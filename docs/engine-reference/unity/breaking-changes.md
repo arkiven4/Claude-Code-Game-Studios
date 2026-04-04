@@ -1,6 +1,6 @@
 # Unity 6.3 LTS — Breaking Changes
 
-**Last verified:** 2026-02-13
+**Last verified:** 2026-04-03
 
 This document tracks breaking API changes and behavioral differences between Unity 2022 LTS
 (likely in model training) and Unity 6.3 LTS (current version). Organized by risk level.
@@ -131,6 +131,45 @@ UGUI still works but UI Toolkit is recommended for new projects.
 
 ### iOS
 - **Unity 6.0+**: Minimum deployment target raised to iOS 13
+
+---
+
+## Unity 6.3 LTS — Additional Breaking Changes (Verified 2026-04-03)
+
+### SerializeField — Field-Only Restriction
+`[SerializeField]` now causes a **compile-time error** if applied to properties or methods.
+
+```csharp
+// ❌ Breaks in Unity 6.3
+[SerializeField] public float Speed { get; set; }
+
+// ✅ Correct
+[field: SerializeField] public float Speed { get; private set; }
+[SerializeField] private float _speed; // private field — still works
+```
+
+### URP Compatibility Mode — Fully Removed
+The `UPM_COMPATIBILITY_MODE` scripting define is stripped by default and **will not
+work in Unity 6.4**. All URP custom passes must use the Render Graph API now.
+
+### Accessibility API Changes
+- `AccessibilityRole` changed from flags enum → standard enum. Set only ONE role per node.
+- `AccessibilityRole` and `AccessibilityState` type changed from `int` → `byte`.
+  Recompile all precompiled assemblies.
+- `AccessibilityNode.selected` deprecated → renamed to `AccessibilityNode.invoked`.
+
+### Multiplayer — Netcode for GameObjects
+`NetworkTransform.Update` can no longer be overridden. Use `NetworkTransform.OnUpdate`
+for non-authority instances or `INetworkUpdateSystem` for authority logic.
+*(Not used in this project, but noted for future reference.)*
+
+### Lightmapping Experimental APIs Removed
+- `AdditionalBakedProbes` removed entirely.
+- `CustomBake` obsolete → use `LightTransport.IProbeIntegrator`.
+
+### UI Toolkit USS Parser Stricter
+USS files with previously-overlooked invalid syntax now **block importing**.
+Check Console for errors after upgrading.
 
 ---
 
