@@ -1,0 +1,32 @@
+# Ignore other AI agent configurations to prevent context pollution
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+.qwen/
+.qwenignore
+QWEN.md
+
+# Ignore project-specific local overrides for Gemini
+.gemini/settings.local.json
+.gemini/docs/UPGRADE-PLAN.md
+GEMINI.local.md
+
+# Ignore session state and logs
+production/session-logs/
+production/session-state/*.md
+
+# IDE and System files
+.vs/
+.vscode/settings.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Build and temporary files
+node_modules/
+build/
+bin/
+obj/
+dist/
+*.tmp
+*.log

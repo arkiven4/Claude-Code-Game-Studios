@@ -1,0 +1,39 @@
+# Ignore other AI assistant configurations when using Qwen Code
+
+### Other AI Assistants ###
+.claude/
+CLAUDE.md
+.gemini/
+GEMINI.md
+
+### Qwen Code Local (should not be ignored, but documented) ###
+# Note: QWEN.local.md and .qwen/settings.local.json are in .gitignore
+# but should NOT be ignored here so Qwen Code can read them
+
+### Build and Output ###
+*.exe
+*.dll
+*.so
+*.dylib
+*.app
+build/
+builds/
+bin/
+obj/
+dist/
+
+### Environment and Secrets ###
+.env
+.env.*
+*.pem
+*.key
+
+### OS Files ###
+.DS_Store
+Thumbs.db
+desktop.ini
+
+### Archives ###
+*.zip
+*.tar.gz
+*.rar

@@ -16,6 +16,11 @@ CLAUDE.local.md
 production/session-logs/
 production/session-state/*.md
 
+# === Qwen Code Local ===
+.qwen/settings.local.json
+.qwen/docs/UPGRADE-PLAN.md
+QWEN.local.md
+
 # === Internal Planning (not for public) ===
 docs/IMPROVEMENTS-PROPOSAL.md
 docs/MULTI-STAGE-DOCUMENT-WORKFLOW.md
@@ -137,3 +142,6 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 *.lnk
+
+.gemini
+GEMINI.md
