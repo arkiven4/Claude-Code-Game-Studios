@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+
+[sub_resource type="Resource" id="Tier1_SpiritWard"]
+script = ExtResource("2_tier")
+effect_value = 0.1
+target_count = 4
+area_radius = 0.0
+duration = 8.0
+
+[sub_resource type="Resource" id="Tier2_SpiritWard"]
+script = ExtResource("2_tier")
+effect_value = 0.18
+target_count = 4
+area_radius = 0.0
+duration = 8.0
+
+[sub_resource type="Resource" id="Tier3_SpiritWard"]
+script = ExtResource("2_tier")
+effect_value = 0.28
+target_count = 4
+area_radius = 0.0
+duration = 8.0
+
+[resource]
+script = ExtResource("1_skill")
+skill_type = 2
+display_name = "Spirit Ward"
+skill_id = "witch_spirit_ward"
+description = "Grants an ATK buff to all allies. Tier 2: 18% buff. Tier 3: 28% buff."
+mp_cost = 20
+base_cooldown = 0.0
+max_charges = 1
+target_type = 5
+target_count = 4
+area_radius = 0.0
+tiers = [SubResource("Tier1_SpiritWard"), SubResource("Tier2_SpiritWard"), SubResource("Tier3_SpiritWard")]
+base_damage = 0
+damage_category = 1
+base_heal = 0

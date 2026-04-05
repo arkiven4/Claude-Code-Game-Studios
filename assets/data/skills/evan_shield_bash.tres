@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+
+[sub_resource type="Resource" id="Tier1_ShieldBash"]
+script = ExtResource("2_tier")
+effect_value = 1.0
+target_count = 1
+area_radius = 0.0
+duration = 0.0
+
+[sub_resource type="Resource" id="Tier2_ShieldBash"]
+script = ExtResource("2_tier")
+effect_value = 1.5
+target_count = 1
+area_radius = 0.0
+duration = 0.0
+
+[sub_resource type="Resource" id="Tier3_ShieldBash"]
+script = ExtResource("2_tier")
+effect_value = 2.0
+target_count = 1
+area_radius = 0.0
+duration = 0.0
+
+[resource]
+script = ExtResource("1_skill")
+skill_type = 0
+display_name = "Shield Bash"
+skill_id = "evan_shield_bash"
+description = "Strikes an enemy with the shield. Tier 2: 1.5x effect. Tier 3: 2.0x effect."
+mp_cost = 20
+base_cooldown = 3.0
+max_charges = 1
+target_type = 0
+target_count = 1
+area_radius = 0.0
+tiers = [SubResource("Tier1_ShieldBash"), SubResource("Tier2_ShieldBash"), SubResource("Tier3_ShieldBash")]
+base_damage = 20
+damage_category = 0

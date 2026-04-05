@@ -1,0 +1,70 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/enemy_ai_controller.gd" id="1_ai"]
+[ext_resource type="Resource" path="res://assets/data/enemies/grunt_melee.tres" id="2_data"]
+[ext_resource type="Script" path="res://src/gameplay/hitbox_component.gd" id="3_hitbox"]
+[ext_resource type="Script" path="res://src/gameplay/hurtbox_component.gd" id="4_hurtbox"]
+[ext_resource type="Script" path="res://src/ui/world_hp_bar.gd" id="5_hp"]
+[ext_resource type="Script" path="res://src/gameplay/loot/loot_dropper.gd" id="6_loot"]
+[ext_resource type="Script" path="res://src/gameplay/loot/loot_table.gd" id="7_table"]
+[ext_resource type="Resource" path="res://assets/data/items/generic_copper_ring.tres" id="8_ring"]
+[ext_resource type="Resource" path="res://assets/data/items/swordman_chain_mail.tres" id="9_mail"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_1"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1"]
+albedo_color = Color(0.8, 0.133333, 0.133333, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_1"]
+radius = 0.7
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2"]
+radius = 0.5
+height = 1.8
+
+[sub_resource type="Resource" id="LootTable_Grunt"]
+script = ExtResource("7_table")
+entries = [ExtResource("8_ring"), ExtResource("9_mail")]
+entry_weights = [0.7, 0.3]
+
+[node name="GruntMelee" type="CharacterBody3D" groups=["Enemies"]]
+script = ExtResource("1_ai")
+enemy_data = ExtResource("2_data")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_1")
+surface_material_override/0 = SubResource("StandardMaterial3D_1")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_1")
+
+[node name="HitboxComponent" type="Area3D" parent="."]
+collision_layer = 4
+collision_mask = 8
+script = ExtResource("3_hitbox")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HitboxComponent"]
+shape = SubResource("SphereShape3D_1")
+
+[node name="HurtboxComponent" type="Area3D" parent="." groups=["Hurtboxes"]]
+collision_layer = 8
+collision_mask = 4
+script = ExtResource("4_hurtbox")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtboxComponent"]
+shape = SubResource("CapsuleShape3D_2")
+
+[node name="WorldHPBar" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+script = ExtResource("5_hp")
+
+[node name="LootDropper" type="Node" parent="."]
+script = ExtResource("6_loot")
+enemy_data = ExtResource("2_data")
+loot_table = SubResource("LootTable_Grunt")

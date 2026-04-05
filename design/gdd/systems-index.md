@@ -2,7 +2,7 @@
 
 > **Status**: Approved
 > **Created**: 2026-04-03
-> **Last Updated**: 2026-04-03
+> **Last Updated**: 2026-04-04
 > **Source Concept**: design/gdd/game-concept.md
 
 ---
@@ -28,44 +28,43 @@ committing the Alpha schedule to it.
 
 | # | System Name | Category | Priority | Status | Design Doc | Depends On |
 |---|-------------|----------|----------|--------|------------|------------|
-| 1 | Character Data | Foundation | MVP | Designed | design/gdd/character-data.md | — |
-| 2 | Item Database | Foundation | MVP | Not Started | — | — |
-| 3 | Item Rarity System | Foundation | MVP | Not Started | — | Item Database |
-| 4 | Skill Database | Foundation | MVP | Not Started | — | — |
-| 5 | Input System | Foundation | MVP | Not Started | — | — |
-| 6 | Audio System | Foundation | MVP | Not Started | — | — |
-| 7 | Save / Load System | Foundation | MVP | Not Started | — | — |
-| 8 | Health & Damage System | Core | MVP | Not Started | — | Character Data |
-| 9 | Hit Detection System | Core | MVP | Not Started | — | Unity Physics |
-| 10 | Camera System | Core | MVP | Not Started | — | Unity Cinemachine |
-| 11 | Chapter State System | Core | MVP | Not Started | — | Save / Load |
-| 12 | Scene Management System | Core | MVP | Not Started | — | Save / Load, Audio |
-| 13 | Status Effects System | Gameplay | MVP | Not Started | — | Health & Damage, Character Data |
-| 14 | Skill Execution System | Gameplay | MVP | Not Started | — | Skill Database, Health & Damage, Status Effects |
-| 15 | Enemy AI System | Gameplay | MVP | Not Started | — | Health & Damage, Hit Detection |
-| 16 | Inventory & Equipment System | Progression | MVP | Not Started | — | Item Database, Character Data |
+| 1 | Character Data | Foundation | MVP | Approved | design/gdd/character-data.md | — |
+| 2 | Item Database | Foundation | MVP | Approved | design/gdd/item-database.md | — |
+| 3 | Item Rarity System | Foundation | MVP | Embedded | (part of Item Database) | Item Database |
+| 4 | Skill Database | Foundation | MVP | Approved | design/gdd/skill-database.md | — |
+| 5 | Input System | Foundation | MVP | Approved | design/gdd/input-system.md | — |
+| 6 | Audio System | Foundation | MVP | Approved | design/gdd/audio-system.md | — |
+| 7 | Save / Load System | Foundation | MVP | Approved | design/gdd/save-load-system.md | — |
+| 8 | Health & Damage System | Core | MVP | Approved | design/gdd/health-damage-system.md | Character Data |
+| 9 | Hit Detection System | Core | MVP | Approved | design/gdd/hit-detection-system.md | Unity Physics |
+| 10 | Camera System | Core | MVP | Approved | design/gdd/camera-system.md | Unity Cinemachine |
+| 11 | Chapter State System | Core | MVP | Approved | design/gdd/chapter-state-system.md | Save / Load |
+| 12 | Scene Management System | Core | MVP | Approved | design/gdd/scene-management-system.md | Save / Load, Audio |
+| 13 | Status Effects System | Gameplay | MVP | Approved | design/gdd/status-effects-system.md | Health & Damage, Character Data |
+| 14 | Skill Execution System | Gameplay | MVP | Approved | design/gdd/skill-execution-system.md | Skill Database, Health & Damage, Status Effects |
+| 15 | Enemy AI System | Gameplay | MVP | Approved | design/gdd/enemy-ai-system.md | Health & Damage, Hit Detection |
+| 16 | Inventory & Equipment System | Progression | MVP | Approved | design/gdd/inventory-equipment-system.md | Item Database, Character Data |
 | 17 | Character Progression System | Progression | Alpha | Not Started | — | Character Data, Health & Damage |
-| 18 | Character Skill System | Progression | MVP | Not Started | — | Skill Database, Skill Execution, Character Progression |
-| 19 | Loot & Drop System | Economy | MVP | Not Started | — | Item Database, Item Rarity, Enemy AI |
-| 20 | Combat System | Gameplay | MVP | Not Started | — | Health & Damage, Hit Detection, Skill Execution, Enemy AI, Camera |
-| 21 | Character State Manager | Party | MVP | Not Started | — | Health & Damage, Status Effects, Skill Execution |
-| 22 | Character Switching System | Party | MVP | Not Started | — | Character State Manager, Combat |
-| 23 | Party AI System | Party | Alpha | Not Started | — | Combat, Enemy AI, Character State Manager |
+| 18 | Character Skill System | Progression | MVP | Approved | design/gdd/character-skill-system.md | Skill Database, Skill Execution, Character Progression |
+| 19 | Loot & Drop System | Economy | MVP | Approved | design/gdd/loot-drop-system.md | Item Database, Item Rarity, Enemy AI |
+| 20 | Combat System | Gameplay | MVP | Approved | design/gdd/combat-system.md | Health & Damage, Hit Detection, Skill Execution, Enemy AI, Camera |
+| 21 | Character State Manager | Party | MVP | Approved | design/gdd/character-state-manager.md | Health & Damage, Status Effects, Skill Execution |
+| 22 | Character Switching System | Party | MVP | Approved | design/gdd/character-switching-system.md | Character State Manager, Combat |
+| 23 | Party AI System | Party | Alpha | ADR + Prototype | docs/architecture/adr-0001-party-ai-rl-vs-behavior-tree.md | Combat, Enemy AI, Character State Manager |
 | 24 | Party Management System | Party | Alpha | Not Started | — | Character Data, Character Switching |
-| 25 | Dialogue System | Narrative | MVP | Not Started | — | Audio, Chapter State |
+| 25 | Dialogue System | Narrative | MVP | Approved | design/gdd/dialogue-system.md | Audio, Chapter State |
 | 26 | Narrative Choice System | Narrative | Alpha | Not Started | — | Dialogue, Chapter State |
-| 27 | Cutscene System | Narrative | MVP | Not Started | — | Dialogue, Camera, Audio, Chapter State |
+| 27 | Cutscene System | Narrative | MVP | Approved | design/gdd/cutscene-system.md | Dialogue, Camera, Audio, Chapter State |
 | 28 | Multiple Endings System | Narrative | Full Vision | Not Started | — | Narrative Choice, Chapter State |
 | 29 | NPC System (inferred) | World | Alpha | Not Started | — | Character Data, Dialogue |
 | 30 | Shop System | Economy | Alpha | Not Started | — | Inventory & Equipment, Item Database |
 | 31 | Village / Hub System (inferred) | World | Alpha | Not Started | — | Scene Management, NPC, Shop, Equipment Enhancement |
 | 32 | Equipment Enhancement System | Economy | Full Vision | Not Started | — | Inventory & Equipment, Item Database |
-| 33 | Combat HUD (inferred) | UI | MVP | Not Started | — | Combat, Health & Damage, Character Switching, Skill Execution |
+| 33 | Combat HUD (inferred) | UI | MVP | Approved | design/gdd/combat-hud.md | Combat, Health & Damage, Character Switching, Skill Execution, Character Skill |
 | 34 | Inventory UI (inferred) | UI | Alpha | Not Started | — | Inventory & Equipment, Equipment Enhancement |
-| 35 | Dialogue UI (inferred) | UI | MVP | Not Started | — | Dialogue System |
-| 36 | Main Menu & Pause Menu (inferred) | UI | MVP | Not Started | — | Save / Load, Settings |
-| 37 | Settings System (inferred) | Meta | Alpha | Not Started | — | Audio, Input |
-| 38 | Cosmetics System | Progression | Full Vision | Not Started | — | Character Data, Inventory & Equipment |
+| 35 | Dialogue UI (inferred) | UI | MVP | Approved | design/gdd/dialogue-ui.md | Dialogue System |
+| 36 | Main Menu & Pause Menu (inferred) | UI | MVP | Approved | design/gdd/main-menu-pause-menu.md | Save / Load, Audio, Input |
+| 37 | Cosmetics System | Progression | Full Vision | Not Started | — | Character Data, Inventory & Equipment |
 
 ---
 
@@ -235,21 +234,43 @@ doesn't depend on NPC System. NPCs call into the Dialogue System, not the revers
 
 | Metric | Count |
 |--------|-------|
-| Total systems identified | 38 |
-| Design docs started | 0 |
-| Design docs reviewed | 0 |
-| Design docs approved | 0 |
-| MVP systems designed | 1 / 21 |
-| Alpha systems designed | 0 / 10 |
-| Full Vision systems designed | 0 / 4 |
+| Total systems identified | 37 (Settings System absorbed into Main Menu & Pause Menu) |
+| Design docs started | 25 |
+| Design docs reviewed | 25 |
+| Design docs approved | 25 (all designed docs approved) |
+| MVP systems designed + approved | 21 / 21 ✓ |
+| Alpha systems designed | 0 / 9 |
+| Full Vision systems designed | 0 / 3 |
+| ADRs written | 6 (ADR-0001 through ADR-0006: Party AI, Character Switching, Health & Damage, Skill Execution, Status Effects, Loot & Inventory) |
+| Prototypes completed | 1 (party-ai — PROCEED verdict) |
 
 ---
 
 ## Next Steps
 
-- [ ] Design system #1: **Character Data** — use `/design-system character-data`
-- [ ] Run `/design-review` on each completed GDD
-- [ ] Prototype Party AI in Month 1 — use `/prototype party-ai`
-- [ ] Create ADR for RL vs. behavior tree — use `/architecture-decision`
-- [ ] Run `/gate-check pre-production` when all MVP systems are designed
-- [ ] Plan first sprint with `/sprint-plan new`
+- [x] Design system #1: **Character Data**
+- [x] Design system #2: **Item Database** (includes #3 Item Rarity)
+- [x] Design system #4: **Skill Database**
+- [x] Design system #7: **Save / Load System**
+- [x] Design system #8: **Health & Damage System**
+- [x] Design system #9: **Hit Detection System**
+- [x] Design system #10: **Camera System**
+- [x] Design system #11: **Chapter State System**
+- [x] Design system #12: **Scene Management System**
+- [x] Design system #13: **Status Effects System**
+- [x] Design system #14: **Skill Execution System**
+- [x] Design system #15: **Enemy AI System**
+- [x] Design system #20: **Combat System**
+- [x] Run `/design-review` on all completed GDDs (all 9 reviewed and fixes applied)
+- [x] Prototype Party AI (`/prototype party-ai`) — verdict: PROCEED
+- [x] Create ADR-0001 (Party AI: RL vs. BT) and ADR-0002 (Character Switching state sync)
+- [x] Design system #16: **Inventory & Equipment** — Approved
+- [x] Design system #18: **Character Skill** — In Review (fixes applied)
+- [x] Design system #19: **Loot & Drop** — In Review (fixes applied)
+- [x] Run `/design-review` on all 11 "Designed" GDDs (batch review + fixes applied 2026-04-04)
+- [x] Settings System (#37) absorbed into Main Menu & Pause Menu — index updated, total systems now 37
+- [x] Re-review + approve all 6 In Review GDDs — all 21 MVP docs now Approved
+- [x] Run `/gate-check pre-production` — identified 2 blockers (no sprint plan, no prototype README)
+- [x] Create `prototypes/party-ai/README.md` (prototype code standards require it) — done 2026-04-05
+- [x] Plan first sprint with `/sprint-plan new` — sprint-01, sprint-02, sprint-03 created
+- [ ] Re-run `/gate-check pre-production` after sprint plan is created → advance to Production

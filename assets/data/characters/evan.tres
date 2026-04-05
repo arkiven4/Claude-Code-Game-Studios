@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://src/core/character_data.gd" id="1_char"]
+[ext_resource type="Resource" path="res://assets/data/skills/evan_crescent_slash.tres" id="2_skill1"]
+[ext_resource type="Resource" path="res://assets/data/skills/evan_shield_bash.tres" id="3_skill2"]
+[ext_resource type="Resource" path="res://assets/data/skills/evan_hunters_mark.tres" id="4_skill3"]
+[ext_resource type="Resource" path="res://assets/data/skills/evan_rending_storm.tres" id="5_skill4"]
+
+[resource]
+script = ExtResource("1_char")
+character_class = 0
+display_name = "Evan"
+role_description = "The hunter. Precise, counter-oriented swordsman."
+is_main_character = true
+base_max_hp = 320
+base_atk = 45
+base_def = 35
+base_spd = 1.1
+base_max_mp = 80
+base_crit = 0.08
+hp_per_level = 18
+atk_per_level = 3
+def_per_level = 2
+mp_per_level = 3
+main_char_hp_bonus = 4
+main_char_atk_bonus = 1
+main_char_def_bonus = 1
+main_char_mp_bonus = 1
+skill_slots = Array[Resource]([ExtResource("2_skill1"), ExtResource("3_skill2"), ExtResource("4_skill3"), ExtResource("5_skill4")])

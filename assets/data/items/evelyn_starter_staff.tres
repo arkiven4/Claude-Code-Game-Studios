@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="ItemEquipment" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/core/item_equipment.gd" id="1_item"]
+
+[resource]
+script = ExtResource("1_item")
+item_id = "evelyn_starter_staff"
+display_name = "Evelyn's Starter Staff"
+description = "A basic magical staff infused with a hint of dark energy."
+slot = 0
+rarity = 1
+allowed_classes = Array[int]([1])
+base_atk = 15.0
+base_def = 0.0
+base_spd = 0.0
+base_max_hp = 0.0
+base_max_mp = 0.0
+base_crit = 0.0
+level_requirement = 1
+sell_price = 80

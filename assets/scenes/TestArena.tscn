@@ -1,0 +1,118 @@
+[gd_scene load_steps=19 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/combat_encounter_manager.gd" id="1_combat"]
+[ext_resource type="Script" path="res://src/gameplay/character_switch_controller.gd" id="2_switch"]
+[ext_resource type="Script" path="res://src/gameplay/player_movement_controller.gd" id="3_move"]
+[ext_resource type="Script" path="res://src/core/input_manager.gd" id="4_input"]
+[ext_resource type="Script" path="res://src/core/save_manager.gd" id="5_save"]
+[ext_resource type="Script" path="res://src/core/audio/audio_manager.gd" id="6_audio"]
+[ext_resource type="Script" path="res://src/core/audio/sfx_player.gd" id="7_sfx"]
+[ext_resource type="Script" path="res://src/gameplay/camera_controller.gd" id="8_camera"]
+[ext_resource type="PackedScene" path="res://assets/scenes/characters/Evelyn.tscn" id="9_evelyn"]
+[ext_resource type="PackedScene" path="res://assets/scenes/characters/Evan.tscn" id="10_evan"]
+[ext_resource type="PackedScene" path="res://assets/scenes/enemies/GruntMelee.tscn" id="11_grunt"]
+[ext_resource type="PackedScene" path="res://assets/scenes/enemies/ArcherRanged.tscn" id="12_archer"]
+[ext_resource type="PackedScene" path="res://assets/scenes/ui/CombatHUD.tscn" id="13_hud"]
+[ext_resource type="Script" path="res://src/gameplay/arena_wiring.gd" id="14_wiring"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
+sky_top_color = Color(0.2, 0.266667, 0.333333, 1)
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("ProceduralSkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+ambient_light_color = Color(0.2, 0.266667, 0.333333, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1"]
+size = Vector2(20, 20)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1"]
+albedo_color = Color(0.333333, 0.333333, 0.333333, 1)
+
+[node name="TestArena" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.433013, 0.75, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_1")
+surface_material_override/0 = SubResource("StandardMaterial3D_1")
+
+[node name="CombatEncounterManager" type="Node" parent="."]
+script = ExtResource("1_combat")
+enemy_paths = Array[NodePath]([NodePath("../Enemies/GruntMelee_1"), NodePath("../Enemies/GruntMelee_2"), NodePath("../Enemies/ArcherRanged_1")])
+party_member_paths = Array[NodePath]([NodePath("../Party/Evelyn/PartyMemberState"), NodePath("../Party/Evan/PartyMemberState")])
+
+[node name="CharacterSwitchController" type="Node" parent="."]
+script = ExtResource("2_switch")
+input_manager = NodePath("../InputManager")
+party_member_paths = [NodePath("../Party/Evelyn/PartyMemberState"), NodePath("../Party/Evan/PartyMemberState")]
+
+[node name="PlayerMovementController" type="Node" parent="."]
+script = ExtResource("3_move")
+input_manager = NodePath("../InputManager")
+switch_controller = NodePath("../CharacterSwitchController")
+
+[node name="InputManager" type="Node" parent="."]
+script = ExtResource("4_input")
+
+[node name="SaveManager" type="Node" parent="."]
+script = ExtResource("5_save")
+
+[node name="AudioManager" type="Node" parent="."]
+script = ExtResource("6_audio")
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="AudioManager"]
+
+[node name="SFXPlayer" type="Node" parent="AudioManager"]
+script = ExtResource("7_sfx")
+
+[node name="CameraController" type="Node3D" parent="." node_paths=PackedStringArray("spring_arm", "camera")]
+script = ExtResource("8_camera")
+spring_arm = NodePath("SpringArm")
+camera = NodePath("SpringArm/Camera")
+encounter_manager = NodePath("../CombatEncounterManager")
+follow_target = NodePath("../Party/Evelyn")
+
+[node name="SpringArm" type="SpringArm3D" parent="CameraController"]
+transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 0, 0)
+spring_length = 8.0
+
+[node name="Camera" type="Camera3D" parent="CameraController/SpringArm"]
+
+[node name="Party" type="Node3D" parent="."]
+
+[node name="Evelyn" parent="Party" instance=ExtResource("9_evelyn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+
+[node name="Evan" parent="Party" instance=ExtResource("10_evan")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+
+[node name="Enemies" type="Node3D" parent="."]
+
+[node name="GruntMelee_1" parent="Enemies" instance=ExtResource("11_grunt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 8)
+
+[node name="GruntMelee_2" parent="Enemies" instance=ExtResource("11_grunt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 8)
+
+[node name="ArcherRanged_1" parent="Enemies" instance=ExtResource("12_archer")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 12)
+
+[node name="CombatHUD" parent="." instance=ExtResource("13_hud")]
+
+[node name="ArenaWiring" type="Node" parent="."]
+script = ExtResource("14_wiring")
+encounter_manager = NodePath("../CombatEncounterManager")
+switch_controller = NodePath("../CharacterSwitchController")
+camera_controller = NodePath("../CameraController")
+party_member_paths = [NodePath("../Party/Evelyn/PartyMemberState"), NodePath("../Party/Evan/PartyMemberState")]
+enemy_paths = [NodePath("../Enemies/GruntMelee_1"), NodePath("../Enemies/GruntMelee_2"), NodePath("../Enemies/ArcherRanged_1")]
+combat_hud = NodePath("../CombatHUD")

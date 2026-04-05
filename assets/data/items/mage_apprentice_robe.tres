@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="ItemEquipment" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/core/item_equipment.gd" id="1_item"]
+
+[resource]
+script = ExtResource("1_item")
+item_id = "mage_apprentice_robe"
+display_name = "Mage Apprentice Robe"
+description = "Simple robes worn by those beginning their magical studies."
+slot = 1
+rarity = 0
+allowed_classes = Array[int]([1])
+base_atk = 0.0
+base_def = 10.0
+base_spd = 0.0
+base_max_hp = 0.0
+base_max_mp = 20.0
+base_crit = 0.0
+level_requirement = 1
+sell_price = 40

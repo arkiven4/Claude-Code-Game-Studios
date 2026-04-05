@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+
+[sub_resource type="Resource" id="Tier1"]
+script = ExtResource("2_tier")
+effect_value = 1.5
+target_count = 1
+area_radius = 0.0
+duration = 0.0
+
+[sub_resource type="Resource" id="Tier2"]
+script = ExtResource("2_tier")
+effect_value = 1.5
+target_count = 2
+area_radius = 3.0
+duration = 0.0
+
+[sub_resource type="Resource" id="Tier3"]
+script = ExtResource("2_tier")
+effect_value = 1.5
+target_count = 3
+area_radius = 5.0
+duration = 0.0
+
+[resource]
+script = ExtResource("1_skill")
+skill_type = 0
+display_name = "Abyssal Chain"
+skill_id = "evelyn_abyssal_chain"
+description = "Dark chains lash nearby enemies dealing damage and slowing them. Tier 2: hits 2 in 3m AoE. Tier 3: hits 3 in 5m AoE."
+mp_cost = 30
+base_cooldown = 4.0
+max_charges = 1
+target_type = 2
+target_count = 1
+area_radius = 0.0
+tiers = [SubResource("Tier1"), SubResource("Tier2"), SubResource("Tier3")]
+base_damage = 40
+damage_category = 3

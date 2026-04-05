@@ -1,0 +1,72 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/party_member_state.gd" id="1_state"]
+[ext_resource type="Resource" path="res://assets/data/characters/evelyn.tres" id="2_data"]
+[ext_resource type="Script" path="res://src/gameplay/status_effects_system.gd" id="3_effects"]
+[ext_resource type="Script" path="res://src/gameplay/skill_execution_system.gd" id="4_skill"]
+[ext_resource type="Script" path="res://src/gameplay/character_state_manager.gd" id="5_manager"]
+[ext_resource type="Script" path="res://src/gameplay/equipment_manager.gd" id="6_equip"]
+[ext_resource type="Script" path="res://src/gameplay/hitbox_component.gd" id="7_hitbox"]
+[ext_resource type="Script" path="res://src/gameplay/hurtbox_component.gd" id="8_hurtbox"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_1"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1"]
+albedo_color = Color(0.419608, 0.176471, 0.545098, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_1"]
+radius = 0.6
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2"]
+radius = 0.5
+height = 1.8
+
+[node name="Evelyn" type="CharacterBody3D" groups=["PartyMembers"]]
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_1")
+surface_material_override/0 = SubResource("StandardMaterial3D_1")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_1")
+
+[node name="PartyMemberState" type="Node" parent="."]
+script = ExtResource("1_state")
+character_data = ExtResource("2_data")
+
+[node name="StatusEffectsSystem" type="Node" parent="."]
+script = ExtResource("3_effects")
+
+[node name="SkillExecutionSystem" type="Node" parent="."]
+script = ExtResource("4_skill")
+state = NodePath("../PartyMemberState")
+status_effects = NodePath("../StatusEffectsSystem")
+
+[node name="CharacterStateManager" type="Node" parent="."]
+script = ExtResource("5_manager")
+
+[node name="EquipmentManager" type="Node" parent="."]
+script = ExtResource("6_equip")
+state = NodePath("../PartyMemberState")
+
+[node name="HitboxComponent" type="Area3D" parent="."]
+collision_layer = 4
+collision_mask = 8
+script = ExtResource("7_hitbox")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HitboxComponent"]
+shape = SubResource("SphereShape3D_1")
+
+[node name="HurtboxComponent" type="Area3D" parent="." groups=["Hurtboxes"]]
+collision_layer = 8
+collision_mask = 4
+script = ExtResource("8_hurtbox")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtboxComponent"]
+shape = SubResource("CapsuleShape3D_2")

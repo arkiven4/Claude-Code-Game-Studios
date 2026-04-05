@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://src/core/character_data.gd" id="1_char"]
+[ext_resource type="Resource" path="res://assets/data/skills/witch_hex_bolt.tres" id="2_skill1"]
+[ext_resource type="Resource" path="res://assets/data/skills/witch_spirit_ward.tres" id="3_skill2"]
+[ext_resource type="Resource" path="res://assets/data/skills/witch_moonfire.tres" id="4_skill3"]
+[ext_resource type="Resource" path="res://assets/data/skills/witch_covens_wrath.tres" id="5_skill4"]
+
+[resource]
+script = ExtResource("1_char")
+character_class = 1
+display_name = "The Witch"
+role_description = "Prologue-only ally. High ATK, fragile glass cannon."
+is_main_character = false
+base_max_hp = 200
+base_atk = 70
+base_def = 15
+base_spd = 1.2
+base_max_mp = 130
+base_crit = 0.06
+hp_per_level = 12
+atk_per_level = 5
+def_per_level = 1
+mp_per_level = 5
+main_char_hp_bonus = 0
+main_char_atk_bonus = 0
+main_char_def_bonus = 0
+main_char_mp_bonus = 0
+skill_slots = Array[Resource]([ExtResource("2_skill1"), ExtResource("3_skill2"), ExtResource("4_skill3"), ExtResource("5_skill4")])

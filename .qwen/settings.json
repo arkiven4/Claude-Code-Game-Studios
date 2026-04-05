@@ -15,7 +15,11 @@
       "Bash(dir *)",
       "Bash(python -m json.tool*)",
       "Bash(python -m pytest*)",
-      "Bash(py -m pytest*)"
+      "Bash(py -m pytest*)",
+      "Bash(cat *)",
+      "Bash(mkdir *)",
+      "Bash(which *)",
+      "Bash(find *)"
     ],
     "deny": [
       "Bash(rm -rf *)",

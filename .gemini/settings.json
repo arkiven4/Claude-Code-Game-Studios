@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json.schemastore.org/gemini-code-settings.json",
+  "statusLine": {
+    "type": "command",
+    "command": "bash .gemini/statusline.sh"
+  },
+  "security": {
+    "autoAddToPolicyByDefault": true
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .gemini/hooks/session-start.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "bash .gemini/hooks/detect-gaps.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "BeforeTool": [
+      {
+        "matcher": "run_shell_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .gemini/hooks/validate-commit.sh",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "command": "bash .gemini/hooks/validate-push.sh",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "codebase_investigator|generalist|cli_help",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .gemini/hooks/log-agent.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "AfterTool": [
+      {
+        "matcher": "write_file|replace",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .gemini/hooks/validate-assets.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreCompress": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .gemini/hooks/pre-compact.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .gemini/hooks/session-stop.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

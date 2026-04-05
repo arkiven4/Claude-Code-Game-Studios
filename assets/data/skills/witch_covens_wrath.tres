@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+
+[sub_resource type="Resource" id="Tier1_CovensWrath"]
+script = ExtResource("2_tier")
+effect_value = 2.8
+target_count = 10
+area_radius = 8.0
+duration = 0.0
+
+[sub_resource type="Resource" id="Tier2_CovensWrath"]
+script = ExtResource("2_tier")
+effect_value = 3.5
+target_count = 10
+area_radius = 8.0
+duration = 0.0
+
+[sub_resource type="Resource" id="Tier3_CovensWrath"]
+script = ExtResource("2_tier")
+effect_value = 4.2
+target_count = 10
+area_radius = 10.0
+duration = 0.0
+
+[resource]
+script = ExtResource("1_skill")
+skill_type = 0
+display_name = "Coven's Wrath"
+skill_id = "witch_covens_wrath"
+description = "Unleashes the full power of the coven on all enemies. Tier 2: 3.5x power. Tier 3: 4.2x power."
+mp_cost = 80
+base_cooldown = 15.0
+max_charges = 1
+target_type = 3
+target_count = 10
+area_radius = 8.0
+tiers = [SubResource("Tier1_CovensWrath"), SubResource("Tier2_CovensWrath"), SubResource("Tier3_CovensWrath")]
+base_damage = 70
+damage_category = 1

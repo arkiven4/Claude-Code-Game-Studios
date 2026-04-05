@@ -5,11 +5,11 @@ Each agent owns a specific domain, enforcing separation of concerns and quality.
 
 ## Technology Stack
 
-- **Engine**: Unity 6.3 LTS (6000.3)
-- **Language**: C#
+- **Engine**: Godot 4.6
+- **Language**: GDScript
 - **Version Control**: Git with trunk-based development
-- **Build System**: Unity Build Pipeline
-- **Asset Pipeline**: Unity Asset Import Pipeline + Addressables
+- **Build System**: Godot Export Pipeline
+- **Asset Pipeline**: Godot Import Pipeline (native .import files)
 
 > **Note**: Engine-specialist agents exist for Godot, Unity, and Unreal with
 > dedicated sub-specialists. Use the set matching your engine.
@@ -20,7 +20,7 @@ Each agent owns a specific domain, enforcing separation of concerns and quality.
 
 ## Engine Version Reference
 
-@docs/engine-reference/unity/VERSION.md
+@docs/engine-reference/godot/VERSION.md
 
 ## Technical Preferences
 

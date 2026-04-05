@@ -372,6 +372,29 @@ fall back to behavior trees with animated expertise simulation.
 
 ---
 
+## Visual Style
+
+**Direction**: 3D with a soft, cartoon aesthetic.
+
+| Aspect | Description |
+|--------|-------------|
+| **Rendering** | 3D — Godot Forward+ renderer |
+| **Art style** | Soft cartoon — rounded forms, cel-shaded or toon-shaded lighting, clean outlines |
+| **Color palette** | Warm shadows, desaturated midtones, vibrant accent colors per character (Evelyn = deep purple/crimson, Evan = steel blue/gold, Witch = forest green/ivory) |
+| **Character proportions** | Slightly stylized (large expressive eyes, clean silhouettes) — readable at gameplay distance |
+| **Environment** | Hand-painted texture feel, soft ambient occlusion, no photorealistic PBR |
+| **VFX** | Bold, readable skill effects — large impact flashes, clear hitboxes implied by visual arcs |
+| **UI** | Flat design with soft rounded panels; matches cartoon aesthetic; no hyper-realistic elements |
+| **References** | Tales of Arise (stylized 3D combat readability), Guilty Gear Strive (crisp cartoon outlines), Genshin Impact (soft toon shading on 3D characters) |
+
+### Godot Implementation Notes
+- Use **toon shading** via a custom `StandardMaterial3D` with `Shading Mode: Unshaded` + rim lighting, or a simple Godot shader
+- **Outlines**: Inverted hull method or Godot's built-in outline on `MeshInstance3D`
+- **Post-processing**: Subtle bloom on skill VFX; no heavy film grain or chromatic aberration
+- Placeholder geometry (capsules) should use **solid flat colors** — blue for players, red for enemies — to keep readability during prototyping
+
+---
+
 ## Next Steps
 
 - [ ] Run `/setup-engine unity` to configure Unity and populate version-aware reference docs

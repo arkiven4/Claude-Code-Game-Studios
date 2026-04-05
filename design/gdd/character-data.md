@@ -41,7 +41,9 @@ a personality expressed through their numbers.
    `Swordman`, `Mage`, `Assassin`, `Healer`, `Tanker`, `Support`, `Archer`.
    Class determines stat growth weights, AI behavior profile, and loot drop filtering.
    Two characters can share a class but have entirely different skill sets
-   (e.g., Evelyn and the Witch are both `Mage`).
+   (e.g., Evelyn and the Witch are both `Mage`). The Witch is a character name — her
+   `CharacterClass` is `Mage`. She uses Mage class gains per level but has different
+   base stats (higher ATK, lower MaxHP than Evelyn) and is active only during the prologue.
 
 3. Every character has **six base stats**:
 
@@ -131,7 +133,7 @@ stats. Changes to SPD and CRIT come from equipment and buffs only.
 | Tanker | 480 | 35 | 55 | 0.9 | 60 | 3% |
 | Support | 270 | 30 | 30 | 1.2 | 130 | 5% |
 | Archer | 260 | 58 | 22 | 1.3 | 80 | 15% |
-| Witch (prologue only) | 200 | 70 | 15 | 1.2 | 130 | 6% |
+| The Witch (CharacterClass: Mage, prologue only) | 200 | 70 | 15 | 1.2 | 130 | 6% |
 
 ---
 
@@ -168,11 +170,11 @@ Effective per-level gains for main characters:
 
 | Class | MaxHP L1 | MaxHP L8 | MaxHP L18 | MaxHP L30 |
 |-------|----------|----------|-----------|-----------|
-| Evelyn (main) | 220 | 325 | 490 | 655 |
-| Mage (generic) | 220 | 304 | 436 | 568 |
+| Evelyn (main) | 220 | 325 | 475 | 655 |
+| Mage (generic) | 220 | 304 | 424 | 568 |
 | Evan (main) | 320 | 474 | 694 | 958 |
 | Swordman (generic) | 320 | 446 | 626 | 842 |
-| Tanker | 480 | 676 | 952 | 1292 |
+| Tanker | 480 | 676 | 956 | 1292 |
 | Assassin | 240 | 338 | 478 | 646 |
 
 | Class | ATK L1 | ATK L8 | ATK L18 | ATK L30 |
@@ -181,7 +183,7 @@ Effective per-level gains for main characters:
 | Mage (generic) | 65 | 100 | 150 | 210 |
 | Archer | 58 | 86 | 126 | 174 |
 | Assassin | 55 | 83 | 123 | 171 |
-| Evan (main) | 45 | 73 | 109 | 161 |
+| Evan (main) | 45 | 73 | 113 | 161 |
 | Healer | 25 | 32 | 42 | 54 |
 
 ---
@@ -371,6 +373,8 @@ else activeTier = 1
 - [ ] A character reaching Tier 2 or Tier 3 mid-combat completes the current skill cast at the old tier before upgrading
 - [ ] `PartyMemberState` initializes `CurrentHP = MaxHP` and `CurrentMP = MaxMP` on scene load for all party members
 - [ ] Performance: reading `CharacterDataSO` fields adds no measurable frame time (ScriptableObject field access is O(1))
+- [ ] Editor validator warns when two characters reference the same `CharacterDataSO` asset
+- [ ] Editor validator warns when `GainPerLevel` is 0 for MaxHP, ATK, DEF, or MaxMP on a non-Witch character (SPD and CRIT exempt)
 
 ## Open Questions
 

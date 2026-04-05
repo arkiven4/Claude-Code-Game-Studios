@@ -1,0 +1,42 @@
+# Unity
+*.unity meta
+*.prefab meta
+*.asset meta
+*.mat meta
+*.controller meta
+*.anim meta
+*.fbx meta
+*.png meta
+*.jpg meta
+*.wav meta
+*.mp3 meta
+*.ttf meta
+*.otf meta
+*.txt text
+*.cs text
+*.json text
+*.yaml text
+*.xml text
+*.md text
+
+# Force LF line endings for Unity scripts
+*.cs text eol=lf
+*.shader text eol=lf
+*.cginc text eol=lf
+*.hlsl text eol=lf
+*.compute text eol=lf
+
+# Binary files
+*.unity binary
+*.prefab binary
+*.mat binary
+*.asset binary
+*.controller binary
+*.anim binary
+*.fbx binary
+*.png binary
+*.jpg binary
+*.wav binary
+*.mp3 binary
+*.ttf binary
+*.otf binary

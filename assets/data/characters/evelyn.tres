@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://src/core/character_data.gd" id="1_char"]
+[ext_resource type="Resource" path="res://assets/data/skills/evelyn_dark_bolt.tres" id="2_skill1"]
+[ext_resource type="Resource" path="res://assets/data/skills/evelyn_shadow_veil.tres" id="3_skill2"]
+[ext_resource type="Resource" path="res://assets/data/skills/evelyn_abyssal_chain.tres" id="4_skill3"]
+[ext_resource type="Resource" path="res://assets/data/skills/evelyn_eclipse_burst.tres" id="5_skill4"]
+
+[resource]
+script = ExtResource("1_char")
+character_class = 1
+display_name = "Evelyn"
+role_description = "The vampire girl. Glass cannon dark mage."
+is_main_character = true
+base_max_hp = 220
+base_atk = 65
+base_def = 18
+base_spd = 1.2
+base_max_mp = 120
+base_crit = 0.06
+hp_per_level = 12
+atk_per_level = 5
+def_per_level = 1
+mp_per_level = 5
+main_char_hp_bonus = 3
+main_char_atk_bonus = 1
+main_char_def_bonus = 0
+main_char_mp_bonus = 2
+skill_slots = Array[Resource]([ExtResource("2_skill1"), ExtResource("3_skill2"), ExtResource("4_skill3"), ExtResource("5_skill4")])
