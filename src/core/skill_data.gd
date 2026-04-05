@@ -42,9 +42,19 @@ enum DamageCategory { PHYSICAL, MAGICAL, HOLY, DARK }
 @export var base_damage: int = 0
 @export var damage_category: DamageCategory = DamageCategory.PHYSICAL
 @export var applied_status_effect: StatusEffect # Needs status_effect.gd
+## When true, damage is delivered via a spawned Projectile node instead of instant hit.
+@export var is_projectile: bool = false
+## Travel speed of the spawned projectile in units/sec. Only used when is_projectile is true.
+@export var projectile_speed: float = 15.0
+## Sprite3D billboard texture shown on the flying projectile. Falls back to generic glow if unset.
+@export var vfx_projectile: Texture2D
+## Billboard texture shown at impact/cast position for non-projectile skills (slash, aura, burst, etc).
+@export var vfx_effect: Texture2D
 
 @export_group("Status Fields")
-@export var effects_to_apply: Array[StatusEffect] = []
+## Each entry pairs a StatusEffect with skill-specific duration, magnitude, and tick rate.
+## The StatusEffect .tres defines identity only — all values come from the override.
+@export var effect_overrides: Array[SkillEffectOverride] = []
 
 @export_group("Support Fields")
 @export var base_heal: int = 0

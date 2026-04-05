@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://8gogamgwpp7r"]
+
+[ext_resource type="Script" uid="uid://dgp0nhn65w813" path="res://src/core/status_effect.gd" id="1_bkait"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" uid="uid://dyxg2pmxgc11b" path="res://assets/art/vfx/skills/mage_skillshot_projectile.png" id="vfx_proj"]
+
+[sub_resource type="Resource" id="Tier1"]
+script = ExtResource("2_tier")
+effect_value = 1.8
+tier_description = "A devastating tracking projectile with splash impact."
+
+[resource]
+script = ExtResource("1_skill")
+display_name = "Arcane Barrage"
+skill_id = "mage_skillshot"
+description = "A slow-moving but devastating magic projectile that tracks the target."
+mp_cost = 0
+base_cooldown = 11.0
+max_cast_range = 11.0
+area_radius = 1.5
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+base_damage = 70
+damage_category = 1
+is_projectile = true
+vfx_projectile = ExtResource("vfx_proj")

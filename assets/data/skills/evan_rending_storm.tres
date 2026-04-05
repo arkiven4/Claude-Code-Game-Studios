@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://dgp0nhn65w813" path="res://src/core/status_effect.gd" id="1_ejnfo"]
 [ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
 [ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" uid="uid://dr3l4niwipyf1" path="res://assets/art/ui/skill_icons/evan_rending_storm_icon.png" id="icon"]
+[ext_resource type="Texture2D" uid="uid://cq5avth3dwqnb" path="res://assets/art/vfx/skills/evan_rending_storm_impact.png" id="vfx_eff"]
 
 [sub_resource type="Resource" id="Tier1_RendingStorm"]
 script = ExtResource("2_tier")
@@ -24,9 +26,11 @@ script = ExtResource("1_skill")
 display_name = "Rending Storm"
 skill_id = "evan_rending_storm"
 description = "A powerful spin attack. Tier 2: 5m radius. Tier 3: 8m radius."
+icon = ExtResource("icon")
 mp_cost = 35
 base_cooldown = 6.0
 target_type = 2
 area_radius = 3.0
 tiers = Array[ExtResource("2_tier")]([SubResource("Tier1_RendingStorm"), SubResource("Tier2_RendingStorm"), SubResource("Tier3_RendingStorm")])
 base_damage = 50
+vfx_effect = ExtResource("vfx_eff")

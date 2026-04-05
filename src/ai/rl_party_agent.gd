@@ -1,103 +1,179 @@
 # rl_party_agent.gd
 class_name RLPartyAgent
-extends PartyAgent
+extends AIController3D
 
-## Reinforcement learning party agent. 
-## Wraps Godot RL Agents addon (replaces Unity ML-Agents).
+## Individual party AI agent (Evan=Tanker, Evelyn=Mage).
+## Extends AIController3D for Godot RL Agents addon.
+## ADR reference: ADR-0001 (Party AI: RL vs. Behavior Tree)
+
+enum Role { TANKER, MAGE }
 
 @export var state: PartyMemberState
 @export var skill_execution: SkillExecutionSystem
+@export var role: Role = Role.TANKER
 
-# Reward Tuning
-@export var reward_per_damage: float = 0.001
-@export var reward_ally_death: float = -1.0
-@export var reward_enemy_kill: float = 1.0
-@export var reward_encounter_win: float = 2.0
-@export var penalty_per_step: float = -0.001
+## Reward weights — tuned per role via Inspector
+@export var w_damage_dealt: float = 0.001
+@export var w_damage_received: float = 0.0003
+@export var w_skill_hit: float = 0.005
+@export var w_idle: float = 0.001
+@export var w_team: float = 0.4
 
-const MAX_OBSERVATION_DISTANCE: float = 20.0
+const MAX_OBS_DIST: float = 20.0
+const N_BASE_OBS: int = 39
+const N_DIRECTIVE: int = 7
+const N_OBS: int = N_BASE_OBS + N_DIRECTIVE  ## 46
 
 var _active_tier: int = 1
-var _total_reward: float = 0.0
+var _context: Dictionary = {}
+
+## Current directive from TeamPolicy (set each step by rl_arena_manager)
+var directive_target: int = 3   ## 0-2=enemy index, 3=none
+var directive_role: int = 0     ## 0=ATTACK, 1=DEFEND, 2=SUPPORT
+
+## Pending movement action for rl_arena_manager to execute
+var pending_move_action: int = 0
+
+## Last discrete action received (for rl_arena_manager to read)
+var last_action: int = 0
 
 func _ready() -> void:
+	super._ready()
 	if not state:
 		state = get_parent().get_node_or_null("PartyMemberState")
 	if not skill_execution:
 		skill_execution = get_parent().get_node_or_null("SkillExecutionSystem")
-		
 	if skill_execution:
 		skill_execution.damage_dealt.connect(_on_damage_dealt)
 
-func on_ai_resume_control(new_context: Dictionary) -> void:
-	super.on_ai_resume_control(new_context)
+## Called by rl_arena_manager each step after TeamPolicy outputs directives.
+func set_directive(target: int, role_mode: int) -> void:
+	directive_target = target
+	directive_role = role_mode
+
+## Called by rl_arena_manager to inject enemy/ally context each episode.
+func set_context(context: Dictionary) -> void:
+	_context = context
 	if state:
 		_active_tier = state.character_data.get_active_tier(state.character_level)
 
-func collect_observations() -> Array[float]:
+# --- AIController3D interface ---
+
+func get_obs() -> Dictionary:
 	var obs: Array[float] = []
-	
+
 	if not state:
-		for i in range(39): obs.append(0.0)
-		return obs
-		
-	# Self (10)
+		obs.resize(N_OBS)
+		obs.fill(0.0)
+		return {"obs": obs}
+
+	# Self (10): hp, mp, 4×cooldown_ratio, 4×can_use
 	obs.append(state.get_hp_ratio())
 	obs.append(state.get_mp_ratio())
 	for i in range(4):
-		obs.append(state.call("get_cooldown_ratio", i) if state.has_method("get_cooldown_ratio") else 0.0)
+		var cd: float = state.skill_cooldowns[i] if i < state.skill_cooldowns.size() else 0.0
+		var skill: SkillData = state.character_data.skill_slots[i] if i < state.character_data.skill_slots.size() else null
+		var max_cd: float = skill.base_cooldown if skill else 1.0
+		obs.append(clampf(cd / max_cd, 0.0, 1.0) if max_cd > 0.0 else 0.0)
 	for i in range(4):
 		obs.append(1.0 if state.can_use_skill(i) else 0.0)
-		
-	# Allies (9)
-	var allies: Array = context.get("allies", [])
-	var ally_count := 0
+
+	# Allies (9): up to 3 × (hp, mp, alive)
+	var allies: Array = _context.get("allies", [])
+	var ally_count: int = 0
 	for ally in allies:
-		if ally_count >= 3: break
-		if ally != state and ally:
-			obs.append(ally.call("get_hp_ratio") if ally.has_method("get_hp_ratio") else 0.0)
-			obs.append(ally.call("get_mp_ratio") if ally.has_method("get_mp_ratio") else 0.0)
-			obs.append(1.0 if ally.is_alive else 0.0)
+		if ally_count >= 3:
+			break
+		if is_instance_valid(ally) and ally != state:
+			obs.append(ally.get_hp_ratio() if ally.has_method("get_hp_ratio") else 0.0)
+			obs.append(ally.get_mp_ratio() if ally.has_method("get_mp_ratio") else 0.0)
+			obs.append(1.0 if ally.get("is_alive") else 0.0)
 			ally_count += 1
-	for i in range(ally_count, 3):
-		for j in range(3): obs.append(0.0)
-		
-	# Enemies (20)
-	var enemies: Array = context.get("enemies", [])
-	var enemy_count := 0
+	while ally_count < 3:
+		obs.append(0.0); obs.append(0.0); obs.append(0.0)
+		ally_count += 1
+
+	# Enemies (20): up to 4 × (hp, dist, alive, rel_x, rel_z)
+	var enemies: Array = _context.get("enemies", [])
+	var agent_pos: Vector3 = get_parent().global_position if get_parent() else Vector3.ZERO
+	var enemy_count: int = 0
 	for enemy in enemies:
-		if enemy_count >= 4: break
-		if enemy:
-			var rel_pos: Vector3 = enemy.global_position - state.get_parent().global_position
-			var dist := state.get_parent().global_position.distance_to(enemy.global_position)
-			obs.append(enemy.call("get_hp_ratio") if enemy.has_method("get_hp_ratio") else 0.0)
-			obs.append(clampf(dist / MAX_OBSERVATION_DISTANCE, 0.0, 1.0))
-			obs.append(1.0 if enemy.is_alive else 0.0)
-			obs.append(clampf(rel_pos.x / MAX_OBSERVATION_DISTANCE, -1.0, 1.0))
-			obs.append(clampf(rel_pos.z / MAX_OBSERVATION_DISTANCE, -1.0, 1.0))
+		if enemy_count >= 4:
+			break
+		if is_instance_valid(enemy):
+			var rel: Vector3 = enemy.global_position - agent_pos
+			obs.append(enemy.get_hp_ratio() if enemy.has_method("get_hp_ratio") else 0.0)
+			obs.append(clampf(agent_pos.distance_to(enemy.global_position) / MAX_OBS_DIST, 0.0, 1.0))
+			obs.append(1.0 if enemy.get("is_alive") else 0.0)
+			obs.append(clampf(rel.x / MAX_OBS_DIST, -1.0, 1.0))
+			obs.append(clampf(rel.z / MAX_OBS_DIST, -1.0, 1.0))
 			enemy_count += 1
-	for i in range(enemy_count, 4):
-		for j in range(5): obs.append(0.0)
-		
-	return obs
+	while enemy_count < 4:
+		for _j in range(5): obs.append(0.0)
+		enemy_count += 1
 
-func on_action_received(action: int) -> void:
-	if not is_active or not state or not state.is_alive: return
-	
-	if action >= 1 and action <= 4:
-		var slot_index := action - 1
-		if skill_execution:
-			skill_execution.try_activate_skill(slot_index, _active_tier)
-			
-	add_reward(penalty_per_step)
+	# Directive (7): focus_target one-hot×4 + role_mode one-hot×3
+	for i in range(4):
+		obs.append(1.0 if directive_target == i else 0.0)
+	for i in range(3):
+		obs.append(1.0 if directive_role == i else 0.0)
 
-func add_reward(amount: float) -> void:
-	_total_reward += amount
-	# In actual Godot RL Agents, we would call self.reward += amount
+	return {"obs": obs}
+
+func get_reward() -> float:
+	return reward
+
+func get_action_space() -> Dictionary:
+	return {
+		# 0=wait, 1-4=skill slots, 5=move→enemy, 6=move away, 7=move→ally, 8=hold
+		"action": {"size": 9, "action_type": "discrete"},
+	}
+
+func set_action(action: Dictionary) -> void:
+	var act: int = action.get("action", 0)
+	last_action = act
+	pending_move_action = 0
+
+	if not state or not state.is_alive:
+		return
+
+	match act:
+		1, 2, 3, 4:
+			if skill_execution:
+				var hit: bool = skill_execution.try_activate_skill(act - 1, _active_tier)
+				if hit:
+					reward += w_skill_hit
+		5:
+			pending_move_action = 5  ## move toward focus_target — rl_arena_manager executes
+		6:
+			pending_move_action = 6  ## move away
+		7:
+			pending_move_action = 7  ## move toward lowest-HP ally
+		8:
+			pending_move_action = 8  ## hold
+		_:
+			reward -= w_idle  ## action=0 or unknown = idle penalty
+
+func reset() -> void:
+	super.reset()
+	reward = 0.0
+	directive_target = 3
+	directive_role = 0
+	pending_move_action = 0
+	last_action = 0
+
+# --- Reward callbacks (called by rl_arena_manager) ---
+
+func add_team_reward(amount: float) -> void:
+	reward += amount * w_team
+
+func on_protection_bonus() -> void:
+	## Called when Evan (Tanker) is positioned between enemy and Evelyn
+	if role == Role.TANKER:
+		reward += 0.003
 
 func _on_damage_dealt(amount: int, _target: Node) -> void:
-	add_reward(amount * reward_per_damage)
+	reward += amount * w_damage_dealt
 
-func end_episode() -> void:
-	# Signal to RL addon
-	_total_reward = 0.0
+func on_damage_received(amount: int) -> void:
+	reward -= amount * w_damage_received

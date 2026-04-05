@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://6umfi7ual0kf"]
+
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Script" path="res://src/core/skill_effect_override.gd" id="3_override"]
+[ext_resource type="Resource" path="res://assets/data/status_effects/stun.tres" id="stun"]
+[ext_resource type="Texture2D" uid="uid://dde402qxpfufn" path="res://assets/art/vfx/skills/archer_super_shot_projectile.png" id="vfx_proj"]
+
+[sub_resource type="Resource" id="Tier1"]
+script = ExtResource("2_tier")
+effect_value = 1.6
+tier_description = "A charged power shot that stuns the target on hit."
+
+[sub_resource type="Resource" id="StunOverride"]
+script = ExtResource("3_override")
+effect_ref = ExtResource("stun")
+duration = 1.0
+
+[resource]
+script = ExtResource("1_skill")
+display_name = "Power Shot"
+skill_id = "archer_super_shot"
+description = "A charged shot dealing heavy damage and stunning the target briefly."
+mp_cost = 0
+base_cooldown = 14.0
+max_cast_range = 12.0
+area_radius = 0.0
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+base_damage = 65
+is_projectile = true
+vfx_projectile = ExtResource("vfx_proj")
+effect_overrides = Array[ExtResource("3_override")]([SubResource("StunOverride")])

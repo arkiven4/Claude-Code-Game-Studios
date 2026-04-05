@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://cbptvgqfvap37"]
+
+[ext_resource type="Script" uid="uid://dgp0nhn65w813" path="res://src/core/status_effect.gd" id="1_pie1d"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" uid="uid://cwcyemtmcm22a" path="res://assets/art/vfx/skills/grunt_shield_block_aura.png" id="vfx_eff"]
+
+[sub_resource type="Resource" id="Tier1"]
+script = ExtResource("2_tier")
+effect_value = 1.0
+tier_description = "Raises shield to absorb incoming damage."
+
+[resource]
+script = ExtResource("1_skill")
+skill_type = 3
+display_name = "Shield Block"
+skill_id = "grunt_shield_block"
+description = "The Grunt raises its shield, absorbing the next 60 damage."
+mp_cost = 0
+base_cooldown = 12.0
+target_type = 6
+area_radius = 0.0
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+vfx_effect = ExtResource("vfx_eff")
+shield_value = 60

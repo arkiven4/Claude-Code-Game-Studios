@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" path="res://src/core/skill_data.gd" id="1_skill"]
 [ext_resource type="Script" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/skill_icons/witch_spirit_ward_icon.png" id="icon"]
+[ext_resource type="Texture2D" path="res://assets/art/vfx/skills/witch_spirit_ward_effect.png" id="vfx_eff"]
 
 [sub_resource type="Resource" id="Tier1_SpiritWard"]
 script = ExtResource("2_tier")
@@ -29,14 +31,16 @@ script = ExtResource("1_skill")
 skill_type = 2
 display_name = "Spirit Ward"
 skill_id = "witch_spirit_ward"
-description = "Grants an ATK buff to all allies. Tier 2: 18% buff. Tier 3: 28% buff."
+description = "Grants an ATK buff to an ally or self. Tier 2: 18% buff. Tier 3: 28% buff."
 mp_cost = 20
-base_cooldown = 0.0
+base_cooldown = 8.0
 max_charges = 1
-target_type = 5
-target_count = 4
+target_type = 4
+target_count = 1
 area_radius = 0.0
 tiers = [SubResource("Tier1_SpiritWard"), SubResource("Tier2_SpiritWard"), SubResource("Tier3_SpiritWard")]
 base_damage = 0
 damage_category = 1
 base_heal = 0
+icon = ExtResource("icon")
+vfx_effect = ExtResource("vfx_eff")

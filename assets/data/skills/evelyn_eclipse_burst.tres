@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
 [ext_resource type="Script" uid="uid://dgp0nhn65w813" path="res://src/core/status_effect.gd" id="1_ygkue"]
 [ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" uid="uid://bk2krksu8wg15" path="res://assets/art/ui/skill_icons/evelyn_eclipse_burst_icon.png" id="icon"]
+[ext_resource type="Texture2D" uid="uid://cjh8p4cx7bgtv" path="res://assets/art/vfx/skills/evelyn_eclipse_burst_impact.png" id="vfx_eff"]
 
 [sub_resource type="Resource" id="Tier1"]
 script = ExtResource("2_tier")
@@ -27,6 +29,7 @@ script = ExtResource("1_skill")
 display_name = "Eclipse Burst"
 skill_id = "evelyn_eclipse_burst"
 description = "A cataclysmic burst of dark energy obliterates all nearby enemies. Tier 2: 3x multiplier, 7m. Tier 3: 3.5x multiplier, 10m."
+icon = ExtResource("icon")
 mp_cost = 60
 base_cooldown = 12.0
 target_type = 3
@@ -35,3 +38,4 @@ area_radius = 5.0
 tiers = Array[ExtResource("2_tier")]([SubResource("Tier1"), SubResource("Tier2"), SubResource("Tier3")])
 base_damage = 60
 damage_category = 3
+vfx_effect = ExtResource("vfx_eff")

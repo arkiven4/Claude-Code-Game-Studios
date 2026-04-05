@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://dgp0nhn65w813" path="res://src/core/status_effect.gd" id="1_p4bih"]
 [ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
 [ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" uid="uid://blkktonvfl70d" path="res://assets/art/ui/skill_icons/evan_hunters_mark_icon.png" id="icon"]
+[ext_resource type="Texture2D" uid="uid://cq2uuaw317m6f" path="res://assets/art/vfx/skills/evan_hunters_mark_effect.png" id="vfx_eff"]
+[ext_resource type="Texture2D" uid="uid://uul0ilibyplg" path="res://assets/art/vfx/skills/evan_hunters_mark_projectile.png" id="vfx_proj"]
 
 [sub_resource type="Resource" id="Tier1_HuntersMark"]
 script = ExtResource("2_tier")
@@ -25,6 +28,11 @@ skill_type = 1
 display_name = "Hunter's Mark"
 skill_id = "evan_hunters_mark"
 description = "Marks a target, increasing damage taken. Tier 2: 10s duration. Tier 3: 15s duration."
+icon = ExtResource("icon")
 mp_cost = 15
-base_cooldown = 0.0
+base_cooldown = 8.0
+max_cast_range = 12.0
 tiers = Array[ExtResource("2_tier")]([SubResource("Tier1_HuntersMark"), SubResource("Tier2_HuntersMark"), SubResource("Tier3_HuntersMark")])
+is_projectile = true
+vfx_projectile = ExtResource("vfx_proj")
+vfx_effect = ExtResource("vfx_eff")

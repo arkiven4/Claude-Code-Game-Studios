@@ -16,6 +16,8 @@ extends Node
 
 var party_members: Array[PartyMemberState] = []
 var enemies: Array[EnemyAIController] = []
+var _last_highlighted: Node3D = null
+var _highlight_vfx: MeshInstance3D = null
 
 func _ready() -> void:
 	for path in party_member_paths:
@@ -92,6 +94,20 @@ func _on_character_switched(previous: PartyMemberState, current: PartyMemberStat
 			previous.hp_changed.disconnect(combat_hud.update_active_health)
 		if previous.mp_changed.is_connected(combat_hud.update_active_mp):
 			previous.mp_changed.disconnect(combat_hud.update_active_mp)
+		if previous.shield_changed.is_connected(_on_active_shield_changed):
+			previous.shield_changed.disconnect(_on_active_shield_changed)
+		
+		var prev_skill_system: SkillExecutionSystem = previous.get_parent().get_node_or_null("SkillExecutionSystem")
+		if prev_skill_system:
+			if prev_skill_system.targeting_started.is_connected(_on_targeting_started):
+				prev_skill_system.targeting_started.disconnect(_on_targeting_started)
+			if prev_skill_system.targeting_ended.is_connected(_on_targeting_ended):
+				prev_skill_system.targeting_ended.disconnect(_on_targeting_ended)
+			if prev_skill_system.hover_target_changed.is_connected(_on_hover_target_changed):
+				prev_skill_system.hover_target_changed.disconnect(_on_hover_target_changed)
+			# Cancel any active targeting on switch
+			prev_skill_system.call("_exit_targeting_mode")
+
 		# Wire as inactive
 		_connect_inactive_member(previous)
 
@@ -144,11 +160,27 @@ func _connect_active_member(member: PartyMemberState) -> void:
 		member.hp_changed.connect(combat_hud.update_active_health)
 	if not member.mp_changed.is_connected(combat_hud.update_active_mp):
 		member.mp_changed.connect(combat_hud.update_active_mp)
-	
+	if not member.shield_changed.is_connected(_on_active_shield_changed):
+		member.shield_changed.connect(_on_active_shield_changed.bind(member))
+
+	var skill_system: SkillExecutionSystem = member.get_parent().get_node_or_null("SkillExecutionSystem")
+	if skill_system:
+		if not skill_system.targeting_started.is_connected(_on_targeting_started):
+			skill_system.targeting_started.connect(_on_targeting_started)
+		if not skill_system.targeting_ended.is_connected(_on_targeting_ended):
+			skill_system.targeting_ended.connect(_on_targeting_ended)
+		if not skill_system.hover_target_changed.is_connected(_on_hover_target_changed):
+			skill_system.hover_target_changed.connect(_on_hover_target_changed)
+
 	# Full refresh of HUD for the new active member
 	combat_hud.update_active_health(member.current_hp, member.max_hp)
 	combat_hud.update_active_mp(member.current_mp, member.max_mp)
+	combat_hud.update_active_shield(member.shield_value)
 	combat_hud.set_active_character(member)
+
+func _on_active_shield_changed(value: int, _member: PartyMemberState) -> void:
+	if combat_hud:
+		combat_hud.update_active_shield(value)
 
 func _connect_inactive_member(member: PartyMemberState) -> void:
 	if not member or not combat_hud: return
@@ -157,3 +189,63 @@ func _connect_inactive_member(member: PartyMemberState) -> void:
 	
 	# Full refresh of HUD for the new inactive member
 	combat_hud.set_inactive_character(member)
+
+func _on_targeting_started(mode: int) -> void:
+	print("[ArenaWiring] Targeting started: mode=", mode)
+	if combat_hud:
+		var color := Color.GREEN if mode == 1 else Color.WHITE # FRIENDLY = 1
+		combat_hud.show_crosshair(color)
+
+func _on_targeting_ended() -> void:
+	if combat_hud:
+		combat_hud.hide_crosshair()
+	_set_highlight(null)
+
+func _on_hover_target_changed(target: Node) -> void:
+	print("[ArenaWiring] Hover target changed: ", target.name if target else "null")
+	var target_char: Node3D = null
+	if target is PartyMemberState:
+		target_char = target.get_parent() as Node3D
+	_set_highlight(target_char)
+
+func _set_highlight(node: Node3D) -> void:
+	if _last_highlighted == node: return
+	
+	if _highlight_vfx:
+		_highlight_vfx.queue_free()
+		_highlight_vfx = null
+			
+	_last_highlighted = node
+	
+	if _last_highlighted:
+		print("[ArenaWiring] Spawning highlight VFX on ", _last_highlighted.name)
+		_highlight_vfx = MeshInstance3D.new()
+		var cylinder := CylinderMesh.new()
+		cylinder.top_radius = 0.8
+		cylinder.bottom_radius = 0.8
+		cylinder.height = 2.2
+		_highlight_vfx.mesh = cylinder
+		
+		var mat := StandardMaterial3D.new()
+		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		mat.albedo_color = Color(0.0, 1.0, 0.0, 0.4) # Brighter green
+		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+		mat.no_depth_test = true # Always visible
+		mat.emission_enabled = true
+		mat.emission = Color(0.0, 1.0, 0.0)
+		mat.emission_energy_multiplier = 1.5
+		
+		_highlight_vfx.material_override = mat
+		_last_highlighted.add_child(_highlight_vfx)
+		_highlight_vfx.position = Vector3(0, 1.0, 0) # Center on character body
+
+func _get_mesh(node: Node3D) -> MeshInstance3D:
+	if not node: return null
+	var mesh := node.get_node_or_null("Mesh") as MeshInstance3D
+	if not mesh:
+		# Fallback: search children
+		for child in node.get_children():
+			if child is MeshInstance3D:
+				return child
+	return mesh

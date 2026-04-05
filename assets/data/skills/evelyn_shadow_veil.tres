@@ -1,8 +1,11 @@
 [gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://fs2dtkmnlv6s"]
 
-[ext_resource type="Script" uid="uid://dgp0nhn65w813" path="res://src/core/status_effect.gd" id="1_nui58"]
-[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
-[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Script" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Script" path="res://src/core/skill_effect_override.gd" id="3_override"]
+[ext_resource type="Texture2D" uid="uid://cp6x03gnwn6r3" path="res://assets/art/ui/skill_icons/evelyn_shadow_veil_icon.png" id="icon"]
+[ext_resource type="Resource" path="res://assets/data/status_effects/invincibility.tres" id="invinc"]
+[ext_resource type="Texture2D" uid="uid://bge0towm7wci5" path="res://assets/art/vfx/skills/evelyn_shadow_veil_effect.png" id="vfx_eff"]
 
 [sub_resource type="Resource" id="Tier1"]
 script = ExtResource("2_tier")
@@ -19,15 +22,22 @@ script = ExtResource("2_tier")
 effect_value = 1.0
 duration = 3.5
 
+[sub_resource type="Resource" id="InvincOverride"]
+script = ExtResource("3_override")
+effect_ref = ExtResource("invinc")
+
 [resource]
 script = ExtResource("1_skill")
 skill_type = 3
 display_name = "Shadow Veil"
 skill_id = "evelyn_shadow_veil"
 description = "Evelyn becomes briefly untouchable in shadow. Tier 2: 2.5s invincibility. Tier 3: 3.5s invincibility."
+icon = ExtResource("icon")
 mp_cost = 25
-base_cooldown = 0.0
+base_cooldown = 6.0
 target_type = 6
 tiers = Array[ExtResource("2_tier")]([SubResource("Tier1"), SubResource("Tier2"), SubResource("Tier3")])
+effect_overrides = Array[ExtResource("3_override")]([SubResource("InvincOverride")])
+vfx_effect = ExtResource("vfx_eff")
 grants_invincibility = true
 invincibility_duration = 1.5

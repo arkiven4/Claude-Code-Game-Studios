@@ -9,6 +9,8 @@
 [ext_resource type="Script" uid="uid://cwe10lc2mexng" path="res://src/gameplay/hitbox_component.gd" id="7_hitbox"]
 [ext_resource type="Script" uid="uid://c5qb86qpl22em" path="res://src/gameplay/hurtbox_component.gd" id="8_hurtbox"]
 [ext_resource type="PackedScene" uid="uid://bqulylm2mckm" path="res://assets/art/characters/anime girl 3d model.glb" id="9_model"]
+[ext_resource type="PackedScene" uid="uid://dp7n5m4x1uqn0" path="res://assets/scenes/Projectile.tscn" id="10_proj"]
+[ext_resource type="Script" uid="uid://cwuunfo02hcyp" path="res://src/gameplay/status_effect_indicator.gd" id="11_sei"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_1"]
 radius = 0.4
@@ -37,7 +39,6 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1")
 
 [node name="CharacterModel" parent="." unique_id=1855752074 instance=ExtResource("9_model")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0.08279431, 0)
-layers = 3
 
 [node name="Collision" type="CollisionShape3D" parent="." unique_id=1615599594]
 shape = SubResource("CapsuleShape3D_1")
@@ -53,6 +54,7 @@ script = ExtResource("3_effects")
 script = ExtResource("4_skill")
 state = NodePath("../PartyMemberState")
 status_effects = NodePath("../StatusEffectsSystem")
+projectile_scene = ExtResource("10_proj")
 
 [node name="CharacterStateManager" type="Node" parent="." unique_id=1541683972]
 script = ExtResource("5_manager")
@@ -80,3 +82,7 @@ parent_node = NodePath("../PartyMemberState")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HurtboxComponent" unique_id=146609743]
 shape = SubResource("CapsuleShape3D_2")
+
+[node name="StatusEffectIndicator" type="Node3D" parent="." unique_id=146609744]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.98764455, 0)
+script = ExtResource("11_sei")

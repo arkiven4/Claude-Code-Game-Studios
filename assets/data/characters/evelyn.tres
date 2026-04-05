@@ -6,7 +6,7 @@
 [ext_resource type="Resource" uid="uid://dyxuno2iq203u" path="res://assets/data/skills/evelyn_dark_bolt.tres" id="3_skill1"]
 [ext_resource type="Resource" uid="uid://fs2dtkmnlv6s" path="res://assets/data/skills/evelyn_shadow_veil.tres" id="4_skill2"]
 [ext_resource type="Resource" uid="uid://det58thfugey" path="res://assets/data/skills/evelyn_abyssal_chain.tres" id="5_skill3"]
-[ext_resource type="Resource" uid="uid://nt4o1gu4a1m1" path="res://assets/data/skills/evelyn_eclipse_burst.tres" id="6_skill4"]
+[ext_resource type="Resource" path="res://assets/data/skills/evelyn_shadow_mend.tres" id="7_ngpjl"]
 
 [resource]
 script = ExtResource("1_char")
@@ -23,5 +23,5 @@ base_crit = 0.06
 main_char_hp_bonus = 3
 main_char_atk_bonus = 1
 main_char_mp_bonus = 2
-skill_slots = Array[ExtResource("3_ngpjl")]([ExtResource("3_skill1"), ExtResource("4_skill2"), ExtResource("5_skill3"), ExtResource("6_skill4")])
+skill_slots = Array[ExtResource("3_ngpjl")]([ExtResource("3_skill1"), ExtResource("4_skill2"), ExtResource("5_skill3"), ExtResource("7_ngpjl")])
 basic_attack = ExtResource("2_basic")

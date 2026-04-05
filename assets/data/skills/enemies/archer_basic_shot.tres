@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://daow7ayjr61ya"]
+
+[ext_resource type="Script" uid="uid://dgp0nhn65w813" path="res://src/core/status_effect.gd" id="1_ix6lx"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" uid="uid://lp0np3up0thi" path="res://assets/art/vfx/skills/archer_basic_shot_projectile.png" id="vfx_proj"]
+
+[sub_resource type="Resource" id="Tier1"]
+script = ExtResource("2_tier")
+effect_value = 0.85
+tier_description = "A quick arrow shot fired from range."
+
+[resource]
+script = ExtResource("1_skill")
+display_name = "Basic Shot"
+skill_id = "archer_basic_shot"
+description = "A quick arrow shot from range."
+mp_cost = 0
+base_cooldown = 3.0
+max_cast_range = 10.0
+area_radius = 0.0
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+base_damage = 25
+is_projectile = true
+vfx_projectile = ExtResource("vfx_proj")

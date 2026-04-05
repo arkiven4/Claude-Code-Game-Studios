@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" path="res://src/core/skill_data.gd" id="1_skill"]
 [ext_resource type="Script" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/skill_icons/witch_covens_wrath_icon.png" id="icon"]
+[ext_resource type="Texture2D" path="res://assets/art/vfx/skills/witch_covens_wrath_impact.png" id="vfx_eff"]
 
 [sub_resource type="Resource" id="Tier1_CovensWrath"]
 script = ExtResource("2_tier")
@@ -39,3 +41,5 @@ area_radius = 8.0
 tiers = [SubResource("Tier1_CovensWrath"), SubResource("Tier2_CovensWrath"), SubResource("Tier3_CovensWrath")]
 base_damage = 70
 damage_category = 1
+icon = ExtResource("icon")
+vfx_effect = ExtResource("vfx_eff")

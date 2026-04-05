@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://dgp0nhn65w813" path="res://src/core/status_effect.gd" id="1_m7ao8"]
 [ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
 [ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" uid="uid://u4x1udexcvsm" path="res://assets/art/ui/skill_icons/evan_crescent_slash_icon.png" id="icon"]
+[ext_resource type="Texture2D" uid="uid://nsqtfwt62m40" path="res://assets/art/vfx/skills/evan_crescent_slash_effect.png" id="vfx_eff"]
 
 [sub_resource type="Resource" id="Tier1_CrescentSlash"]
 script = ExtResource("2_tier")
@@ -22,7 +24,11 @@ target_count = 3
 script = ExtResource("1_skill")
 display_name = "Crescent Slash"
 skill_id = "evan_crescent_slash"
-description = "A wide horizontal slash. Tier 2: hits 2 enemies. Tier 3: hits 3 enemies."
+description = "A wide horizontal slash in a cone arc. Tier 2: hits 2 enemies. Tier 3: hits 3 enemies."
+icon = ExtResource("icon")
 base_cooldown = 1.2
+target_type = 2
+area_radius = 3.0
 tiers = Array[ExtResource("2_tier")]([SubResource("Tier1_CrescentSlash"), SubResource("Tier2_CrescentSlash"), SubResource("Tier3_CrescentSlash")])
 base_damage = 30
+vfx_effect = ExtResource("vfx_eff")

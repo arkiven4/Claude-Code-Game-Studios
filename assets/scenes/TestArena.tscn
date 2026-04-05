@@ -9,11 +9,12 @@
 [ext_resource type="Script" uid="uid://chpoegb3tlcpj" path="res://src/core/audio/sfx_player.gd" id="7_sfx"]
 [ext_resource type="Script" uid="uid://dcvm8ktng0nuh" path="res://src/gameplay/camera_controller.gd" id="8_camera"]
 [ext_resource type="PackedScene" uid="uid://bgfdfr1n2rhl" path="res://assets/scenes/characters/Evelyn.tscn" id="9_evelyn"]
-[ext_resource type="PackedScene" path="res://assets/scenes/characters/Evan.tscn" id="10_evan"]
-[ext_resource type="PackedScene" path="res://assets/scenes/enemies/GruntMelee.tscn" id="11_grunt"]
+[ext_resource type="PackedScene" uid="uid://bixlue2j75gbg" path="res://assets/scenes/characters/Evan.tscn" id="10_evan"]
+[ext_resource type="PackedScene" uid="uid://d25c0yibrlo5p" path="res://assets/scenes/enemies/GruntMelee.tscn" id="11_grunt"]
 [ext_resource type="PackedScene" path="res://assets/scenes/enemies/ArcherRanged.tscn" id="12_archer"]
 [ext_resource type="PackedScene" path="res://assets/scenes/ui/CombatHUD.tscn" id="13_hud"]
 [ext_resource type="Script" uid="uid://cf5h4nqx6foi6" path="res://src/gameplay/arena_wiring.gd" id="14_wiring"]
+[ext_resource type="PackedScene" path="res://assets/scenes/enemies/MageEnemy.tscn" id="15_mage"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 sky_top_color = Color(0.2, 0.266667, 0.333333, 1)
@@ -48,6 +49,7 @@ shadow_enabled = true
 [node name="Ground" type="StaticBody3D" parent="." unique_id=729131801]
 
 [node name="Mesh" type="MeshInstance3D" parent="Ground" unique_id=1595612953]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.724411, -0.12428284, 2.5190876)
 mesh = SubResource("PlaneMesh_1")
 surface_material_override/0 = SubResource("StandardMaterial3D_1")
 
@@ -57,7 +59,7 @@ shape = SubResource("BoxShape3D_1")
 
 [node name="CombatEncounterManager" type="Node" parent="." unique_id=1992922717]
 script = ExtResource("1_combat")
-enemy_paths = Array[NodePath]([NodePath("../Enemies/GruntMelee_1"), NodePath("../Enemies/GruntMelee_2"), NodePath("../Enemies/ArcherRanged_1")])
+enemy_paths = Array[NodePath]([NodePath("../Enemies/GruntMelee_1"), NodePath("../Enemies/GruntMelee_2"), NodePath("../Enemies/ArcherRanged_1"), NodePath("../Enemies/MageEnemy_1")])
 party_member_paths = Array[NodePath]([NodePath("../Party/Evelyn/PartyMemberState"), NodePath("../Party/Evan/PartyMemberState")])
 
 [node name="CharacterSwitchController" type="Node" parent="." unique_id=399154685 node_paths=PackedStringArray("input_manager")]
@@ -94,7 +96,7 @@ follow_target = NodePath("../Party/Evelyn")
 [node name="CameraPivot" type="Node3D" parent="CameraController" unique_id=1404959941]
 
 [node name="Camera" type="Camera3D" parent="CameraController/CameraPivot" unique_id=1226139569]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 2)
 current = true
 
 [node name="Party" type="Node3D" parent="." unique_id=1819767695]
@@ -116,6 +118,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.9, 25)
 [node name="ArcherRanged_1" parent="Enemies" unique_id=1349000536 groups=["Hurtboxes"] instance=ExtResource("12_archer")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 26.45758)
 
+[node name="MageEnemy_1" parent="Enemies" unique_id=1349000537 groups=["Hurtboxes"] instance=ExtResource("15_mage")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.9, 23)
+
 [node name="CombatHUD" parent="." unique_id=2051617569 instance=ExtResource("13_hud")]
 
 [node name="ArenaWiring" type="Node" parent="." unique_id=2013908921 node_paths=PackedStringArray("encounter_manager", "switch_controller", "camera_controller", "input_manager", "player_movement_controller", "combat_hud")]
@@ -126,5 +131,5 @@ camera_controller = NodePath("../CameraController")
 input_manager = NodePath("../InputManager")
 player_movement_controller = NodePath("../PlayerMovementController")
 party_member_paths = Array[NodePath]([NodePath("../Party/Evelyn/PartyMemberState"), NodePath("../Party/Evan/PartyMemberState")])
-enemy_paths = Array[NodePath]([NodePath("../Enemies/GruntMelee_1"), NodePath("../Enemies/GruntMelee_2"), NodePath("../Enemies/ArcherRanged_1")])
+enemy_paths = Array[NodePath]([NodePath("../Enemies/GruntMelee_1"), NodePath("../Enemies/GruntMelee_2"), NodePath("../Enemies/ArcherRanged_1"), NodePath("../Enemies/MageEnemy_1")])
 combat_hud = NodePath("../CombatHUD")

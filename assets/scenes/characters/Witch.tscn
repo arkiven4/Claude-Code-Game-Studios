@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://src/gameplay/equipment_manager.gd" id="6_equip"]
 [ext_resource type="Script" path="res://src/gameplay/hitbox_component.gd" id="7_hitbox"]
 [ext_resource type="Script" path="res://src/gameplay/hurtbox_component.gd" id="8_hurtbox"]
+[ext_resource type="Script" path="res://src/gameplay/status_effect_indicator.gd" id="9_sei"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_1"]
 radius = 0.4
@@ -70,9 +71,12 @@ far = 0.3
 current = false
 
 [node name="HurtboxComponent" type="Area3D" parent="." groups=["Hurtboxes"]]
-collision_layer = 8
+collision_layer = 2
 collision_mask = 4
 script = ExtResource("8_hurtbox")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HurtboxComponent"]
 shape = SubResource("CapsuleShape3D_2")
+
+[node name="StatusEffectIndicator" type="Node3D" parent="."]
+script = ExtResource("9_sei")

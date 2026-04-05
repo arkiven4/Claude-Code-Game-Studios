@@ -1,8 +1,9 @@
 [gd_resource type="Resource" script_class="CharacterData" format=3 uid="uid://t67gs2ip4ny8"]
 
-[ext_resource type="Script" uid="uid://cd1p7b1fjqu6o" path="res://src/core/character_data.gd" id="1_char"]
+[ext_resource type="Script" path="res://src/core/character_data.gd" id="1_char"]
 [ext_resource type="Resource" path="res://assets/data/skills/basic_sword_swing.tres" id="2_basic"]
-[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="3_kdl4g"]
+[ext_resource type="Resource" path="res://assets/data/skills/evan_parry_stance.tres" id="2_parry"]
+[ext_resource type="Script" path="res://src/core/skill_data.gd" id="3_kdl4g"]
 [ext_resource type="Resource" uid="uid://laka8qq7htvt" path="res://assets/data/skills/evan_crescent_slash.tres" id="3_skill1"]
 [ext_resource type="Resource" uid="uid://bqwoiwnv20d0l" path="res://assets/data/skills/evan_shield_bash.tres" id="4_skill2"]
 [ext_resource type="Resource" uid="uid://cmrga7hdducqd" path="res://assets/data/skills/evan_hunters_mark.tres" id="5_skill3"]
@@ -29,3 +30,4 @@ main_char_def_bonus = 1
 main_char_mp_bonus = 1
 skill_slots = Array[ExtResource("3_kdl4g")]([ExtResource("3_skill1"), ExtResource("4_skill2"), ExtResource("5_skill3"), ExtResource("6_skill4")])
 basic_attack = ExtResource("2_basic")
+special_attack = ExtResource("2_parry")

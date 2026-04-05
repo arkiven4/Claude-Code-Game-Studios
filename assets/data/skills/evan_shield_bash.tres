@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
 [ext_resource type="Script" uid="uid://dgp0nhn65w813" path="res://src/core/status_effect.gd" id="1_w8l22"]
 [ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" uid="uid://crorvn6km4fvm" path="res://assets/art/ui/skill_icons/evan_shield_bash_icon.png" id="icon"]
+[ext_resource type="Texture2D" uid="uid://d2r3ypk68jfx6" path="res://assets/art/vfx/skills/evan_shield_bash_impact.png" id="vfx_eff"]
 
 [sub_resource type="Resource" id="Tier1_ShieldBash"]
 script = ExtResource("2_tier")
@@ -21,7 +23,9 @@ script = ExtResource("1_skill")
 display_name = "Shield Bash"
 skill_id = "evan_shield_bash"
 description = "Strikes an enemy with the shield. Tier 2: 1.5x effect. Tier 3: 2.0x effect."
+icon = ExtResource("icon")
 mp_cost = 20
 base_cooldown = 3.0
 tiers = Array[ExtResource("2_tier")]([SubResource("Tier1_ShieldBash"), SubResource("Tier2_ShieldBash"), SubResource("Tier3_ShieldBash")])
 base_damage = 20
+vfx_effect = ExtResource("vfx_eff")

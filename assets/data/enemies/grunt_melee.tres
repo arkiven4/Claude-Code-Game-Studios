@@ -1,7 +1,31 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://ckhsrldb8uyei"]
 
 [ext_resource type="Script" uid="uid://pjoxxkra8hlc" path="res://src/core/enemy_data.gd" id="1_enemy"]
-[ext_resource type="Script" uid="uid://cebmr5g6qwykx" path="res://src/core/enemy_skill_entry.gd" id="2_dslaw"]
+[ext_resource type="Script" uid="uid://cebmr5g6qwykx" path="res://src/core/enemy_skill_entry.gd" id="2_entry"]
+[ext_resource type="Resource" uid="uid://pa5dlw84xtxv" path="res://assets/data/skills/enemies/grunt_basic_slash.tres" id="3_basic"]
+[ext_resource type="Resource" uid="uid://camh6pylydyuq" path="res://assets/data/skills/enemies/grunt_super_slash.tres" id="4_super"]
+[ext_resource type="Resource" uid="uid://cbptvgqfvap37" path="res://assets/data/skills/enemies/grunt_shield_block.tres" id="5_shield"]
+
+[sub_resource type="Resource" id="Entry_Basic"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("3_basic")
+cooldown = 0.8
+weight = 3.0
+max_range = 3.0
+
+[sub_resource type="Resource" id="Entry_Super"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("4_super")
+cooldown = 8.0
+weight = 2.0
+max_range = 3.5
+
+[sub_resource type="Resource" id="Entry_Shield"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("5_shield")
+cooldown = 12.0
+max_range = 999.0
+condition = 3
 
 [resource]
 script = ExtResource("1_enemy")
@@ -10,3 +34,5 @@ display_name = "Grunt"
 base_max_hp = 150
 base_atk = 25
 base_def = 15
+magical_resistance = 1.2
+skill_list = Array[ExtResource("2_entry")]([SubResource("Entry_Basic"), SubResource("Entry_Super"), SubResource("Entry_Shield")])

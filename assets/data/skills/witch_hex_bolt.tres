@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" path="res://src/core/skill_data.gd" id="1_skill"]
 [ext_resource type="Script" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/skill_icons/witch_hex_bolt_icon.png" id="icon"]
+[ext_resource type="Texture2D" uid="uid://dvqd2a2neqfhj" path="res://assets/art/vfx/skills/witch_hex_bolt_projectile.png" id="vfx_proj"]
 
 [sub_resource type="Resource" id="Tier1_HexBolt"]
 script = ExtResource("2_tier")
@@ -35,7 +37,11 @@ base_cooldown = 0.8
 max_charges = 1
 target_type = 0
 target_count = 1
+max_cast_range = 10.0
 area_radius = 0.0
 tiers = [SubResource("Tier1_HexBolt"), SubResource("Tier2_HexBolt"), SubResource("Tier3_HexBolt")]
 base_damage = 20
 damage_category = 1
+is_projectile = true
+vfx_projectile = ExtResource("vfx_proj")
+icon = ExtResource("icon")

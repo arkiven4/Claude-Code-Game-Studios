@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" path="res://src/core/skill_data.gd" id="1_skill"]
 [ext_resource type="Script" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/skill_icons/witch_moonfire_icon.png" id="icon"]
+[ext_resource type="Texture2D" uid="uid://up8yivpaqhsg" path="res://assets/art/vfx/skills/witch_moonfire_projectile.png" id="vfx_proj"]
 
 [sub_resource type="Resource" id="Tier1_Moonfire"]
 script = ExtResource("2_tier")
@@ -39,3 +41,6 @@ area_radius = 3.0
 tiers = [SubResource("Tier1_Moonfire"), SubResource("Tier2_Moonfire"), SubResource("Tier3_Moonfire")]
 base_damage = 45
 damage_category = 1
+is_projectile = true
+vfx_projectile = ExtResource("vfx_proj")
+icon = ExtResource("icon")

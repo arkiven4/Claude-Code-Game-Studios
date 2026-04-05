@@ -50,5 +50,7 @@ config/
 production/session-state/
 production/session-logs/
 
+prototypes/rl-training/logs
+prototypes/rl-training/models
 *.glb
 *.jpg

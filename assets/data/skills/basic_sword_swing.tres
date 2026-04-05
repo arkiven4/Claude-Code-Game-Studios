@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dgp0nhn65w813" path="res://src/core/status_effect.gd" id="1_gm0xv"]
 [ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
 [ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" uid="uid://bjwbci6e0n0g5" path="res://assets/art/vfx/skills/basic_sword_swing_impact.png" id="vfx_eff"]
 
 [sub_resource type="Resource" id="Tier1"]
 script = ExtResource("2_tier")
@@ -22,3 +23,4 @@ target_count = 5
 area_radius = 2.5
 tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
 base_damage = 15
+vfx_effect = ExtResource("vfx_eff")

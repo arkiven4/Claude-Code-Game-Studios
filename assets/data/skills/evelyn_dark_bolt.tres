@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://dgp0nhn65w813" path="res://src/core/status_effect.gd" id="1_efmn8"]
 [ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
 [ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" uid="uid://b2k60x64f76ry" path="res://assets/art/ui/skill_icons/evelyn_dark_bolt_icon.png" id="icon"]
+[ext_resource type="Texture2D" uid="uid://co0ctg0ler6o0" path="res://assets/art/vfx/skills/evelyn_dark_bolt_projectile.png" id="vfx_proj"]
 
 [sub_resource type="Resource" id="Tier1"]
 script = ExtResource("2_tier")
@@ -23,9 +25,12 @@ script = ExtResource("1_skill")
 display_name = "Dark Bolt"
 skill_id = "evelyn_dark_bolt"
 description = "Fires a bolt of dark energy at an enemy. Tier 2: hits 2 enemies. Tier 3: hits 3 enemies."
+icon = ExtResource("icon")
 mp_cost = 15
 base_cooldown = 1.0
 max_cast_range = 10.0
 tiers = Array[ExtResource("2_tier")]([SubResource("Tier1"), SubResource("Tier2"), SubResource("Tier3")])
 base_damage = 25
 damage_category = 3
+is_projectile = true
+vfx_projectile = ExtResource("vfx_proj")

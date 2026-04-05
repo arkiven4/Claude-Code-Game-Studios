@@ -1,8 +1,11 @@
 [gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://det58thfugey"]
 
 [ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
-[ext_resource type="Script" uid="uid://dgp0nhn65w813" path="res://src/core/status_effect.gd" id="1_w0ax0"]
 [ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Script" path="res://src/core/skill_effect_override.gd" id="3_override"]
+[ext_resource type="Texture2D" uid="uid://bdf63bofohg47" path="res://assets/art/ui/skill_icons/evelyn_abyssal_chain_icon.png" id="icon"]
+[ext_resource type="Resource" path="res://assets/data/status_effects/stun.tres" id="stun"]
+[ext_resource type="Texture2D" uid="uid://oepgad4wsreh" path="res://assets/art/vfx/skills/evelyn_abyssal_chain_effect.png" id="vfx_eff"]
 
 [sub_resource type="Resource" id="Tier1"]
 script = ExtResource("2_tier")
@@ -20,14 +23,25 @@ effect_value = 1.5
 target_count = 3
 area_radius = 5.0
 
+[sub_resource type="Resource" id="StunOverride"]
+script = ExtResource("3_override")
+effect_ref = ExtResource("stun")
+duration = 1.5
+
 [resource]
 script = ExtResource("1_skill")
 display_name = "Abyssal Chain"
 skill_id = "evelyn_abyssal_chain"
-description = "Dark chains lash nearby enemies dealing damage and slowing them. Tier 2: hits 2 in 3m AoE. Tier 3: hits 3 in 5m AoE."
+description = "Dark chains lash a distant enemy binding them in place. Tier 2: hits 2 enemies in 3m AoE. Tier 3: hits 3 in 5m AoE."
+icon = ExtResource("icon")
 mp_cost = 30
 base_cooldown = 4.0
 target_type = 2
+max_cast_range = 10.0
 tiers = Array[ExtResource("2_tier")]([SubResource("Tier1"), SubResource("Tier2"), SubResource("Tier3")])
 base_damage = 40
 damage_category = 3
+is_projectile = true
+vfx_projectile = ExtResource("vfx_eff")
+vfx_effect = ExtResource("vfx_eff")
+effect_overrides = Array[ExtResource("3_override")]([SubResource("StunOverride")])

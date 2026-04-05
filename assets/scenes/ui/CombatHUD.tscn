@@ -1,13 +1,14 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://kvt1qcbl81ag"]
 
-[ext_resource type="Script" path="res://src/ui/combat_hud.gd" id="1_hud"]
-[ext_resource type="Script" path="res://src/ui/skill_slot_ui.gd" id="2_slot"]
-[ext_resource type="PackedScene" path="res://assets/scenes/ui/ActivePortrait.tscn" id="3_portrait"]
+[ext_resource type="Script" uid="uid://bn40notonv1a7" path="res://src/ui/combat_hud.gd" id="1_hud"]
+[ext_resource type="Script" uid="uid://bqdn787r7kbrl" path="res://src/ui/skill_slot_ui.gd" id="2_slot"]
+[ext_resource type="Script" uid="uid://bqw8ygy8mnyju" path="res://src/ui/hud_status_effect_indicator.gd" id="3_hud_sfx"]
+[ext_resource type="PackedScene" path="res://assets/scenes/ui/ActivePortrait.tscn" id="4_portrait"]
 
-[node name="CombatHUD" type="CanvasLayer"]
+[node name="CombatHUD" type="CanvasLayer" unique_id=832320958]
 script = ExtResource("1_hud")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1350552501]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -18,50 +19,62 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=788081662]
 layout_mode = 2
 
-[node name="ActiveSection" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="ActiveSection" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1446592844]
 layout_mode = 2
 
-[node name="ActivePortrait" parent="MarginContainer/VBoxContainer/ActiveSection" instance=ExtResource("3_portrait")]
+[node name="ActivePortrait" parent="MarginContainer/VBoxContainer/ActiveSection" unique_id=1415135980 instance=ExtResource("4_portrait")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ActiveStats" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ActiveSection"]
+[node name="ActiveStats" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ActiveSection" unique_id=167691646]
 layout_mode = 2
 
-[node name="ActiveHPBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/ActiveSection/ActiveStats"]
+[node name="ActiveShieldBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/ActiveSection/ActiveStats" unique_id=882262812]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(200, 8)
+layout_mode = 2
+
+[node name="ActiveHPBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/ActiveSection/ActiveStats" unique_id=1491670490]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 20)
 layout_mode = 2
 value = 100.0
 
-[node name="ActiveMPBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/ActiveSection/ActiveStats"]
+[node name="ActiveMPBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/ActiveSection/ActiveStats" unique_id=510358433]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 20)
 layout_mode = 2
 value = 100.0
 
-[node name="InactiveSection" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="StatusEffectsRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ActiveSection/ActiveStats" unique_id=900570175]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("3_hud_sfx")
+
+[node name="InactiveSection" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1099962904]
 layout_mode = 2
 
-[node name="InactivePortrait" type="TextureRect" parent="MarginContainer/VBoxContainer/InactiveSection"]
+[node name="InactivePortrait" type="TextureRect" parent="MarginContainer/VBoxContainer/InactiveSection" unique_id=967644495]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
 
-[node name="InactiveHPBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/InactiveSection"]
+[node name="InactiveHPBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/InactiveSection" unique_id=1076760815]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(160, 16)
 layout_mode = 2
 value = 100.0
 
-[node name="SwitchCooldownLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="SwitchCooldownLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=63621559]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SkillBar" type="HBoxContainer" parent="."]
+[node name="SkillBar" type="HBoxContainer" parent="." unique_id=1541418735]
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -72,28 +85,26 @@ offset_right = 136.0
 offset_bottom = -16.0
 theme_override_constants/separation = 8
 
-[node name="SkillSlot0" type="Control" parent="SkillBar"]
+[node name="SkillSlot0" type="Control" parent="SkillBar" unique_id=230496282]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 script = ExtResource("2_slot")
-slot_index = 0
-key_label_text = "J"
 
-[node name="SkillSlot1" type="Control" parent="SkillBar"]
+[node name="SkillSlot1" type="Control" parent="SkillBar" unique_id=1716308032]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 script = ExtResource("2_slot")
 slot_index = 1
 key_label_text = "K"
 
-[node name="SkillSlot2" type="Control" parent="SkillBar"]
+[node name="SkillSlot2" type="Control" parent="SkillBar" unique_id=485560082]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 script = ExtResource("2_slot")
 slot_index = 2
 key_label_text = "L"
 
-[node name="SkillSlot3" type="Control" parent="SkillBar"]
+[node name="SkillSlot3" type="Control" parent="SkillBar" unique_id=1849420896]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 script = ExtResource("2_slot")

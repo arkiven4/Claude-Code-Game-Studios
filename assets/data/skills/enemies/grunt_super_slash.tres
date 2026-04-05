@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://camh6pylydyuq"]
+
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://dgp0nhn65w813" path="res://src/core/status_effect.gd" id="1_tq8gk"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" uid="uid://bd5eog75ad27i" path="res://assets/art/vfx/skills/grunt_super_slash_impact.png" id="vfx_eff"]
+
+[sub_resource type="Resource" id="Tier1"]
+script = ExtResource("2_tier")
+effect_value = 1.4
+tier_description = "A heavy overhead slam with a wide arc."
+
+[resource]
+script = ExtResource("1_skill")
+display_name = "Super Slash"
+skill_id = "grunt_super_slash"
+description = "A powerful overhead slam dealing heavy damage in a wide arc."
+mp_cost = 0
+base_cooldown = 8.0
+target_type = 2
+area_radius = 3.5
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+base_damage = 50
+vfx_effect = ExtResource("vfx_eff")

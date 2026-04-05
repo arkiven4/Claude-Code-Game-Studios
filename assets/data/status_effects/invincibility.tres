@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://src/core/status_effect.gd" id="1_fx"]
+
+[resource]
+script = ExtResource("1_fx")
+effect_id = "invincibility"
+display_name = "Invincible"
+description = "Takes no damage."
+effect_type = 0
+effect_category = 5
+stat_to_modify = 0
+modify_type = 0
+stacking_rule = 0
+max_stacks = 1
+dispellable = false
+is_hostile = false
