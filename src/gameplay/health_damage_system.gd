@@ -28,6 +28,11 @@ static func calculate_damage(
 	var crit_mult := CRITICAL_MULTIPLIER if was_crit else 1.0
 	
 	var raw_damage: float = (caster_atk * 0.5 + skill_base_damage) * effect_value * crit_mult
+	
+	# Add +/- 10% variance
+	var variance := randf_range(0.9, 1.1)
+	raw_damage *= variance
+	
 	var after_def: float = raw_damage - target_def
 	var after_category: float = after_def * category_resistance
 	

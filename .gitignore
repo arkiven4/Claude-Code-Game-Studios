@@ -49,3 +49,6 @@ config/
 # Production session state (ephemeral)
 production/session-state/
 production/session-logs/
+
+*.glb
+*.jpg

@@ -25,7 +25,12 @@ enum DamageCategory { PHYSICAL, MAGICAL, HOLY, DARK }
 @export_group("Targeting")
 @export var target_type: TargetType = TargetType.SINGLE_ENEMY
 @export var target_count: int = 1
-@export var area_radius: float = 0.0
+## Maximum distance from the caster the effect center can be. 0 = Centered on Caster.
+@export var max_cast_range: float = 0.0
+## Size of the effect at the cast location.
+@export var area_radius: float = 2.0
+## For CONE targeting: the total width of the arc in degrees.
+@export var cone_angle: float = 90.0
 
 @export_group("Tiers")
 ## Configuration for each of the 3 tiers.

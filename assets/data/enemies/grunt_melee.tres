@@ -1,21 +1,12 @@
-[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://ckhsrldb8uyei"]
 
-[ext_resource type="Script" path="res://src/core/enemy_data.gd" id="1_enemy"]
+[ext_resource type="Script" uid="uid://pjoxxkra8hlc" path="res://src/core/enemy_data.gd" id="1_enemy"]
+[ext_resource type="Script" uid="uid://cebmr5g6qwykx" path="res://src/core/enemy_skill_entry.gd" id="2_dslaw"]
 
 [resource]
 script = ExtResource("1_enemy")
 enemy_id = "grunt_melee"
 display_name = "Grunt"
-enemy_class = 0
-behavior_profile = 0
 base_max_hp = 150
 base_atk = 25
 base_def = 15
-base_spd = 1.0
-physical_resistance = 1.0
-magical_resistance = 1.0
-holy_resistance = 1.0
-dark_resistance = 1.0
-status_immunities = Array[String]([])
-skill_list = Array[Resource]([])
-death_threshold = 0.0

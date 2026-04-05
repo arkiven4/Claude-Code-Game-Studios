@@ -6,17 +6,16 @@ has a cutoff date** and game engines update frequently.
 
 ## Why This Exists
 
-Claude's training data has a knowledge cutoff (currently May 2025). Game engines
-like Godot, Unity, and Unreal ship updates that introduce breaking API changes,
-new features, and deprecated patterns. Without these reference files, agents will
-suggest outdated code.
+Claude's training data has a knowledge cutoff (currently May 2025). Godot ships
+updates that introduce breaking API changes, new features, and deprecated patterns.
+Without these reference files, agents will suggest outdated code.
 
 ## Structure
 
-Each engine gets its own directory:
+This project uses **Godot 4.6**. Only the `godot/` directory is active.
 
 ```
-<engine>/
+godot/
 ├── VERSION.md              # Pinned version, verification date, knowledge gap window
 ├── breaking-changes.md     # API changes between versions, organized by risk level
 ├── deprecated-apis.md      # "Don't use X → Use Y" lookup tables

@@ -38,15 +38,17 @@ func test_first_member_is_player_controlled_after_init() -> void:
 	assert_false(_member_b.is_player_controlled, "Second member starts AI-controlled")
 
 func test_switch_transfers_control() -> void:
+	_controller.switch_window_duration = 0.05
 	_controller._initialize_starting_character()
-	# Directly call switch_to (bypasses cooldown for unit test)
-	_controller.current_character = _member_a
-	_controller.current_member_index = 0
-	_member_a.is_player_controlled = true
+	
+	_controller.switch_to(_member_b)
 
-	_controller._complete_switch(_member_a, _member_b)
+	assert_false(_member_a.is_player_controlled, "Previous member loses control immediately")
+	
+	await wait_for_signal(_controller.character_switched, 1.0)
 
-	assert_false(_member_a.is_player_controlled, "Previous member loses control after switch")
+	assert_true(_member_b.is_player_controlled, "Target member gains control after switch window")
+	assert_eq(_controller.current_character, _member_b, "Current character updated")
 
 func test_dead_member_cannot_be_switched_to() -> void:
 	_controller._initialize_starting_character()

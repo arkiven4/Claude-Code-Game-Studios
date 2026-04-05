@@ -1,13 +1,14 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene format=3 uid="uid://bixlue2j75gbg"]
 
-[ext_resource type="Script" path="res://src/gameplay/party_member_state.gd" id="1_state"]
-[ext_resource type="Resource" path="res://assets/data/characters/evan.tres" id="2_data"]
-[ext_resource type="Script" path="res://src/gameplay/status_effects_system.gd" id="3_effects"]
-[ext_resource type="Script" path="res://src/gameplay/skill_execution_system.gd" id="4_skill"]
-[ext_resource type="Script" path="res://src/gameplay/character_state_manager.gd" id="5_manager"]
-[ext_resource type="Script" path="res://src/gameplay/equipment_manager.gd" id="6_equip"]
-[ext_resource type="Script" path="res://src/gameplay/hitbox_component.gd" id="7_hitbox"]
-[ext_resource type="Script" path="res://src/gameplay/hurtbox_component.gd" id="8_hurtbox"]
+[ext_resource type="Script" uid="uid://dgx1wwtlxgakg" path="res://src/gameplay/party_member_state.gd" id="1_state"]
+[ext_resource type="Resource" uid="uid://t67gs2ip4ny8" path="res://assets/data/characters/evan.tres" id="2_data"]
+[ext_resource type="Script" uid="uid://c3cjekrr00ob3" path="res://src/gameplay/status_effects_system.gd" id="3_effects"]
+[ext_resource type="Script" uid="uid://d2rx7b3fv7e0a" path="res://src/gameplay/skill_execution_system.gd" id="4_skill"]
+[ext_resource type="Script" uid="uid://cxcf2p53a3hr1" path="res://src/gameplay/character_state_manager.gd" id="5_manager"]
+[ext_resource type="Script" uid="uid://cxqstfanixytv" path="res://src/gameplay/equipment_manager.gd" id="6_equip"]
+[ext_resource type="Script" uid="uid://cwe10lc2mexng" path="res://src/gameplay/hitbox_component.gd" id="7_hitbox"]
+[ext_resource type="Script" uid="uid://c5qb86qpl22em" path="res://src/gameplay/hurtbox_component.gd" id="8_hurtbox"]
+[ext_resource type="PackedScene" uid="uid://cn5i7rjykfx5c" path="res://assets/art/characters/fantasy+swordsman+3d+model.glb" id="9_model"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_1"]
 radius = 0.4
@@ -24,49 +25,59 @@ height = 1.8
 radius = 0.6
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2"]
-radius = 0.5
 height = 1.8
 
-[node name="Evan" type="CharacterBody3D" groups=["PartyMembers"]]
+[node name="Evan" type="CharacterBody3D" unique_id=159600484 groups=["PartyMembers"]]
 
-[node name="Mesh" type="MeshInstance3D" parent="."]
+[node name="Mesh" type="MeshInstance3D" parent="." unique_id=1927253876]
+visible = false
+layers = 3
 mesh = SubResource("CapsuleMesh_1")
 surface_material_override/0 = SubResource("StandardMaterial3D_1")
 
-[node name="Collision" type="CollisionShape3D" parent="."]
+[node name="CharacterModel" parent="." unique_id=1743587926 instance=ExtResource("9_model")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0.13875043, 0)
+layers = 3
+
+[node name="Collision" type="CollisionShape3D" parent="." unique_id=776308429]
 shape = SubResource("CapsuleShape3D_1")
 
-[node name="PartyMemberState" type="Node" parent="."]
+[node name="PartyMemberState" type="Node" parent="." unique_id=1398330630]
 script = ExtResource("1_state")
 character_data = ExtResource("2_data")
 
-[node name="StatusEffectsSystem" type="Node" parent="."]
+[node name="StatusEffectsSystem" type="Node" parent="." unique_id=909559889]
 script = ExtResource("3_effects")
 
-[node name="SkillExecutionSystem" type="Node" parent="."]
+[node name="SkillExecutionSystem" type="Node" parent="." unique_id=1570827783 node_paths=PackedStringArray("state", "status_effects")]
 script = ExtResource("4_skill")
 state = NodePath("../PartyMemberState")
 status_effects = NodePath("../StatusEffectsSystem")
 
-[node name="CharacterStateManager" type="Node" parent="."]
+[node name="CharacterStateManager" type="Node" parent="." unique_id=364514687]
 script = ExtResource("5_manager")
 
-[node name="EquipmentManager" type="Node" parent="."]
+[node name="EquipmentManager" type="Node" parent="." unique_id=992215755 node_paths=PackedStringArray("state")]
 script = ExtResource("6_equip")
 state = NodePath("../PartyMemberState")
 
-[node name="HitboxComponent" type="Area3D" parent="."]
-collision_layer = 4
+[node name="HitboxComponent" type="Area3D" parent="." unique_id=133451198]
 collision_mask = 8
 script = ExtResource("7_hitbox")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="HitboxComponent"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HitboxComponent" unique_id=531503359]
 shape = SubResource("SphereShape3D_1")
 
-[node name="HurtboxComponent" type="Area3D" parent="." groups=["Hurtboxes"]]
-collision_layer = 8
+[node name="PortraitCamera" type="Camera3D" parent="."]
+transform = Transform3D(-0.99863, -0.009086703, -0.051533215, -0.008366487, 0.9998646, -0.014174317, 0.051655035, -0.013723746, -0.9985707, 0.077203475, 0.33151114, -0.09103043)
+far = 0.3
+current = false
+
+[node name="HurtboxComponent" type="Area3D" parent="." unique_id=1924138571 groups=["Hurtboxes"]]
+collision_layer = 2
 collision_mask = 4
 script = ExtResource("8_hurtbox")
+parent_node = NodePath("../PartyMemberState")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtboxComponent"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtboxComponent" unique_id=347370286]
 shape = SubResource("CapsuleShape3D_2")

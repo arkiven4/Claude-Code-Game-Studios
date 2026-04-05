@@ -17,6 +17,7 @@ signal switch_next_pressed
 signal switch_prev_pressed
 signal dodge_pressed
 signal basic_attack_pressed
+signal special_attack_pressed
 signal target_lock_pressed
 
 # UI Signals
@@ -67,10 +68,12 @@ func _handle_combat_input(event: InputEvent) -> void:
 		_buffer_input(func(): skill_pressed.emit(2))
 	elif event.is_action_pressed("skill_4"):
 		_buffer_input(func(): skill_pressed.emit(3))
-	elif event.is_action_pressed("dodge"):
+	elif event.is_action_pressed("dodge") or event.is_action_pressed("roll"):
 		_buffer_input(func(): dodge_pressed.emit())
 	elif event.is_action_pressed("basic_attack"):
 		_buffer_input(func(): basic_attack_pressed.emit())
+	elif event.is_action_pressed("special_attack"):
+		_buffer_input(func(): special_attack_pressed.emit())
 	elif event.is_action_pressed("switch_next"):
 		switch_next_pressed.emit()
 	elif event.is_action_pressed("switch_prev"):

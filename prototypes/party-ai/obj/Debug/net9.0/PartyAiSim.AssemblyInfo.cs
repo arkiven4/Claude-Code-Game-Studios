@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PartyAiSim")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+29fb19625c8623f5ea24ad87c71ef26b2ecfeb3c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+14806efbda96484618613fbae77cee5a6d1db0e3")]
 [assembly: System.Reflection.AssemblyProductAttribute("PartyAiSim")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PartyAiSim")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

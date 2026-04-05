@@ -1,27 +1,22 @@
-[gd_resource type="Resource" script_class="SkillData" load_steps=5 format=3]
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://fs2dtkmnlv6s"]
 
-[ext_resource type="Script" path="res://src/core/skill_data.gd" id="1_skill"]
-[ext_resource type="Script" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Script" uid="uid://dgp0nhn65w813" path="res://src/core/status_effect.gd" id="1_nui58"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
 
 [sub_resource type="Resource" id="Tier1"]
 script = ExtResource("2_tier")
 effect_value = 1.0
-target_count = 1
-area_radius = 0.0
 duration = 1.5
 
 [sub_resource type="Resource" id="Tier2"]
 script = ExtResource("2_tier")
 effect_value = 1.0
-target_count = 1
-area_radius = 0.0
 duration = 2.5
 
 [sub_resource type="Resource" id="Tier3"]
 script = ExtResource("2_tier")
 effect_value = 1.0
-target_count = 1
-area_radius = 0.0
 duration = 3.5
 
 [resource]
@@ -32,10 +27,7 @@ skill_id = "evelyn_shadow_veil"
 description = "Evelyn becomes briefly untouchable in shadow. Tier 2: 2.5s invincibility. Tier 3: 3.5s invincibility."
 mp_cost = 25
 base_cooldown = 0.0
-max_charges = 1
 target_type = 6
-target_count = 1
-area_radius = 0.0
-tiers = [SubResource("Tier1"), SubResource("Tier2"), SubResource("Tier3")]
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1"), SubResource("Tier2"), SubResource("Tier3")])
 grants_invincibility = true
 invincibility_duration = 1.5

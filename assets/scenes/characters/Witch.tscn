@@ -30,6 +30,7 @@ height = 1.8
 [node name="Witch" type="CharacterBody3D" groups=["PartyMembers"]]
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
+layers = 3
 mesh = SubResource("CapsuleMesh_1")
 surface_material_override/0 = SubResource("StandardMaterial3D_1")
 
@@ -62,6 +63,11 @@ script = ExtResource("7_hitbox")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HitboxComponent"]
 shape = SubResource("SphereShape3D_1")
+
+[node name="PortraitCamera" type="Camera3D" parent="."]
+transform = Transform3D(-0.99863, -0.00909564, -0.051532, 0, 0.984808, -0.173648, 0.0523282, -0.17341, -0.983458, -0.1, 0.3, -0.01)
+far = 0.3
+current = false
 
 [node name="HurtboxComponent" type="Area3D" parent="." groups=["Hurtboxes"]]
 collision_layer = 8

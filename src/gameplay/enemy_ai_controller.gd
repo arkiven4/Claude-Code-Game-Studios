@@ -10,6 +10,7 @@ signal damage_taken(amount: int)
 @export var enemy_data: EnemyData
 @export var move_speed: float = 3.5
 @export var stop_distance: float = 1.5
+@export var aggro_range: float = 10.0
 
 var current_hp: int
 var max_hp: int
@@ -18,7 +19,7 @@ var is_enraged: bool = false
 
 var _skill_cooldowns: Array[float] = []
 var _decision_timer: float = 0.5
-var _current_target: Node # Will be PartyMemberState
+var _current_target: Node3D # CharacterBody3D of the target character
 
 func _ready() -> void:
 	if not enemy_data:
@@ -43,23 +44,35 @@ func _physics_process(delta: float) -> void:
 			_skill_cooldowns[i] -= delta
 			
 	# Movement toward target
-	if _current_target and _current_target.has_method("is_alive") and _current_target.is_alive():
+	var target_state := _get_target_state()
+	if _current_target and target_state and target_state.is_alive:
 		var dist := global_position.distance_to(_current_target.global_position)
 		if dist > stop_distance:
 			var dir: Vector3 = (_current_target.global_position - global_position).normalized()
-			velocity = dir * move_speed
+			var target_vel := dir * move_speed
+			velocity.x = target_vel.x
+			velocity.z = target_vel.z
 			look_at(global_position + Vector3(dir.x, 0, dir.z), Vector3.UP)
-			move_and_slide()
 		else:
-			velocity = Vector3.ZERO
+			velocity.x = move_toward(velocity.x, 0, move_speed)
+			velocity.z = move_toward(velocity.z, 0, move_speed)
+
+	# Apply gravity
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+
+	move_and_slide()
+
 	
 	# Decision cycle
 	_decision_timer -= delta
 	if _decision_timer <= 0.0:
 		_make_decision()
 
-func take_damage(amount: int) -> void:
+## Accepts either a damage Dictionary (from HealthDamageSystem) or a plain int.
+func take_damage(data) -> void:
 	if not is_alive: return
+	var amount: int = int(data.get("damage", 0)) if data is Dictionary else int(data)
 	var final_amount: int = int(max(HealthDamageSystem.MINIMUM_DAMAGE, amount))
 	
 	current_hp = max(0, current_hp - final_amount)
@@ -81,41 +94,57 @@ func _die() -> void:
 func get_resistance(category: int) -> float:
 	return enemy_data.get_category_resistance(category) if enemy_data else 1.0
 
+## Returns the PartyMemberState child of _current_target, or null if not valid.
+func _get_target_state() -> PartyMemberState:
+	if not _current_target: return null
+	return _current_target.get_node_or_null("PartyMemberState") as PartyMemberState
+
 func _make_decision() -> void:
 	_current_target = _select_target()
-	
-	if not _current_target or not _current_target.has_method("is_alive") or not _current_target.is_alive():
+
+	var target_state := _get_target_state()
+	if not target_state or not target_state.is_alive:
 		_decision_timer = _get_decision_interval()
 		return
-		
+
 	var best_skill_index := _select_best_skill()
 	if best_skill_index >= 0:
-		_execute_skill(best_skill_index, _current_target)
-		
+		_execute_skill(best_skill_index, target_state)
+	elif _current_target:
+		# Fallback: plain melee punch when no skills are defined and enemy is in range
+		var dist := global_position.distance_to(_current_target.global_position)
+		if dist <= stop_distance + 0.5:
+			var atk: int = enemy_data.base_atk if enemy_data else 10
+			var result := HealthDamageSystem.calculate_damage(atk, atk, 1.0, target_state.get_effective_def(), 1.0, 0.05)
+			target_state.take_damage(result)
+
 	_decision_timer = _get_decision_interval()
 
-func _select_target() -> Node:
+## Returns the CharacterBody3D of the best party member to target (for movement/position).
+func _select_target() -> Node3D:
 	var party_members := get_tree().get_nodes_in_group("PartyMembers")
 	if party_members.is_empty(): return null
-	
-	var best_target: Node = null
+
+	var best_target: Node3D = null
 	var best_score: float = INF
-	
+
 	for member in party_members:
-		if not member.has_method("is_alive") or not member.is_alive(): continue
-		
+		var state: PartyMemberState = member.get_node_or_null("PartyMemberState")
+		if not state or not state.is_alive: continue
+		if global_position.distance_to(member.global_position) > aggro_range: continue
+
 		var score: float = 0.0
-		var hp_ratio: float = member.get("current_hp") / float(member.get("max_hp")) if "max_hp" in member else 1.0
-		
+		var hp_ratio: float = state.current_hp / float(state.max_hp) if state.max_hp > 0 else 1.0
+
 		match enemy_data.behavior_profile:
 			EnemyData.EnemyBehaviorProfile.AGGRESSIVE, EnemyData.EnemyBehaviorProfile.BOSS:
 				score = hp_ratio # Lowest HP
 			EnemyData.EnemyBehaviorProfile.TACTICAL:
-				score = member.call("get_effective_def") if member.has_method("get_effective_def") else 0.0
+				score = state.get_effective_def()
 			EnemyData.EnemyBehaviorProfile.DEFENSIVE:
 				score = 1.0 - hp_ratio # Targets highest threat (approx by low HP)
 				best_score = -INF # Invert for max
-				
+
 		if enemy_data.behavior_profile == EnemyData.EnemyBehaviorProfile.DEFENSIVE:
 			if score > best_score:
 				best_score = score
@@ -124,7 +153,7 @@ func _select_target() -> Node:
 			if score < best_score:
 				best_score = score
 				best_target = member
-				
+
 	return best_target
 
 func _select_best_skill() -> int:
@@ -164,7 +193,9 @@ func _evaluate_condition(condition: int) -> bool:
 		0: # ALWAYS
 			return true
 		1: # TARGET_BELOW_HP_50
-			return _current_target.get("current_hp") < _current_target.get("max_hp") * 0.5 if "max_hp" in _current_target else false
+			var state := _get_target_state()
+			if not state: return false
+			return state.current_hp < state.max_hp * 0.5
 		# ... other conditions ...
 		7, 8: # PHASE_2_ONLY, ENRAGE_PHASE
 			return is_enraged
@@ -175,24 +206,22 @@ func _is_condition_eligible(condition: int) -> bool:
 		return is_enraged
 	return true
 
-func _execute_skill(index: int, target: Node) -> void:
+func _execute_skill(index: int, target: PartyMemberState) -> void:
 	var entry := enemy_data.skill_list[index]
 	var skill := entry.skill_ref
-	
+
 	var cooldown := entry.cooldown * 0.5 if is_enraged else entry.cooldown
 	_skill_cooldowns[index] = cooldown
-	
+
 	# Apply effect based on skill type
 	if skill.skill_type == SkillData.SkillType.DAMAGE:
 		var effect_value: float = skill.tiers[0].effect_value if not skill.tiers.is_empty() else 1.0
 		var atk: int = int(floor(enemy_data.base_atk * 1.5)) if is_enraged else enemy_data.base_atk
-		var target_def: int = int(target.call("get_effective_def")) if target.has_method("get_effective_def") else 0
+		var target_def: int = target.get_effective_def()
 		var res: float = float(target.call("get_resistance", skill.damage_category)) if target.has_method("get_resistance") else 1.0
-		
+
 		var result: Dictionary = HealthDamageSystem.calculate_damage(atk, skill.base_damage, effect_value, target_def, res, 0.0)
-		
-		if target.has_method("take_damage"):
-			target.call("take_damage", result)
+		target.take_damage(result)
 
 func _get_decision_interval() -> float:
 	match enemy_data.enemy_class:

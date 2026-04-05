@@ -8,7 +8,8 @@ signal character_switched(previous: PartyMemberState, current: PartyMemberState)
 
 @export var input_manager: InputManager
 @export var party_member_paths: Array[NodePath] = []
-@export var switch_window_duration: float = 0.3
+@export var switch_window_duration: float = 0.3   # Animation delay before switch completes
+@export var switch_cooldown_duration: float = 1.0 # Total cooldown between switches (per design)
 
 var party_members: Array[PartyMemberState] = []
 var current_member_index: int = 0
@@ -76,9 +77,9 @@ func switch_to(target: PartyMemberState) -> void:
 	
 	var previous := current_character
 	previous.set_player_controlled(false)
-	
-	_switch_cooldown_remaining = switch_window_duration
-	
+
+	_switch_cooldown_remaining = switch_cooldown_duration
+
 	_complete_switch(previous, target)
 
 func _complete_switch(previous: PartyMemberState, target: PartyMemberState) -> void:

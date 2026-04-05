@@ -8,6 +8,7 @@ signal health_state_changed(state: HealthState)
 signal death
 signal revived
 signal hp_changed(current: int, max: int)
+signal mp_changed(current: int, max: int)
 signal control_state_changed(is_player: bool)
 
 enum HealthState { HEALTHY, INJURED, CRITICAL, DEAD }
@@ -25,6 +26,15 @@ var max_mp: int
 # Skill Runtime State
 var skill_cooldowns: Array[float] = [0.0, 0.0, 0.0, 0.0]
 var skill_charges: Array[int] = [0, 0, 0, 0]
+
+# Dedicated Attack Cooldowns (Mouse)
+var basic_attack_cooldown: float = 0.0
+var special_attack_cooldown: float = 0.0
+
+# Regeneration
+var mp_regen_timer: float = 0.0
+const MP_REGEN_INTERVAL: float = 1.0 # Regenerate MP every 1 second
+@export var base_mp_regen: float = 2.0 # MP per second
 
 # Status Effects
 var active_effects: Array[ActiveEffect] = []
@@ -69,7 +79,16 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if not is_alive: return
 	
-	# Tick cooldowns
+	# MP Regeneration
+	if current_mp < max_mp:
+		mp_regen_timer += delta
+		if mp_regen_timer >= MP_REGEN_INTERVAL:
+			restore_mp(int(base_mp_regen))
+			mp_regen_timer = 0.0
+	else:
+		mp_regen_timer = 0.0
+
+	# Tick skill cooldowns
 	for i in range(4):
 		if skill_cooldowns[i] > 0.0:
 			skill_cooldowns[i] -= delta
@@ -79,6 +98,12 @@ func _process(delta: float) -> void:
 				var skill: SkillData = character_data.skill_slots[i] if i < character_data.skill_slots.size() else null
 				if skill:
 					skill_charges[i] = skill.max_charges
+	
+	# Tick attack cooldowns
+	if basic_attack_cooldown > 0.0:
+		basic_attack_cooldown = max(0.0, basic_attack_cooldown - delta)
+	if special_attack_cooldown > 0.0:
+		special_attack_cooldown = max(0.0, special_attack_cooldown - delta)
 
 # --- Damage / Heal ---
 
@@ -122,9 +147,11 @@ func apply_heal(amount: int) -> void:
 
 func consume_mp(amount: int) -> void:
 	current_mp = max(0, current_mp - amount)
+	mp_changed.emit(current_mp, max_mp)
 
 func restore_mp(amount: int) -> void:
 	current_mp = min(current_mp + amount, max_mp)
+	mp_changed.emit(current_mp, max_mp)
 
 # --- Skills ---
 
@@ -141,6 +168,35 @@ func can_use_skill(slot: int) -> bool:
 	
 	if _has_action_denial_effect(): return false
 	
+	return true
+
+## Checks if the character can use their basic/special attack.
+func can_attack(is_special: bool) -> bool:
+	if not is_alive: return false
+	if _has_action_denial_effect(): return false
+	
+	if is_special:
+		return special_attack_cooldown <= 0.0 and character_data.special_attack != null
+	else:
+		return basic_attack_cooldown <= 0.0 and character_data.basic_attack != null
+
+## Consumes the cooldown for a basic/special attack.
+func consume_attack_cooldown(is_special: bool) -> void:
+	var attack_skill := character_data.special_attack if is_special else character_data.basic_attack
+	if not attack_skill: return
+	
+	if is_special:
+		special_attack_cooldown = attack_skill.base_cooldown
+	else:
+		basic_attack_cooldown = attack_skill.base_cooldown
+
+## Consumes MP for a dodge/dash. Returns true if successful.
+func try_consume_dodge_mp() -> bool:
+	if not is_alive: return false
+	if current_mp < character_data.dodge_mp_cost: return false
+	if is_invincible: return true # Maybe dodging while invincible is free? Or not.
+	
+	consume_mp(character_data.dodge_mp_cost)
 	return true
 
 func consume_charge(slot: int) -> void:
@@ -232,6 +288,12 @@ func set_player_controlled(value: bool) -> void:
 	is_player_controlled = value
 	control_state = ControlState.PLAYER_CONTROLLED if value else ControlState.AI_CONTROLLED
 	control_state_changed.emit(value)
+
+func set_shield(value: int) -> void:
+	shield_value = max(0, value)
+
+func set_invincible(value: bool) -> void:
+	is_invincible = value
 
 func revive() -> void:
 	if is_alive or revives_used_this_encounter >= 1: return

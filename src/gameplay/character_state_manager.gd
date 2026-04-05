@@ -16,21 +16,22 @@ func _ready() -> void:
 
 func capture_snapshot() -> Dictionary:
 	return {
-		"hp": _health_system.current_hp if _health_system else 0.0,
-		"mp": _health_system.current_mp if _health_system else 0.0,
+		"hp": _health_system.current_hp if _health_system else 0,
+		"mp": _health_system.current_mp if _health_system else 0,
 		"is_alive": _health_system.is_alive if _health_system else false,
 		"effects": _capture_effects(),
-		"cooldowns": _skill_executor.get_all_cooldowns() if _skill_executor else {},
+		"cooldowns": _health_system.skill_cooldowns.duplicate() if _health_system else [],
 	}
 
 func restore_from_snapshot(snapshot: Dictionary) -> void:
 	if _health_system:
-		_health_system.current_hp = snapshot.get("hp", 0.0)
-		_health_system.current_mp = snapshot.get("mp", 0.0)
+		_health_system.current_hp = snapshot.get("hp", 0)
+		_health_system.current_mp = snapshot.get("mp", 0)
 		_health_system.is_alive = snapshot.get("is_alive", false)
-		_health_system.health_changed.emit(_health_system.current_hp, _health_system.character_data.max_hp)
-	if _skill_executor:
-		_skill_executor.restore_cooldowns(snapshot.get("cooldowns", {}))
+		_health_system.hp_changed.emit(_health_system.current_hp, _health_system.max_hp)
+		var cooldowns: Array = snapshot.get("cooldowns", [])
+		for i in range(mini(cooldowns.size(), _health_system.skill_cooldowns.size())):
+			_health_system.skill_cooldowns[i] = cooldowns[i]
 
 func _capture_effects() -> Array:
 	if not _status_effects:

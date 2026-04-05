@@ -1,41 +1,32 @@
-[gd_resource type="Resource" script_class="SkillData" load_steps=5 format=3]
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://dp06vdky5l2w7"]
 
-[ext_resource type="Script" path="res://src/core/skill_data.gd" id="1_skill"]
-[ext_resource type="Script" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Script" uid="uid://dgp0nhn65w813" path="res://src/core/status_effect.gd" id="1_ejnfo"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
 
 [sub_resource type="Resource" id="Tier1_RendingStorm"]
 script = ExtResource("2_tier")
 effect_value = 1.8
-target_count = 1
 area_radius = 3.0
-duration = 0.0
 
 [sub_resource type="Resource" id="Tier2_RendingStorm"]
 script = ExtResource("2_tier")
 effect_value = 1.8
-target_count = 1
 area_radius = 5.0
-duration = 0.0
 
 [sub_resource type="Resource" id="Tier3_RendingStorm"]
 script = ExtResource("2_tier")
 effect_value = 1.8
-target_count = 1
 area_radius = 8.0
-duration = 0.0
 
 [resource]
 script = ExtResource("1_skill")
-skill_type = 0
 display_name = "Rending Storm"
 skill_id = "evan_rending_storm"
 description = "A powerful spin attack. Tier 2: 5m radius. Tier 3: 8m radius."
 mp_cost = 35
 base_cooldown = 6.0
-max_charges = 1
 target_type = 2
-target_count = 1
 area_radius = 3.0
-tiers = [SubResource("Tier1_RendingStorm"), SubResource("Tier2_RendingStorm"), SubResource("Tier3_RendingStorm")]
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1_RendingStorm"), SubResource("Tier2_RendingStorm"), SubResource("Tier3_RendingStorm")])
 base_damage = 50
-damage_category = 0

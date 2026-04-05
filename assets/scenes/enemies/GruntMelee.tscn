@@ -46,7 +46,7 @@ shape = SubResource("CapsuleShape3D_1")
 
 [node name="HitboxComponent" type="Area3D" parent="."]
 collision_layer = 4
-collision_mask = 8
+collision_mask = 2
 script = ExtResource("3_hitbox")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HitboxComponent"]
@@ -54,7 +54,7 @@ shape = SubResource("SphereShape3D_1")
 
 [node name="HurtboxComponent" type="Area3D" parent="." groups=["Hurtboxes"]]
 collision_layer = 8
-collision_mask = 4
+collision_mask = 1
 script = ExtResource("4_hurtbox")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HurtboxComponent"]

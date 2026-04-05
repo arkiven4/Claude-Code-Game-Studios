@@ -1,41 +1,37 @@
-[gd_resource type="Resource" script_class="SkillData" load_steps=5 format=3]
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://nt4o1gu4a1m1"]
 
-[ext_resource type="Script" path="res://src/core/skill_data.gd" id="1_skill"]
-[ext_resource type="Script" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://dgp0nhn65w813" path="res://src/core/status_effect.gd" id="1_ygkue"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
 
 [sub_resource type="Resource" id="Tier1"]
 script = ExtResource("2_tier")
 effect_value = 2.5
 target_count = 99
 area_radius = 5.0
-duration = 0.0
 
 [sub_resource type="Resource" id="Tier2"]
 script = ExtResource("2_tier")
 effect_value = 3.0
 target_count = 99
 area_radius = 7.0
-duration = 0.0
 
 [sub_resource type="Resource" id="Tier3"]
 script = ExtResource("2_tier")
 effect_value = 3.5
 target_count = 99
 area_radius = 10.0
-duration = 0.0
 
 [resource]
 script = ExtResource("1_skill")
-skill_type = 0
 display_name = "Eclipse Burst"
 skill_id = "evelyn_eclipse_burst"
 description = "A cataclysmic burst of dark energy obliterates all nearby enemies. Tier 2: 3x multiplier, 7m. Tier 3: 3.5x multiplier, 10m."
 mp_cost = 60
 base_cooldown = 12.0
-max_charges = 1
 target_type = 3
 target_count = 99
 area_radius = 5.0
-tiers = [SubResource("Tier1"), SubResource("Tier2"), SubResource("Tier3")]
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1"), SubResource("Tier2"), SubResource("Tier3")])
 base_damage = 60
 damage_category = 3

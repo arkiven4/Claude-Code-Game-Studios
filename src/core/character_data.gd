@@ -49,6 +49,14 @@ const LEVEL_CAP: int = 30
 ## The four skill slots for this character (index 0-3).
 @export var skill_slots: Array[SkillData] = [null, null, null, null]
 
+@export_group("Combat Actions")
+## Dedicated basic attack (Left Click).
+@export var basic_attack: SkillData
+## Dedicated special attack (Right Click).
+@export var special_attack: SkillData
+## MP cost for dodging/dashing.
+@export var dodge_mp_cost: int = 15
+
 # Stat Computation
 
 ## Returns MaxHP at the given character level.
