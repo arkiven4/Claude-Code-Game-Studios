@@ -46,12 +46,16 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
             **config
         )
         
-        # Based on TrainingArena.tscn structure:
-        # Agent 0: Evan   (obs 46, act: {action 9, heal_target 2})
-        # Agent 1: Evelyn (obs 46, act: {action 9, heal_target 2})
-        # Agent 2: Team   (obs 33, act: {evan_target 4, evan_role 3, evelyn_target 4, evelyn_role 3})
-        self._agent_ids = ["evan", "evelyn", "team"]
-        
+        # Based on TrainingArena.tscn structure (scene-tree order):
+        # Agent 0: Evan    (obs 46, act: {action 9, heal_target 2})
+        # Agent 1: Evelyn  (obs 46, act: {action 9, heal_target 2})
+        # Agent 2: Team    (obs 33, act: {evan_target 4, evan_role 3, evelyn_target 4, evelyn_role 3})
+        # Agent 3: Enemy 0 (obs 21, act: {action 6})  — Grunt
+        # Agent 4: Enemy 1 (obs 21, act: {action 6})  — Archer
+        # Agent 5: Enemy 2 (obs 21, act: {action 6})  — Mage
+        self._agent_ids = {"evan", "evelyn", "team", "enemy_0", "enemy_1", "enemy_2"}
+        self.possible_agents = self._agent_ids
+
         # Evan/Evelyn Spaces
         obs_46 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (46,), dtype=np.float32)})
         act_party = gym.spaces.Dict({
@@ -68,32 +72,50 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
             "evelyn_role":   gym.spaces.Discrete(3),
         })
 
+        # Enemy Hive Spaces (shared policy, 3 separate agents)
+        obs_21 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (21,), dtype=np.float32)})
+        act_enemy = gym.spaces.Dict({
+            "action": gym.spaces.Discrete(6),  # 0=wait,1=skill0,2=skill1,3-5=movement
+        })
+
         self.observation_space = gym.spaces.Dict({
-            "evan":   obs_46,
-            "evelyn": obs_46,
-            "team":   obs_33,
+            "evan":    obs_46,
+            "evelyn":  obs_46,
+            "team":    obs_33,
+            "enemy_0": obs_21,
+            "enemy_1": obs_21,
+            "enemy_2": obs_21,
         })
         self.action_space = gym.spaces.Dict({
-            "evan":   act_party,
-            "evelyn": act_party,
-            "team":   act_team,
+            "evan":    act_party,
+            "evelyn":  act_party,
+            "team":    act_team,
+            "enemy_0": act_enemy,
+            "enemy_1": act_enemy,
+            "enemy_2": act_enemy,
         })
 
     def reset(self, *, seed=None, options=None):
         obs, info = self._env.reset()
         return {
-            "evan": {"obs": np.array(obs[0]["obs"], dtype=np.float32)},
-            "evelyn": {"obs": np.array(obs[1]["obs"], dtype=np.float32)},
-            "team": {"obs": np.array(obs[2]["obs"], dtype=np.float32)},
+            "evan":    {"obs": np.array(obs[0]["obs"], dtype=np.float32)},
+            "evelyn":  {"obs": np.array(obs[1]["obs"], dtype=np.float32)},
+            "team":    {"obs": np.array(obs[2]["obs"], dtype=np.float32)},
+            "enemy_0": {"obs": np.array(obs[3]["obs"], dtype=np.float32)},
+            "enemy_1": {"obs": np.array(obs[4]["obs"], dtype=np.float32)},
+            "enemy_2": {"obs": np.array(obs[5]["obs"], dtype=np.float32)},
         }, {}
 
     def step(self, action_dict):
-        # Map back to Godot list order
-        # GodotEnv.from_numpy expects action[agent_idx][head_idx] when order_ij=True
-        evan_act = action_dict["evan"]
-        evelyn_act = action_dict["evelyn"]
-        team_act = action_dict["team"]
-        
+        # Map back to Godot list order (must match scene-tree agent registration order)
+        # Use .get() with no-op defaults — RLlib may omit agents it considers inactive
+        evan_act   = action_dict.get("evan",    {"action": 0, "heal_target": 1})
+        evelyn_act = action_dict.get("evelyn",  {"action": 0, "heal_target": 1})
+        team_act   = action_dict.get("team",    {"evan_target": 3, "evan_role": 0, "evelyn_target": 3, "evelyn_role": 0})
+        e0_act     = action_dict.get("enemy_0", {"action": 0})
+        e1_act     = action_dict.get("enemy_1", {"action": 0})
+        e2_act     = action_dict.get("enemy_2", {"action": 0})
+
         actions = [
             [int(evan_act["action"]),   int(evan_act["heal_target"])],
             [int(evelyn_act["action"]), int(evelyn_act["heal_target"])],
@@ -103,28 +125,47 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
                 int(team_act["evelyn_target"]),
                 int(team_act["evelyn_role"]),
             ],
+            [int(e0_act["action"])],
+            [int(e1_act["action"])],
+            [int(e2_act["action"])],
         ]
         obs, reward, terminated, truncated, info = self._env.step(actions, order_ij=True)
-        
+
         res_obs = {
-            "evan": {"obs": np.array(obs[0]["obs"], dtype=np.float32)},
-            "evelyn": {"obs": np.array(obs[1]["obs"], dtype=np.float32)},
-            "team": {"obs": np.array(obs[2]["obs"], dtype=np.float32)},
+            "evan":    {"obs": np.array(obs[0]["obs"], dtype=np.float32)},
+            "evelyn":  {"obs": np.array(obs[1]["obs"], dtype=np.float32)},
+            "team":    {"obs": np.array(obs[2]["obs"], dtype=np.float32)},
+            "enemy_0": {"obs": np.array(obs[3]["obs"], dtype=np.float32)},
+            "enemy_1": {"obs": np.array(obs[4]["obs"], dtype=np.float32)},
+            "enemy_2": {"obs": np.array(obs[5]["obs"], dtype=np.float32)},
         }
-        res_rew = {"evan": reward[0], "evelyn": reward[1], "team": reward[2]}
+        res_rew = {
+            "evan":    reward[0],
+            "evelyn":  reward[1],
+            "team":    reward[2],
+            "enemy_0": reward[3],
+            "enemy_1": reward[4],
+            "enemy_2": reward[5],
+        }
         res_term = {
-            "evan": terminated[0], 
-            "evelyn": terminated[1], 
-            "team": terminated[2],
+            "evan":    terminated[0],
+            "evelyn":  terminated[1],
+            "team":    terminated[2],
+            "enemy_0": terminated[3],
+            "enemy_1": terminated[4],
+            "enemy_2": terminated[5],
             "__all__": all(terminated)
         }
         res_trunc = {
-            "evan": truncated[0], 
-            "evelyn": truncated[1], 
-            "team": truncated[2],
+            "evan":    truncated[0],
+            "evelyn":  truncated[1],
+            "team":    truncated[2],
+            "enemy_0": truncated[3],
+            "enemy_1": truncated[4],
+            "enemy_2": truncated[5],
             "__all__": all(truncated)
         }
-        
+
         return res_obs, res_rew, res_term, res_trunc, {}
     
     def close(self):
@@ -156,11 +197,14 @@ def main():
         .environment("godot_multiagent", env_config={"port": 11008})
         .multi_agent(
             policies={
-                "evan_policy":   (None, None, None, {}),
-                "evelyn_policy": (None, None, None, {}),
-                "team_policy":   (None, None, None, {}),
+                "evan_policy":       (None, None, None, {}),
+                "evelyn_policy":     (None, None, None, {}),
+                "team_policy":       (None, None, None, {}),
+                "enemy_hive_policy": (None, None, None, {}),
             },
-            policy_mapping_fn=lambda agent_id, *args, **kwargs: f"{agent_id}_policy",
+            policy_mapping_fn=lambda agent_id, *args, **kwargs: (
+                "enemy_hive_policy" if agent_id.startswith("enemy_") else f"{agent_id}_policy"
+            ),
         )
         .training(
             lr=3e-4,

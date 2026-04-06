@@ -52,5 +52,7 @@ production/session-logs/
 
 prototypes/rl-training/logs
 prototypes/rl-training/models
+prototypes/rl-training/ray_results
+
 *.glb
 *.jpg

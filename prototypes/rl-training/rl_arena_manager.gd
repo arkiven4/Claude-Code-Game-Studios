@@ -10,6 +10,11 @@ extends Node3D
 @export var move_speed: float = 4.0
 @export var max_episode_steps: int = 2000
 
+## Stagnation penalty: steps of no damage before penalty fires (60 = ~1 second at 60 FPS)
+@export var stagnation_threshold: int = 60
+## Penalty applied to team reward and each party agent per step while stagnating
+@export var w_stagnation: float = 0.002
+
 var evan_body: CharacterBody3D
 var evelyn_body: CharacterBody3D
 var enemy_container: Node3D
@@ -20,26 +25,21 @@ var enemy_container: Node3D
 @onready var _evelyn_state: PartyMemberState
 @onready var _team_agent: RLTeamAgent = $TeamAI
 
-const GRUNT_SCENE: PackedScene  = preload("res://assets/scenes/enemies/GruntMelee.tscn")
-const ARCHER_SCENE: PackedScene = preload("res://assets/scenes/enemies/ArcherRanged.tscn")
-const MAGE_SCENE: PackedScene   = preload("res://assets/scenes/enemies/MageEnemy.tscn")
-
-## Spawn transforms: Grunt front-left, Archer back-right, Mage back-center
-var ENEMY_SPAWNS: Array[Transform3D] = [
-	Transform3D(Basis.IDENTITY, Vector3(-4.0, 0.9,  8.0)),
-	Transform3D(Basis.IDENTITY, Vector3( 4.0, 0.9,  8.0)),
-	Transform3D(Basis.IDENTITY, Vector3( 0.0, 0.9, 11.0)),
-]
-const ENEMY_SCENES: Array = [GRUNT_SCENE, ARCHER_SCENE, MAGE_SCENE]
-
 var _enemies: Array[EnemyAIController] = []
 var _hive_agents: Array[RLEnemyHiveAgent] = []
 var _episode_step: int = 0
 var _episode_active: bool = false
 var _party: Array[PartyMemberState] = []
 
+## Stagnation tracking — party
+var _steps_since_last_damage: int = 0
+var _damage_dealt_this_step: bool = false
+
+## Stagnation tracking — enemies
+var _enemy_steps_since_last_damage: int = 0
+var _enemy_damage_dealt_this_step: bool = false
+
 func _ready() -> void:
-	# Resolve node references from paths
 	evan_body   = get_node_or_null(evan_body_path)   as CharacterBody3D
 	evelyn_body = get_node_or_null(evelyn_body_path) as CharacterBody3D
 	enemy_container = get_node_or_null(enemy_container_path) as Node3D
@@ -52,14 +52,26 @@ func _ready() -> void:
 		_evelyn_state = evelyn_body.get_node_or_null("PartyMemberState")
 
 	_party = [_evan_state, _evelyn_state]
-	# Wire party death to hive rewards
 	if _evan_state:   _evan_state.death.connect(_on_party_member_died)
 	if _evelyn_state: _evelyn_state.death.connect(_on_party_member_died)
+	if _evan_agent and _evan_agent.skill_execution:
+		_evan_agent.skill_execution.damage_dealt.connect(_on_party_damage_dealt)
+	if _evelyn_agent and _evelyn_agent.skill_execution:
+		_evelyn_agent.skill_execution.damage_dealt.connect(_on_party_damage_dealt)
 
-	await get_tree().process_frame
-	_start_episode()
+	# Discover static enemies — already registered with godot_rl at scene load
+	_find_enemies()
+	_update_all_contexts()
+	# Don't call _start_episode() here — Python sends "reset" after connecting,
+	# which triggers needs_reset=true and calls _reset_episode() via _physics_process.
 
 func _physics_process(delta: float) -> void:
+	# godot_rl sets needs_reset=true when Python calls env.reset() after an episode ends.
+	# Reset here — before sync.gd reads observations — so Python gets fresh state.
+	if _evan_agent and _evan_agent.needs_reset:
+		_reset_episode()
+		return
+
 	if not _episode_active:
 		return
 
@@ -70,9 +82,7 @@ func _physics_process(delta: float) -> void:
 		if _evan_agent:   _evan_agent.set_directive(_team_agent.evan_target, _team_agent.evan_role)
 		if _evelyn_agent: _evelyn_agent.set_directive(_team_agent.evelyn_target, _team_agent.evelyn_role)
 
-	# Execute party movement
 	_execute_party_movement(delta)
-	# Execute enemy movement
 	_execute_enemy_movement(delta)
 
 	# Survival reward per step
@@ -80,18 +90,35 @@ func _physics_process(delta: float) -> void:
 	if _team_agent:
 		_team_agent.add_survival_reward(alive_ratio)
 
-	# Check protection bonus for Evan (tanker between enemy and Evelyn)
+	_check_stagnation_penalty()
+	_check_enemy_stagnation_penalty()
 	_check_protection_bonus()
-
-	# Check end conditions
 	_check_victory_or_defeat()
-
-	# Update HUD
 	_update_hud()
 
-	# Force-end episode after timeout
 	if _episode_step >= max_episode_steps:
 		_end_episode(false)
+
+# --- Enemy Discovery ---
+
+func _find_enemies() -> void:
+	## Read pre-placed RLEnemyController children from the Enemies container.
+	## Called once in _ready() — enemies stay in scene tree for all episodes.
+	if not enemy_container:
+		return
+	for child in enemy_container.get_children():
+		if not child is RLEnemyController:
+			continue
+		var enemy := child as RLEnemyController
+		var hive: RLEnemyHiveAgent = enemy.get_node_or_null("RLEnemyHiveAgent") as RLEnemyHiveAgent
+		if not hive:
+			push_warning("[ArenaManager] %s has no RLEnemyHiveAgent child — skipping." % enemy.name)
+			continue
+		enemy.died.connect(_on_enemy_died.bind(enemy, hive))
+		enemy.damage_dealt.connect(_on_enemy_damage_dealt)
+		hive.enemy_controller = enemy
+		_enemies.append(enemy)
+		_hive_agents.append(hive)
 
 # --- Movement Execution ---
 
@@ -99,7 +126,7 @@ func _execute_party_movement(delta: float) -> void:
 	_execute_agent_movement(evan_body, _evan_agent, delta)
 	_execute_agent_movement(evelyn_body, _evelyn_agent, delta)
 
-func _execute_agent_movement(body: CharacterBody3D, agent: RLPartyAgent, delta: float) -> void:
+func _execute_agent_movement(body: CharacterBody3D, agent: RLPartyAgent, _delta: float) -> void:
 	if not body or not agent or not agent.state or not agent.state.is_alive:
 		if body:
 			body.velocity = Vector3.ZERO
@@ -110,27 +137,27 @@ func _execute_agent_movement(body: CharacterBody3D, agent: RLPartyAgent, delta: 
 	var enemies: Array = agent._context.get("enemies", [])
 
 	match agent.pending_move_action:
-		5:  ## move toward focus_target enemy
+		5:
 			var target_idx: int = agent.directive_target
 			if target_idx < enemies.size() and is_instance_valid(enemies[target_idx]) and enemies[target_idx].is_alive:
 				move_dir = (enemies[target_idx].global_position - body.global_position).normalized()
 			else:
 				move_dir = _toward_nearest_enemy(body.global_position, enemies)
-		6:  ## move away from nearest enemy
+		6:
 			var nearest: Vector3 = _nearest_enemy_pos(body.global_position, enemies)
 			if nearest != Vector3.ZERO:
 				move_dir = (body.global_position - nearest).normalized()
-		7:  ## move toward lowest-HP ally
+		7:
 			var ally_body: CharacterBody3D = _lowest_hp_ally_body(body)
 			if ally_body:
 				move_dir = (ally_body.global_position - body.global_position).normalized()
-		8:  ## hold position
+		8:
 			move_dir = Vector3.ZERO
 
 	body.velocity = move_dir * move_speed
 	body.move_and_slide()
 
-func _execute_enemy_movement(delta: float) -> void:
+func _execute_enemy_movement(_delta: float) -> void:
 	var party_bodies: Array[CharacterBody3D] = []
 	if evan_body: party_bodies.append(evan_body)
 	if evelyn_body: party_bodies.append(evelyn_body)
@@ -147,15 +174,15 @@ func _execute_enemy_movement(delta: float) -> void:
 		var party_states: Array = hive._context.get("party", [])
 
 		match hive.pending_move_action:
-			3:  ## move toward nearest party member
+			3:
 				var nearest: Vector3 = _nearest_alive_party_pos(enemy.global_position, party_bodies)
 				if nearest != Vector3.ZERO:
 					move_dir = (nearest - enemy.global_position).normalized()
-			4:  ## reposition away
+			4:
 				var nearest: Vector3 = _nearest_alive_party_pos(enemy.global_position, party_bodies)
 				if nearest != Vector3.ZERO:
 					move_dir = (enemy.global_position - nearest).normalized()
-			5:  ## move toward lowest-HP party member
+			5:
 				var target_body: CharacterBody3D = _lowest_hp_alive_party_body(party_bodies, party_states)
 				if target_body:
 					move_dir = (target_body.global_position - enemy.global_position).normalized()
@@ -167,7 +194,6 @@ func _execute_enemy_movement(delta: float) -> void:
 
 func _start_episode() -> void:
 	_episode_step = 0
-	_spawn_enemies()
 	_update_all_contexts()
 	_episode_active = true
 
@@ -187,47 +213,40 @@ func _end_episode(victory: bool) -> void:
 		if _evelyn_agent: _evelyn_agent.done = true
 		for hive in _hive_agents:
 			if is_instance_valid(hive): hive.on_party_wiped()
-
-	await get_tree().create_timer(0.1).timeout
-	_reset_episode()
+	## Do NOT reset here. godot_rl sends done=true to Python, Python calls reset(),
+	## godot_rl sends "reset" message back to Godot, sync.gd sets needs_reset=true,
+	## and we detect that at the top of _physics_process to reset cleanly.
 
 func _reset_episode() -> void:
+	## Synchronous — no awaits. Called from _physics_process when needs_reset is true,
+	## which runs before sync.gd reads obs for the reset response to Python.
+	_steps_since_last_damage = 0
+	_damage_dealt_this_step = false
+	_enemy_steps_since_last_damage = 0
+	_enemy_damage_dealt_this_step = false
+
 	# Reset party
 	if _evan_state:   _evan_state.reset_for_encounter(true)
 	if _evelyn_state: _evelyn_state.reset_for_encounter(true)
-	if evan_body:   evan_body.global_position   = Vector3(-1.5, 1.0, 0.0)
-	if evelyn_body: evelyn_body.global_position = Vector3( 1.5, 1.0, 0.0)
+	if evan_body:   evan_body.global_position   = Vector3(-1.5, 1.0, -5.0)
+	if evelyn_body: evelyn_body.global_position = Vector3( 1.5, 1.0, -5.0)
 
-	# Destroy and respawn enemies
+	# Reset enemies in-place
 	for enemy in _enemies:
-		if is_instance_valid(enemy): enemy.queue_free()
-	_enemies.clear()
-	_hive_agents.clear()
-	await get_tree().process_frame
+		if is_instance_valid(enemy):
+			(enemy as RLEnemyController).reset_to_start()
 
-	# Reset AI controllers
-	if _evan_agent: _evan_agent.reset()
+	# Reset all AI controllers (agent.reset() clears needs_reset and n_steps)
+	if _evan_agent:   _evan_agent.reset()
 	if _evelyn_agent: _evelyn_agent.reset()
-	if _team_agent: _team_agent.reset()
+	if _team_agent:   _team_agent.reset()
+	for hive in _hive_agents:
+		if is_instance_valid(hive):
+			hive.reset()
+			hive.done = false  ## base reset() does not clear done
 
+	_update_all_contexts()
 	_start_episode()
-
-func _spawn_enemies() -> void:
-	for i in range(ENEMY_SPAWNS.size()):
-		var scene: PackedScene = ENEMY_SCENES[i]
-		var enemy: EnemyAIController = scene.instantiate()
-		enemy_container.add_child(enemy)
-		enemy.global_transform = ENEMY_SPAWNS[i]
-
-		var hive: RLEnemyHiveAgent = RLEnemyHiveAgent.new()
-		hive.policy_name = "enemy_hive"
-		hive.reset_after = max_episode_steps
-		enemy.add_child(hive)
-		hive.enemy_controller = enemy
-
-		enemy.died.connect(_on_enemy_died.bind(enemy, hive))
-		_enemies.append(enemy)
-		_hive_agents.append(hive)
 
 func _update_all_contexts() -> void:
 	if _evan_agent: _evan_agent.set_context({"enemies": _enemies, "allies": [_evelyn_state]})
@@ -247,6 +266,9 @@ func _on_enemy_died(_enemy: EnemyAIController, _hive: RLEnemyHiveAgent) -> void:
 	if _team_agent: _team_agent.on_enemy_killed()
 	if _evan_agent: _evan_agent.reward += 0.5 * _evan_agent.w_team
 	if _evelyn_agent: _evelyn_agent.reward += 0.5 * _evelyn_agent.w_team
+	## Note: do NOT set hive.done = true here.
+	## Mid-episode individual termination causes RLlib/godot_rl sync mismatches.
+	## All agents terminate together at episode end.
 	_update_all_contexts()
 	_check_victory_or_defeat()
 
@@ -267,7 +289,6 @@ func _check_protection_bonus() -> void:
 		var evan_pos: Vector3 = evan_body.global_position
 		var evelyn_pos: Vector3 = evelyn_body.global_position
 		var enemy_pos: Vector3 = enemy.global_position
-		## Check if Evan is between enemy and Evelyn
 		var to_evelyn: Vector3 = (evelyn_pos - enemy_pos).normalized()
 		var to_evan: Vector3 = (evan_pos - enemy_pos).normalized()
 		if to_evan.dot(to_evelyn) > 0.7 and evan_pos.distance_to(enemy_pos) < evelyn_pos.distance_to(enemy_pos):
@@ -285,7 +306,8 @@ func _check_victory_or_defeat() -> void:
 	if all_enemies_dead:
 		_end_episode(true)
 		return
-	var party_wiped: bool = (not _evan_state or not _evan_state.is_alive) and (not _evelyn_state or not _evelyn_state.is_alive)
+	var party_wiped: bool = (not _evan_state or not _evan_state.is_alive) and \
+							(not _evelyn_state or not _evelyn_state.is_alive)
 	if party_wiped:
 		_end_episode(false)
 
@@ -358,14 +380,93 @@ func _lowest_hp_alive_party_body(party_bodies: Array, _party_states: Array) -> C
 			best_body = body
 	return best_body
 
+func _on_party_damage_dealt(_amount: int, _target: Node) -> void:
+	_damage_dealt_this_step = true
+
+func _on_enemy_damage_dealt(_amount: int, _target: Node) -> void:
+	_enemy_damage_dealt_this_step = true
+
+func _check_stagnation_penalty() -> void:
+	if _damage_dealt_this_step:
+		_steps_since_last_damage = 0
+		_damage_dealt_this_step = false
+		return
+
+	_steps_since_last_damage += 1
+
+	var any_enemy_alive: bool = false
+	for enemy in _enemies:
+		if is_instance_valid(enemy) and enemy.is_alive:
+			any_enemy_alive = true
+			break
+
+	if not any_enemy_alive or _steps_since_last_damage < stagnation_threshold:
+		return
+	if _any_party_member_regenerating():
+		return
+
+	if _team_agent:   _team_agent.reward -= w_stagnation
+	if _evan_agent:   _evan_agent.reward -= w_stagnation
+	if _evelyn_agent: _evelyn_agent.reward -= w_stagnation
+
+func _check_enemy_stagnation_penalty() -> void:
+	if _enemy_damage_dealt_this_step:
+		_enemy_steps_since_last_damage = 0
+		_enemy_damage_dealt_this_step = false
+		return
+
+	_enemy_steps_since_last_damage += 1
+
+	var party_alive: bool = (_evan_state and _evan_state.is_alive) or \
+							(_evelyn_state and _evelyn_state.is_alive)
+	if not party_alive or _enemy_steps_since_last_damage < stagnation_threshold:
+		return
+
+	for i in range(_hive_agents.size()):
+		var hive: RLEnemyHiveAgent = _hive_agents[i]
+		var enemy: EnemyAIController = _enemies[i] if i < _enemies.size() else null
+		if not is_instance_valid(hive) or not is_instance_valid(enemy) or not enemy.is_alive:
+			continue
+		var hp_ratio: float = enemy.get_hp_ratio() if enemy.has_method("get_hp_ratio") else 1.0
+		if hp_ratio < 1.0:
+			continue  ## Injured enemy may be repositioning — exempt
+		hive.reward -= w_stagnation
+
+func _any_party_member_regenerating() -> bool:
+	if _evan_state and _evan_state.is_alive:
+		if _evan_state.current_hp < _evan_state.max_hp or _evan_state.current_mp < _evan_state.max_mp:
+			return true
+	if _evelyn_state and _evelyn_state.is_alive:
+		if _evelyn_state.current_hp < _evelyn_state.max_hp or _evelyn_state.current_mp < _evelyn_state.max_mp:
+			return true
+	return false
+
 func _update_hud() -> void:
-	var evan_hp_label = get_node_or_null("%EvanHP")
-	var evelyn_hp_label = get_node_or_null("%EvelynHP")
+	if _evan_state:
+		var label = get_node_or_null("%EvanHP")
+		if label: label.text = "Evan: %d/%d" % [_evan_state.current_hp, _evan_state.max_hp]
+	if _evelyn_state:
+		var label = get_node_or_null("%EvelynHP")
+		if label: label.text = "Evelyn: %d/%d" % [_evelyn_state.current_hp, _evelyn_state.max_hp]
+
 	var step_label = get_node_or_null("%StepLabel")
-	
-	if evan_hp_label and _evan_state:
-		evan_hp_label.text = "Evan: %d/%d" % [_evan_state.current_hp, _evan_state.max_hp]
-	if evelyn_hp_label and _evelyn_state:
-		evelyn_hp_label.text = "Evelyn: %d/%d" % [_evelyn_state.current_hp, _evelyn_state.max_hp]
-	if step_label:
-		step_label.text = "Step: %d" % _episode_step
+	if step_label: step_label.text = "Step: %d" % _episode_step
+
+	var evan_r = get_node_or_null("%EvanReward")
+	if evan_r and _evan_agent: evan_r.text = "Evan R: %.3f" % _evan_agent.reward
+
+	var evelyn_r = get_node_or_null("%EvelynReward")
+	if evelyn_r and _evelyn_agent: evelyn_r.text = "Evelyn R: %.3f" % _evelyn_agent.reward
+
+	var team_r = get_node_or_null("%TeamReward")
+	if team_r and _team_agent: team_r.text = "Team R: %.3f" % _team_agent.reward
+
+	var enemy_r = get_node_or_null("%EnemyReward")
+	if enemy_r:
+		var total: float = 0.0
+		var count: int = 0
+		for i in range(_hive_agents.size()):
+			if is_instance_valid(_hive_agents[i]) and is_instance_valid(_enemies[i]) and _enemies[i].is_alive:
+				total += _hive_agents[i].reward
+				count += 1
+		enemy_r.text = "Enemy R: %.3f" % (total / count if count > 0 else 0.0)
