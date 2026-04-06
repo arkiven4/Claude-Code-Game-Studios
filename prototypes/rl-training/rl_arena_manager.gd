@@ -65,8 +65,10 @@ func _ready() -> void:
 	if _evelyn_state: _evelyn_state.death.connect(_on_party_member_died)
 	if _evan_agent and _evan_agent.skill_execution:
 		_evan_agent.skill_execution.damage_dealt.connect(_on_party_damage_dealt)
+		_evan_agent.skill_execution.projectile_spawned.connect(_on_party_projectile_spawned)
 	if _evelyn_agent and _evelyn_agent.skill_execution:
 		_evelyn_agent.skill_execution.damage_dealt.connect(_on_party_damage_dealt)
+		_evelyn_agent.skill_execution.projectile_spawned.connect(_on_party_projectile_spawned)
 
 	# Discover static enemies — already registered with godot_rl at scene load
 	_find_enemies()
@@ -125,9 +127,23 @@ func _find_enemies() -> void:
 			continue
 		enemy.died.connect(_on_enemy_died.bind(enemy, hive))
 		enemy.damage_dealt.connect(_on_enemy_damage_dealt)
+		enemy.projectile_spawned.connect(_on_enemy_projectile_spawned)
 		hive.enemy_controller = enemy
 		_enemies.append(enemy)
 		_hive_agents.append(hive)
+
+func _on_enemy_projectile_spawned(projectile: Projectile) -> void:
+	# Connect party agents to this projectile so they can get dodge rewards
+	if _evan_agent:
+		projectile.missed.connect(_evan_agent._on_projectile_missed)
+	if _evelyn_agent:
+		projectile.missed.connect(_evelyn_agent._on_projectile_missed)
+
+func _on_party_projectile_spawned(projectile: Projectile) -> void:
+	# Connect all active hive agents to this projectile so they can get dodge rewards
+	for hive in _hive_agents:
+		if is_instance_valid(hive):
+			projectile.missed.connect(hive._on_projectile_missed)
 
 # --- Movement Execution ---
 

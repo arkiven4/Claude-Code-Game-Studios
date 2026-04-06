@@ -49,10 +49,30 @@ func _ready() -> void:
 	if skill_execution:
 		skill_execution.damage_dealt.connect(_on_damage_dealt)
 		skill_execution.skill_cast.connect(_on_skill_cast_complete)
+		skill_execution.projectile_spawned.connect(_on_projectile_spawned)
 
-func _on_skill_cast_complete(_skill: SkillData) -> void:
-	## Reward for completing the cast/skill execution
+func _on_projectile_spawned(projectile: Projectile) -> void:
+	projectile.hit.connect(_on_projectile_hit)
+	projectile.missed.connect(_on_projectile_missed)
+
+func _on_projectile_hit(_target: Node) -> void:
 	reward += w_skill_hit * 2.0
+
+func _on_projectile_missed(target: Node) -> void:
+	# If WE were the target and it missed, we dodged it!
+	if target == state:
+		reward += w_skill_hit * 1.5 # Dodge reward
+	else:
+		# We were the caster and we missed
+		reward -= w_skill_hit * 1.0
+
+func _on_skill_cast_complete(skill: SkillData) -> void:
+	## Reward for completing the cast/skill execution
+	# If it's a projectile, we wait for hit/miss signal for the bulk of the reward
+	if skill.is_projectile:
+		reward += w_skill_hit * 0.5
+	else:
+		reward += w_skill_hit * 2.0
 
 ## Called by rl_arena_manager each step after TeamPolicy outputs directives.
 func set_directive(target: int, role_mode: int) -> void:

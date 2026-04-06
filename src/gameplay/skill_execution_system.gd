@@ -8,6 +8,7 @@ signal skill_activated(slot_index: int, success: bool)
 signal attack_activated(is_special: bool, success: bool)
 signal skill_cast(skill: SkillData)
 signal damage_dealt(amount: int, target: Node)
+signal projectile_spawned(projectile: Projectile)
 signal targeting_started(mode: TargetingMode)
 signal targeting_ended
 signal hover_target_changed(target: Node)
@@ -479,15 +480,19 @@ func _spawn_projectile_vfx(skill: SkillData, caster_node: Node3D, target: EnemyA
 	var spawn_pos := caster_node.global_position + Vector3(0, 0.8, 0)
 	var caster_id: String = str(state.get_parent().name) if state and state.get_parent() else ""
 
+	var projectile: Projectile = null
 	if target:
-		CombatVFX.spawn_projectile(get_tree(), projectile_scene, skill, damage_result, caster_id,
-				spawn_pos, target.global_position + Vector3(0, 0.8, 0), true, false)
+		projectile = CombatVFX.spawn_projectile(get_tree(), projectile_scene, skill, damage_result, caster_id,
+				spawn_pos, target.global_position + Vector3(0, 0.8, 0), true, false, -1.0, target)
 	else:
 		# No target: fire forward, expire when it reaches max range.
 		var forward := -caster_node.global_transform.basis.z.normalized()
 		var lifetime := skill.max_cast_range / maxf(skill.projectile_speed, 1.0)
-		CombatVFX.spawn_projectile(get_tree(), projectile_scene, skill, damage_result, caster_id,
+		projectile = CombatVFX.spawn_projectile(get_tree(), projectile_scene, skill, damage_result, caster_id,
 				spawn_pos, spawn_pos + forward * skill.max_cast_range, true, false, lifetime)
+	
+	if projectile:
+		projectile_spawned.emit(projectile)
 
 func _apply_skill_to_target(skill: SkillData, target: Node, effect_value: float, tier: int) -> void:
 	match skill.skill_type:

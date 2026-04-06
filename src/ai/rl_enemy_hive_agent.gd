@@ -24,9 +24,26 @@ func _ready() -> void:
 		enemy_controller.damage_taken.connect(_on_damage_taken)
 		enemy_controller.damage_dealt.connect(_on_damage_dealt)
 		enemy_controller.skill_fired.connect(_on_skill_fired)
+		enemy_controller.projectile_spawned.connect(_on_projectile_spawned)
 
-func _on_skill_fired(_index: int, _skill: SkillData) -> void:
-	reward += 0.01  ## Reward for finishing a cast
+func _on_projectile_spawned(projectile: Projectile) -> void:
+	projectile.hit.connect(_on_projectile_hit)
+	projectile.missed.connect(_on_projectile_missed)
+
+func _on_projectile_hit(_target: Node) -> void:
+	reward += 0.02
+
+func _on_projectile_missed(target: Node) -> void:
+	if target == enemy_controller:
+		reward += 0.05 # Dodge reward for enemy
+	else:
+		reward -= 0.01 # Miss penalty for enemy caster
+
+func _on_skill_fired(_index: int, skill: SkillData) -> void:
+	if skill.is_projectile:
+		reward += 0.005 # Small intent reward, bulk comes from hit
+	else:
+		reward += 0.01  ## Reward for finishing a cast
 
 func set_context(context: Dictionary) -> void:
 	_context = context

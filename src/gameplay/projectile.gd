@@ -4,6 +4,9 @@ extends Area3D
 
 ## Moves in a straight line and hits targets via HurtboxComponent.
 
+signal hit(target: Node)
+signal missed(target: Node)
+
 @export var speed: float = 20.0
 @export var lifetime: float = 3.0
 
@@ -16,8 +19,9 @@ var _effect_overrides: Array[SkillEffectOverride] = []
 var _timer: float = 0.0
 var _vfx_impact: Texture2D = null
 var _hit_targets: Array[Node] = []
+var _target: Node = null # The intended target (if any) to track for misses/dodges
 
-func initialize(damage_data, caster_id: String, hit_enemies: bool = true, hit_allies: bool = false, overrides: Array[SkillEffectOverride] = [], impact_texture: Texture2D = null, skill_name: String = "Projectile") -> void:
+func initialize(damage_data, caster_id: String, hit_enemies: bool = true, hit_allies: bool = false, overrides: Array[SkillEffectOverride] = [], impact_texture: Texture2D = null, skill_name: String = "Projectile", target: Node = null) -> void:
 	if damage_data is Dictionary:
 		_damage = int(damage_data.get("damage", 0))
 		# If dict contains names, use them, otherwise use defaults
@@ -32,6 +36,7 @@ func initialize(damage_data, caster_id: String, hit_enemies: bool = true, hit_al
 	_hit_allies = hit_allies
 	_effect_overrides = overrides
 	_vfx_impact = impact_texture
+	_target = target
 	_timer = 0.0
 
 ## Sets a skill-specific VFX texture on the Sprite3D billboard.
@@ -63,6 +68,9 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_timer += delta
 	if _timer >= lifetime:
+		if _target and is_instance_valid(_target):
+			# If the target is still alive and we haven't hit anything, it's a miss/dodge
+			missed.emit(_target)
 		queue_free()
 		return
 		
@@ -116,6 +124,8 @@ func _on_area_entered(area: Area3D) -> void:
 				})
 				_apply_effects_on_hit(target)
 				_hit_targets.append(state_node)
+				hit.emit(state_node)
+				_target = null # Clear target so we don't emit missed signal
 			else:
 				print("[Projectile] Hit blocked by invincibility/dodge on: ", state_node.name)
 

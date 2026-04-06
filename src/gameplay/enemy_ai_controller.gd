@@ -17,6 +17,7 @@ signal damage_taken(amount: int)
 signal damage_dealt(amount: int, target: Node)
 signal shield_changed(new_value: int)
 signal skill_fired(index: int, skill: SkillData)
+signal projectile_spawned(projectile: Projectile)
 
 @export var enemy_data: EnemyData
 @export var projectile_scene: PackedScene
@@ -721,8 +722,10 @@ func _execute_skill_with_target(skill: SkillData, entry: EnemySkillEntry, target
 					result, name,
 					global_position + Vector3(0, 0.8, 0),
 					target_node.global_position + Vector3(0, 0.8, 0),
-					false, true)
-			if not spawned:
+					false, true, -1.0, target_node)
+			if spawned:
+				projectile_spawned.emit(spawned)
+			else:
 				push_error("[EnemyAIController] %s: Failed to spawn projectile for '%s' (projectile_scene=%s)" % [name, skill.display_name, str(projectile_scene)])
 		else:
 			push_error("[EnemyAIController] %s: Target node is null, cannot fire '%s'" % [name, skill.display_name])

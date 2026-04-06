@@ -40,7 +40,8 @@ static func spawn_projectile(
 		target_pos: Vector3,
 		hit_enemies: bool,
 		hit_allies: bool,
-		lifetime: float = -1.0) -> Node:
+		lifetime: float = -1.0,
+		target: Node = null) -> Node:
 	if not projectile_scene: return null
 	var projectile: Node = projectile_scene.instantiate()
 	if not projectile: return null
@@ -64,7 +65,7 @@ static func spawn_projectile(
 		projectile.collision_mask = mask
 
 	if projectile.has_method("initialize"):
-		projectile.call("initialize", damage_data, caster_id, hit_enemies, hit_allies, skill.effect_overrides, skill.vfx_effect, skill.display_name)
+		projectile.call("initialize", damage_data, caster_id, hit_enemies, hit_allies, skill.effect_overrides, skill.vfx_effect, skill.display_name, target)
 	
 	if skill.vfx_projectile and projectile.has_method("set_vfx"):
 		projectile.call("set_vfx", skill.vfx_projectile)
