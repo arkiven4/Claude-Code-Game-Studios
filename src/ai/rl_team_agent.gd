@@ -19,6 +19,7 @@ var evan_role: int = 0     ## 0=ATTACK, 1=DEFEND, 2=SUPPORT
 var evelyn_target: int = 3
 var evelyn_role: int = 0
 
+var victory: bool = false
 var _context: Dictionary = {}
 var _step_count: int = 0
 
@@ -87,6 +88,13 @@ func get_obs() -> Dictionary:
 func get_reward() -> float:
 	return reward
 
+func get_statistics() -> Dictionary:
+	return {
+		"reward": reward,
+		"victory": 1.0 if victory else 0.0,
+		"steps": float(_step_count)
+	}
+
 func get_action_space() -> Dictionary:
 	return {
 		"evan_target":   {"size": 4, "action_type": "discrete"},
@@ -105,6 +113,7 @@ func set_action(action: Dictionary) -> void:
 func reset() -> void:
 	super.reset()
 	reward = 0.0
+	victory = false
 	evan_target = 3; evan_role = 0
 	evelyn_target = 3; evelyn_role = 0
 	_step_count = 0
@@ -116,6 +125,7 @@ func on_enemy_killed() -> void:
 
 func on_victory() -> void:
 	reward += 5.0
+	victory = true
 	done = true
 
 func on_defeat() -> void:

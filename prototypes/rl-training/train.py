@@ -129,6 +129,17 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
         ]
         obs, reward, terminated, truncated, info = self._env.step(actions, order_ij=True)
 
+        # Extract custom metrics from info
+        # info[i] contains the dict returned by agent.get_statistics()
+        res_info = {
+            "evan":    info[0] if len(info) > 0 else {},
+            "evelyn":  info[1] if len(info) > 1 else {},
+            "team":    info[2] if len(info) > 2 else {},
+            "enemy_0": info[3] if len(info) > 3 else {},
+            "enemy_1": info[4] if len(info) > 4 else {},
+            "enemy_2": info[5] if len(info) > 5 else {},
+        }
+
         res_obs = {
             "evan":    {"obs": np.array(obs[0]["obs"], dtype=np.float32)},
             "evelyn":  {"obs": np.array(obs[1]["obs"], dtype=np.float32)},
@@ -164,7 +175,7 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
             "__all__": all(truncated)
         }
 
-        return res_obs, res_rew, res_term, res_trunc, {}
+        return res_obs, res_rew, res_term, res_trunc, res_info
     
     def close(self):
         if self._env:
@@ -237,7 +248,14 @@ def main():
             if iteration % 10 == 0:
                 reward = result.get('episode_reward_mean')
                 reward_str = f"{reward:.3f}" if isinstance(reward, (float, int)) else str(reward)
-                print(f"[{iteration}] reward_mean: {reward_str}")
+                
+                # Extract victory metric from custom metrics (team policy)
+                # RLlib nested structure: result['custom_metrics']['team_victory_mean']
+                custom = result.get('custom_metrics', {})
+                win_rate = custom.get('team_victory_mean', 0.0) * 100.0
+                ep_len = result.get('episode_len_mean', 0.0)
+                
+                print(f"[{iteration}] reward: {reward_str} | win_rate: {win_rate:.1f}% | len: {ep_len:.1f}")
             if iteration % 50 == 0:
                 save_path = algo.save(MODELS_DIR)
                 print(f"Checkpoint saved: {save_path}")

@@ -157,6 +157,13 @@ func get_obs() -> Dictionary:
 func get_reward() -> float:
 	return reward
 
+func get_statistics() -> Dictionary:
+	return {
+		"reward": reward,
+		"is_alive": 1.0 if (state and state.is_alive) else 0.0,
+		"hp_ratio": state.get_hp_ratio() if state else 0.0
+	}
+
 func get_action_space() -> Dictionary:
 	return {
 		# 0=wait, 1-4=skill slots, 5=move→enemy, 6=move away, 7=move→ally, 8=hold, 9=basic, 10=special

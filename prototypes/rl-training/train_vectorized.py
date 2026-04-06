@@ -130,6 +130,7 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
         res_rew = {}
         res_term = {}
         res_trunc = {}
+        res_info = {}
         
         for i in range(self.n_arenas):
             offset = i * 6
@@ -163,12 +164,19 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
             res_trunc[prefix + "enemy_1"] = truncated[offset + 4]
             res_trunc[prefix + "enemy_2"] = truncated[offset + 5]
 
+            res_info[prefix + "evan"]    = info[offset + 0] if len(info) > offset + 0 else {}
+            res_info[prefix + "evelyn"]  = info[offset + 1] if len(info) > offset + 1 else {}
+            res_info[prefix + "team"]    = info[offset + 2] if len(info) > offset + 2 else {}
+            res_info[prefix + "enemy_0"] = info[offset + 3] if len(info) > offset + 3 else {}
+            res_info[prefix + "enemy_1"] = info[offset + 4] if len(info) > offset + 4 else {}
+            res_info[prefix + "enemy_2"] = info[offset + 5] if len(info) > offset + 5 else {}
+
         # Synchronous reset: only terminate the environment when ALL agents in ALL arenas are done
         # (Though in practice, godot_rl usually resets the whole process when reset is requested)
         res_term["__all__"] = all(terminated)
         res_trunc["__all__"] = all(truncated)
 
-        return res_obs, res_rew, res_term, res_trunc, {}
+        return res_obs, res_rew, res_term, res_trunc, res_info
     
     def close(self):
         if self._env:
