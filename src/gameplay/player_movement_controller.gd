@@ -86,6 +86,13 @@ func _physics_process(delta: float) -> void:
 		character_node.move_and_slide()
 		return
 
+	## Block movement during cast — character must stand still while channeling
+	if current.is_casting:
+		character_node.velocity.x = move_toward(character_node.velocity.x, 0, move_speed * 10.0 * delta)
+		character_node.velocity.z = move_toward(character_node.velocity.z, 0, move_speed * 10.0 * delta)
+		character_node.move_and_slide()
+		return
+
 	## Apply movement slow from active MOVEMENT_IMPAIR effects.
 	var effective_speed: float = move_speed
 	if effects_node:
@@ -120,6 +127,7 @@ func dodge() -> void:
 
 	var current := switch_controller.current_character
 	if not current or not current.is_alive: return
+	if current.is_casting: return
 
 	var character_node := current.get_parent() as CharacterBody3D
 	if not character_node: return

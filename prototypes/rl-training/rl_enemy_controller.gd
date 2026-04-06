@@ -27,5 +27,11 @@ func reset_to_start() -> void:
 	shield_value = 0
 	shield_changed.emit(0)
 	_skill_cooldowns.fill(0.0)
+	_basic_attack_cooldown = 0.0
 	_decision_timer = _get_decision_interval()
 	_current_target = null
+	## Clear cast state so the next episode doesn't start mid-cast
+	_is_casting = false
+	_cast_timer = 0.0
+	_current_cast_skill_index = -1
+	_current_cast_target = null

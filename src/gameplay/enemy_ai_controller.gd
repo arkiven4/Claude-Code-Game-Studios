@@ -27,6 +27,9 @@ signal projectile_spawned(projectile: Projectile)
 @export var attack_range: float = 1.5
 @export var use_attack_range_for_aggro: bool = false
 @export var cast_indicator: SkillCastIndicator
+## When true, disables the scripted AI brain so an RL agent can drive this enemy.
+## Movement and skill execution are handled externally by RLEnemyHiveAgent + rl_arena_manager.
+@export var rl_controlled: bool = false
 
 var current_hp: int
 var max_hp: int
@@ -183,32 +186,31 @@ func _initialize_ranges() -> void:
 	if _ranges_initialized:
 		return
 
-	# attack_range = skill_list[0].max_cast_range (the character's basic attack skill)
-	# If max_cast_range <= 0.5, fall back to area_radius (for melee/AoE skills with no explicit range).
-	if not enemy_data.skill_list.is_empty() and enemy_data.skill_list.size() > 0:
+	# attack_range = how close the enemy must get before attacking.
+	# For ranged skills: use max_cast_range (enemy fires from that distance).
+	# For melee/caster-centered AoE (max_cast_range = 0): keep the exported default (1.5).
+	#   area_radius describes the SWEEP size of the attack, not the engagement distance.
+	#   A grunt with a 3-unit AoE slash still needs to walk into melee range to swing.
+	if not enemy_data.skill_list.is_empty():
 		var basic_entry := enemy_data.skill_list[0]
 		if basic_entry and basic_entry.skill_ref:
 			var skill := basic_entry.skill_ref
 			if skill.max_cast_range > 0.5:
 				attack_range = skill.max_cast_range
-			elif skill.area_radius > 0.0:
-				attack_range = skill.area_radius
+			# else: melee/AoE — keep @export default (attack_range stays at 1.5)
 
-	# Dynamic aggro: 1.5 * attack_range
-	var aggro_calculated := attack_range * 1.5
+	# stop_distance: meaningfully inside attack_range so the hitbox reliably connects.
+	# 0.5 unit buffer ensures floating-point jitter and capsule radius offsets don't cause misses.
+	stop_distance = maxf(0.5, attack_range - 0.5)
 
-	# Fallback to 10 if result is 0 or too small
-	if aggro_calculated <= 0.5:
-		aggro_range = 10.0
-	else:
-		aggro_range = aggro_calculated
-
+	# Dynamic aggro: 1.5 * attack_range, with a minimum of 6.0 so melee enemies
+	# auto-aggro at a reasonable distance (not just arm's reach).
+	aggro_range = maxf(6.0, attack_range * 1.5)
 	_aggro_range_calculated = aggro_range
 
-	# Max skill range (longest among ALL skills, for chase state)
+	# Max skill range (longest among ALL skills, used for chase distance)
 	_max_skill_range = _calculate_max_skill_range()
 
-	stop_distance = attack_range
 	_ranges_initialized = true
 
 ## Calculates the maximum cast range among all equipped skills.
@@ -265,26 +267,49 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		return
 
-	var is_stunned := _has_effect_category(StatusEffect.EffectCategory.ACTION_DENIAL)
-	if is_stunned:
-		velocity.x = move_toward(velocity.x, 0, move_speed)
-		velocity.z = move_toward(velocity.z, 0, move_speed)
+	if rl_controlled:
+		# RL mode: scripted AI brain is disabled. Movement and skills are driven by
+		# RLEnemyHiveAgent + rl_arena_manager. Only refresh target so _execute_skill
+		# and _get_target_state() remain functional when the RL agent fires a skill.
+		var ts: PartyMemberState = _get_target_state()
+		if not ts or not ts.is_alive:
+			_current_target = null
+			var best_dist: float = INF
+			for member in get_tree().get_nodes_in_group("PartyMembers"):
+				var member_state: PartyMemberState = member.get_node_or_null("PartyMemberState") as PartyMemberState
+				if not member_state or not member_state.is_alive:
+					continue
+				var d: float = global_position.distance_to(member.global_position)
+				if d < best_dist:
+					best_dist = d
+					_current_target = member as Node3D
 	else:
-		# Update combat state and execute behavior
-		_update_combat_state()
-		_execute_behavior(delta)
+		var is_stunned := _has_effect_category(StatusEffect.EffectCategory.ACTION_DENIAL)
+		if is_stunned:
+			velocity.x = move_toward(velocity.x, 0, move_speed)
+			velocity.z = move_toward(velocity.z, 0, move_speed)
+		else:
+			# Update combat state and execute behavior
+			_update_combat_state()
+			_execute_behavior(delta)
 
-	# Apply gravity
+		# Apply gravity
+		if not is_on_floor():
+			velocity += get_gravity() * delta
+
+		move_and_slide()
+
+		# Decision cycle for attack actions
+		_decision_timer -= delta
+		if _decision_timer <= 0.0 and _combat_state == CombatState.ATTACKING:
+			_make_decision()
+			_decision_timer = _get_decision_interval()
+		return
+
+	# RL mode: gravity + slide (movement velocity set by rl_arena_manager)
 	if not is_on_floor():
 		velocity += get_gravity() * delta
-
 	move_and_slide()
-
-	# Decision cycle for attack actions
-	_decision_timer -= delta
-	if _decision_timer <= 0.0 and _combat_state == CombatState.ATTACKING:
-		_make_decision()
-		_decision_timer = _get_decision_interval()
 
 ## Updates the combat state based on current target distance and cooldowns.
 ## Priority 1: When aggroed, ALWAYS keep enemy inside attack range (chase to close distance)
@@ -326,8 +351,13 @@ func _update_combat_state() -> void:
 		return
 
 	# State transitions - Priority 1: Keep enemy inside attack range
+	# Only enter ATTACKING once within attack_range. Long-range secondary skills
+	# (e.g. Arcane Barrage range=11 while attack_range=9) must NOT trigger ATTACKING
+	# early — that causes the enemy to stop mid-chase and cast, creating a jarring freeze.
+	# Once inside attack_range, _make_decision() will still select long-range skills.
+	var in_attack_range := dist <= attack_range
 	var new_state := CombatState.IDLE
-	if can_basic_attack or can_use_skill:
+	if (can_basic_attack or can_use_skill) and in_attack_range:
 		# In range and can attack
 		new_state = CombatState.ATTACKING
 	elif can_chase and dist > attack_range:
@@ -367,6 +397,15 @@ func _behavior_chase_target(_delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, move_speed)
 		return
 
+	var dist: float = global_position.distance_to(_current_target.global_position)
+	if dist <= stop_distance:
+		# Already inside stop_distance — halt and face target so hitbox reliably connects
+		velocity.x = move_toward(velocity.x, 0, move_speed)
+		velocity.z = move_toward(velocity.z, 0, move_speed)
+		var dir_face: Vector3 = (_current_target.global_position - global_position).normalized()
+		look_at(global_position + Vector3(dir_face.x, 0, dir_face.z), Vector3.UP)
+		return
+
 	var dir: Vector3 = (_current_target.global_position - global_position).normalized()
 	var effective_speed: float = move_speed * _get_movement_multiplier()
 	var target_vel := dir * effective_speed
@@ -375,9 +414,9 @@ func _behavior_chase_target(_delta: float) -> void:
 	look_at(global_position + Vector3(dir.x, 0, dir.z), Vector3.UP)
 
 func _behavior_attack_target() -> void:
-	# Stop movement when in attack range (will be overridden by skill animations)
+	# Stop movement when within stop_distance (0.5 buffer inside attack_range ensures hitbox connects)
 	var dist := global_position.distance_to(_current_target.global_position) if _current_target else 999.0
-	if dist <= attack_range:
+	if dist <= stop_distance:
 		velocity.x = move_toward(velocity.x, 0, move_speed)
 		velocity.z = move_toward(velocity.z, 0, move_speed)
 	else:
@@ -526,8 +565,11 @@ func _make_decision() -> void:
 		_execute_skill(best_skill_index, target_state)
 		return
 
-	# Priority 2: Use basic attack if in range and not on cooldown
-	if dist <= attack_range and _basic_attack_cooldown <= 0.0:
+	# Priority 2: Use basic attack if in range and not on cooldown.
+	# Also check _skill_cooldowns[0] — basic attack uses slot 0, which may have been
+	# put on cooldown by the skill path above. Both trackers must be clear.
+	var slot0_ready := _skill_cooldowns.is_empty() or _skill_cooldowns[0] <= 0.0
+	if dist <= attack_range and _basic_attack_cooldown <= 0.0 and slot0_ready:
 		_debug_ai("[AI Decision] %s: USING Basic Attack (dist=%.1f <= range=%.1f, no cd) → %s" % [
 			name, dist, attack_range, target_state.name])
 		_execute_basic_attack(target_state)
@@ -605,7 +647,10 @@ func _select_best_skill() -> int:
 			_debug_ai("[Skill Select] %s:   slot %d '%s': SKIP (condition failed: %d)" % [name, i, skill.display_name, entry.condition])
 			continue
 
-		# Range check - use skill.max_cast_range, NOT entry.max_range
+		# Range check: how close must the enemy be to fire this skill?
+		# - Ranged skill (max_cast_range > 0): fire from up to max_cast_range away.
+		# - Melee/caster-AoE (max_cast_range = 0): enemy must be within attack_range (melee distance).
+		#   area_radius is the sweep size after firing, not the engagement distance.
 		var skill_range := skill.max_cast_range if skill.max_cast_range > 0.0 else attack_range
 		if dist > skill_range:
 			_debug_ai("[Skill Select] %s:   slot %d '%s': SKIP (out of range, dist=%.1f > range=%.1f)" % [name, i, skill.display_name, dist, skill_range])
@@ -664,32 +709,26 @@ func _execute_skill(index: int, target: PartyMemberState) -> void:
 	_apply_skill_logic(index, target)
 
 ## Executes a basic attack using skill_list index 0.
+## Routes through _execute_skill so cast_time is respected (e.g. 0.4s wind-up).
+## Cooldown is applied in _apply_skill_logic after the cast completes.
 ## If index 0 is missing or invalid, falls back to direct damage.
 func _execute_basic_attack(target: PartyMemberState) -> void:
-	_basic_attack_cooldown = BASIC_ATTACK_COOLDOWN
-
-	# Basic attack = skill_list index 0
-	if enemy_data.skill_list.is_empty() or enemy_data.skill_list.size() <= 0:
+	if enemy_data.skill_list.is_empty():
 		push_error("[EnemyAIController] %s: skill_list[0] missing! Cannot execute basic attack." % name)
+		_basic_attack_cooldown = BASIC_ATTACK_COOLDOWN
 		_fallback_direct_damage(target, "Basic Attack")
 		return
 
 	var entry: EnemySkillEntry = enemy_data.skill_list[0]
 	if not entry or not entry.skill_ref:
 		push_error("[EnemyAIController] %s: skill_list[0] is null! Cannot execute basic attack." % name)
+		_basic_attack_cooldown = BASIC_ATTACK_COOLDOWN
 		_fallback_direct_damage(target, "Basic Attack")
 		return
 
-	var skill: SkillData = entry.skill_ref
-
-	_debug_ai("[Execute] %s: Basic Attack '%s' (range=%.1f, cd=%.1fs) → %s" % [
-		name, skill.display_name, skill.max_cast_range, BASIC_ATTACK_COOLDOWN, target.name])
-
-	# Apply cooldown
-	_skill_cooldowns[0] = BASIC_ATTACK_COOLDOWN
-
-	# Execute using unified damage flow
-	_execute_skill_with_target(skill, entry, target)
+	_debug_ai("[Execute] %s: Basic Attack '%s' → %s" % [name, entry.skill_ref.display_name, target.name])
+	# Route through _execute_skill: respects cast_time, _apply_skill_logic handles cooldown
+	_execute_skill(0, target)
 
 ## Executes a skill against a target using unified damage flow (projectile, hitbox, or direct).
 ## Mirrors SkillExecutionSystem._execute_enemy_skill pattern.
@@ -781,9 +820,13 @@ func _apply_skill_logic(index: int, target: PartyMemberState) -> void:
 	var entry: EnemySkillEntry = enemy_data.skill_list[index]
 	var skill: SkillData = entry.skill_ref
 
-	# Apply cooldown (THIS WAS MISSING — causing skills to fire every frame!)
+	# Apply cooldown after cast completes (this is the single source of truth for all skills)
 	var cooldown: float = entry.cooldown * 0.5 if is_enraged else entry.cooldown
 	_skill_cooldowns[index] = cooldown
+	# Slot 0 is the basic attack — keep _basic_attack_cooldown in sync so the
+	# basic attack guard in _make_decision always sees the correct value.
+	if index == 0:
+		_basic_attack_cooldown = cooldown
 
 	# Show cast indicator
 	if cast_indicator:

@@ -126,7 +126,7 @@ func _start_casting(skill: SkillData, slot_index: int, tier: int, force_self: bo
 		_current_cast_skill = skill
 		_current_cast_slot = slot_index
 		_current_cast_tier = tier
-		_is_special_attack = (slot_index == -1)
+		_is_special_attack = is_special
 		_cast_force_self = force_self
 		state.set("is_casting", true)
 		return true
@@ -135,6 +135,14 @@ func _start_casting(skill: SkillData, slot_index: int, tier: int, force_self: bo
 			return _execute_attack_immediately(is_special, tier)
 		else:
 			return _execute_skill_immediately(slot_index, tier, force_self)
+
+## Cancels an in-progress cast without firing the skill. Used on episode reset.
+func cancel_cast() -> void:
+	if state:
+		state.set("is_casting", false)
+	_cast_timer = 0.0
+	_current_cast_skill = null
+	_current_cast_slot = -1
 
 func _complete_casting() -> void:
 	state.set("is_casting", false)

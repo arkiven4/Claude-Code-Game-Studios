@@ -17,6 +17,7 @@ skill_id = "grunt_basic_slash"
 description = "A fast melee cleave hitting everything in front."
 mp_cost = 0
 base_cooldown = 1.5
+cast_time = 0.4
 target_type = 2
 area_radius = 2.5
 tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])

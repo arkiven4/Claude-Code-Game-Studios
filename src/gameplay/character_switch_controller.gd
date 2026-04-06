@@ -74,6 +74,7 @@ func switch_to_index(index: int) -> void:
 func switch_to(target: PartyMemberState) -> void:
 	if _switch_cooldown_remaining > 0.0: return
 	if not target or target == current_character or not target.is_alive: return
+	if current_character and current_character.is_casting: return
 	
 	var previous := current_character
 	previous.set_player_controlled(false)

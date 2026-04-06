@@ -22,13 +22,13 @@ Uses a single Godot process with N parallel arenas (VecEnv).
 To test your trained agents and see their performance:
 1.  **Identify Checkpoint:** Find your model in `prototypes/rl-training/models/`.
 2.  **Start Python:**
-    ```bash
-    python3 prototypes/rl-training/inference.py --checkpoint prototypes/rl-training/models/checkpoint_000XXX
-    ```
+	```bash
+	python3 prototypes/rl-training/inference.py --checkpoint prototypes/rl-training/models/checkpoint_000XXX
+	```
 3.  **Start Godot:**
-    ```bash
-    godot -- res://prototypes/rl-training/InferenceArena.tscn --port=11009
-    ```
+	```bash
+	godot -- res://prototypes/rl-training/InferenceArena.tscn --port=11009
+	```
 
 ---
 

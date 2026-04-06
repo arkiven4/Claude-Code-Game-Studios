@@ -8,12 +8,20 @@ extends Node3D
 @export var enemy_container_path: NodePath
 
 @export var move_speed: float = 4.0
-@export var max_episode_steps: int = 2000
+@export var max_episode_steps: int = 18000
 
 ## Stagnation penalty: steps of no damage before penalty fires (60 = ~1 second at 60 FPS)
 @export var stagnation_threshold: int = 60
 ## Penalty applied to team reward and each party agent per step while stagnating
 @export var w_stagnation: float = 0.002
+
+@export_group("Curriculum Scheduler")
+## Enable automatic episode length scaling based on rolling win rate
+@export var curriculum_enabled: bool = true
+## Episodes required before the scheduler checks for the first stage advance
+@export var curriculum_min_episodes: int = 50
+## Rolling window of recent episodes used to compute win rate for advancement
+@export var curriculum_eval_window: int = 100
 
 var evan_body: CharacterBody3D
 var evelyn_body: CharacterBody3D
@@ -46,6 +54,26 @@ var _enemy_damage_dealt_this_step: bool = false
 var _total_episodes: int = 0
 var _party_wins: int = 0
 
+## Curriculum state
+var _curriculum_stage: int = 0
+var _recent_results: Array[bool] = []  ## rolling window: true=party win, false=loss/timeout
+
+## Stage definitions: [episode_timeout_steps, win_rate_to_advance, display_label]
+## Steps = game-time minutes × 60s × 60 ticks (at 60 FPS physics)
+## Steps at speed_up=10: real_seconds × 60 FPS × 10 speed_up = steps
+## Stage 1:  1200 steps =  2 real-seconds/episode — ultra-fast cycling, pure exploration
+## Stage 2:  3600 steps =  6 real-seconds/episode
+## Stage 3:  7200 steps = 12 real-seconds/episode
+## Stage 4: 14400 steps = 24 real-seconds/episode
+## Stage 5: 28800 steps = 48 real-seconds/episode — full fights once AI is competent
+const _CURRICULUM_STAGES: Array = [
+	{"steps":  1200, "advance_at": 0.40, "label": "Stage 1 (~2s/ep)"},
+	{"steps":  3600, "advance_at": 0.45, "label": "Stage 2 (~6s/ep)"},
+	{"steps":  7200, "advance_at": 0.50, "label": "Stage 3 (~12s/ep)"},
+	{"steps": 14400, "advance_at": 0.55, "label": "Stage 4 (~24s/ep)"},
+	{"steps": 28800, "advance_at":  1.1, "label": "Stage 5 (~48s/ep)"},  ## final stage
+]
+
 func _ready() -> void:
 	evan_body   = get_node_or_null(evan_body_path)   as CharacterBody3D
 	evelyn_body = get_node_or_null(evelyn_body_path) as CharacterBody3D
@@ -69,6 +97,10 @@ func _ready() -> void:
 	if _evelyn_agent and _evelyn_agent.skill_execution:
 		_evelyn_agent.skill_execution.damage_dealt.connect(_on_party_damage_dealt)
 		_evelyn_agent.skill_execution.projectile_spawned.connect(_on_party_projectile_spawned)
+
+	# Apply initial curriculum stage timeout
+	if curriculum_enabled:
+		max_episode_steps = _CURRICULUM_STAGES[0]["steps"]
 
 	# Discover static enemies — already registered with godot_rl at scene load
 	_find_enemies()
@@ -108,7 +140,7 @@ func _physics_process(delta: float) -> void:
 	_update_hud()
 
 	if _episode_step >= max_episode_steps:
-		_end_episode(false)
+		_end_episode(false, true)  ## timeout — not a party wipe
 
 # --- Enemy Discovery ---
 
@@ -211,9 +243,24 @@ func _execute_enemy_movement(_delta: float) -> void:
 				var target_body: CharacterBody3D = _lowest_hp_alive_party_body(party_bodies, party_states)
 				if target_body:
 					move_dir = (target_body.global_position - enemy.global_position).normalized()
+			_:
+				# Action 0 (idle/wait): scripted fallback — chase nearest party member so enemies
+				# always close distance. RL learns when to retreat or reposition (actions 4/5).
+				var nearest: Vector3 = _nearest_alive_party_pos(enemy.global_position, party_bodies)
+				if nearest != Vector3.ZERO:
+					var dist: float = enemy.global_position.distance_to(nearest)
+					if dist > enemy.stop_distance:
+						move_dir = (nearest - enemy.global_position).normalized()
 
-		enemy.velocity = move_dir * enemy.move_speed
-		enemy.move_and_slide()
+		# Freeze movement during cast — enemy stands still while winding up the attack
+		if enemy.is_casting():
+			enemy.velocity.x = 0.0
+			enemy.velocity.z = 0.0
+			continue
+
+		# Only override horizontal velocity — preserve y so gravity accumulates in enemy's _physics_process
+		enemy.velocity.x = move_dir.x * enemy.move_speed
+		enemy.velocity.z = move_dir.z * enemy.move_speed
 
 # --- Episode Management ---
 
@@ -222,21 +269,39 @@ func _start_episode() -> void:
 	_update_all_contexts()
 	_episode_active = true
 
-func _end_episode(victory: bool) -> void:
+## victory=true: party killed all enemies.
+## victory=false + timeout=true: step limit reached, no winner.
+## victory=false + timeout=false: party was wiped.
+func _end_episode(victory: bool, timeout: bool = false) -> void:
 	if not _episode_active: return
 	_episode_active = false
 	_total_episodes += 1
+	if victory: _party_wins += 1
+
+	# Curriculum tracking — always record, independent of outcome signals
+	if curriculum_enabled:
+		_recent_results.append(victory)
+		if _recent_results.size() > curriculum_eval_window:
+			_recent_results.pop_front()
+		_update_curriculum()
+
+	# Signal outcome — must set done=true on all agents so Python triggers env.reset()
+	if _evan_agent: _evan_agent.done = true
+	if _evelyn_agent: _evelyn_agent.done = true
+	for hive in _hive_agents:
+		if is_instance_valid(hive): hive.done = true
+
 	if victory:
-		_party_wins += 1
 		if _team_agent: _team_agent.on_victory()
-		if _evan_agent: _evan_agent.done = true
-		if _evelyn_agent: _evelyn_agent.done = true
 		for hive in _hive_agents:
 			if is_instance_valid(hive): hive.on_all_enemies_killed()
-	else:
+	elif timeout:
+		# Neither side won — small defeat signal for party, no bonus for enemies
 		if _team_agent: _team_agent.on_defeat()
-		if _evan_agent: _evan_agent.done = true
-		if _evelyn_agent: _evelyn_agent.done = true
+		# Enemies get no bonus reward for a timeout draw
+	else:
+		# Actual party wipe
+		if _team_agent: _team_agent.on_defeat()
 		for hive in _hive_agents:
 			if is_instance_valid(hive): hive.on_party_wiped()
 	## Do NOT reset here. godot_rl sends done=true to Python, Python calls reset(),
@@ -251,7 +316,9 @@ func _reset_episode() -> void:
 	_enemy_steps_since_last_damage = 0
 	_enemy_damage_dealt_this_step = false
 
-	# Reset party
+	# Reset party — cancel any in-flight casts before resetting state
+	if _evan_agent and _evan_agent.skill_execution:   _evan_agent.skill_execution.cancel_cast()
+	if _evelyn_agent and _evelyn_agent.skill_execution: _evelyn_agent.skill_execution.cancel_cast()
 	if _evan_state:   _evan_state.reset_for_encounter(true)
 	if _evelyn_state: _evelyn_state.reset_for_encounter(true)
 	if evan_body:   evan_body.global_position   = _initial_evan_pos
@@ -273,6 +340,31 @@ func _reset_episode() -> void:
 
 	_update_all_contexts()
 	_start_episode()
+
+func _update_curriculum() -> void:
+	if _total_episodes < curriculum_min_episodes:
+		return
+	if _recent_results.size() < curriculum_eval_window:
+		return
+	if _curriculum_stage >= _CURRICULUM_STAGES.size() - 1:
+		return  ## Already at final stage
+
+	var wins: int = 0
+	for r: bool in _recent_results:
+		if r: wins += 1
+	var win_rate: float = float(wins) / float(_recent_results.size())
+
+	var threshold: float = _CURRICULUM_STAGES[_curriculum_stage]["advance_at"]
+	if win_rate >= threshold:
+		_curriculum_stage += 1
+		max_episode_steps = _CURRICULUM_STAGES[_curriculum_stage]["steps"]
+		_recent_results.clear()  ## Reset window so next stage is judged fresh
+		print("[Curriculum] Advanced to %s — win rate was %.1f%% over last %d episodes. Timeout: %d steps." % [
+			_CURRICULUM_STAGES[_curriculum_stage]["label"],
+			win_rate * 100.0,
+			curriculum_eval_window,
+			max_episode_steps,
+		])
 
 func _update_all_contexts() -> void:
 	if _evan_agent: _evan_agent.set_context({"enemies": _enemies, "allies": [_evelyn_state]})
@@ -428,8 +520,6 @@ func _check_stagnation_penalty() -> void:
 
 	if not any_enemy_alive or _steps_since_last_damage < stagnation_threshold:
 		return
-	if _any_party_member_regenerating():
-		return
 
 	if _team_agent:   _team_agent.reward -= w_stagnation
 	if _evan_agent:   _evan_agent.reward -= w_stagnation
@@ -454,18 +544,10 @@ func _check_enemy_stagnation_penalty() -> void:
 		if not is_instance_valid(hive) or not is_instance_valid(enemy) or not enemy.is_alive:
 			continue
 		var hp_ratio: float = enemy.get_hp_ratio() if enemy.has_method("get_hp_ratio") else 1.0
-		if hp_ratio < 1.0:
-			continue  ## Injured enemy may be repositioning — exempt
+		if hp_ratio < 0.2:
+			continue  ## Near-death enemy may be repositioning — exempt
 		hive.reward -= w_stagnation
 
-func _any_party_member_regenerating() -> bool:
-	if _evan_state and _evan_state.is_alive:
-		if _evan_state.current_hp < _evan_state.max_hp or _evan_state.current_mp < _evan_state.max_mp:
-			return true
-	if _evelyn_state and _evelyn_state.is_alive:
-		if _evelyn_state.current_hp < _evelyn_state.max_hp or _evelyn_state.current_mp < _evelyn_state.max_mp:
-			return true
-	return false
 
 func _update_hud() -> void:
 	if _evan_state:
@@ -482,6 +564,11 @@ func _update_hud() -> void:
 	if wr_label:
 		var wr: float = (float(_party_wins) / float(_total_episodes)) * 100.0 if _total_episodes > 0 else 0.0
 		wr_label.text = "Win Rate: %.1f%% (%d/%d)" % [wr, _party_wins, _total_episodes]
+
+	var stage_label = get_node_or_null("%CurriculumStage")
+	if stage_label:
+		var stage_name: String = _CURRICULUM_STAGES[_curriculum_stage]["label"]
+		stage_label.text = "Curriculum: %s" % stage_name
 
 	var evan_r = get_node_or_null("%EvanReward")
 	if evan_r and _evan_agent: evan_r.text = "Evan R: %.3f" % _evan_agent.reward

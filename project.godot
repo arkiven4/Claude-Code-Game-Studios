@@ -12,7 +12,7 @@ config_version=5
 
 config/name="My Vampire"
 config/version="0.1.0"
-run/main_scene="uid://brhe3x8ei04ii"
+run/main_scene="uid://c6h8j2k3l4m5n"
 config/features=PackedStringArray("4.7", "Forward Plus")
 
 [configuration]

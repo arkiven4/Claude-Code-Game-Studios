@@ -395,6 +395,7 @@ func reset_for_encounter(full_reset: bool) -> void:
 		current_hp = max_hp
 		current_mp = max_mp
 		is_alive = true
+		is_casting = false
 		revives_used_this_encounter = 0
 		damage_history.clear()
 		total_damage_received = 0

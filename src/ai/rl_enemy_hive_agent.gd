@@ -127,10 +127,15 @@ func set_action(action: Dictionary) -> void:
 			if enemy_controller.is_casting():
 				reward -= 0.001
 				return
-			if enemy_controller.enemy_data and act - 1 < enemy_controller.enemy_data.skill_list.size():
+			var skill_idx: int = act - 1
+			var cds: Array = enemy_controller.get("_skill_cooldowns")
+			if cds and skill_idx < cds.size() and cds[skill_idx] > 0.0:
+				reward -= 0.001  ## Penalty for trying to use a skill still on cooldown
+				return
+			if enemy_controller.enemy_data and skill_idx < enemy_controller.enemy_data.skill_list.size():
 				var target = enemy_controller.call("_get_target_state")
 				if target:
-					enemy_controller.call("_execute_skill", act - 1, target)
+					enemy_controller.call("_execute_skill", skill_idx, target)
 		3, 4, 5:
 			if enemy_controller.is_casting():
 				reward -= 0.001
