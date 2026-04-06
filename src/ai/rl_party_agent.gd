@@ -20,9 +20,9 @@ enum Role { TANKER, MAGE, SUPPORT }
 @export var w_team: float = 0.4
 
 const MAX_OBS_DIST: float = 20.0
-const N_BASE_OBS: int = 39
+const N_BASE_OBS: int = 41
 const N_DIRECTIVE: int = 7
-const N_OBS: int = N_BASE_OBS + N_DIRECTIVE  ## 46
+const N_OBS: int = N_BASE_OBS + N_DIRECTIVE  ## 48
 
 var _active_tier: int = 1
 var _context: Dictionary = {}
@@ -48,6 +48,11 @@ func _ready() -> void:
 		skill_execution = get_parent().get_node_or_null("SkillExecutionSystem")
 	if skill_execution:
 		skill_execution.damage_dealt.connect(_on_damage_dealt)
+		skill_execution.skill_cast.connect(_on_skill_cast_complete)
+
+func _on_skill_cast_complete(_skill: SkillData) -> void:
+	## Reward for completing the cast/skill execution
+	reward += w_skill_hit * 2.0
 
 ## Called by rl_arena_manager each step after TeamPolicy outputs directives.
 func set_directive(target: int, role_mode: int) -> void:
@@ -80,6 +85,10 @@ func get_obs() -> Dictionary:
 		obs.append(clampf(cd / max_cd, 0.0, 1.0) if max_cd > 0.0 else 0.0)
 	for i in range(4):
 		obs.append(1.0 if state.can_use_skill(i) else 0.0)
+
+	# Casting (2): is_casting, progress
+	obs.append(1.0 if state.get("is_casting") else 0.0)
+	obs.append(skill_execution.get_cast_progress() if skill_execution else 0.0)
 
 	# Allies (9): up to 3 × (hp, mp, alive)
 	var allies: Array = _context.get("allies", [])
@@ -145,6 +154,10 @@ func set_action(action: Dictionary) -> void:
 
 	match act:
 		1, 2, 3, 4:
+			if state.is_casting:
+				reward -= w_idle  ## Penalty for trying to cast while already casting
+				return
+
 			if skill_execution:
 				var slot: int = act - 1
 				var char_data: CharacterData = state.character_data if state else null
@@ -156,14 +169,20 @@ func set_action(action: Dictionary) -> void:
 				else:
 					hit = skill_execution.try_activate_skill(slot, _active_tier)
 				if hit:
-					reward += w_skill_hit
+					reward += w_skill_hit * 0.5  ## Reduced intent reward
 		5, 6, 7, 8:
+			if state.is_casting:
+				reward -= w_idle  ## Penalty for trying to move while casting
+				return
 			pending_move_action = act
 		9, 10:
+			if state.is_casting:
+				reward -= w_idle
+				return
 			if skill_execution:
 				var hit := skill_execution.try_activate_attack(act == 10, _active_tier)
 				if hit:
-					reward += w_skill_hit
+					reward += w_skill_hit * 0.5
 		_:
 			reward -= w_idle  ## action=0 or unknown = idle penalty
 

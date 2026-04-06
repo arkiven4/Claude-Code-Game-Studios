@@ -16,6 +16,7 @@ signal died
 signal damage_taken(amount: int)
 signal damage_dealt(amount: int, target: Node)
 signal shield_changed(new_value: int)
+signal skill_fired(index: int, skill: SkillData)
 
 @export var enemy_data: EnemyData
 @export var projectile_scene: PackedScene
@@ -447,6 +448,17 @@ func get_resistance(category: int) -> float:
 func get_hp_ratio() -> float:
 	return float(current_hp) / float(max_hp) if max_hp > 0 else 0.0
 
+func is_casting() -> bool:
+	return _is_casting
+
+func get_cast_progress() -> float:
+	if not _is_casting or _current_cast_skill_index < 0:
+		return 0.0
+	var skill := enemy_data.skill_list[_current_cast_skill_index].skill_ref
+	var total := skill.cast_time if skill else 1.0
+	if total <= 0.0: return 1.0
+	return clampf(1.0 - (_cast_timer / total), 0.0, 1.0)
+
 ## ICombatant interface — required by CombatSkillExecutor
 
 func get_effective_atk() -> int:
@@ -768,6 +780,8 @@ func _apply_skill_logic(index: int, target: PartyMemberState) -> void:
 	# Show cast indicator
 	if cast_indicator:
 		cast_indicator.show_skill_icon(skill)
+
+	skill_fired.emit(index, skill)
 
 	# Handle skill type-specific logic
 	match skill.skill_type:

@@ -97,3 +97,33 @@ func test_tier_selection() -> void:
 	# of _execute_enemy_skill, but we can verify it doesn't crash and returns true.
 	var success := _skill_system.try_activate_skill(0, 2)
 	assert_true(success, "Activates with tier 2")
+
+func test_cast_time_logic() -> void:
+	_skill.cast_time = 1.0
+	_state.current_mp = 100
+	
+	watch_signals(_skill_system)
+	var success := _skill_system.try_activate_skill(0, 1)
+	
+	assert_true(success, "Skill activation should start (casting)")
+	assert_true(_state.is_casting, "State should be 'is_casting'")
+	assert_false(_state.can_use_skill(0), "Cannot use another skill while casting")
+	
+	# MP and charges should NOT be consumed yet (consumed in Phase 2: _execute_skill_immediately)
+	assert_eq(_state.current_mp, 100, "MP not yet consumed")
+	assert_eq(_state.skill_charges[0], 1, "Charge not yet consumed")
+	
+	# Progress should be 0 at start
+	assert_eq(_skill_system.get_cast_progress(), 0.0, "Progress should be 0.0")
+	
+	# Advance time
+	_skill_system._process(0.5)
+	assert_true(_state.is_casting, "Should still be casting after 0.5s")
+	assert_almost_eq(_skill_system.get_cast_progress(), 0.5, 0.01, "Progress should be ~0.5")
+	
+	# Complete casting
+	_skill_system._process(0.6)
+	assert_false(_state.is_casting, "Should have finished casting")
+	assert_eq(_state.current_mp, 100 - _skill.mp_cost, "MP should be consumed after cast")
+	assert_eq(_state.skill_charges[0], 0, "Charge should be consumed after cast")
+	assert_signal_emitted(_skill_system, "skill_cast")

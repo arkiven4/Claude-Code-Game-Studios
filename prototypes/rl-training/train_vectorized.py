@@ -35,9 +35,9 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
         self.possible_agents = self._agent_ids
 
         # Define individual agent spaces
-        obs_46 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (46,), dtype=np.float32)})
+        obs_48 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (48,), dtype=np.float32)})
         act_party = gym.spaces.Dict({
-            "action":      gym.spaces.Discrete(9),
+            "action":      gym.spaces.Discrete(11),
             "heal_target": gym.spaces.Discrete(2),
         })
 
@@ -49,7 +49,7 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
             "evelyn_role":   gym.spaces.Discrete(3),
         })
 
-        obs_21 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (21,), dtype=np.float32)})
+        obs_23 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (23,), dtype=np.float32)})
         act_enemy = gym.spaces.Dict({
             "action": gym.spaces.Discrete(6),
         })
@@ -58,12 +58,12 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
         obs_spaces = {}
         act_spaces = {}
         for i in range(self.n_arenas):
-            obs_spaces[f"arena_{i}_evan"]    = obs_46
-            obs_spaces[f"arena_{i}_evelyn"]  = obs_46
+            obs_spaces[f"arena_{i}_evan"]    = obs_48
+            obs_spaces[f"arena_{i}_evelyn"]  = obs_48
             obs_spaces[f"arena_{i}_team"]    = obs_33
-            obs_spaces[f"arena_{i}_enemy_0"] = obs_21
-            obs_spaces[f"arena_{i}_enemy_1"] = obs_21
-            obs_spaces[f"arena_{i}_enemy_2"] = obs_21
+            obs_spaces[f"arena_{i}_enemy_0"] = obs_23
+            obs_spaces[f"arena_{i}_enemy_1"] = obs_23
+            obs_spaces[f"arena_{i}_enemy_2"] = obs_23
             
             act_spaces[f"arena_{i}_evan"]    = act_party
             act_spaces[f"arena_{i}_evelyn"]  = act_party

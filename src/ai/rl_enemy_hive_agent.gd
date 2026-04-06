@@ -8,8 +8,8 @@ extends AIController3D
 @export var enemy_controller: EnemyAIController
 
 const MAX_OBS_DIST: float = 20.0
-## self(3) + party×2(10) + enemy_allies×2(8) = 21
-const N_OBS: int = 21
+## self(5) + party×2(10) + enemy_allies×2(8) = 23
+const N_OBS: int = 23
 
 ## Pending movement action — executed by rl_arena_manager
 var pending_move_action: int = 0
@@ -23,6 +23,10 @@ func _ready() -> void:
 	if enemy_controller:
 		enemy_controller.damage_taken.connect(_on_damage_taken)
 		enemy_controller.damage_dealt.connect(_on_damage_dealt)
+		enemy_controller.skill_fired.connect(_on_skill_fired)
+
+func _on_skill_fired(_index: int, _skill: SkillData) -> void:
+	reward += 0.01  ## Reward for finishing a cast
 
 func set_context(context: Dictionary) -> void:
 	_context = context
@@ -43,6 +47,10 @@ func get_obs() -> Dictionary:
 	var cds: Array = enemy_controller.get("_skill_cooldowns") if enemy_controller.get("_skill_cooldowns") != null else []
 	obs.append(clampf(cds[0] / 5.0, 0.0, 1.0) if cds.size() > 0 else 0.0)
 	obs.append(clampf(cds[1] / 5.0, 0.0, 1.0) if cds.size() > 1 else 0.0)
+
+	# Casting (2): is_casting, progress
+	obs.append(1.0 if enemy_controller.is_casting() else 0.0)
+	obs.append(enemy_controller.get_cast_progress())
 
 	# Party members × 2 (10): hp, dist, alive, rel_x, rel_z
 	var party: Array = _context.get("party", [])
@@ -99,16 +107,18 @@ func set_action(action: Dictionary) -> void:
 
 	match act:
 		1, 2:
+			if enemy_controller.is_casting():
+				reward -= 0.001
+				return
 			if enemy_controller.enemy_data and act - 1 < enemy_controller.enemy_data.skill_list.size():
 				var target = enemy_controller.call("_get_target_state")
 				if target:
 					enemy_controller.call("_execute_skill", act - 1, target)
-		3:
-			pending_move_action = 3  ## rl_arena_manager moves toward nearest party member
-		4:
-			pending_move_action = 4  ## reposition away
-		5:
-			pending_move_action = 5  ## move toward lowest-HP party member
+		3, 4, 5:
+			if enemy_controller.is_casting():
+				reward -= 0.001
+				return
+			pending_move_action = act
 		_:
 			reward -= 0.001  ## idle penalty
 

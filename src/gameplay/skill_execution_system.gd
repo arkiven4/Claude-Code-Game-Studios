@@ -48,6 +48,13 @@ func _process(delta: float) -> void:
 		if _cast_timer <= 0.0:
 			_complete_casting()
 
+func get_cast_progress() -> float:
+	if not state or not state.get("is_casting") or not _current_cast_skill:
+		return 0.0
+	var total := _current_cast_skill.cast_time
+	if total <= 0.0: return 1.0
+	return clampf(1.0 - (_cast_timer / total), 0.0, 1.0)
+
 func try_activate_skill(slot_index: int, active_tier: int) -> bool:
 	# Phase 1: Validation
 	if not state or not state.get("is_alive") or state.get("is_casting"):

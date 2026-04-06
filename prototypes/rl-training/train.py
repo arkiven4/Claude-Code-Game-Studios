@@ -42,9 +42,9 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
         self.possible_agents = self._agent_ids
 
         # Evan/Evelyn Spaces
-        obs_46 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (46,), dtype=np.float32)})
+        obs_48 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (48,), dtype=np.float32)})
         act_party = gym.spaces.Dict({
-            "action":      gym.spaces.Discrete(9),  # 0=wait,1-4=skills,5-8=movement
+            "action":      gym.spaces.Discrete(11),  # 0=wait,1-4=skills,5-8=movement,9=basic,10=special
             "heal_target": gym.spaces.Discrete(2),  # 0=self, 1=lowest-HP ally
         })
 
@@ -58,18 +58,18 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
         })
 
         # Enemy Hive Spaces (shared policy, 3 separate agents)
-        obs_21 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (21,), dtype=np.float32)})
+        obs_23 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (23,), dtype=np.float32)})
         act_enemy = gym.spaces.Dict({
             "action": gym.spaces.Discrete(6),  # 0=wait,1=skill0,2=skill1,3-5=movement
         })
 
         self.observation_space = gym.spaces.Dict({
-            "evan":    obs_46,
-            "evelyn":  obs_46,
+            "evan":    obs_48,
+            "evelyn":  obs_48,
             "team":    obs_33,
-            "enemy_0": obs_21,
-            "enemy_1": obs_21,
-            "enemy_2": obs_21,
+            "enemy_0": obs_23,
+            "enemy_1": obs_23,
+            "enemy_2": obs_23,
         })
         self.action_space = gym.spaces.Dict({
             "evan":    act_party,
