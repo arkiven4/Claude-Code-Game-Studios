@@ -718,11 +718,16 @@ func _execute_skill_with_target(skill: SkillData, entry: EnemySkillEntry, target
 		var target_node := target.get_parent() as Node3D
 		if target_node:
 			var result: Dictionary = CombatSkillExecutor.calculate_skill_damage(self, skill, effect_value, target)
+			
+			# Calculate lifetime based on range. Buffer of 0.1s.
+			var p_speed := maxf(skill.projectile_speed, 1.0)
+			var lifetime := (skill.max_cast_range / p_speed) + 0.1
+			
 			var spawned := CombatVFX.spawn_projectile(get_tree(), projectile_scene, skill,
 					result, name,
 					global_position + Vector3(0, 0.8, 0),
 					target_node.global_position + Vector3(0, 0.8, 0),
-					false, true, -1.0, target_node)
+					false, true, lifetime, target_node)
 			if spawned:
 				projectile_spawned.emit(spawned)
 			else:

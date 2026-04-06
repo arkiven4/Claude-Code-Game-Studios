@@ -480,14 +480,17 @@ func _spawn_projectile_vfx(skill: SkillData, caster_node: Node3D, target: EnemyA
 	var spawn_pos := caster_node.global_position + Vector3(0, 0.8, 0)
 	var caster_id: String = str(state.get_parent().name) if state and state.get_parent() else ""
 
+	# Calculate lifetime based on range. Buffer of 0.1s to ensure it reaches the edge.
+	var speed := maxf(skill.projectile_speed, 1.0)
+	var lifetime := (skill.max_cast_range / speed) + 0.1
+
 	var projectile: Projectile = null
 	if target:
 		projectile = CombatVFX.spawn_projectile(get_tree(), projectile_scene, skill, damage_result, caster_id,
-				spawn_pos, target.global_position + Vector3(0, 0.8, 0), true, false, -1.0, target)
+				spawn_pos, target.global_position + Vector3(0, 0.8, 0), true, false, lifetime, target)
 	else:
-		# No target: fire forward, expire when it reaches max range.
+		# No target: fire forward
 		var forward := -caster_node.global_transform.basis.z.normalized()
-		var lifetime := skill.max_cast_range / maxf(skill.projectile_speed, 1.0)
 		projectile = CombatVFX.spawn_projectile(get_tree(), projectile_scene, skill, damage_result, caster_id,
 				spawn_pos, spawn_pos + forward * skill.max_cast_range, true, false, lifetime)
 	
