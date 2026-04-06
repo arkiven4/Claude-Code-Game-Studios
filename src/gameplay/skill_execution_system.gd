@@ -8,6 +8,7 @@ signal skill_activated(slot_index: int, success: bool)
 signal attack_activated(is_special: bool, success: bool)
 signal skill_cast(skill: SkillData)
 signal damage_dealt(amount: int, target: Node)
+signal heal_applied(amount: int, target: Node)
 signal projectile_spawned(projectile: Projectile)
 signal targeting_started(mode: TargetingMode)
 signal targeting_ended
@@ -525,3 +526,4 @@ func _apply_support_skill(skill: SkillData, target: Node, effect_value: float) -
 	
 	if target.has_method("apply_heal"):
 		target.call("apply_heal", heal)
+		heal_applied.emit(heal, target)

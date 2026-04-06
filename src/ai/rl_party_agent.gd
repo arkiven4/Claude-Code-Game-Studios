@@ -16,6 +16,7 @@ enum Role { TANKER, MAGE, SUPPORT }
 @export var w_damage_dealt: float = 0.001
 @export var w_damage_received: float = 0.0003
 @export var w_skill_hit: float = 0.005
+@export var w_heal_given: float = 0.002
 @export var w_idle: float = 0.001
 @export var w_team: float = 0.4
 
@@ -48,6 +49,7 @@ func _ready() -> void:
 		skill_execution = get_parent().get_node_or_null("SkillExecutionSystem")
 	if skill_execution:
 		skill_execution.damage_dealt.connect(_on_damage_dealt)
+		skill_execution.heal_applied.connect(_on_heal_applied)
 		skill_execution.skill_cast.connect(_on_skill_cast_complete)
 		skill_execution.projectile_spawned.connect(_on_projectile_spawned)
 
@@ -227,6 +229,9 @@ func on_protection_bonus() -> void:
 
 func _on_damage_dealt(amount: int, _target: Node) -> void:
 	reward += amount * w_damage_dealt
+
+func _on_heal_applied(amount: int, _target: Node) -> void:
+	reward += amount * w_heal_given
 
 func on_damage_received(amount: int) -> void:
 	reward -= amount * w_damage_received
