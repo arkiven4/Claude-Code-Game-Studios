@@ -11,10 +11,10 @@
 [ext_resource type="PackedScene" uid="uid://bgfdfr1n2rhl" path="res://assets/scenes/characters/Evelyn.tscn" id="9_evelyn"]
 [ext_resource type="PackedScene" uid="uid://bixlue2j75gbg" path="res://assets/scenes/characters/Evan.tscn" id="10_evan"]
 [ext_resource type="PackedScene" uid="uid://d25c0yibrlo5p" path="res://assets/scenes/enemies/GruntMelee.tscn" id="11_grunt"]
-[ext_resource type="PackedScene" path="res://assets/scenes/enemies/ArcherRanged.tscn" id="12_archer"]
+[ext_resource type="PackedScene" uid="uid://csywd2vdhgbk8" path="res://assets/scenes/enemies/ArcherRanged.tscn" id="12_archer"]
 [ext_resource type="PackedScene" uid="uid://kvt1qcbl81ag" path="res://assets/scenes/ui/CombatHUD.tscn" id="13_hud"]
 [ext_resource type="Script" uid="uid://cf5h4nqx6foi6" path="res://src/gameplay/arena_wiring.gd" id="14_wiring"]
-[ext_resource type="PackedScene" path="res://assets/scenes/enemies/MageEnemy.tscn" id="15_mage"]
+[ext_resource type="PackedScene" uid="uid://8n0eyg87d40s" path="res://assets/scenes/enemies/MageEnemy.tscn" id="15_mage"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 sky_top_color = Color(0.2, 0.266667, 0.333333, 1)
@@ -111,15 +111,20 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.7046553, 0)
 
 [node name="GruntMelee_1" parent="Enemies" unique_id=635631624 groups=["Hurtboxes"] instance=ExtResource("11_grunt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.9, 25)
+show_debug_ranges = false
+show_debug_ai_decisions = true
 
 [node name="GruntMelee_2" parent="Enemies" unique_id=1485683892 groups=["Hurtboxes"] instance=ExtResource("11_grunt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.9, 25)
+show_debug_ranges = false
 
 [node name="ArcherRanged_1" parent="Enemies" unique_id=1349000536 groups=["Hurtboxes"] instance=ExtResource("12_archer")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.46904, 0.9, 13.995243)
+show_debug_ranges = false
 
 [node name="MageEnemy_1" parent="Enemies" unique_id=1349000537 groups=["Hurtboxes"] instance=ExtResource("15_mage")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.762451, 0.9, 13.33773)
+show_debug_ranges = false
 
 [node name="CombatHUD" parent="." unique_id=2051617569 instance=ExtResource("13_hud")]
 

@@ -59,9 +59,22 @@ var _aggro_range_calculated: float = 0.0
 var _ranges_initialized: bool = false
 
 # Debug Visualization
+@export_group("Debug Settings")
 @export var show_debug_ranges: bool = false
+@export var show_debug_ai_decisions: bool = false
+@export var show_debug_combat_logs: bool = false
 var _aggro_debug_mesh: MeshInstance3D = null
 var _attack_range_debug: MeshInstance3D = null
+
+## Logs AI decision-making only if show_debug_ai_decisions is enabled.
+func _debug_ai(msg: String) -> void:
+	if show_debug_ai_decisions:
+		print(msg)
+
+## Logs combat events only if show_debug_combat_logs is enabled.
+func _debug_combat(msg: String) -> void:
+	if show_debug_combat_logs:
+		print(msg)
 
 # TODO: Pathfinding integration for chase behavior
 # When implementing pathfinding:
@@ -168,10 +181,15 @@ func _initialize_ranges() -> void:
 		return
 
 	# attack_range = skill_list[0].max_cast_range (the character's basic attack skill)
+	# If max_cast_range <= 0.5, fall back to area_radius (for melee/AoE skills with no explicit range).
 	if not enemy_data.skill_list.is_empty() and enemy_data.skill_list.size() > 0:
 		var basic_entry := enemy_data.skill_list[0]
-		if basic_entry and basic_entry.skill_ref and basic_entry.skill_ref.max_cast_range > 0.0:
-			attack_range = basic_entry.skill_ref.max_cast_range
+		if basic_entry and basic_entry.skill_ref:
+			var skill := basic_entry.skill_ref
+			if skill.max_cast_range > 0.5:
+				attack_range = skill.max_cast_range
+			elif skill.area_radius > 0.0:
+				attack_range = skill.area_radius
 
 	# Dynamic aggro: 1.5 * attack_range
 	var aggro_calculated := attack_range * 1.5
@@ -397,13 +415,17 @@ func take_damage(data) -> void:
 	current_hp = max(0, current_hp - final_amount)
 	damage_taken.emit(final_amount)
 
-	# When damaged by player, automatically enter CHASING state and acquire attacker as target
-	if data is Dictionary and _combat_state == CombatState.IDLE:
+	# When damaged by player, automatically mark attacker as target (taunt on hit).
+	# Equivalent to entering aggro range — enemy will chase and attack regardless of distance.
+	if data is Dictionary:
 		var caster_name: String = data.get("caster_name", "")
 		if not caster_name.is_empty():
 			_acquire_target_by_name(caster_name)
 			if _current_target:
-				_combat_state = CombatState.CHASING
+				_is_chasing = true  # Persistent lock-on, won't drop target
+				if _combat_state == CombatState.IDLE:
+					_combat_state = CombatState.CHASING
+					_debug_ai("[AI Decision] %s: Hit by '%s' — marking as target, entering CHASING" % [name, caster_name])
 
 	# Check enrage (25%)
 	if not is_enraged and current_hp <= max_hp * 0.25:
@@ -472,25 +494,34 @@ func _acquire_target_by_name(caster_name: String) -> void:
 func _make_decision() -> void:
 	## Do nothing if action-denied (stunned)
 	if _has_effect_category(StatusEffect.EffectCategory.ACTION_DENIAL):
+		_debug_ai("[AI Decision] %s: SKIPPED — stunned/action denied" % name)
 		return
 
 	var target_state := _get_target_state()
 	if not target_state or not target_state.is_alive:
 		return
 
+	var dist := global_position.distance_to(_current_target.global_position)
+
 	# Priority 1: Use best available skill
 	var best_skill_index := _select_best_skill()
 	if best_skill_index >= 0:
+		var entry: EnemySkillEntry = enemy_data.skill_list[best_skill_index]
+		_debug_ai("[AI Decision] %s: USING '%s' (slot %d, dist=%.1f, weight=%.1f) → %s" % [
+			name, entry.skill_ref.display_name, best_skill_index, dist, entry.weight, target_state.name])
 		_execute_skill(best_skill_index, target_state)
 		return
 
 	# Priority 2: Use basic attack if in range and not on cooldown
-	var dist := global_position.distance_to(_current_target.global_position)
 	if dist <= attack_range and _basic_attack_cooldown <= 0.0:
+		_debug_ai("[AI Decision] %s: USING Basic Attack (dist=%.1f <= range=%.1f, no cd) → %s" % [
+			name, dist, attack_range, target_state.name])
 		_execute_basic_attack(target_state)
 		return
 
 	# Priority 3: All attacks on cooldown - state machine will handle strafe/chase
+	_debug_ai("[AI Decision] %s: WAITING — all skills on cooldown (dist=%.1f, basic_cd=%.1f)" % [
+		name, dist, _basic_attack_cooldown])
 
 ## Returns the CharacterBody3D of the best party member to target (for movement/position).
 func _select_target() -> Node3D:
@@ -536,34 +567,52 @@ func _select_best_skill() -> int:
 	var best_score: float = -INF
 	var dist := global_position.distance_to(_current_target.global_position) if _current_target else 999.0
 
+	if show_debug_ai_decisions:
+		_debug_ai("[Skill Select] %s: Evaluating skills (target dist=%.1f, attack_range=%.1f)" % [name, dist, attack_range])
+
 	for i in range(enemy_data.skill_list.size()):
 		var entry := enemy_data.skill_list[i]
 		if not entry or not entry.skill_ref:
+			_debug_ai("[Skill Select] %s:   slot %d: SKIP (null skill_ref)" % [name, i])
 			continue
 
 		var skill := entry.skill_ref
 
 		## Hard block: skip skills that are still on cooldown
 		if _skill_cooldowns[i] > 0.0:
+			_debug_ai("[Skill Select] %s:   slot %d '%s': SKIP (cooldown %.1fs remaining)" % [name, i, skill.display_name, _skill_cooldowns[i]])
 			continue
 
 		# Condition check
 		if not _is_condition_eligible(entry.condition):
+			_debug_ai("[Skill Select] %s:   slot %d '%s': SKIP (condition not eligible: %d)" % [name, i, skill.display_name, entry.condition])
 			continue
 		if not _evaluate_condition(entry.condition):
+			_debug_ai("[Skill Select] %s:   slot %d '%s': SKIP (condition failed: %d)" % [name, i, skill.display_name, entry.condition])
 			continue
 
 		# Range check - use skill.max_cast_range, NOT entry.max_range
 		var skill_range := skill.max_cast_range if skill.max_cast_range > 0.0 else attack_range
 		if dist > skill_range:
+			_debug_ai("[Skill Select] %s:   slot %d '%s': SKIP (out of range, dist=%.1f > range=%.1f)" % [name, i, skill.display_name, dist, skill_range])
 			continue
 		if entry.min_range > 0.0 and dist < entry.min_range:
+			_debug_ai("[Skill Select] %s:   slot %d '%s': SKIP (too close, dist=%.1f < min=%.1f)" % [name, i, skill.display_name, dist, entry.min_range])
 			continue
 
+		# Skill is valid
 		var score := entry.weight
+		_debug_ai("[Skill Select] %s:   slot %d '%s': VALID (score=%.1f, range=%.1f, cd=%.1fs)" % [name, i, skill.display_name, score, skill_range, entry.cooldown])
 		if score > best_score:
 			best_score = score
 			best_index = i
+
+	if show_debug_ai_decisions:
+		if best_index >= 0:
+			var winner := enemy_data.skill_list[best_index].skill_ref
+			_debug_ai("[Skill Select] %s: → SELECTED '%s' (slot %d, score=%.1f)" % [name, winner.display_name, best_index, best_score])
+		else:
+			_debug_ai("[Skill Select] %s: → NO VALID SKILL (all on cd, out of range, or conditions unmet)" % name)
 
 	return best_index
 
@@ -590,12 +639,14 @@ func _execute_skill(index: int, target: PartyMemberState) -> void:
 	var skill: SkillData = entry.skill_ref
 
 	if skill.cast_time > 0.0:
+		_debug_ai("[Execute] %s: STARTING cast of '%s' for %.1fs → %s" % [name, skill.display_name, skill.cast_time, target.name])
 		_is_casting = true
 		_cast_timer = skill.cast_time
 		_current_cast_skill_index = index
 		_current_cast_target = target
 		return
 
+	_debug_ai("[Execute] %s: Firing '%s' immediately → %s" % [name, skill.display_name, target.name])
 	_apply_skill_logic(index, target)
 
 ## Executes a basic attack using skill_list index 0.
@@ -616,6 +667,9 @@ func _execute_basic_attack(target: PartyMemberState) -> void:
 		return
 
 	var skill: SkillData = entry.skill_ref
+
+	_debug_ai("[Execute] %s: Basic Attack '%s' (range=%.1f, cd=%.1fs) → %s" % [
+		name, skill.display_name, skill.max_cast_range, BASIC_ATTACK_COOLDOWN, target.name])
 
 	# Apply cooldown
 	_skill_cooldowns[0] = BASIC_ATTACK_COOLDOWN

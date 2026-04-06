@@ -316,6 +316,7 @@ func _execute_enemy_skill(skill: SkillData, tier_config: SkillTierConfig, effect
 		for i in range(hits):
 			var target := in_range[i] as EnemyAIController
 			var actual_damage: Dictionary = CombatSkillExecutor.calculate_skill_damage(state, skill, effect_value, target)
+			actual_damage["caster_name"] = caster_node.name
 			_spawn_projectile_vfx(skill, caster_node, target, actual_damage)
 		# damage_dealt is emitted later by the Projectile node's hurtbox callback;
 		# nothing more to do here for projectile skills.
@@ -324,6 +325,7 @@ func _execute_enemy_skill(skill: SkillData, tier_config: SkillTierConfig, effect
 	for i in range(hits):
 		var target := in_range[i] as EnemyAIController
 		var actual_damage: Dictionary = CombatSkillExecutor.calculate_skill_damage(state, skill, effect_value, target)
+		actual_damage["caster_name"] = caster_node.name
 		target.take_damage(actual_damage)
 		_spawn_skill_vfx(target.global_position, Color(1.0, 0.1, 0.1), skill.vfx_effect)
 		damage_dealt.emit(actual_damage.get("damage", 0), target)
