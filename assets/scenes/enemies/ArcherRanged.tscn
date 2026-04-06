@@ -11,6 +11,7 @@
 [ext_resource type="Resource" path="res://assets/data/items/mage_apprentice_robe.tres" id="9_robe"]
 [ext_resource type="Script" uid="uid://c3cjekrr00ob3" path="res://src/gameplay/status_effects_system.gd" id="10_sfx"]
 [ext_resource type="Script" uid="uid://cwuunfo02hcyp" path="res://src/gameplay/status_effect_indicator.gd" id="11_sei"]
+[ext_resource type="Script" uid="uid://dwcbwk2j8ucck" path="res://src/gameplay/skill_cast_indicator.gd" id="12_sci"]
 [ext_resource type="PackedScene" uid="uid://dp7n5m4x1uqn0" path="res://assets/scenes/Projectile.tscn" id="proj"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_1"]
@@ -39,9 +40,10 @@ entry_weights = Array[float]([0.6, 0.4])
 script = ExtResource("1_ai")
 enemy_data = ExtResource("2_data")
 projectile_scene = ExtResource("proj")
+cast_indicator = NodePath("../SkillCastIndicator")
 attack_range = 8.0
 use_attack_range_for_aggro = true
-show_debug_ranges = true
+show_debug_ranges = false
 
 [node name="Mesh" type="MeshInstance3D" parent="." unique_id=1321930505]
 mesh = SubResource("CapsuleMesh_1")
@@ -80,3 +82,7 @@ script = ExtResource("10_sfx")
 [node name="StatusEffectIndicator" type="Node3D" parent="." unique_id=330676053]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 0)
 script = ExtResource("11_sei")
+
+[node name="SkillCastIndicator" type="Node3D" parent="." unique_id=330676054]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0, 0)
+script = ExtResource("12_sci")

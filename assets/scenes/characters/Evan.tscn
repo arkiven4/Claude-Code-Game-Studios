@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://cn5i7rjykfx5c" path="res://assets/art/characters/fantasy+swordsman+3d+model.glb" id="9_model"]
 [ext_resource type="PackedScene" uid="uid://dp7n5m4x1uqn0" path="res://assets/scenes/Projectile.tscn" id="10_proj"]
 [ext_resource type="Script" uid="uid://cwuunfo02hcyp" path="res://src/gameplay/status_effect_indicator.gd" id="11_sei"]
+[ext_resource type="Script" uid="uid://dwcbwk2j8ucck" path="res://src/gameplay/skill_cast_indicator.gd" id="12_sci"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_1"]
 radius = 0.4
@@ -27,6 +28,7 @@ height = 1.8
 radius = 0.6
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2"]
+radius = 0.4
 height = 1.8
 
 [node name="Evan" type="CharacterBody3D" unique_id=159600484 groups=["PartyMembers"]]
@@ -50,11 +52,12 @@ character_data = ExtResource("2_data")
 [node name="StatusEffectsSystem" type="Node" parent="." unique_id=909559889]
 script = ExtResource("3_effects")
 
-[node name="SkillExecutionSystem" type="Node" parent="." unique_id=1570827783 node_paths=PackedStringArray("state", "status_effects")]
+[node name="SkillExecutionSystem" type="Node" parent="." unique_id=1570827783 node_paths=PackedStringArray("state", "status_effects", "cast_indicator")]
 script = ExtResource("4_skill")
 state = NodePath("../PartyMemberState")
 status_effects = NodePath("../StatusEffectsSystem")
 projectile_scene = ExtResource("10_proj")
+cast_indicator = NodePath("../SkillCastIndicator")
 
 [node name="CharacterStateManager" type="Node" parent="." unique_id=364514687]
 script = ExtResource("5_manager")
@@ -86,3 +89,7 @@ shape = SubResource("CapsuleShape3D_2")
 [node name="StatusEffectIndicator" type="Node3D" parent="." unique_id=347370287]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9885467, 0)
 script = ExtResource("11_sei")
+
+[node name="SkillCastIndicator" type="Node3D" parent="." unique_id=347370288]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+script = ExtResource("12_sci")

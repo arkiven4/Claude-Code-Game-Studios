@@ -24,6 +24,7 @@ signal shield_changed(new_value: int)
 @export var aggro_range: float = 1.0
 @export var attack_range: float = 1.5
 @export var use_attack_range_for_aggro: bool = false
+@export var cast_indicator: SkillCastIndicator
 
 var current_hp: int
 var max_hp: int
@@ -747,6 +748,10 @@ func _fallback_direct_damage(target: PartyMemberState, skill_name: String) -> vo
 func _complete_casting() -> void:
 	_is_casting = false
 	if _current_cast_skill_index >= 0 and _current_cast_target and _current_cast_target.is_alive:
+		var entry: EnemySkillEntry = enemy_data.skill_list[_current_cast_skill_index]
+		if entry and entry.skill_ref:
+			if cast_indicator:
+				cast_indicator.show_skill_icon(entry.skill_ref)
 		_apply_skill_logic(_current_cast_skill_index, _current_cast_target)
 
 	_current_cast_skill_index = -1
@@ -759,6 +764,10 @@ func _apply_skill_logic(index: int, target: PartyMemberState) -> void:
 	# Apply cooldown (THIS WAS MISSING — causing skills to fire every frame!)
 	var cooldown: float = entry.cooldown * 0.5 if is_enraged else entry.cooldown
 	_skill_cooldowns[index] = cooldown
+
+	# Show cast indicator
+	if cast_indicator:
+		cast_indicator.show_skill_icon(skill)
 
 	# Handle skill type-specific logic
 	match skill.skill_type:

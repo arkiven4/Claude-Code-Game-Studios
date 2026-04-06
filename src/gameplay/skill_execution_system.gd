@@ -15,6 +15,7 @@ signal hover_target_changed(target: Node)
 @export var state: Node # Will be PartyMemberState
 @export var status_effects: StatusEffectsSystem
 @export var projectile_scene: PackedScene
+@export var cast_indicator: SkillCastIndicator
 
 ## Double-tap tracking
 const DOUBLE_TAP_THRESHOLD: float = 0.35
@@ -73,6 +74,7 @@ func try_activate_skill(slot_index: int, active_tier: int) -> bool:
 	# Handle Targeting Mode
 	if _current_targeting_mode == TargetingMode.FRIENDLY and _targeting_skill_index == slot_index:
 		# Pressed the same skill again -> Self Heal
+		_exit_targeting_mode()
 		return _start_casting(skill, slot_index, active_tier, true)
 	
 	var is_supportive := skill.skill_type in [SkillData.SkillType.SUPPORT, SkillData.SkillType.STATUS]
@@ -106,6 +108,7 @@ func _enter_targeting_mode(mode: TargetingMode, index: int, tier: int) -> void:
 func _exit_targeting_mode() -> void:
 	_current_targeting_mode = TargetingMode.NONE
 	_targeting_skill_index = -1
+	_last_hover_target = null
 	targeting_ended.emit()
 
 func _start_casting(skill: SkillData, slot_index: int, tier: int, force_self: bool = false, is_special: bool = false) -> bool:
@@ -156,8 +159,10 @@ func _execute_skill_immediately(slot_index: int, active_tier: int, force_self: b
 		_execute_enemy_skill(skill, tier_data.tier_config, effect_value, target_count, active_tier)
 	else:
 		_execute_friendly_skill(skill, tier_data.tier_config, effect_value, target_count, active_tier, force_self)
-		
+
 	skill_cast.emit(skill)
+	if cast_indicator:
+		cast_indicator.show_skill_icon(skill)
 	skill_activated.emit(slot_index, true)
 	return true
 
@@ -168,7 +173,9 @@ func try_activate_attack(is_special: bool, active_tier: int = 1) -> bool:
 		if not is_special:
 			# Left click confirms friendly targeting
 			var skill: SkillData = state.get("character_data").skill_slots[_targeting_skill_index]
-			_start_casting(skill, _targeting_skill_index, _targeting_tier)
+			# If we have a hover target, use it; otherwise self-heal
+			var use_hover := _last_hover_target != null and _last_hover_target != state
+			_start_casting(skill, _targeting_skill_index, _targeting_tier, !use_hover)
 			_exit_targeting_mode()
 			return true
 		else:
@@ -212,8 +219,10 @@ func _execute_attack_immediately(is_special: bool, active_tier: int) -> bool:
 		_execute_enemy_skill(skill, tier_data.tier_config, effect_value, target_count, active_tier)
 	else:
 		_execute_friendly_skill(skill, tier_data.tier_config, effect_value, target_count, active_tier)
-		
+
 	skill_cast.emit(skill)
+	if cast_indicator:
+		cast_indicator.show_skill_icon(skill)
 	attack_activated.emit(is_special, true)
 	return true
 
@@ -353,25 +362,30 @@ func _execute_friendly_skill(skill: SkillData, tier_config: SkillTierConfig, eff
 				_spawn_skill_vfx(member.global_position, Color(0.2, 1.0, 0.4), skill.vfx_effect)
 		return
 
-	## SINGLE_ALLY: Try crosshair targeting, fallback to lowest HP
-	var crosshair_target := _get_crosshair_friendly_target()
+	## SINGLE_ALLY: Check if we have a confirmed target from targeting mode
 	var final_target: Node = null
-	
-	if crosshair_target:
-		final_target = crosshair_target
+
+	# Priority 1: Use the confirmed hover target if in friendly targeting mode
+	if _current_targeting_mode == TargetingMode.FRIENDLY and _last_hover_target:
+		final_target = _last_hover_target
 	else:
-		## SINGLE_ALLY FALLBACK: apply to the lowest-HP living ally (or self if none found)
-		var party := get_tree().get_nodes_in_group("PartyMembers")
-		var best_target: Node = state
-		var lowest_hp_ratio: float = 1.0
-		for member in party:
-			var member_state: Node = member.get_node_or_null("PartyMemberState")
-			if not member_state or not member_state.get("is_alive"): continue
-			var ratio: float = member_state.get_hp_ratio() if member_state.has_method("get_hp_ratio") else 1.0
-			if ratio < lowest_hp_ratio:
-				lowest_hp_ratio = ratio
-				best_target = member_state
-		final_target = best_target
+		# Priority 2: Try crosshair targeting
+		var crosshair_target := _get_crosshair_friendly_target()
+		if crosshair_target:
+			final_target = crosshair_target
+		else:
+			## SINGLE_ALLY FALLBACK: apply to the lowest-HP living ally (or self if none found)
+			var party := get_tree().get_nodes_in_group("PartyMembers")
+			var best_target: Node = state
+			var lowest_hp_ratio: float = 1.0
+			for member in party:
+				var member_state: Node = member.get_node_or_null("PartyMemberState")
+				if not member_state or not member_state.get("is_alive"): continue
+				var ratio: float = member_state.get_hp_ratio() if member_state.has_method("get_hp_ratio") else 1.0
+				if ratio < lowest_hp_ratio:
+					lowest_hp_ratio = ratio
+					best_target = member_state
+			final_target = best_target
 
 	if final_target:
 		_apply_skill_to_target(skill, final_target, effect_value, tier)
@@ -384,51 +398,56 @@ func _get_crosshair_friendly_target() -> Node:
 	if not camera: return null
 
 	var screen_center := get_viewport().get_visible_rect().size / 2.0
-	
+
 	# Phase 1: Direct Raycast (Center of screen)
 	var from := camera.project_ray_origin(screen_center)
-	var to := from + camera.project_ray_normal(screen_center) * 100.0
-	
+	var to := from + camera.project_ray_normal(screen_center) * 200.0
+
 	var space_state := get_tree().root.world_3d.direct_space_state
 	var query := PhysicsRayQueryParameters3D.create(from, to)
 	query.collision_mask = 2 # Layer 2: Party Hurtboxes
 	query.collide_with_areas = true
-	query.collide_with_bodies = true
-	
+	query.collide_with_bodies = false # Don't hit bodies, only areas
+
 	var result := space_state.intersect_ray(query)
 	if not result.is_empty() and result.collider:
 		var direct_target = _extract_party_member_state(result.collider)
-		if direct_target: return direct_target
+		if direct_target and direct_target != state:
+			return direct_target
 
 	# Phase 2: Auto-snapping (Target allies within 30% of screen center)
 	var viewport_size := get_viewport().get_visible_rect().size
 	var snap_width := viewport_size.x * 0.3
 	var snap_height := viewport_size.y * 0.3
-	
+
 	var party_members := get_tree().get_nodes_in_group("PartyMembers")
 	var best_snap_target: Node = null
 	var closest_dist_sq := INF
-	
+
 	for member in party_members:
 		if not member is Node3D: continue
 		var state_node: PartyMemberState = member.get_node_or_null("PartyMemberState")
 		if not state_node or not state_node.is_alive: continue
-		
-		# Skip self if it's not a SELF target type (already handled by double-tap)
+
+		# Skip self (already handled by double-tap self-heal)
 		if state_node == state: continue
 
-		var screen_pos := camera.unproject_position(member.global_position) # Target chest/head
-		
+		var chest_pos: Vector3 = member.global_position + Vector3(0, 0.9, 0)
+		var screen_pos: Vector2 = camera.unproject_position(chest_pos)
+
+		# Check if visible (not behind camera)
+		if camera.is_position_behind(chest_pos):
+			continue
+
 		# Check if within snapping bounds
-		if abs(screen_pos.x - screen_center.x) < snap_width * 0.5 and \
-		   abs(screen_pos.y - screen_center.y) < snap_height * 0.5:
-			# Check if visible (not behind camera)
-			if not camera.is_position_behind(member.global_position):
-				var dist_sq = screen_pos.distance_squared_to(screen_center)
-				if dist_sq < closest_dist_sq:
-					closest_dist_sq = dist_sq
-					best_snap_target = state_node
-					
+		var dx := absf(screen_pos.x - screen_center.x)
+		var dy := absf(screen_pos.y - screen_center.y)
+		if dx < snap_width * 0.5 and dy < snap_height * 0.5:
+			var dist_sq = screen_pos.distance_squared_to(screen_center)
+			if dist_sq < closest_dist_sq:
+				closest_dist_sq = dist_sq
+				best_snap_target = state_node
+
 	return best_snap_target
 
 func _extract_party_member_state(node: Node) -> PartyMemberState:
