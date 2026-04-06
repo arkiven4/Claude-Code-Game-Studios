@@ -2,11 +2,11 @@
 class_name RLPartyAgent
 extends AIController3D
 
-## Individual party AI agent (Evan=Tanker, Evelyn=Mage).
+## Individual party AI agent (Evan=Tanker, Evelyn=Mage, Witch=Support).
 ## Extends AIController3D for Godot RL Agents addon.
 ## ADR reference: ADR-0001 (Party AI: RL vs. Behavior Tree)
 
-enum Role { TANKER, MAGE }
+enum Role { TANKER, MAGE, SUPPORT }
 
 @export var state: PartyMemberState
 @export var skill_execution: SkillExecutionSystem
@@ -36,6 +36,9 @@ var pending_move_action: int = 0
 
 ## Last discrete action received (for rl_arena_manager to read)
 var last_action: int = 0
+
+## Heal target for SINGLE_ALLY skills: 0=self, 1=ally (lowest-HP)
+var pending_heal_target: int = 1
 
 func _ready() -> void:
 	super._ready()
@@ -127,10 +130,13 @@ func get_action_space() -> Dictionary:
 	return {
 		# 0=wait, 1-4=skill slots, 5=move→enemy, 6=move away, 7=move→ally, 8=hold
 		"action": {"size": 9, "action_type": "discrete"},
+		# For SINGLE_ALLY skills: 0=heal self, 1=heal lowest-HP ally
+		"heal_target": {"size": 2, "action_type": "discrete"},
 	}
 
 func set_action(action: Dictionary) -> void:
 	var act: int = action.get("action", 0)
+	pending_heal_target = action.get("heal_target", 1)
 	last_action = act
 	pending_move_action = 0
 
@@ -140,7 +146,15 @@ func set_action(action: Dictionary) -> void:
 	match act:
 		1, 2, 3, 4:
 			if skill_execution:
-				var hit: bool = skill_execution.try_activate_skill(act - 1, _active_tier)
+				var slot: int = act - 1
+				var char_data: CharacterData = state.character_data if state else null
+				var skill: SkillData = char_data.skill_slots[slot] if char_data and slot < char_data.skill_slots.size() else null
+				var hit: bool
+				if skill and skill.target_type == SkillData.TargetType.SINGLE_ALLY:
+					# Bypass interactive targeting — agent chose self (0) or ally (1)
+					hit = skill_execution.execute_skill_rl(slot, _active_tier, pending_heal_target == 0)
+				else:
+					hit = skill_execution.try_activate_skill(slot, _active_tier)
 				if hit:
 					reward += w_skill_hit
 		5:
@@ -161,6 +175,7 @@ func reset() -> void:
 	directive_role = 0
 	pending_move_action = 0
 	last_action = 0
+	pending_heal_target = 1
 
 # --- Reward callbacks (called by rl_arena_manager) ---
 

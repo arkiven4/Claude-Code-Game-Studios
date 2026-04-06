@@ -36,9 +36,9 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
         self.seed = env_config.get("seed", 42)
         config = {
             "env_path": None,
-            "show_window": False,
+            "show_window": env_config.get("show_window", False),
             "action_repeat": 1,
-            "speedup": 10,
+            "speedup": env_config.get("speedup", 10),
         }
         self._env = GodotEnv(
             port=self.port,
@@ -47,33 +47,36 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
         )
         
         # Based on TrainingArena.tscn structure:
-        # Agent 0: Evan (obs 46, act 9)
-        # Agent 1: Evelyn (obs 46, act 9)
-        # Agent 2: Team (obs 33, multi-head act)
+        # Agent 0: Evan   (obs 46, act: {action 9, heal_target 2})
+        # Agent 1: Evelyn (obs 46, act: {action 9, heal_target 2})
+        # Agent 2: Team   (obs 33, act: {evan_target 4, evan_role 3, evelyn_target 4, evelyn_role 3})
         self._agent_ids = ["evan", "evelyn", "team"]
         
         # Evan/Evelyn Spaces
         obs_46 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (46,), dtype=np.float32)})
-        act_9 = gym.spaces.Discrete(9)
-        
+        act_party = gym.spaces.Dict({
+            "action":      gym.spaces.Discrete(9),  # 0=wait,1-4=skills,5-8=movement
+            "heal_target": gym.spaces.Discrete(2),  # 0=self, 1=lowest-HP ally
+        })
+
         # Team Spaces
         obs_33 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (33,), dtype=np.float32)})
         act_team = gym.spaces.Dict({
-            "evan_target": gym.spaces.Discrete(4),
-            "evan_role": gym.spaces.Discrete(3),
+            "evan_target":   gym.spaces.Discrete(4),
+            "evan_role":     gym.spaces.Discrete(3),
             "evelyn_target": gym.spaces.Discrete(4),
-            "evelyn_role": gym.spaces.Discrete(3),
+            "evelyn_role":   gym.spaces.Discrete(3),
         })
-        
+
         self.observation_space = gym.spaces.Dict({
-            "evan": obs_46,
+            "evan":   obs_46,
             "evelyn": obs_46,
-            "team": obs_33,
+            "team":   obs_33,
         })
         self.action_space = gym.spaces.Dict({
-            "evan": act_9,
-            "evelyn": act_9,
-            "team": act_team,
+            "evan":   act_party,
+            "evelyn": act_party,
+            "team":   act_team,
         })
 
     def reset(self, *, seed=None, options=None):
@@ -92,8 +95,8 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
         team_act = action_dict["team"]
         
         actions = [
-            [int(evan_act)],
-            [int(evelyn_act)],
+            [int(evan_act["action"]),   int(evan_act["heal_target"])],
+            [int(evelyn_act["action"]), int(evelyn_act["heal_target"])],
             [
                 int(team_act["evan_target"]),
                 int(team_act["evan_role"]),
@@ -134,6 +137,11 @@ def main():
     if not ray.is_initialized():
         ray.init()
     
+    import torch
+    print(f"CUDA available: {torch.cuda.is_available()}")
+    if torch.cuda.is_available():
+        print(f"Using GPU: {torch.cuda.get_device_name(0)}")
+    
     register_env("godot_multiagent", env_creator)
 
     print("Waiting for Godot to connect on port 11008 ...")
@@ -161,10 +169,23 @@ def main():
             entropy_coeff=0.01,
         )
         .env_runners(num_env_runners=0)
-        .resources(num_gpus=0)
+        .resources(num_gpus=1)
     )
 
-    algo = config.build_algo()
+    # Redirect logs to project directory
+    from ray.tune.logger import UnifiedLogger
+    import datetime
+
+    def custom_logger_creator(config):
+        base_logdir = os.path.join(os.path.dirname(__file__), "ray_results")
+        os.makedirs(base_logdir, exist_ok=True)
+        # Create a unique subfolder for this run
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        run_logdir = os.path.join(base_logdir, f"PPO_godot_{timestamp}")
+        os.makedirs(run_logdir, exist_ok=True)
+        return UnifiedLogger(config, run_logdir)
+
+    algo = config.build_algo(logger_creator=custom_logger_creator)
 
     print("Training started. Ctrl+C to stop.")
     try:

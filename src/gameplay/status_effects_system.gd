@@ -66,7 +66,6 @@ func apply_effect(definition: StatusEffect, applied_by_id: String, tier: int,
 	if not existing:
 		var new_effect := ActiveEffect.new(definition, applied_by_id, tier, custom_duration, custom_value, custom_tick)
 		active_effects.append(new_effect)
-		print("[StatusEffectsSystem] Applied effect: ", definition.display_name, " to ", get_parent().name)
 		effect_applied.emit(new_effect)
 	else:
 		match definition.stacking_rule:

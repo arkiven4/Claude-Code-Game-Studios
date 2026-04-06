@@ -20,16 +20,17 @@ var enemy_container: Node3D
 @onready var _evelyn_state: PartyMemberState
 @onready var _team_agent: RLTeamAgent = $TeamAI
 
-const GRUNT_SCENE: PackedScene = preload("res://assets/scenes/enemies/GruntMelee.tscn")
+const GRUNT_SCENE: PackedScene  = preload("res://assets/scenes/enemies/GruntMelee.tscn")
 const ARCHER_SCENE: PackedScene = preload("res://assets/scenes/enemies/ArcherRanged.tscn")
+const MAGE_SCENE: PackedScene   = preload("res://assets/scenes/enemies/MageEnemy.tscn")
 
-## Spawn transforms (position, rotation) for enemies — set to match TestArena layout
+## Spawn transforms: Grunt front-left, Archer back-right, Mage back-center
 var ENEMY_SPAWNS: Array[Transform3D] = [
-	Transform3D(Basis.IDENTITY, Vector3(-4.0, 0.9, 8.0)),
-	Transform3D(Basis.IDENTITY, Vector3(4.0,  0.9, 8.0)),
-	Transform3D(Basis.IDENTITY, Vector3(0.0,  0.9, 10.0)),
+	Transform3D(Basis.IDENTITY, Vector3(-4.0, 0.9,  8.0)),
+	Transform3D(Basis.IDENTITY, Vector3( 4.0, 0.9,  8.0)),
+	Transform3D(Basis.IDENTITY, Vector3( 0.0, 0.9, 11.0)),
 ]
-const ENEMY_SCENES: Array = [GRUNT_SCENE, GRUNT_SCENE, ARCHER_SCENE]
+const ENEMY_SCENES: Array = [GRUNT_SCENE, ARCHER_SCENE, MAGE_SCENE]
 
 var _enemies: Array[EnemyAIController] = []
 var _hive_agents: Array[RLEnemyHiveAgent] = []
@@ -39,10 +40,10 @@ var _party: Array[PartyMemberState] = []
 
 func _ready() -> void:
 	# Resolve node references from paths
-	evan_body = get_node_or_null(evan_body_path) as CharacterBody3D
+	evan_body   = get_node_or_null(evan_body_path)   as CharacterBody3D
 	evelyn_body = get_node_or_null(evelyn_body_path) as CharacterBody3D
 	enemy_container = get_node_or_null(enemy_container_path) as Node3D
-	
+
 	if evan_body:
 		_evan_agent = evan_body.get_node_or_null("RLPartyAgent")
 		_evan_state = evan_body.get_node_or_null("PartyMemberState")
@@ -52,9 +53,9 @@ func _ready() -> void:
 
 	_party = [_evan_state, _evelyn_state]
 	# Wire party death to hive rewards
-	if _evan_state: _evan_state.death.connect(_on_party_member_died)
+	if _evan_state:   _evan_state.death.connect(_on_party_member_died)
 	if _evelyn_state: _evelyn_state.death.connect(_on_party_member_died)
-	
+
 	await get_tree().process_frame
 	_start_episode()
 
@@ -66,10 +67,8 @@ func _physics_process(delta: float) -> void:
 
 	# Push TeamPolicy directives to party agents
 	if _team_agent:
-		if _evan_agent:
-			_evan_agent.set_directive(_team_agent.evan_target, _team_agent.evan_role)
-		if _evelyn_agent:
-			_evelyn_agent.set_directive(_team_agent.evelyn_target, _team_agent.evelyn_role)
+		if _evan_agent:   _evan_agent.set_directive(_team_agent.evan_target, _team_agent.evan_role)
+		if _evelyn_agent: _evelyn_agent.set_directive(_team_agent.evelyn_target, _team_agent.evelyn_role)
 
 	# Execute party movement
 	_execute_party_movement(delta)
@@ -86,6 +85,9 @@ func _physics_process(delta: float) -> void:
 
 	# Check end conditions
 	_check_victory_or_defeat()
+
+	# Update HUD
+	_update_hud()
 
 	# Force-end episode after timeout
 	if _episode_step >= max_episode_steps:
@@ -191,10 +193,10 @@ func _end_episode(victory: bool) -> void:
 
 func _reset_episode() -> void:
 	# Reset party
-	if _evan_state: _evan_state.reset_for_encounter(true)
+	if _evan_state:   _evan_state.reset_for_encounter(true)
 	if _evelyn_state: _evelyn_state.reset_for_encounter(true)
-	if evan_body: evan_body.global_position = Vector3(-1.0, 1.0, 0.0)
-	if evelyn_body: evelyn_body.global_position = Vector3(1.0, 1.0, 0.0)
+	if evan_body:   evan_body.global_position   = Vector3(-1.5, 1.0, 0.0)
+	if evelyn_body: evelyn_body.global_position = Vector3( 1.5, 1.0, 0.0)
 
 	# Destroy and respawn enemies
 	for enemy in _enemies:
@@ -355,3 +357,15 @@ func _lowest_hp_alive_party_body(party_bodies: Array, _party_states: Array) -> C
 			best_ratio = state.get_hp_ratio()
 			best_body = body
 	return best_body
+
+func _update_hud() -> void:
+	var evan_hp_label = get_node_or_null("%EvanHP")
+	var evelyn_hp_label = get_node_or_null("%EvelynHP")
+	var step_label = get_node_or_null("%StepLabel")
+	
+	if evan_hp_label and _evan_state:
+		evan_hp_label.text = "Evan: %d/%d" % [_evan_state.current_hp, _evan_state.max_hp]
+	if evelyn_hp_label and _evelyn_state:
+		evelyn_hp_label.text = "Evelyn: %d/%d" % [_evelyn_state.current_hp, _evelyn_state.max_hp]
+	if step_label:
+		step_label.text = "Step: %d" % _episode_step

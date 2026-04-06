@@ -10,6 +10,7 @@ extends AIController3D
 @export var evelyn_agent: RLPartyAgent
 
 const MAX_OBS_DIST: float = 20.0
+## evan(3) + evelyn(3) + enemies×4(20) + combat(3) + memory(4) = 33
 const N_OBS: int = 33
 
 ## Current directive outputs — read by rl_arena_manager to push to party agents

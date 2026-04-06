@@ -8,6 +8,7 @@ extends AIController3D
 @export var enemy_controller: EnemyAIController
 
 const MAX_OBS_DIST: float = 20.0
+## self(3) + party×2(10) + enemy_allies×2(8) = 21
 const N_OBS: int = 21
 
 ## Pending movement action — executed by rl_arena_manager

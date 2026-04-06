@@ -69,12 +69,22 @@ func try_activate_skill(slot_index: int, active_tier: int) -> bool:
 	
 	if is_supportive and skill.target_type == SkillData.TargetType.SINGLE_ALLY:
 		# Enter friendly targeting mode
-		print("[SkillExecutionSystem] Entering targeting mode for slot ", slot_index)
 		_enter_targeting_mode(TargetingMode.FRIENDLY, slot_index, active_tier)
 		return true
 
 	# Standard instant execution for other types
 	return _execute_skill_immediately(slot_index, active_tier)
+
+## Called by RL agents to bypass interactive targeting for SINGLE_ALLY skills.
+## force_self=true → heal/buff self; force_self=false → lowest-HP ally fallback.
+func execute_skill_rl(slot_index: int, active_tier: int, force_self: bool) -> bool:
+	if not state or not state.get("is_alive"): return false
+	if slot_index < 0 or slot_index >= 4: return false
+	if not state.has_method("can_use_skill") or not state.can_use_skill(slot_index): return false
+	var character_data: CharacterData = state.get("character_data")
+	if not character_data or slot_index >= character_data.skill_slots.size(): return false
+	if not character_data.skill_slots[slot_index]: return false
+	return _execute_skill_immediately(slot_index, active_tier, force_self)
 
 func _enter_targeting_mode(mode: TargetingMode, index: int, tier: int) -> void:
 	_current_targeting_mode = mode

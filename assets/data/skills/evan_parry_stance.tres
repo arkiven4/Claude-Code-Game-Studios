@@ -1,11 +1,16 @@
-[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://evan_parry_tier"]
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://r1l0g81dgpls"]
 
-[ext_resource type="Script" path="res://src/core/skill_data.gd" id="1_skill"]
-[ext_resource type="Script" path="res://src/core/skill_tier_config.gd" id="2_tier"]
-[ext_resource type="Script" path="res://src/core/skill_effect_override.gd" id="3_override"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/skill_icons/evan_parry_stance_icon.png" id="icon"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Script" uid="uid://dambpep7g2e0j" path="res://src/core/skill_effect_override.gd" id="3_override"]
+[ext_resource type="Texture2D" uid="uid://b3g4tqdntk8rm" path="res://assets/art/ui/skill_icons/evan_parry_stance_icon.png" id="icon"]
 [ext_resource type="Resource" path="res://assets/data/status_effects/invincibility.tres" id="invinc"]
-[ext_resource type="Texture2D" path="res://assets/art/vfx/skills/evan_parry_stance_aura.png" id="vfx_eff"]
+[ext_resource type="Texture2D" uid="uid://cwtqrqby6uq58" path="res://assets/art/vfx/skills/evan_parry_stance_aura.png" id="vfx_eff"]
+
+[sub_resource type="Resource" id="InvincOverride"]
+script = ExtResource("3_override")
+effect_ref = ExtResource("invinc")
+duration = 3.0
 
 [sub_resource type="Resource" id="Tier1"]
 script = ExtResource("2_tier")
@@ -22,11 +27,6 @@ script = ExtResource("2_tier")
 effect_value = 2.0
 tier_description = "Perfect parry. Each blocked hit reflects 150% damage back and grants a small shield."
 
-[sub_resource type="Resource" id="InvincOverride"]
-script = ExtResource("3_override")
-effect_ref = ExtResource("invinc")
-duration = 3.0
-
 [resource]
 script = ExtResource("1_skill")
 skill_type = 3
@@ -36,13 +36,10 @@ description = "Evan raises his guard, perfectly parrying the next 3 incoming dam
 icon = ExtResource("icon")
 mp_cost = 20
 base_cooldown = 12.0
-max_charges = 1
 target_type = 6
-target_count = 1
-max_cast_range = 0.0
 area_radius = 0.0
 tiers = Array[ExtResource("2_tier")]([SubResource("Tier1"), SubResource("Tier2"), SubResource("Tier3")])
-effect_overrides = Array[ExtResource("3_override")]([SubResource("InvincOverride")])
 vfx_effect = ExtResource("vfx_eff")
+effect_overrides = Array[ExtResource("3_override")]([SubResource("InvincOverride")])
 grants_invincibility = true
 invincibility_duration = 3.0

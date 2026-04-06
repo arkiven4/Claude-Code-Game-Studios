@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://drawwnlga81h1"]
 
-[ext_resource type="Script" uid="uid://dgp0nhn65w813" path="res://src/core/status_effect.gd" id="1_5lbwe"]
+[ext_resource type="Script" uid="uid://dambpep7g2e0j" path="res://src/core/skill_effect_override.gd" id="1_1wr22"]
 [ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
 [ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
 [ext_resource type="Texture2D" uid="uid://25yovv1hes5k" path="res://assets/art/vfx/skills/archer_dash_effect.png" id="vfx_eff"]
