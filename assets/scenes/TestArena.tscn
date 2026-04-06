@@ -12,7 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://bixlue2j75gbg" path="res://assets/scenes/characters/Evan.tscn" id="10_evan"]
 [ext_resource type="PackedScene" uid="uid://d25c0yibrlo5p" path="res://assets/scenes/enemies/GruntMelee.tscn" id="11_grunt"]
 [ext_resource type="PackedScene" path="res://assets/scenes/enemies/ArcherRanged.tscn" id="12_archer"]
-[ext_resource type="PackedScene" path="res://assets/scenes/ui/CombatHUD.tscn" id="13_hud"]
+[ext_resource type="PackedScene" uid="uid://kvt1qcbl81ag" path="res://assets/scenes/ui/CombatHUD.tscn" id="13_hud"]
 [ext_resource type="Script" uid="uid://cf5h4nqx6foi6" path="res://src/gameplay/arena_wiring.gd" id="14_wiring"]
 [ext_resource type="PackedScene" path="res://assets/scenes/enemies/MageEnemy.tscn" id="15_mage"]
 
@@ -116,10 +116,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.9, 25)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.9, 25)
 
 [node name="ArcherRanged_1" parent="Enemies" unique_id=1349000536 groups=["Hurtboxes"] instance=ExtResource("12_archer")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 26.45758)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.46904, 0.9, 13.995243)
 
 [node name="MageEnemy_1" parent="Enemies" unique_id=1349000537 groups=["Hurtboxes"] instance=ExtResource("15_mage")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.9, 23)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.762451, 0.9, 13.33773)
 
 [node name="CombatHUD" parent="." unique_id=2051617569 instance=ExtResource("13_hud")]
 

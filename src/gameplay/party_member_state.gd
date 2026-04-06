@@ -35,7 +35,7 @@ var special_attack_cooldown: float = 0.0
 # Regeneration
 var mp_regen_timer: float = 0.0
 const MP_REGEN_INTERVAL: float = 1.0 # Regenerate MP every 1 second
-@export var base_mp_regen: float = 2.0 # MP per second
+@export var base_mp_regen: float = 17.0 # MP per second
 
 # Status Effects
 var active_effects: Array[ActiveEffect] = []
@@ -44,10 +44,15 @@ var _status_effects_system: StatusEffectsSystem
 # Shield / Invincibility
 var shield_value: int = 0
 var is_invincible: bool = false
+var is_casting: bool = false
 
 # Control State
 var is_player_controlled: bool = false
 var control_state: ControlState = ControlState.AI_CONTROLLED
+
+# Damage Tracking (for Death Summary)
+var damage_history: Dictionary = {} # Map of "Caster:Skill" -> total_amount
+var total_damage_received: int = 0
 
 # Life State
 var is_alive: bool = true
@@ -118,6 +123,17 @@ func _process(delta: float) -> void:
 func take_damage(data: Dictionary) -> void:
 	if not is_alive: return
 	var amount: int = int(data.get("damage", 0))
+	
+	if is_player_controlled and amount > 0:
+		var c_name: String = data.get("caster_name", "Unknown")
+		var s_name: String = data.get("skill_name", "Attack")
+		print("[CombatLog] %s took %d damage from %s's %s" % [character_data.display_name if character_data else name, amount, c_name, s_name])
+		
+		# Update History
+		var key := "%s:%s" % [c_name, s_name]
+		damage_history[key] = damage_history.get(key, 0) + amount
+		total_damage_received += amount
+
 	if is_invincible or _has_effect_category(StatusEffect.EffectCategory.INVINCIBILITY):
 		amount = 0
 	if amount <= 0: return
@@ -144,9 +160,43 @@ func _die() -> void:
 	active_effects.clear()
 	if _status_effects_system:
 		_status_effects_system.clear_all_effects()
+	
+	if is_player_controlled:
+		_print_death_recap()
+		
 	is_player_controlled = false
 	control_state = ControlState.AI_CONTROLLED
 	death.emit()
+
+func _print_death_recap() -> void:
+	var char_name: String = character_data.display_name if character_data else name
+	print("=== DEATH RECAP: %s ===" % char_name)
+	print("Total Damage Received: %d" % total_damage_received)
+	
+	if total_damage_received <= 0:
+		print("No damage recorded (instakill or unknown source).")
+		return
+		
+	# Sort by damage amount descending
+	var sorted_keys: Array[String] = []
+	for k in damage_history.keys():
+		sorted_keys.append(str(k))
+		
+	sorted_keys.sort_custom(func(a: String, b: String) -> bool: 
+		var val_a: int = int(damage_history.get(a, 0))
+		var val_b: int = int(damage_history.get(b, 0))
+		return val_a > val_b
+	)
+	
+	for key_raw in sorted_keys:
+		var key: String = str(key_raw)
+		var amount: int = int(damage_history.get(key, 0))
+		var percent: float = (float(amount) / float(total_damage_received)) * 100.0
+		var parts: PackedStringArray = key.split(":")
+		var source: String = parts[0] if parts.size() > 0 else "Unknown"
+		var skill: String = parts[1] if parts.size() > 1 else "Attack"
+		print("- %s (%s): %d (%.1f%%)" % [skill, source, amount, percent])
+	print("===============================")
 	_notify_health_state_changed()
 
 func apply_heal(amount: int) -> void:
@@ -169,6 +219,7 @@ func restore_mp(amount: int) -> void:
 
 func can_use_skill(slot: int) -> bool:
 	if not is_alive: return false
+	if is_casting: return false
 	if slot < 0 or slot >= 4: return false
 	if not character_data: return false
 
@@ -186,6 +237,7 @@ func can_use_skill(slot: int) -> bool:
 ## Checks if the character can use their basic/special attack.
 func can_attack(is_special: bool) -> bool:
 	if not is_alive: return false
+	if is_casting: return false
 	if _has_action_denial_effect(): return false
 	
 	if not character_data: return false
@@ -210,8 +262,7 @@ func try_consume_dodge_mp() -> bool:
 	if not is_alive: return false
 	if not character_data: return false
 	if current_mp < character_data.dodge_mp_cost: return false
-	if is_invincible: return true
-
+	
 	consume_mp(character_data.dodge_mp_cost)
 	return true
 
@@ -345,6 +396,8 @@ func reset_for_encounter(full_reset: bool) -> void:
 		current_mp = max_mp
 		is_alive = true
 		revives_used_this_encounter = 0
+		damage_history.clear()
+		total_damage_received = 0
 		active_effects.clear()
 		if _status_effects_system:
 			_status_effects_system.clear_all_effects()

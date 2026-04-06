@@ -39,6 +39,7 @@ entry_weights = Array[float]([0.7, 0.3])
 script = ExtResource("1_ai")
 enemy_data = ExtResource("2_data")
 projectile_scene = ExtResource("proj")
+show_debug_ranges = true
 
 [node name="Mesh" type="MeshInstance3D" parent="." unique_id=1283860160]
 mesh = SubResource("CapsuleMesh_1")

@@ -25,6 +25,9 @@ var enemy_container: Node3D
 @onready var _evelyn_state: PartyMemberState
 @onready var _team_agent: RLTeamAgent = $TeamAI
 
+var _initial_evan_pos: Vector3
+var _initial_evelyn_pos: Vector3
+
 var _enemies: Array[EnemyAIController] = []
 var _hive_agents: Array[RLEnemyHiveAgent] = []
 var _episode_step: int = 0
@@ -39,6 +42,10 @@ var _damage_dealt_this_step: bool = false
 var _enemy_steps_since_last_damage: int = 0
 var _enemy_damage_dealt_this_step: bool = false
 
+## Long-term statistics
+var _total_episodes: int = 0
+var _party_wins: int = 0
+
 func _ready() -> void:
 	evan_body   = get_node_or_null(evan_body_path)   as CharacterBody3D
 	evelyn_body = get_node_or_null(evelyn_body_path) as CharacterBody3D
@@ -47,9 +54,11 @@ func _ready() -> void:
 	if evan_body:
 		_evan_agent = evan_body.get_node_or_null("RLPartyAgent")
 		_evan_state = evan_body.get_node_or_null("PartyMemberState")
+		_initial_evan_pos = evan_body.global_position
 	if evelyn_body:
 		_evelyn_agent = evelyn_body.get_node_or_null("RLPartyAgent")
 		_evelyn_state = evelyn_body.get_node_or_null("PartyMemberState")
+		_initial_evelyn_pos = evelyn_body.global_position
 
 	_party = [_evan_state, _evelyn_state]
 	if _evan_state:   _evan_state.death.connect(_on_party_member_died)
@@ -200,8 +209,9 @@ func _start_episode() -> void:
 func _end_episode(victory: bool) -> void:
 	if not _episode_active: return
 	_episode_active = false
-
+	_total_episodes += 1
 	if victory:
+		_party_wins += 1
 		if _team_agent: _team_agent.on_victory()
 		if _evan_agent: _evan_agent.done = true
 		if _evelyn_agent: _evelyn_agent.done = true
@@ -228,8 +238,8 @@ func _reset_episode() -> void:
 	# Reset party
 	if _evan_state:   _evan_state.reset_for_encounter(true)
 	if _evelyn_state: _evelyn_state.reset_for_encounter(true)
-	if evan_body:   evan_body.global_position   = Vector3(-1.5, 1.0, -5.0)
-	if evelyn_body: evelyn_body.global_position = Vector3( 1.5, 1.0, -5.0)
+	if evan_body:   evan_body.global_position   = _initial_evan_pos
+	if evelyn_body: evelyn_body.global_position = _initial_evelyn_pos
 
 	# Reset enemies in-place
 	for enemy in _enemies:
@@ -451,6 +461,11 @@ func _update_hud() -> void:
 
 	var step_label = get_node_or_null("%StepLabel")
 	if step_label: step_label.text = "Step: %d" % _episode_step
+
+	var wr_label = get_node_or_null("%WinRate")
+	if wr_label:
+		var wr: float = (float(_party_wins) / float(_total_episodes)) * 100.0 if _total_episodes > 0 else 0.0
+		wr_label.text = "Win Rate: %.1f%% (%d/%d)" % [wr, _party_wins, _total_episodes]
 
 	var evan_r = get_node_or_null("%EvanReward")
 	if evan_r and _evan_agent: evan_r.text = "Evan R: %.3f" % _evan_agent.reward

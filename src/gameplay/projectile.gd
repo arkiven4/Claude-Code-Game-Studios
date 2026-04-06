@@ -9,17 +9,29 @@ extends Area3D
 
 var _damage: int = 0
 var _caster_id: String = ""
+var _skill_name: String = ""
 var _hit_enemies: bool = true
 var _hit_allies: bool = false
 var _effect_overrides: Array[SkillEffectOverride] = []
 var _timer: float = 0.0
+var _vfx_impact: Texture2D = null
+var _hit_targets: Array[Node] = []
 
-func initialize(damage: int, caster_id: String, hit_enemies: bool = true, hit_allies: bool = false, overrides: Array[SkillEffectOverride] = []) -> void:
-	_damage = damage
-	_caster_id = caster_id
+func initialize(damage_data, caster_id: String, hit_enemies: bool = true, hit_allies: bool = false, overrides: Array[SkillEffectOverride] = [], impact_texture: Texture2D = null, skill_name: String = "Projectile") -> void:
+	if damage_data is Dictionary:
+		_damage = int(damage_data.get("damage", 0))
+		# If dict contains names, use them, otherwise use defaults
+		_caster_id = damage_data.get("caster_name", caster_id)
+		_skill_name = damage_data.get("skill_name", skill_name)
+	else:
+		_damage = int(damage_data)
+		_caster_id = caster_id
+		_skill_name = skill_name
+		
 	_hit_enemies = hit_enemies
 	_hit_allies = hit_allies
 	_effect_overrides = overrides
+	_vfx_impact = impact_texture
 	_timer = 0.0
 
 ## Sets a skill-specific VFX texture on the Sprite3D billboard.
@@ -56,21 +68,67 @@ func _process(delta: float) -> void:
 		
 	var movement := -global_transform.basis.z * speed * delta
 	global_position += movement
-
+	
+	# Look at movement direction if speed is not zero
+	if speed > 0 and movement.length() > 0.001:
+		var target_pos := global_position + movement
+		look_at(target_pos, Vector3.UP)
 func _on_area_entered(area: Area3D) -> void:
 	if area is HurtboxComponent:
 		var hurtbox := area as HurtboxComponent
+
+		# Prevent hitting self
+		if hurtbox.get_parent().name == _caster_id:
+			return
+
 		# Logic to filter enemies/allies
-		var parent := hurtbox.get_parent()
-		var is_enemy := parent is EnemyAIController
-		var is_party := parent.is_in_group("PartyMembers")
+		var target := hurtbox.get_parent()
+		var is_enemy := target is EnemyAIController or target.is_in_group("Enemies")
+
+		# Check if target or any parent is in PartyMembers group
+		var is_party := false
+		var check_node: Node = target
+		while check_node and check_node != get_tree().root:
+			if check_node.is_in_group("PartyMembers"):
+				is_party = true
+				break
+			check_node = check_node.get_parent()
 
 		if (is_enemy and _hit_enemies) or (is_party and _hit_allies):
-			hurtbox.take_hit({"damage": _damage, "is_projectile": true})
-			_apply_effects_on_hit(parent)
-			queue_free()
+			# Access the authoritative state node (PartyMemberState or EnemyAIController)
+			var state_node: Node = hurtbox.parent_node if hurtbox.parent_node else target
 
+			# Prevent hitting the same target twice
+			if state_node in _hit_targets:
+				return
+
+			# CRITICAL FIX: Check if target is invincible BEFORE applying damage
+			var can_damage: bool = true
+			if state_node.get("is_invincible") == true:
+				can_damage = false
+
+			if can_damage:
+				hurtbox.take_hit({
+					"damage": _damage, 
+					"is_projectile": true,
+					"caster_name": _caster_id,
+					"skill_name": _skill_name
+				})
+				_apply_effects_on_hit(target)
+				_hit_targets.append(state_node)
+			else:
+				print("[Projectile] Hit blocked by invincibility/dodge on: ", state_node.name)
+
+			# Always spawn impact VFX and destroy projectile on hit, even if dodged
+			if _vfx_impact:
+				CombatSkillExecutor.spawn_hit_vfx(get_tree(), global_position, _vfx_impact)
+
+			queue_free()
 func _on_body_entered(body: Node) -> void:
+	# Grace period to prevent hitting floor at spawn
+	if _timer < 0.05:
+		return
+		
 	# Hit environment
 	if body.is_in_group("Environment") or body is StaticBody3D:
 		queue_free()

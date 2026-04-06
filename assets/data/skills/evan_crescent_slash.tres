@@ -30,5 +30,5 @@ base_cooldown = 1.2
 target_type = 2
 area_radius = 3.0
 tiers = Array[ExtResource("2_tier")]([SubResource("Tier1_CrescentSlash"), SubResource("Tier2_CrescentSlash"), SubResource("Tier3_CrescentSlash")])
-base_damage = 30
+base_damage = 60
 vfx_effect = ExtResource("vfx_eff")

@@ -34,25 +34,10 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
         super().__init__()
         self.port = env_config.get("port", 11008)
         self.seed = env_config.get("seed", 42)
-        config = {
-            "env_path": None,
-            "show_window": env_config.get("show_window", False),
-            "action_repeat": 1,
-            "speedup": env_config.get("speedup", 10),
-        }
-        self._env = GodotEnv(
-            port=self.port,
-            seed=self.seed,
-            **config
-        )
+        self.env_config = env_config
+        self._env = None
         
-        # Based on TrainingArena.tscn structure (scene-tree order):
-        # Agent 0: Evan    (obs 46, act: {action 9, heal_target 2})
-        # Agent 1: Evelyn  (obs 46, act: {action 9, heal_target 2})
-        # Agent 2: Team    (obs 33, act: {evan_target 4, evan_role 3, evelyn_target 4, evelyn_role 3})
-        # Agent 3: Enemy 0 (obs 21, act: {action 6})  — Grunt
-        # Agent 4: Enemy 1 (obs 21, act: {action 6})  — Archer
-        # Agent 5: Enemy 2 (obs 21, act: {action 6})  — Mage
+        # Define IDs for space initialization
         self._agent_ids = {"evan", "evelyn", "team", "enemy_0", "enemy_1", "enemy_2"}
         self.possible_agents = self._agent_ids
 
@@ -96,6 +81,19 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
         })
 
     def reset(self, *, seed=None, options=None):
+        if self._env is None:
+            config = {
+                "env_path": None,
+                "show_window": self.env_config.get("show_window", False),
+                "action_repeat": 1,
+                "speedup": self.env_config.get("speedup", 10),
+            }
+            self._env = GodotEnv(
+                port=self.port,
+                seed=self.seed,
+                **config
+            )
+
         obs, info = self._env.reset()
         return {
             "evan":    {"obs": np.array(obs[0]["obs"], dtype=np.float32)},
@@ -169,7 +167,8 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
         return res_obs, res_rew, res_term, res_trunc, {}
     
     def close(self):
-        self._env.close()
+        if self._env:
+            self._env.close()
 
 def env_creator(env_config):
     return RayMultiAgentGodotEnv(env_config)

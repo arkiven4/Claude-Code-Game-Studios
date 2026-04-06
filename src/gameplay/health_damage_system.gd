@@ -11,6 +11,9 @@ const HEALTHY_THRESHOLD: float = 0.5
 const CRITICAL_THRESHOLD: float = 0.1
 const MINIMUM_DAMAGE: int = 1
 
+## If false, calculate_damage will skip the +/- 10% random variance (useful for unit tests).
+static var use_variance: bool = true
+
 ## Calculates final damage for a skill hit.
 ## Formula:
 ##   RawDamage = (casterATK * 0.5 + skillBaseDamage) * effectValue * critMultiplier
@@ -29,9 +32,10 @@ static func calculate_damage(
 	
 	var raw_damage: float = (caster_atk * 0.5 + skill_base_damage) * effect_value * crit_mult
 	
-	# Add +/- 10% variance
-	var variance := randf_range(0.9, 1.1)
-	raw_damage *= variance
+	# Add +/- 10% variance (skip if use_variance is false)
+	if use_variance:
+		var variance := randf_range(0.9, 1.1)
+		raw_damage *= variance
 	
 	var after_def: float = raw_damage - target_def
 	var after_category: float = after_def * category_resistance

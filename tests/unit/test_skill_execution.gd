@@ -13,11 +13,11 @@ var _tier_1: SkillTierConfig
 func before_each() -> void:
 	_skill_system = SkillExecutionSystem.new()
 	add_child(_skill_system)
-	
+
 	_tier_1 = SkillTierConfig.new()
 	_tier_1.effect_value = 1.5
 	_tier_1.target_count = 1
-	
+
 	_skill = SkillData.new()
 	_skill.skill_id = "test_skill"
 	_skill.mp_cost = 20
@@ -26,15 +26,29 @@ func before_each() -> void:
 	_skill.tiers = [_tier_1]
 	_skill.skill_type = SkillData.SkillType.DAMAGE
 	_skill.target_type = SkillData.TargetType.SINGLE_ENEMY
-	
+
 	_char_data = CharacterData.new()
 	_char_data.skill_slots = [_skill, null, null, null]
-	
+
 	_state = PartyMemberState.new()
+	_state.name = "TestState"
 	_state.character_data = _char_data
 	add_child(_state)
-	
+
+	# Ensure _state is properly initialized with defaults
+	_state.is_alive = true
+	_state.max_hp = 100
+	_state.current_hp = 100
+	_state.max_mp = 100
+	_state.current_mp = 100
+
 	_skill_system.state = _state
+
+func after_each() -> void:
+	if is_instance_valid(_skill_system):
+		_skill_system.queue_free()
+	if is_instance_valid(_state):
+		_state.queue_free()
 
 func test_try_activate_skill_validation_dead() -> void:
 	_state.is_alive = false

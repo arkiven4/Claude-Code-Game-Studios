@@ -34,15 +34,15 @@ static func spawn_projectile(
 		tree: SceneTree,
 		projectile_scene: PackedScene,
 		skill: SkillData,
-		damage: int,
+		damage_data, # Can be int or Dictionary
 		caster_id: String,
 		spawn_pos: Vector3,
 		target_pos: Vector3,
 		hit_enemies: bool,
 		hit_allies: bool,
-		lifetime: float = -1.0) -> Projectile:
+		lifetime: float = -1.0) -> Node:
 	if not projectile_scene: return null
-	var projectile: Projectile = projectile_scene.instantiate() as Projectile
+	var projectile: Node = projectile_scene.instantiate()
 	if not projectile: return null
 
 	var dir := target_pos - spawn_pos
@@ -51,19 +51,23 @@ static func spawn_projectile(
 	else:
 		projectile.global_position = spawn_pos
 
-	projectile.speed = skill.projectile_speed
-	if lifetime > 0.0:
-		projectile.lifetime = lifetime
+	if projectile.has_method("set"):
+		projectile.set("speed", skill.projectile_speed)
+		if lifetime > 0.0:
+			projectile.set("lifetime", lifetime)
 
 	# Layer 1 = environment, layer 8 = enemy hurtbox, layer 2 = party hurtbox
 	var mask: int = 1
 	if hit_enemies: mask |= 8
 	if hit_allies:  mask |= 2
-	projectile.collision_mask = mask
+	if projectile is Area3D:
+		projectile.collision_mask = mask
 
-	projectile.initialize(damage, caster_id, hit_enemies, hit_allies, skill.effect_overrides)
-	if skill.vfx_projectile:
-		projectile.set_vfx(skill.vfx_projectile)
+	if projectile.has_method("initialize"):
+		projectile.call("initialize", damage_data, caster_id, hit_enemies, hit_allies, skill.effect_overrides, skill.vfx_effect, skill.display_name)
+	
+	if skill.vfx_projectile and projectile.has_method("set_vfx"):
+		projectile.call("set_vfx", skill.vfx_projectile)
 
 	tree.root.add_child(projectile)
 	return projectile

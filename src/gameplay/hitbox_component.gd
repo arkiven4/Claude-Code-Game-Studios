@@ -11,14 +11,26 @@ signal hit_landed(hurtbox: HurtboxComponent)
 var _is_active: bool = false
 var _damage_data: Dictionary = {}
 var _hit_targets: Array[HurtboxComponent] = []
+var _current_skill: SkillData = null
 
 func _ready() -> void:
 	monitoring = false
 	monitorable = false
+	
+	# Set collision mask based on target layer
+	# Layer 2 = Party Hurtboxes (enemies hitting players)
+	# Layer 8 = Enemy Hurtboxes (players hitting enemies)
+	if target_layer == 2:
+		collision_mask = 2  # Hit party members
+		print("[HitboxComponent] %s: Set collision_mask to 2 (hit Party)" % name)
+	elif target_layer == 8:
+		collision_mask = 8  # Hit enemies
+		print("[HitboxComponent] %s: Set collision_mask to 8 (hit Enemy)" % name)
 
-func activate(damage_data: Dictionary) -> void:
+func activate(damage_data: Dictionary, skill: SkillData = null) -> void:
 	_is_active = true
 	_damage_data = damage_data
+	_current_skill = skill
 	_hit_targets.clear()
 	monitoring = true
 

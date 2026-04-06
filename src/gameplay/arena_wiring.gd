@@ -238,7 +238,7 @@ func _set_highlight(node: Node3D) -> void:
 		
 		_highlight_vfx.material_override = mat
 		_last_highlighted.add_child(_highlight_vfx)
-		_highlight_vfx.position = Vector3(0, 1.0, 0) # Center on character body
+		_highlight_vfx.position = Vector3(0, 0.8, 0) # Highlight centered on character chest
 
 func _get_mesh(node: Node3D) -> MeshInstance3D:
 	if not node: return null

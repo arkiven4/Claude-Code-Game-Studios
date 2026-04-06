@@ -3,20 +3,22 @@ Inference script for myvampire party AI.
 Loads a trained checkpoint and runs the InferenceArena.tscn.
 
 Usage:
-  Terminal 1:
+  Terminal 1 (Python):
     python3.10 prototypes/rl-training/inference.py --checkpoint prototypes/rl-training/models/checkpoint_XXXXXX
 
-  Terminal 2:
-    godot -- res://prototypes/rl-training/InferenceArena.tscn
+  Terminal 2 (Godot):
+    godot -- res://prototypes/rl-training/InferenceArena.tscn --port=11009
 """
 
 import os
 import argparse
 import ray
 import numpy as np
+import gymnasium as gym
 from ray.rllib.algorithms.ppo import PPOConfig
 from ray.tune.registry import register_env
 import sys
+
 # Add current script directory to path so we can import train.py
 script_dir = os.path.dirname(os.path.abspath(__file__))
 if script_dir not in sys.path:
@@ -25,23 +27,43 @@ if script_dir not in sys.path:
 from train import RayMultiAgentGodotEnv
 
 def env_creator(env_config):
-    # Set show_window=True for inference and speedup=1.0
-    env_config["show_window"] = True
-    env_config["speedup"] = 1.0
+    # This creator is used by RLlib internally to initialize spaces
+    # We use a dummy mode or just return the env class
     return RayMultiAgentGodotEnv(env_config)
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--checkpoint", type=str, required=True, help="Path to the checkpoint folder")
-    parser.add_argument("--port", type=int, default=11008, help="Port to connect to Godot")
+    parser.add_argument("--port", type=int, default=11009, help="Port to connect to Godot")
     args = parser.parse_args()
 
+    print("DEBUG: Initializing Ray...")
     if not ray.is_initialized():
-        ray.init()
+        ray.init(logging_level="error")
+    print("DEBUG: Ray initialized.")
 
+    # Define spaces explicitly
+    obs_46 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (46,), dtype=np.float32)})
+    act_party = gym.spaces.Dict({
+        "action":      gym.spaces.Discrete(9),
+        "heal_target": gym.spaces.Discrete(2),
+    })
+    obs_33 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (33,), dtype=np.float32)})
+    act_team = gym.spaces.Dict({
+        "evan_target":   gym.spaces.Discrete(4),
+        "evan_role":     gym.spaces.Discrete(3),
+        "evelyn_target": gym.spaces.Discrete(4),
+        "evelyn_role":   gym.spaces.Discrete(3),
+    })
+    obs_21 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (21,), dtype=np.float32)})
+    act_enemy = gym.spaces.Dict({
+        "action": gym.spaces.Discrete(6),
+    })
+
+    print("DEBUG: Registering environment...")
     register_env("godot_multiagent", env_creator)
 
-    # Reconstruct the config (must match train.py)
+    print("DEBUG: Setting up PPOConfig...")
     config = (
         PPOConfig()
         .api_stack(
@@ -51,48 +73,66 @@ def main():
         .environment("godot_multiagent", env_config={"port": args.port})
         .multi_agent(
             policies={
-                "evan_policy":   (None, None, None, {}),
-                "evelyn_policy": (None, None, None, {}),
-                "team_policy":   (None, None, None, {}),
+                "evan_policy":       (None, obs_46, act_party, {}),
+                "evelyn_policy":     (None, obs_46, act_party, {}),
+                "team_policy":       (None, obs_33, act_team, {}),
+                "enemy_hive_policy": (None, obs_21, act_enemy, {}),
             },
-            policy_mapping_fn=lambda agent_id, *args, **kwargs: f"{agent_id}_policy",
+            policy_mapping_fn=lambda agent_id, *args, **kwargs: (
+                "enemy_hive_policy" if agent_id.startswith("enemy_") else f"{agent_id}_policy"
+            ),
         )
         .env_runners(num_env_runners=0)
     )
 
-    # Build the algorithm and restore from checkpoint
+    print("DEBUG: Building algorithm (this should not wait for Godot)...")
     algo = config.build_algo()
+    print("DEBUG: Algorithm built.")
     
     checkpoint_path = os.path.abspath(args.checkpoint)
     if not os.path.exists(checkpoint_path):
-        print(f"ERROR: Checkpoint path does not exist: {checkpoint_path}")
-        return
-        
+        # Try finding it if user passed a folder containing the checkpoint
+        if os.path.exists(os.path.join(checkpoint_path, "checkpoint_000000")): # Example
+             checkpoint_path = os.path.join(checkpoint_path, "checkpoint_000000")
+
+    print(f"Restoring checkpoint from {checkpoint_path} ...")
     algo.restore(checkpoint_path)
 
-    print(f"Checkpoint restored from {args.checkpoint}")
     print(f"Waiting for Godot to connect on port {args.port} ...")
-    print("Launch: godot -- res://prototypes/rl-training/InferenceArena.tscn")
+    print(f"RUN THIS: godot res://prototypes/rl-training/InferenceArena.tscn --port={args.port}")
 
+    # Now create the actual environment that connects to Godot
     env = RayMultiAgentGodotEnv({"port": args.port, "speedup": 1.0, "show_window": True})
     obs, info = env.reset()
+
+    total_episodes = 0
+    party_wins = 0
 
     print("Running inference. Close Godot window to stop.")
     try:
         while True:
-            # Compute actions for all agents
             action_dict = {}
             for agent_id, agent_obs in obs.items():
-                policy_id = f"{agent_id}_policy"
+                policy_id = (
+                    "enemy_hive_policy" if agent_id.startswith("enemy_") 
+                    else f"{agent_id}_policy"
+                )
                 action_dict[agent_id] = algo.compute_single_action(
                     agent_obs, 
                     policy_id=policy_id,
-                    explore=False # No exploration during inference
+                    explore=False
                 )
             
             obs, rewards, terminated, truncated, info = env.step(action_dict)
             
             if terminated["__all__"] or truncated["__all__"]:
+                total_episodes += 1
+                if rewards.get("team", 0) > 0:
+                    party_wins += 1
+                
+                wr = (party_wins / total_episodes) * 100
+                print(f"Episode {total_episodes} finished. Win: {rewards.get('team', 0) > 0}. Win Rate: {wr:.1f}%")
+                
                 obs, info = env.reset()
     except KeyboardInterrupt:
         print("Inference stopped.")

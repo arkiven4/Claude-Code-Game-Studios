@@ -157,6 +157,11 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Step: 0"
 
+[node name="WinRate" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Win Rate: 0.0%"
+
 [node name="EvanReward" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2

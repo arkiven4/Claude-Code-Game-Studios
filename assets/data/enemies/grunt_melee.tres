@@ -9,21 +9,21 @@
 [sub_resource type="Resource" id="Entry_Basic"]
 script = ExtResource("2_entry")
 skill_ref = ExtResource("3_basic")
-cooldown = 0.8
+cooldown = 1.5
 weight = 3.0
 max_range = 3.0
 
 [sub_resource type="Resource" id="Entry_Super"]
 script = ExtResource("2_entry")
 skill_ref = ExtResource("4_super")
-cooldown = 8.0
+cooldown = 4.0
 weight = 2.0
 max_range = 3.5
 
 [sub_resource type="Resource" id="Entry_Shield"]
 script = ExtResource("2_entry")
 skill_ref = ExtResource("5_shield")
-cooldown = 12.0
+cooldown = 6.0
 max_range = 999.0
 condition = 3
 
@@ -31,7 +31,7 @@ condition = 3
 script = ExtResource("1_enemy")
 enemy_id = "grunt_melee"
 display_name = "Grunt"
-base_max_hp = 150
+base_max_hp = 2160
 base_atk = 25
 base_def = 15
 magical_resistance = 1.2

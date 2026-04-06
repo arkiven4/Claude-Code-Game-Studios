@@ -58,9 +58,9 @@ func _physics_process(delta: float) -> void:
 			camera_pivot.rotation.x = clamp(new_pitch, deg_to_rad(-60), deg_to_rad(30))
 		_mouse_delta = Vector2.ZERO
 
-	# Always look at the player's head so the angle is correct regardless of orbit
+	# Always look at the player's chest/head (0.8m) so the angle is correct regardless of orbit
 	if camera and follow_target:
-		camera.look_at(follow_target.global_position + Vector3(0, 1.0, 0))
+		camera.look_at(follow_target.global_position + Vector3(0, 0.8, 0))
 
 ## Called by InputManager signal (keyboard/stick look input)
 func on_camera_orbit(dir: Vector2) -> void:

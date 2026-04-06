@@ -9,14 +9,13 @@
 [sub_resource type="Resource" id="Entry_Basic"]
 script = ExtResource("2_entry")
 skill_ref = ExtResource("3_basic")
-cooldown = 1.2
+cooldown = 1.8
 weight = 3.0
 min_range = 3.0
 
 [sub_resource type="Resource" id="Entry_Dash"]
 script = ExtResource("2_entry")
 skill_ref = ExtResource("4_dash")
-cooldown = 10.0
 weight = 1.5
 max_range = 999.0
 condition = 4
@@ -24,7 +23,7 @@ condition = 4
 [sub_resource type="Resource" id="Entry_Super"]
 script = ExtResource("2_entry")
 skill_ref = ExtResource("5_super")
-cooldown = 14.0
+cooldown = 4.0
 weight = 2.0
 min_range = 4.0
 max_range = 12.0
@@ -34,8 +33,7 @@ script = ExtResource("1_enemy")
 enemy_id = "archer_ranged"
 display_name = "Archer"
 enemy_class = 1
-behavior_profile = 1
-base_max_hp = 120
+base_max_hp = 2160
 base_atk = 35
 base_def = 10
 base_spd = 1.3

@@ -27,16 +27,29 @@ var _targeting_skill_index: int = -1
 var _targeting_tier: int = 1
 var _last_hover_target: Node = null
 
-func _process(_delta: float) -> void:
+# Casting State
+var _cast_timer: float = 0.0
+var _current_cast_skill: SkillData = null
+var _current_cast_slot: int = -1 # -1 for basic/special attack
+var _current_cast_tier: int = 1
+var _is_special_attack: bool = false
+var _cast_force_self: bool = false
+
+func _process(delta: float) -> void:
 	if _current_targeting_mode == TargetingMode.FRIENDLY:
 		var current_hover := _get_crosshair_friendly_target()
 		if current_hover != _last_hover_target:
 			_last_hover_target = current_hover
 			hover_target_changed.emit(current_hover)
+	
+	if state and state.get("is_casting"):
+		_cast_timer -= delta
+		if _cast_timer <= 0.0:
+			_complete_casting()
 
 func try_activate_skill(slot_index: int, active_tier: int) -> bool:
 	# Phase 1: Validation
-	if not state or not state.get("is_alive"):
+	if not state or not state.get("is_alive") or state.get("is_casting"):
 		skill_activated.emit(slot_index, false)
 		return false
 		
@@ -60,31 +73,29 @@ func try_activate_skill(slot_index: int, active_tier: int) -> bool:
 	# Handle Targeting Mode
 	if _current_targeting_mode == TargetingMode.FRIENDLY and _targeting_skill_index == slot_index:
 		# Pressed the same skill again -> Self Heal
-		_execute_skill_immediately(slot_index, active_tier, true)
-		_exit_targeting_mode()
-		return true
+		return _start_casting(skill, slot_index, active_tier, true)
 	
 	var is_supportive := skill.skill_type in [SkillData.SkillType.SUPPORT, SkillData.SkillType.STATUS]
-	var is_single_target := skill.target_type in [SkillData.TargetType.SINGLE_ENEMY, SkillData.TargetType.SINGLE_ALLY] # For friendly skills, SINGLE_ALLY
 	
 	if is_supportive and skill.target_type == SkillData.TargetType.SINGLE_ALLY:
 		# Enter friendly targeting mode
 		_enter_targeting_mode(TargetingMode.FRIENDLY, slot_index, active_tier)
 		return true
 
-	# Standard instant execution for other types
-	return _execute_skill_immediately(slot_index, active_tier)
+	# Standard execution path (checks for cast time)
+	return _start_casting(skill, slot_index, active_tier)
 
 ## Called by RL agents to bypass interactive targeting for SINGLE_ALLY skills.
 ## force_self=true → heal/buff self; force_self=false → lowest-HP ally fallback.
 func execute_skill_rl(slot_index: int, active_tier: int, force_self: bool) -> bool:
-	if not state or not state.get("is_alive"): return false
+	if not state or not state.get("is_alive") or state.get("is_casting"): return false
 	if slot_index < 0 or slot_index >= 4: return false
 	if not state.has_method("can_use_skill") or not state.can_use_skill(slot_index): return false
 	var character_data: CharacterData = state.get("character_data")
 	if not character_data or slot_index >= character_data.skill_slots.size(): return false
-	if not character_data.skill_slots[slot_index]: return false
-	return _execute_skill_immediately(slot_index, active_tier, force_self)
+	var skill: SkillData = character_data.skill_slots[slot_index]
+	if not skill: return false
+	return _start_casting(skill, slot_index, active_tier, force_self)
 
 func _enter_targeting_mode(mode: TargetingMode, index: int, tier: int) -> void:
 	_current_targeting_mode = mode
@@ -96,6 +107,37 @@ func _exit_targeting_mode() -> void:
 	_current_targeting_mode = TargetingMode.NONE
 	_targeting_skill_index = -1
 	targeting_ended.emit()
+
+func _start_casting(skill: SkillData, slot_index: int, tier: int, force_self: bool = false, is_special: bool = false) -> bool:
+	if skill.cast_time > 0.0:
+		_cast_timer = skill.cast_time
+		_current_cast_skill = skill
+		_current_cast_slot = slot_index
+		_current_cast_tier = tier
+		_is_special_attack = (slot_index == -1)
+		_cast_force_self = force_self
+		state.set("is_casting", true)
+		return true
+	else:
+		if slot_index == -1:
+			return _execute_attack_immediately(is_special, tier)
+		else:
+			return _execute_skill_immediately(slot_index, tier, force_self)
+
+func _complete_casting() -> void:
+	state.set("is_casting", false)
+	var skill := _current_cast_skill
+	var slot := _current_cast_slot
+	var tier := _current_cast_tier
+	var force_self := _cast_force_self
+	var is_special := _is_special_attack
+	
+	_current_cast_skill = null
+	
+	if slot == -1:
+		_execute_attack_immediately(is_special, tier)
+	else:
+		_execute_skill_immediately(slot, tier, force_self)
 
 func _execute_skill_immediately(slot_index: int, active_tier: int, force_self: bool = false) -> bool:
 	var character_data: CharacterData = state.get("character_data")
@@ -125,7 +167,8 @@ func try_activate_attack(is_special: bool, active_tier: int = 1) -> bool:
 	if _current_targeting_mode == TargetingMode.FRIENDLY:
 		if not is_special:
 			# Left click confirms friendly targeting
-			_execute_skill_immediately(_targeting_skill_index, _targeting_tier)
+			var skill: SkillData = state.get("character_data").skill_slots[_targeting_skill_index]
+			_start_casting(skill, _targeting_skill_index, _targeting_tier)
 			_exit_targeting_mode()
 			return true
 		else:
@@ -133,7 +176,7 @@ func try_activate_attack(is_special: bool, active_tier: int = 1) -> bool:
 			_exit_targeting_mode()
 			return false
 
-	if not state or not state.get("is_alive"):
+	if not state or not state.get("is_alive") or state.get("is_casting"):
 		attack_activated.emit(is_special, false)
 		return false
 		
@@ -151,6 +194,12 @@ func try_activate_attack(is_special: bool, active_tier: int = 1) -> bool:
 		attack_activated.emit(is_special, false)
 		return false
 		
+	return _start_casting(skill, -1, active_tier, false, is_special)
+
+func _execute_attack_immediately(is_special: bool, active_tier: int) -> bool:
+	var character_data: CharacterData = state.get("character_data")
+	var skill: SkillData = character_data.special_attack if is_special else character_data.basic_attack
+	
 	# Consume cooldown (No MP)
 	state.call("consume_attack_cooldown", is_special)
 	
@@ -252,7 +301,7 @@ func _execute_enemy_skill(skill: SkillData, tier_config: SkillTierConfig, effect
 		else:
 			# Melee/instant: show the VFX in front of the caster (air swing).
 			var forward := -caster_node.global_transform.basis.z.normalized()
-			var swing_pos := caster_node.global_position + forward * 1.0 + Vector3(0, 0.5, 0)
+			var swing_pos := caster_node.global_position + forward * 1.0 + Vector3(0, 0.8, 0)
 			_spawn_skill_vfx(swing_pos, Color(1.0, 0.3, 0.1), skill.vfx_effect)
 		return
 
@@ -276,10 +325,10 @@ func _execute_enemy_skill(skill: SkillData, tier_config: SkillTierConfig, effect
 		var target := in_range[i] as EnemyAIController
 		var actual_damage: Dictionary = CombatSkillExecutor.calculate_skill_damage(state, skill, effect_value, target)
 		target.take_damage(actual_damage)
-		_spawn_skill_vfx(target.global_position + Vector3(0, 1.0, 0), Color(1.0, 0.1, 0.1), skill.vfx_effect)
+		_spawn_skill_vfx(target.global_position, Color(1.0, 0.1, 0.1), skill.vfx_effect)
 		damage_dealt.emit(actual_damage.get("damage", 0), target)
 		# Apply on-hit status effects (e.g. abyssal_chain stun)
-		CombatSkillExecutor.apply_skill_effects(skill, state.name if state else "", target)
+		CombatSkillExecutor.apply_skill_effects(skill, state.get_parent().name if state and state.get_parent() else "", target)
 
 func _execute_friendly_skill(skill: SkillData, tier_config: SkillTierConfig, effect_value: float, target_count: int, tier: int, force_self: bool = false) -> void:
 	var caster_node: Node3D = state.get_parent() as Node3D
@@ -288,18 +337,18 @@ func _execute_friendly_skill(skill: SkillData, tier_config: SkillTierConfig, eff
 	if skill.target_type == SkillData.TargetType.SELF or force_self:
 		## Self-targeted: apply directly to caster's own state
 		_apply_skill_to_target(skill, state, effect_value, tier)
-		_spawn_skill_vfx(caster_node.global_position + Vector3(0, 1.0, 0), Color(0.2, 1.0, 0.4), skill.vfx_effect)
+		_spawn_skill_vfx(caster_node.global_position, Color(0.2, 1.0, 0.4), skill.vfx_effect)
 		return
 
 	## ALL_ALLIES: apply to every living party member
 	if skill.target_type == SkillData.TargetType.ALL_ALLIES:
-		_spawn_skill_vfx(caster_node.global_position + Vector3(0, 1.0, 0), Color(0.2, 1.0, 0.4), skill.vfx_effect)
+		_spawn_skill_vfx(caster_node.global_position, Color(0.2, 1.0, 0.4), skill.vfx_effect)
 		var party := get_tree().get_nodes_in_group("PartyMembers")
 		for member in party:
 			var member_state: Node = member.get_node_or_null("PartyMemberState")
 			if member_state and member_state.get("is_alive"):
 				_apply_skill_to_target(skill, member_state, effect_value, tier)
-				_spawn_skill_vfx(member.global_position + Vector3(0, 1.0, 0), Color(0.2, 1.0, 0.4), skill.vfx_effect)
+				_spawn_skill_vfx(member.global_position, Color(0.2, 1.0, 0.4), skill.vfx_effect)
 		return
 
 	## SINGLE_ALLY: Try crosshair targeting, fallback to lowest HP
@@ -326,7 +375,7 @@ func _execute_friendly_skill(skill: SkillData, tier_config: SkillTierConfig, eff
 		_apply_skill_to_target(skill, final_target, effect_value, tier)
 		var target_node: Node3D = final_target.get_parent() as Node3D
 		if target_node:
-			_spawn_skill_vfx(target_node.global_position + Vector3(0, 1.0, 0), Color(0.2, 1.0, 0.4), skill.vfx_effect)
+			_spawn_skill_vfx(target_node.global_position, Color(0.2, 1.0, 0.4), skill.vfx_effect)
 
 func _get_crosshair_friendly_target() -> Node:
 	var camera := get_viewport().get_camera_3d()
@@ -366,7 +415,7 @@ func _get_crosshair_friendly_target() -> Node:
 		# Skip self if it's not a SELF target type (already handled by double-tap)
 		if state_node == state: continue
 
-		var screen_pos := camera.unproject_position(member.global_position + Vector3(0, 1.0, 0)) # Target chest/head
+		var screen_pos := camera.unproject_position(member.global_position) # Target chest/head
 		
 		# Check if within snapping bounds
 		if abs(screen_pos.x - screen_center.x) < snap_width * 0.5 and \
@@ -399,18 +448,17 @@ func _spawn_skill_vfx(position: Vector3, color: Color, texture: Texture2D = null
 ## Spawns a Projectile via CombatVFX.spawn_projectile aimed at [target] (or forward if null).
 ## Design doc: skills with is_projectile = true use this delivery path instead of instant hit.
 func _spawn_projectile_vfx(skill: SkillData, caster_node: Node3D, target: EnemyAIController, damage_result: Dictionary) -> void:
-	var spawn_pos := caster_node.global_position + Vector3(0, 1.0, 0)
-	var caster_id: String = str(state.name) if state else ""
-	var damage: int = int(damage_result.get("damage", 0))
+	var spawn_pos := caster_node.global_position + Vector3(0, 0.8, 0)
+	var caster_id: String = str(state.get_parent().name) if state and state.get_parent() else ""
 
 	if target:
-		CombatVFX.spawn_projectile(get_tree(), projectile_scene, skill, damage, caster_id,
-				spawn_pos, target.global_position + Vector3(0, 1.0, 0), true, false)
+		CombatVFX.spawn_projectile(get_tree(), projectile_scene, skill, damage_result, caster_id,
+				spawn_pos, target.global_position + Vector3(0, 0.8, 0), true, false)
 	else:
 		# No target: fire forward, expire when it reaches max range.
 		var forward := -caster_node.global_transform.basis.z.normalized()
 		var lifetime := skill.max_cast_range / maxf(skill.projectile_speed, 1.0)
-		CombatVFX.spawn_projectile(get_tree(), projectile_scene, skill, damage, caster_id,
+		CombatVFX.spawn_projectile(get_tree(), projectile_scene, skill, damage_result, caster_id,
 				spawn_pos, spawn_pos + forward * skill.max_cast_range, true, false, lifetime)
 
 func _apply_skill_to_target(skill: SkillData, target: Node, effect_value: float, tier: int) -> void:
@@ -423,9 +471,9 @@ func _apply_skill_to_target(skill: SkillData, target: Node, effect_value: float,
 		SkillData.SkillType.SUPPORT:
 			_apply_support_skill(skill, target, effect_value)
 		SkillData.SkillType.STATUS:
-			CombatSkillExecutor.apply_skill_effects(skill, state.name if state else "", target, tier)
+			CombatSkillExecutor.apply_skill_effects(skill, state.get_parent().name if state and state.get_parent() else "", target, tier)
 		SkillData.SkillType.UTILITY:
-			CombatSkillExecutor.apply_utility(skill, state, state.name if state else "")
+			CombatSkillExecutor.apply_utility(skill, state, state.get_parent().name if state and state.get_parent() else "")
 
 func _apply_support_skill(skill: SkillData, target: Node, effect_value: float) -> void:
 	if skill.is_revive:

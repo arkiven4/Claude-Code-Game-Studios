@@ -1,0 +1,88 @@
+[gd_scene load_steps=14 format=3 uid="uid://dpw8j2k3l4m5n"]
+
+[ext_resource type="Script" path="res://prototypes/rl-training/rl_arena_manager.gd" id="1_manager"]
+[ext_resource type="PackedScene" uid="uid://bixlue2j75gbg" path="res://assets/scenes/characters/Evan.tscn" id="2_evan_scene"]
+[ext_resource type="PackedScene" uid="uid://bgfdfr1n2rhl" path="res://assets/scenes/characters/Evelyn.tscn" id="3_evelyn_scene"]
+[ext_resource type="Script" path="res://src/ai/rl_party_agent.gd" id="4_party_agent"]
+[ext_resource type="Script" path="res://src/ai/rl_team_agent.gd" id="5_team_agent"]
+[ext_resource type="Script" path="res://prototypes/rl-training/rl_enemy_controller.gd" id="6_rl_enemy_ctrl"]
+[ext_resource type="Script" path="res://src/ai/rl_enemy_hive_agent.gd" id="7_hive_agent"]
+[ext_resource type="PackedScene" uid="uid://d25c0yibrlo5p" path="res://assets/scenes/enemies/GruntMelee.tscn" id="8_grunt"]
+[ext_resource type="PackedScene" path="res://assets/scenes/enemies/ArcherRanged.tscn" id="9_archer"]
+[ext_resource type="PackedScene" path="res://assets/scenes/enemies/MageEnemy.tscn" id="10_mage"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1"]
+size = Vector3(60, 0.1, 60)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1"]
+size = Vector3(60, 0.1, 60)
+
+[node name="TrainingArenaIsolated" type="Node3D"]
+script = ExtResource("1_manager")
+evan_body_path = NodePath("Party/Evan")
+evelyn_body_path = NodePath("Party/Evelyn")
+enemy_container_path = NodePath("Enemies")
+
+[node name="Ground" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("BoxShape3D_1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("BoxMesh_1")
+
+[node name="Party" type="Node3D" parent="."]
+
+[node name="Evan" parent="Party" instance=ExtResource("2_evan_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 1, -5)
+
+[node name="RLPartyAgent" type="Node3D" parent="Party/Evan"]
+script = ExtResource("4_party_agent")
+policy_name = "evan_policy"
+role = 0
+reset_after = 2000
+
+[node name="Evelyn" parent="Party" instance=ExtResource("3_evelyn_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 1, -5)
+
+[node name="RLPartyAgent" type="Node3D" parent="Party/Evelyn"]
+script = ExtResource("4_party_agent")
+policy_name = "evelyn_policy"
+role = 1
+reset_after = 2000
+
+[node name="TeamAI" type="Node3D" parent="." node_paths=PackedStringArray("evan_agent", "evelyn_agent")]
+script = ExtResource("5_team_agent")
+evan_agent = NodePath("../Party/Evan/RLPartyAgent")
+evelyn_agent = NodePath("../Party/Evelyn/RLPartyAgent")
+policy_name = "team_policy"
+reset_after = 2000
+
+[node name="Enemies" type="Node3D" parent="."]
+
+[node name="GruntMelee" parent="Enemies" instance=ExtResource("8_grunt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.9, 8)
+script = ExtResource("6_rl_enemy_ctrl")
+
+[node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/GruntMelee"]
+script = ExtResource("7_hive_agent")
+policy_name = "enemy_hive"
+reset_after = 2000
+
+[node name="ArcherRanged" parent="Enemies" instance=ExtResource("9_archer")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.9, 8)
+script = ExtResource("6_rl_enemy_ctrl")
+
+[node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/ArcherRanged"]
+script = ExtResource("7_hive_agent")
+policy_name = "enemy_hive"
+reset_after = 2000
+
+[node name="MageEnemy" parent="Enemies" instance=ExtResource("10_mage")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 11)
+script = ExtResource("6_rl_enemy_ctrl")
+
+[node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/MageEnemy"]
+script = ExtResource("7_hive_agent")
+policy_name = "enemy_hive"
+reset_after = 2000

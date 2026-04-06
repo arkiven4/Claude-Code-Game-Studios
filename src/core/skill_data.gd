@@ -21,6 +21,7 @@ enum DamageCategory { PHYSICAL, MAGICAL, HOLY, DARK }
 @export var mp_cost: int = 10
 @export var base_cooldown: float = 5.0
 @export var max_charges: int = 1
+@export var cast_time: float = 0.0
 
 @export_group("Targeting")
 @export var target_type: TargetType = TargetType.SINGLE_ENEMY

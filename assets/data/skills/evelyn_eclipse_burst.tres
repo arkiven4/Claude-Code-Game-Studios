@@ -36,6 +36,6 @@ target_type = 3
 target_count = 99
 area_radius = 5.0
 tiers = Array[ExtResource("2_tier")]([SubResource("Tier1"), SubResource("Tier2"), SubResource("Tier3")])
-base_damage = 60
+base_damage = 120
 damage_category = 3
 vfx_effect = ExtResource("vfx_eff")

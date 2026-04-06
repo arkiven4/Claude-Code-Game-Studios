@@ -21,11 +21,14 @@ func before_each() -> void:
 	_manager = EquipmentManager.new()
 	_manager.name = "EquipmentManager"
 	add_child(_manager)
+	# _ready auto-detects state from parent; set explicitly as fallback
 	_manager.state = _state
 
 func after_each() -> void:
-	_manager.queue_free()
-	_state.queue_free()
+	if is_instance_valid(_manager):
+		_manager.queue_free()
+	if is_instance_valid(_state):
+		_state.queue_free()
 
 func _make_weapon(atk_bonus: float) -> ItemEquipment:
 	var item := ItemEquipment.new()

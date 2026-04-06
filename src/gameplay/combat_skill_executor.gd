@@ -25,7 +25,14 @@ static func calculate_skill_damage(caster: Node, skill: SkillData, effect_value:
 	var target_def: int = target.get_effective_def() if target.has_method("get_effective_def") else 0
 	var res: float = target.get_resistance(skill.damage_category) if target.has_method("get_resistance") else 1.0
 	var crit_chance: float = caster.get_effective_crit() if caster.has_method("get_effective_crit") else 0.0
-	return HealthDamageSystem.calculate_damage(caster_atk, skill.base_damage, effect_value, target_def, res, crit_chance)
+	
+	var result := HealthDamageSystem.calculate_damage(caster_atk, skill.base_damage, effect_value, target_def, res, crit_chance)
+	
+	# Add metadata for logging
+	result["caster_name"] = caster.name
+	result["skill_name"] = skill.display_name
+	
+	return result
 
 ## Applies all on-hit/on-cast status effects from a skill to a target.
 ## Values (duration, magnitude, tick rate) come from SkillEffectOverride in skill.effect_overrides.

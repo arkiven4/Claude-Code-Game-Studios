@@ -4,6 +4,12 @@
 
 extends GutTest
 
+func before_all() -> void:
+	HealthDamageSystem.use_variance = false
+
+func after_all() -> void:
+	HealthDamageSystem.use_variance = true
+
 func test_calculate_damage_no_crit() -> void:
 	# Formula: raw = (atk * 0.5 + base_dmg) * effect * crit_mult
 	# raw = (100 * 0.5 + 50) * 1.0 * 1.0 = 100

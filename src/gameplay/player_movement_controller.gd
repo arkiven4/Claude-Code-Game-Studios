@@ -8,7 +8,7 @@ extends Node
 @export var switch_controller: CharacterSwitchController
 @export var move_speed: float = 5.0
 @export var dodge_multiplier: float = 3.0
-@export var dodge_duration: float = 0.2
+@export var dodge_duration: float = 0.35
 
 var _move_input: Vector2 = Vector2.ZERO
 var _is_dodging: bool = false

@@ -128,8 +128,8 @@ func get_reward() -> float:
 
 func get_action_space() -> Dictionary:
 	return {
-		# 0=wait, 1-4=skill slots, 5=move→enemy, 6=move away, 7=move→ally, 8=hold
-		"action": {"size": 9, "action_type": "discrete"},
+		# 0=wait, 1-4=skill slots, 5=move→enemy, 6=move away, 7=move→ally, 8=hold, 9=basic, 10=special
+		"action": {"size": 11, "action_type": "discrete"},
 		# For SINGLE_ALLY skills: 0=heal self, 1=heal lowest-HP ally
 		"heal_target": {"size": 2, "action_type": "discrete"},
 	}
@@ -157,14 +157,13 @@ func set_action(action: Dictionary) -> void:
 					hit = skill_execution.try_activate_skill(slot, _active_tier)
 				if hit:
 					reward += w_skill_hit
-		5:
-			pending_move_action = 5  ## move toward focus_target — rl_arena_manager executes
-		6:
-			pending_move_action = 6  ## move away
-		7:
-			pending_move_action = 7  ## move toward lowest-HP ally
-		8:
-			pending_move_action = 8  ## hold
+		5, 6, 7, 8:
+			pending_move_action = act
+		9, 10:
+			if skill_execution:
+				var hit := skill_execution.try_activate_attack(act == 10, _active_tier)
+				if hit:
+					reward += w_skill_hit
 		_:
 			reward -= w_idle  ## action=0 or unknown = idle penalty
 

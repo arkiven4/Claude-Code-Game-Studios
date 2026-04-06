@@ -6,26 +6,38 @@
 
 ---
 
-## How to Run Training
+## How to Run
 
-Requires two terminals simultaneously.
+### 1. Standard Training (One Arena)
+**Terminal 1:** `python3 prototypes/rl-training/train.py`
+**Terminal 2:** `godot --headless -- res://prototypes/rl-training/TrainingArena.tscn`
 
-**Terminal 1 — Python trainer (start first):**
-```bash
-cd /home/arkiven4/Documents/Project/Other/myvampire
-python3.10 prototypes/rl-training/train.py
-```
-Wait until you see: `Waiting for Godot to connect on port 11008 ...`
+### 2. Vectorized Training (Fastest)
+Uses a single Godot process with N parallel arenas (VecEnv).
+**Terminal 1:** `python3 prototypes/rl-training/train_vectorized.py`
+**Terminal 2:** `godot --headless -- res://prototypes/rl-training/VectorizedTraining.tscn --n_arenas=4`
+*Note: This reduces RAM overhead significantly compared to multi-process training.*
 
-**Terminal 2 — Godot headless:**
-```bash
-godot --headless -- res://prototypes/rl-training/TrainingArena.tscn \
-  --speedup=10 --fixed-fps=2000 --disable-render-loop
-```
+### 3. Inference & Validation
+To test your trained agents and see their performance:
+1.  **Identify Checkpoint:** Find your model in `prototypes/rl-training/models/`.
+2.  **Start Python:**
+    ```bash
+    python3 prototypes/rl-training/inference.py --checkpoint prototypes/rl-training/models/checkpoint_000XXX
+    ```
+3.  **Start Godot:**
+    ```bash
+    godot -- res://prototypes/rl-training/InferenceArena.tscn --port=11009
+    ```
 
-Or press **Play** in the Godot editor (slower but shows visuals).
+---
 
-Training runs 500 iterations. Checkpoints save every 50 to `models/`. Stop anytime with **Ctrl+C**.
+## Monitoring Win Rate
+The HUD in both Training and Inference arenas now displays a **Win Rate** counter:
+- **Calculation:** `(Party Victories / Total Episodes) * 100`
+- **Inference Terminal:** The `inference.py` console will also print the result of every episode:
+  `Episode 10 finished. Win: True. Win Rate: 80.0%`
+- **Target:** A stable win rate above 80% indicates the party has learned effective coordination.
 
 ---
 
@@ -34,8 +46,13 @@ Training runs 500 iterations. Checkpoints save every 50 to `models/`. Stop anyti
 | File | Purpose |
 |------|---------|
 | `train.py` | Python side: RLlib PPO config, env wrapper, obs/action space definitions |
+| `train_vectorized.py` | (New) Optimized trainer: 1 Godot process with N parallel arenas |
+| `inference.py` | (New) Validation script: loads a checkpoint and runs InferenceArena |
 | `TrainingArena.tscn` | Godot scene: all 6 agents pre-placed as static nodes |
-| `rl_arena_manager.gd` | Episode logic: reset, movement, reward routing, stagnation penalties |
+| `TrainingArenaIsolated.tscn` | (New) Lightweight arena for vectorization (no global nodes) |
+| `VectorizedTraining.tscn` | (New) Wrapper scene: instances N isolated arenas in a grid |
+| `InferenceArena.tscn` | (New) Scene for model validation (includes HUD win rate) |
+| `rl_arena_manager.gd` | Episode logic: reset, movement, reward, **win rate tracking** |
 | `rl_party_agent.gd` | Per-character agent: obs, actions, reward for Evan/Evelyn |
 | `rl_team_agent.gd` | High-level coordinator: outputs target/role directives to party agents |
 | `rl_enemy_hive_agent.gd` | Enemy agent: obs, actions, reward (shared policy across all 3 enemies) |
