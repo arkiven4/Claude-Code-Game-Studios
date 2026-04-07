@@ -197,7 +197,7 @@ def main():
     
     register_env("godot_multiagent", env_creator)
 
-    print("Waiting for Godot to connect on port 11008 ...")
+    print("Python server listening on port 11008 — launch Godot now.")
     print("Launch: godot --headless -- res://prototypes/rl-training/TrainingArena.tscn")
 
     config = (

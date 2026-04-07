@@ -31,6 +31,14 @@ signal projectile_spawned(projectile: Projectile)
 ## Movement and skill execution are handled externally by RLEnemyHiveAgent + rl_arena_manager.
 @export var rl_controlled: bool = false
 
+## Per-arena party candidates for RL target acquisition.
+## Set by rl_arena_manager so vectorized arenas cannot cross-target each other.
+## Empty = fall back to global PartyMembers group (single-arena training).
+var _rl_party_candidates: Array[Node3D] = []
+
+func set_rl_party_candidates(candidates: Array[Node3D]) -> void:
+	_rl_party_candidates = candidates
+
 var current_hp: int
 var max_hp: int
 var is_alive: bool = true
@@ -275,14 +283,20 @@ func _physics_process(delta: float) -> void:
 		if not ts or not ts.is_alive:
 			_current_target = null
 			var best_dist: float = INF
-			for member in get_tree().get_nodes_in_group("PartyMembers"):
+			# Prefer per-arena candidates set by rl_arena_manager — required for vectorized
+			# training so arena_0 enemies cannot accidentally target arena_1 party members.
+			# Falls back to the global group when running a single arena.
+			var search_list: Array = _rl_party_candidates \
+				if not _rl_party_candidates.is_empty() \
+				else get_tree().get_nodes_in_group("PartyMembers")
+			for member: Node3D in search_list:
 				var member_state: PartyMemberState = member.get_node_or_null("PartyMemberState") as PartyMemberState
 				if not member_state or not member_state.is_alive:
 					continue
 				var d: float = global_position.distance_to(member.global_position)
 				if d < best_dist:
 					best_dist = d
-					_current_target = member as Node3D
+					_current_target = member
 	else:
 		var is_stunned := _has_effect_category(StatusEffect.EffectCategory.ACTION_DENIAL)
 		if is_stunned:

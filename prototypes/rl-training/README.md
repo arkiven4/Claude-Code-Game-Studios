@@ -8,15 +8,18 @@
 
 ## How to Run
 
-### 1. Standard Training (One Arena)
-**Terminal 1:** `python3 prototypes/rl-training/train.py`
-**Terminal 2:** `godot --headless -- res://prototypes/rl-training/TrainingArena.tscn`
+> **Important:** The scene path must come **before** `--`. Everything after `--` is read by godot_rl as user args.
 
-### 2. Vectorized Training (Fastest)
-Uses a single Godot process with N parallel arenas (VecEnv).
-**Terminal 1:** `python3 prototypes/rl-training/train_vectorized.py`
-**Terminal 2:** `godot --headless -- res://prototypes/rl-training/VectorizedTraining.tscn --n_arenas=4`
-*Note: This reduces RAM overhead significantly compared to multi-process training.*
+### 1. Standard Training (One Arena)
+**Terminal 1:** `python3.10 prototypes/rl-training/train.py`
+**Terminal 2:** `godot --headless res://prototypes/rl-training/TrainingArena.tscn -- --speedup=10`
+
+### 2. Vectorized Training (Fastest — recommended)
+Runs N arenas in one Godot process. 8× more experience per wall-clock second vs single arena.
+**Terminal 1:** `python3.10 prototypes/rl-training/train_vectorized.py`
+**Terminal 2:** `godot --headless res://prototypes/rl-training/VectorizedTraining.tscn -- --n_arenas=8 --speedup=10`
+
+Start **Python first**. Launch Godot only after Python prints "Waiting for Godot to connect..."
 
 ### 3. Inference & Validation
 To test your trained agents and see their performance:
@@ -45,18 +48,16 @@ The HUD in both Training and Inference arenas now displays a **Win Rate** counte
 
 | File | Purpose |
 |------|---------|
-| `train.py` | Python side: RLlib PPO config, env wrapper, obs/action space definitions |
-| `train_vectorized.py` | (New) Optimized trainer: 1 Godot process with N parallel arenas |
-| `inference.py` | (New) Validation script: loads a checkpoint and runs InferenceArena |
-| `TrainingArena.tscn` | Godot scene: all 6 agents pre-placed as static nodes |
-| `TrainingArenaIsolated.tscn` | (New) Lightweight arena for vectorization (no global nodes) |
-| `VectorizedTraining.tscn` | (New) Wrapper scene: instances N isolated arenas in a grid |
-| `InferenceArena.tscn` | (New) Scene for model validation (includes HUD win rate) |
-| `rl_arena_manager.gd` | Episode logic: reset, movement, reward, **win rate tracking** |
+| `train.py` | Python: RLlib PPO config for single-arena training |
+| `train_vectorized.py` | Python: RLlib PPO config for N-arena vectorized training |
+| `TrainingArena.tscn` | Godot: single arena with all 6 agents pre-placed as static nodes |
+| `VectorizedTraining.tscn` | Godot: root scene that spawns N TrainingArena instances in a grid, shared Sync node |
+| `vectorized_training.gd` | Spawns arenas, strips embedded Sync/HUD per arena, adds one shared Sync node |
+| `rl_arena_manager.gd` | Episode logic: reset, rewards, curriculum, damage-progress tracking |
 | `rl_party_agent.gd` | Per-character agent: obs, actions, reward for Evan/Evelyn |
 | `rl_team_agent.gd` | High-level coordinator: outputs target/role directives to party agents |
 | `rl_enemy_hive_agent.gd` | Enemy agent: obs, actions, reward (shared policy across all 3 enemies) |
-| `rl_enemy_controller.gd` | Training-only subclass of EnemyAIController — overrides `_die()` to skip `queue_free()` |
+| `rl_enemy_controller.gd` | Training-only subclass of EnemyAIController — forces `rl_controlled=true`, overrides `_die()` to skip `queue_free()` |
 | `models/` | Saved RLlib checkpoints |
 
 ---
@@ -67,12 +68,12 @@ The HUD in both Training and Inference arenas now displays a **Win Rate** counte
 
 | Agent ID | Policy | Obs | Action Space | Role |
 |----------|--------|-----|--------------|------|
-| `evan` | `evan_policy` | 46 floats | `action`(9) + `heal_target`(2) | Party tanker |
-| `evelyn` | `evelyn_policy` | 46 floats | `action`(9) + `heal_target`(2) | Party mage |
+| `evan` | `evan_policy` | 54 floats | `action`(11) + `heal_target`(2) | Party tanker |
+| `evelyn` | `evelyn_policy` | 54 floats | `action`(11) + `heal_target`(2) | Party mage |
 | `team` | `team_policy` | 33 floats | `evan_target`(4) + `evan_role`(3) + `evelyn_target`(4) + `evelyn_role`(3) | High-level coordinator |
-| `enemy_0` | `enemy_hive_policy` | 21 floats | `action`(6) | Grunt (melee) |
-| `enemy_1` | `enemy_hive_policy` | 21 floats | `action`(6) | Archer (ranged) |
-| `enemy_2` | `enemy_hive_policy` | 21 floats | `action`(6) | Mage |
+| `enemy_0` | `enemy_hive_policy` | 25 floats | `action`(6) | Grunt (melee) |
+| `enemy_1` | `enemy_hive_policy` | 25 floats | `action`(6) | Archer (ranged) |
+| `enemy_2` | `enemy_hive_policy` | 25 floats | `action`(6) | Mage |
 
 **Enemies share one policy** (`enemy_hive_policy`) — one brain controls all 3 bodies.
 **Self-play adversarial**: party and enemies train against each other simultaneously.
@@ -82,10 +83,9 @@ The HUD in both Training and Inference arenas now displays a **Win Rate** counte
 **Party `action`:**
 - `0` = wait (idle penalty applied)
 - `1–4` = skill slots 0–3
-- `5` = move toward directive target enemy
-- `6` = move away from nearest enemy
-- `7` = move toward lowest-HP ally
-- `8` = hold position
+- `5–8` = movement (toward target, away from enemy, toward ally, hold)
+- `9` = basic attack
+- `10` = special
 
 **Party `heal_target`** (used when skill is `SINGLE_ALLY` type):
 - `0` = target self
@@ -103,11 +103,12 @@ The HUD in both Training and Inference arenas now displays a **Win Rate** counte
 
 ## Observation Spaces
 
-### Party agent (46 floats)
+### Party agent (54 floats)
 ```
 Self (10):     hp_ratio, mp_ratio, cooldown×4, can_use×4
-Allies (9):    up to 3 × (hp, mp, alive)
-Enemies (20):  up to 4 × (hp, dist, alive, rel_x, rel_z)
+Casting (2):   is_casting, cast_progress
+Allies (15):   up to 3 × (hp, mp, alive, rel_x, rel_z)  — dead allies zero-padded
+Enemies (20):  up to 4 × (hp, dist, alive, rel_x, rel_z) — dead enemies zero-padded
 Directive (7): focus_target one-hot×4, role_mode one-hot×3
 ```
 
@@ -120,11 +121,11 @@ Combat (3):    step_norm, alive_party_ratio, alive_enemy_ratio
 Memory (4):    last evan_target, evan_role, evelyn_target, evelyn_role
 ```
 
-### Enemy hive agent (21 floats)
+### Enemy hive agent (25 floats)
 ```
-Self (3):          hp_ratio, skill0_cd_ratio, skill1_cd_ratio
-Party ×2 (10):     hp, dist, alive, rel_x, rel_z  (per member)
-Enemy allies ×2 (8): hp, alive, rel_x, rel_z  (other enemies)
+Self (5):            hp_ratio, skill0_cd_ratio, skill1_cd_ratio, rel_x, rel_z
+Party ×2 (10):       hp, dist, alive, rel_x, rel_z  (per member — dead zero-padded)
+Enemy allies ×2 (10): hp, dist, alive, rel_x, rel_z (other enemies — dead zero-padded)
 ```
 
 ---
@@ -203,7 +204,15 @@ When a single enemy dies, we do NOT set `hive.done = true` on its individual age
 
 **Why:** If one enemy's agent sends `terminated=True` mid-episode, RLlib removes it from active agents. But godot_rl keeps sending obs for it. This mismatch between Python and Godot's view of active agents causes various sync errors.
 
-### 5. `_agent_ids` must be a set, not a list
+### 5. Vectorized sync node must be added before `_ready()` returns
+
+In `VectorizedTraining.tscn`, the shared Sync node must be added at the **end of `_ready()`**, not after `await get_tree().process_frame`.
+
+**Why:** `sync.gd._ready()` does `await get_tree().root.ready` before connecting to Python. `root.ready` fires the moment the top-level scene node's `_ready()` returns. If `vectorized_training.gd._ready()` suspends on any `await` before adding the Sync node, `root.ready` fires without Sync being in the tree. Sync is then added *after* `root.ready` has already fired — its internal await waits for a signal that never comes again → permanent hang, never connects to Python.
+
+`add_child(arena)` during `_ready()` is **synchronous** — all child `_ready()` calls (AIController3D agent registration) complete immediately, so no frame waits are needed.
+
+### 6. `_agent_ids` must be a set, not a list
 ```python
 self._agent_ids = {"evan", "evelyn", "team", "enemy_0", "enemy_1", "enemy_2"}
 self.possible_agents = self._agent_ids

@@ -161,6 +161,12 @@ func _find_enemies() -> void:
 		hive.enemy_controller = enemy
 		_enemies.append(enemy)
 		_hive_agents.append(hive)
+		# Restrict target search to this arena's own party — prevents cross-arena targeting
+		# when multiple arenas run in the same scene (vectorized training).
+		var candidates: Array[Node3D] = []
+		if evan_body: candidates.append(evan_body)
+		if evelyn_body: candidates.append(evelyn_body)
+		enemy.set_rl_party_candidates(candidates)
 
 func _on_enemy_projectile_spawned(projectile: Projectile) -> void:
 	# Use _on_enemy_projectile_missed (dodge-only) so the non-targeted party agent
