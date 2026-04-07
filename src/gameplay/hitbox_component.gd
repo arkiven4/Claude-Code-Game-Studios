@@ -22,10 +22,10 @@ func _ready() -> void:
 	# Layer 8 = Enemy Hurtboxes (players hitting enemies)
 	if target_layer == 2:
 		collision_mask = 2  # Hit party members
-		print("[HitboxComponent] %s: Set collision_mask to 2 (hit Party)" % name)
+		#print("[HitboxComponent] %s: Set collision_mask to 2 (hit Party)" % name)
 	elif target_layer == 8:
 		collision_mask = 8  # Hit enemies
-		print("[HitboxComponent] %s: Set collision_mask to 8 (hit Enemy)" % name)
+		#print("[HitboxComponent] %s: Set collision_mask to 8 (hit Enemy)" % name)
 
 func activate(damage_data: Dictionary, skill: SkillData = null) -> void:
 	_is_active = true
@@ -50,4 +50,4 @@ func _physics_process(_delta: float) -> void:
 				hurtbox.take_hit(_damage_data)
 				_hit_targets.append(hurtbox)
 				hit_landed.emit(hurtbox)
-				print("[HitboxComponent] Hit %s" % hurtbox.get_parent().name)
+				#print("[HitboxComponent] Hit %s" % hurtbox.get_parent().name)
