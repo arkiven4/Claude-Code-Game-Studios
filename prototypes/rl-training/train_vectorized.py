@@ -231,26 +231,81 @@ def main():
 
     algo = config.build_algo(logger_creator=custom_logger_creator)
 
+    # --- Early stopping config ---
+    # Primary metric: team_policy reward (rises as damage progress improves —
+    # includes on_victory +5, on_enemy_killed +0.5, on_defeat -5).
+    # custom_metrics is always empty in this RLlib setup, so we read from
+    # policy_reward_mean directly instead.
+    PATIENCE      = 50    # iterations without improvement before stopping
+    MIN_REWARD_DELTA = 0.5  # minimum team reward gain to count as improvement
+    # Warn (and optionally stop) when a policy's entropy collapses this low.
+    # With 11 actions, random entropy ≈ ln(11) ≈ 2.4. Below 0.5 means near-deterministic.
+    ENTROPY_WARN  = 0.5
+    ENTROPY_STOP  = 0.1   # hard stop — policy is essentially deterministic
+
+    best_team_reward  = float("-inf")
+    no_improve_iters  = 0
+    best_ckpt_path    = None
+
     print("Training started. Ctrl+C to stop.")
+    print(f"Early stopping: patience={PATIENCE} iters | min_reward_delta={MIN_REWARD_DELTA} "
+          f"| entropy_stop={ENTROPY_STOP}")
     try:
         for iteration in range(500):
             result = algo.train()
+
+            policy_rewards = result.get("env_runners", {}).get("policy_reward_mean", {})
+            team_reward = policy_rewards.get("team_policy", float("nan"))
+            ep_len      = result.get("episode_len_mean") or result.get("env_runners", {}).get("episode_len_mean", 0.0)
+
+            # --- Per-policy entropy check ---
+            learner_info = result.get("info", {}).get("learner", {})
+            entropy_collapse = False
+            for policy_name, policy_info in learner_info.items():
+                entropy = policy_info.get("learner_stats", {}).get("entropy", float("inf"))
+                if entropy < ENTROPY_WARN:
+                    print(f"  [WARN] {policy_name} entropy={entropy:.3f} — "
+                          f"policy becoming deterministic (threshold={ENTROPY_WARN})")
+                if entropy < ENTROPY_STOP:
+                    print(f"  [STOP] {policy_name} entropy={entropy:.3f} collapsed "
+                          f"below {ENTROPY_STOP} — stopping to prevent degenerate policy.")
+                    entropy_collapse = True
+
             if iteration % 10 == 0:
-                reward = result.get("episode_reward_mean")
-                reward_str = f"{reward:.3f}" if isinstance(reward, (float, int)) else str(reward)
-                custom = result.get("custom_metrics", {})
-                wins = custom.get("team_victory_mean", 0.0) * 100.0
-                ep_len = result.get("episode_len_mean", 0.0)
-                print(f"[{iteration}] reward: {reward_str} | wins: {wins:.1f}% | len: {ep_len:.1f} "
-                      f"| arenas: {N_ARENAS}")
+                team_str = f"{team_reward:.2f}" if team_reward == team_reward else "n/a"
+                print(f"[{iteration}] team_reward: {team_str} | ep_len: {ep_len:.1f} "
+                      f"| no_improve: {no_improve_iters}/{PATIENCE} | arenas: {N_ARENAS}")
+
+            # --- Best checkpoint (skip NaN iterations — no completed episodes yet) ---
+            if team_reward == team_reward and team_reward >= best_team_reward + MIN_REWARD_DELTA:
+                best_team_reward = team_reward
+                no_improve_iters = 0
+                best_ckpt_path   = algo.save(os.path.join(MODELS_DIR, "best"))
+                print(f"  [BEST] team_reward={team_reward:.2f} — checkpoint: {best_ckpt_path}")
+            elif team_reward == team_reward:  # only count non-NaN iterations
+                no_improve_iters += 1
+
+            # --- Periodic checkpoint ---
             if iteration % 50 == 0:
                 save_path = algo.save(MODELS_DIR)
                 print(f"Checkpoint saved: {save_path}")
+
+            # --- Early stopping ---
+            if entropy_collapse:
+                break
+            if no_improve_iters >= PATIENCE:
+                print(f"[EARLY STOP] team_policy reward hasn't improved by ≥{MIN_REWARD_DELTA} "
+                      f"for {PATIENCE} iterations (best={best_team_reward:.2f}). Stopping.")
+                break
+
     except KeyboardInterrupt:
         print("Training interrupted.")
 
     algo.save(os.path.join(MODELS_DIR, "final_vec"))
-    print(f"Training complete. Models saved to {MODELS_DIR}")
+    print(f"Training complete. Best team reward: {best_team_reward:.2f}")
+    if best_ckpt_path:
+        print(f"Best checkpoint: {best_ckpt_path}")
+    print(f"Models saved to {MODELS_DIR}")
     ray.shutdown()
 
 
