@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://c6h8j2k3l4m5n"]
+[gd_scene format=3 uid="uid://b5f1h9j3k7l2m4"]
 
 [ext_resource type="Script" uid="uid://b8nn4emerxgmh" path="res://prototypes/rl-training/rl_arena_manager.gd" id="1_manager"]
 [ext_resource type="Script" uid="uid://qsa1ddhuicgl" path="res://addons/godot_rl_agents/sync.gd" id="2_sync"]
@@ -36,6 +36,7 @@ enemy_container_path = NodePath("Enemies")
 
 [node name="Sync" type="Node" parent="." unique_id=900390836]
 script = ExtResource("2_sync")
+speed_up = 1.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=248893211]
 environment = SubResource("Environment_1")
@@ -109,7 +110,7 @@ reset_after = 200000
 policy_name = "enemy_hive"
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1071961489]
-transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 10, 15)
+transform = Transform3D(0.055010986, -0.4992431, 0.86471397, 0, 0.8660253, 0.50000024, -0.9984858, -0.027505504, 0.047640905, 11.862373, 6.659171, 5.223255)
 current = true
 script = ExtResource("12_static_cam")
 

@@ -7,7 +7,7 @@ Usage:
     python3.10 prototypes/rl-training/inference.py --checkpoint prototypes/rl-training/models/checkpoint_XXXXXX
 
   Terminal 2 (Godot):
-    godot -- res://prototypes/rl-training/InferenceArena.tscn --port=11009
+        godot res://prototypes/rl-training/InferenceArena.tscn -- --port=11008 --speedup=10
 """
 
 import os
@@ -34,7 +34,8 @@ def env_creator(env_config):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--checkpoint", type=str, required=True, help="Path to the checkpoint folder")
-    parser.add_argument("--port", type=int, default=11009, help="Port to connect to Godot")
+    parser.add_argument("--port", type=int, default=11008, help="Port to connect to Godot")
+    parser.add_argument("--speedup", type=float, default=10.0, help="Godot simulation speedup")
     args = parser.parse_args()
 
     print("DEBUG: Initializing Ray...")
@@ -101,10 +102,13 @@ def main():
     algo.restore(checkpoint_path)
 
     print(f"Waiting for Godot to connect on port {args.port} ...")
-    print(f"RUN THIS: godot res://prototypes/rl-training/InferenceArena.tscn --port={args.port}")
+    print(
+        "RUN THIS: godot res://prototypes/rl-training/InferenceArena.tscn "
+        f"-- --port={args.port} --speedup={args.speedup:g}"
+    )
 
     # Now create the actual environment that connects to Godot
-    env = RayMultiAgentGodotEnv({"port": args.port, "speedup": 1.0, "show_window": True})
+    env = RayMultiAgentGodotEnv({"port": args.port, "speedup": args.speedup, "show_window": True})
     obs, info = env.reset()
 
     total_episodes = 0

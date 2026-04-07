@@ -30,7 +30,7 @@ To test your trained agents and see their performance:
 	```
 3.  **Start Godot:**
 	```bash
-	godot -- res://prototypes/rl-training/InferenceArena.tscn --port=11009
+	godot res://prototypes/rl-training/InferenceArena.tscn -- --port=11008 --speedup=10
 	```
 
 ---

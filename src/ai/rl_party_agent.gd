@@ -233,7 +233,11 @@ func set_action(action: Dictionary) -> void:
 				if hit:
 					reward += w_skill_hit * 0.5
 		_:
-			reward -= w_idle  ## action=0 or unknown = idle penalty
+			# action=0 = "wait". Penalise idle only when NOT already casting —
+			# waiting while a cast is in-flight is the correct behavior, and
+			# penalising it makes all skills net-negative (cast penalty > reward).
+			if not (state and state.is_casting):
+				reward -= w_idle
 
 func reset() -> void:
 	super.reset()
