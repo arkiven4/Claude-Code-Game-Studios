@@ -290,7 +290,9 @@ def main():
                 to_train = _ENEMY_POLICIES if iteration % 2 == 0 else _PARTY_POLICIES
             else:
                 to_train = _ALL_POLICIES
-            algo.config.multi_agent(policies_to_train=to_train)
+            algo.config._is_frozen = False
+            algo.config.policies_to_train = to_train
+            algo.config._is_frozen = True
 
             result = algo.train()
 
