@@ -1,18 +1,17 @@
-[gd_scene load_steps=18 format=3 uid="uid://c6h8j2k3l4m5n"]
+[gd_scene format=3 uid="uid://c6h8j2k3l4m5n"]
 
 [ext_resource type="Script" uid="uid://b8nn4emerxgmh" path="res://prototypes/rl-training/rl_arena_manager.gd" id="1_manager"]
 [ext_resource type="Script" uid="uid://qsa1ddhuicgl" path="res://addons/godot_rl_agents/sync.gd" id="2_sync"]
 [ext_resource type="PackedScene" uid="uid://bixlue2j75gbg" path="res://assets/scenes/characters/Evan.tscn" id="3_evan_scene"]
 [ext_resource type="PackedScene" uid="uid://bgfdfr1n2rhl" path="res://assets/scenes/characters/Evelyn.tscn" id="4_evelyn_scene"]
-[ext_resource type="Script" path="res://src/ai/rl_party_agent.gd" id="5_party_agent"]
-[ext_resource type="Script" path="res://src/ai/rl_team_agent.gd" id="6_team_agent"]
-[ext_resource type="Script" path="res://prototypes/rl-training/rl_enemy_controller.gd" id="7_rl_enemy_ctrl"]
-[ext_resource type="Script" path="res://src/ai/rl_enemy_hive_agent.gd" id="8_hive_agent"]
+[ext_resource type="Script" uid="uid://dra0pg6cdx2vj" path="res://src/ai/rl_party_agent.gd" id="5_party_agent"]
+[ext_resource type="Script" uid="uid://cn8e5mauukyif" path="res://src/ai/rl_team_agent.gd" id="6_team_agent"]
+[ext_resource type="Script" uid="uid://b0wxhdacrkcns" path="res://prototypes/rl-training/rl_enemy_controller.gd" id="7_rl_enemy_ctrl"]
+[ext_resource type="Script" uid="uid://c8rbwqa5wdahw" path="res://src/ai/rl_enemy_hive_agent.gd" id="8_hive_agent"]
 [ext_resource type="PackedScene" uid="uid://d25c0yibrlo5p" path="res://assets/scenes/enemies/GruntMelee.tscn" id="9_grunt"]
-[ext_resource type="PackedScene" path="res://assets/scenes/enemies/ArcherRanged.tscn" id="10_archer"]
-[ext_resource type="PackedScene" path="res://assets/scenes/enemies/MageEnemy.tscn" id="11_mage"]
-
-[ext_resource type="Script" path="res://prototypes/rl-training/static_camera.gd" id="12_static_cam"]
+[ext_resource type="PackedScene" uid="uid://csywd2vdhgbk8" path="res://assets/scenes/enemies/ArcherRanged.tscn" id="10_archer"]
+[ext_resource type="PackedScene" uid="uid://8n0eyg87d40s" path="res://assets/scenes/enemies/MageEnemy.tscn" id="11_mage"]
+[ext_resource type="Script" uid="uid://qtm16sp4tj43" path="res://prototypes/rl-training/static_camera.gd" id="12_static_cam"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 
@@ -29,95 +28,94 @@ size = Vector3(60, 0.1, 60)
 [sub_resource type="BoxMesh" id="BoxMesh_1"]
 size = Vector3(60, 0.1, 60)
 
-[node name="InferenceArena" type="Node3D"]
+[node name="InferenceArena" type="Node3D" unique_id=1630897379]
 script = ExtResource("1_manager")
 evan_body_path = NodePath("Party/Evan")
 evelyn_body_path = NodePath("Party/Evelyn")
 enemy_container_path = NodePath("Enemies")
 
-[node name="Sync" type="Node" parent="."]
+[node name="Sync" type="Node" parent="." unique_id=900390836]
 script = ExtResource("2_sync")
-control_mode = 1
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=248893211]
 environment = SubResource("Environment_1")
 
-[node name="Sun" type="DirectionalLight3D" parent="."]
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1986712597]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Ground" type="StaticBody3D" parent="."]
+[node name="Ground" type="StaticBody3D" parent="." unique_id=918185734]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground" unique_id=1946101286]
 shape = SubResource("BoxShape3D_1")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground" unique_id=989312669]
 mesh = SubResource("BoxMesh_1")
 
-[node name="Party" type="Node3D" parent="."]
+[node name="Party" type="Node3D" parent="." unique_id=1692578189]
 
-[node name="Evan" parent="Party" instance=ExtResource("3_evan_scene")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 1, -5)
+[node name="Evan" parent="Party" unique_id=1311048457 instance=ExtResource("3_evan_scene")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.5, 1, -5)
 
-[node name="RLPartyAgent" type="Node3D" parent="Party/Evan"]
+[node name="RLPartyAgent" type="Node3D" parent="Party/Evan" unique_id=1867277796]
 script = ExtResource("5_party_agent")
+reset_after = 200000
 policy_name = "evan_policy"
-role = 0
-reset_after = 2000
 
-[node name="Evelyn" parent="Party" instance=ExtResource("4_evelyn_scene")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 1, -5)
+[node name="Evelyn" parent="Party" unique_id=1937881518 instance=ExtResource("4_evelyn_scene")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.5, 1, -5)
 
-[node name="RLPartyAgent" type="Node3D" parent="Party/Evelyn"]
+[node name="RLPartyAgent" type="Node3D" parent="Party/Evelyn" unique_id=1873280008]
 script = ExtResource("5_party_agent")
-policy_name = "evelyn_policy"
 role = 1
-reset_after = 2000
+reset_after = 200000
+policy_name = "evelyn_policy"
 
-[node name="TeamAI" type="Node3D" parent="." node_paths=PackedStringArray("evan_agent", "evelyn_agent")]
+[node name="TeamAI" type="Node3D" parent="." unique_id=1316678529 node_paths=PackedStringArray("evan_agent", "evelyn_agent")]
 script = ExtResource("6_team_agent")
 evan_agent = NodePath("../Party/Evan/RLPartyAgent")
 evelyn_agent = NodePath("../Party/Evelyn/RLPartyAgent")
+reset_after = 200000
 policy_name = "team_policy"
-reset_after = 2000
 
-[node name="Enemies" type="Node3D" parent="."]
+[node name="Enemies" type="Node3D" parent="." unique_id=1305077150]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.8415232)
 
-[node name="GruntMelee" parent="Enemies" instance=ExtResource("9_grunt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.9, 8)
+[node name="GruntMelee" parent="Enemies" unique_id=1426126921 instance=ExtResource("9_grunt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.26254892, 0.9, 8)
 script = ExtResource("7_rl_enemy_ctrl")
 
-[node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/GruntMelee"]
+[node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/GruntMelee" unique_id=1919574493]
 script = ExtResource("8_hive_agent")
+reset_after = 200000
 policy_name = "enemy_hive"
-reset_after = 2000
 
-[node name="ArcherRanged" parent="Enemies" instance=ExtResource("10_archer")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.9, 8)
+[node name="ArcherRanged" parent="Enemies" unique_id=1340772790 instance=ExtResource("10_archer")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5078235, 0.9, 9.701473)
 script = ExtResource("7_rl_enemy_ctrl")
 
-[node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/ArcherRanged"]
+[node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/ArcherRanged" unique_id=2138015917]
 script = ExtResource("8_hive_agent")
+reset_after = 200000
 policy_name = "enemy_hive"
-reset_after = 2000
 
-[node name="MageEnemy" parent="Enemies" instance=ExtResource("11_mage")]
+[node name="MageEnemy" parent="Enemies" unique_id=296157625 instance=ExtResource("11_mage")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 11)
 script = ExtResource("7_rl_enemy_ctrl")
 
-[node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/MageEnemy"]
+[node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/MageEnemy" unique_id=1211924896]
 script = ExtResource("8_hive_agent")
+reset_after = 200000
 policy_name = "enemy_hive"
-reset_after = 2000
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1071961489]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 10, 15)
-script = ExtResource("12_static_cam")
 current = true
+script = ExtResource("12_static_cam")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1887544158]
 
-[node name="Control" type="Control" parent="CanvasLayer"]
+[node name="Control" type="Control" parent="CanvasLayer" unique_id=1610278331]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -125,14 +123,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="Panel" parent="CanvasLayer/Control"]
+[node name="Panel" type="Panel" parent="CanvasLayer/Control" unique_id=1412530799]
 layout_mode = 0
 offset_left = 20.0
 offset_top = 20.0
 offset_right = 260.0
 offset_bottom = 220.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/Panel" unique_id=878662937]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -144,42 +142,47 @@ offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="EvanHP" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer"]
+[node name="EvanHP" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=870224160]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Evan: 100/100"
 
-[node name="EvelynHP" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer"]
+[node name="EvelynHP" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=2097615523]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Evelyn: 100/100"
 
-[node name="StepLabel" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer"]
+[node name="StepLabel" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=935279157]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Step: 0"
 
-[node name="WinRate" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer"]
+[node name="WinRate" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=511263775]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Win Rate: 0.0%"
 
-[node name="EvanReward" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer"]
+[node name="CurriculumStage" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=231677435]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Curriculum: Stage 1 (~5 min)"
+
+[node name="EvanReward" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=419752509]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Evan R: 0.000"
 
-[node name="EvelynReward" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer"]
+[node name="EvelynReward" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=975477061]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Evelyn R: 0.000"
 
-[node name="TeamReward" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer"]
+[node name="TeamReward" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=659587217]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Team R: 0.000"
 
-[node name="EnemyReward" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer"]
+[node name="EnemyReward" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=2137672863]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Enemy R: 0.000"
