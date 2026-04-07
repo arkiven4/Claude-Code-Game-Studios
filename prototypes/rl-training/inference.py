@@ -34,7 +34,7 @@ def env_creator(env_config):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--checkpoint", type=str, required=True, help="Path to the checkpoint folder")
-    parser.add_argument("--port", type=int, default=11008, help="Port to connect to Godot")
+    parser.add_argument("--port", type=int, default=11009, help="Port to connect to Godot")
     args = parser.parse_args()
 
     print("DEBUG: Initializing Ray...")
