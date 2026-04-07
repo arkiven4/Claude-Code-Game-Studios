@@ -21,9 +21,10 @@ enum Role { TANKER, MAGE, SUPPORT }
 @export var w_team: float = 0.4
 
 const MAX_OBS_DIST: float = 20.0
-const N_BASE_OBS: int = 41
+## self(10) + casting(2) + allies×3(15: hp,mp,alive,rel_x,rel_z) + enemies×4(20) = 47
+const N_BASE_OBS: int = 47
 const N_DIRECTIVE: int = 7
-const N_OBS: int = N_BASE_OBS + N_DIRECTIVE  ## 48
+const N_OBS: int = N_BASE_OBS + N_DIRECTIVE  ## 54
 
 var _active_tier: int = 1
 var _context: Dictionary = {}
@@ -61,12 +62,17 @@ func _on_projectile_hit(_target: Node) -> void:
 	reward += w_skill_hit * 2.0
 
 func _on_projectile_missed(target: Node) -> void:
-	# If WE were the target and it missed, we dodged it!
+	# Called only for our OWN projectiles (connected in _on_projectile_spawned).
+	# target is the intended enemy — we missed, apply miss penalty.
+	reward -= w_skill_hit * 1.0
+
+## Called for ENEMY projectiles only (connected by rl_arena_manager).
+## Only gives a dodge reward when this agent was the intended target.
+## Does NOT penalise — other agents are also connected to this signal and
+## would receive a false miss penalty if the generic handler were used.
+func _on_enemy_projectile_missed(target: Node) -> void:
 	if target == state:
-		reward += w_skill_hit * 1.5 # Dodge reward
-	else:
-		# We were the caster and we missed
-		reward -= w_skill_hit * 1.0
+		reward += w_skill_hit * 1.5  # Dodge reward
 
 func _on_skill_cast_complete(skill: SkillData) -> void:
 	## Reward for completing the cast/skill execution
@@ -97,6 +103,9 @@ func get_obs() -> Dictionary:
 		obs.fill(0.0)
 		return {"obs": obs}
 
+	# Agent position — used for all relative calculations below
+	var agent_pos: Vector3 = get_parent().global_position if get_parent() else Vector3.ZERO
+
 	# Self (10): hp, mp, 4×cooldown_ratio, 4×can_use
 	obs.append(state.get_hp_ratio())
 	obs.append(state.get_mp_ratio())
@@ -112,35 +121,46 @@ func get_obs() -> Dictionary:
 	obs.append(1.0 if state.get("is_casting") else 0.0)
 	obs.append(skill_execution.get_cast_progress() if skill_execution else 0.0)
 
-	# Allies (9): up to 3 × (hp, mp, alive)
+	# Allies (15): up to 3 × (hp, mp, alive, rel_x, rel_z)
+	# Dead allies are zero-padded — alive=0.0 tells the network to ignore the entry.
 	var allies: Array = _context.get("allies", [])
 	var ally_count: int = 0
 	for ally in allies:
 		if ally_count >= 3:
 			break
 		if is_instance_valid(ally) and ally != state:
-			obs.append(ally.get_hp_ratio() if ally.has_method("get_hp_ratio") else 0.0)
-			obs.append(ally.get_mp_ratio() if ally.has_method("get_mp_ratio") else 0.0)
-			obs.append(1.0 if ally.get("is_alive") else 0.0)
+			if ally.get("is_alive"):
+				var ally_body: Node3D = ally.get_parent() as Node3D
+				var rel: Vector3 = (ally_body.global_position - agent_pos) if ally_body else Vector3.ZERO
+				obs.append(ally.get_hp_ratio() if ally.has_method("get_hp_ratio") else 0.0)
+				obs.append(ally.get_mp_ratio() if ally.has_method("get_mp_ratio") else 0.0)
+				obs.append(1.0)
+				obs.append(clampf(rel.x / MAX_OBS_DIST, -1.0, 1.0))
+				obs.append(clampf(rel.z / MAX_OBS_DIST, -1.0, 1.0))
+			else:
+				for _j in range(5): obs.append(0.0)
 			ally_count += 1
 	while ally_count < 3:
-		obs.append(0.0); obs.append(0.0); obs.append(0.0)
+		for _j in range(5): obs.append(0.0)
 		ally_count += 1
 
 	# Enemies (20): up to 4 × (hp, dist, alive, rel_x, rel_z)
+	# Dead enemies are zero-padded — alive=0.0 tells the network to ignore the entry.
 	var enemies: Array = _context.get("enemies", [])
-	var agent_pos: Vector3 = get_parent().global_position if get_parent() else Vector3.ZERO
 	var enemy_count: int = 0
 	for enemy in enemies:
 		if enemy_count >= 4:
 			break
 		if is_instance_valid(enemy):
-			var rel: Vector3 = enemy.global_position - agent_pos
-			obs.append(enemy.get_hp_ratio() if enemy.has_method("get_hp_ratio") else 0.0)
-			obs.append(clampf(agent_pos.distance_to(enemy.global_position) / MAX_OBS_DIST, 0.0, 1.0))
-			obs.append(1.0 if enemy.get("is_alive") else 0.0)
-			obs.append(clampf(rel.x / MAX_OBS_DIST, -1.0, 1.0))
-			obs.append(clampf(rel.z / MAX_OBS_DIST, -1.0, 1.0))
+			if enemy.get("is_alive"):
+				var rel: Vector3 = enemy.global_position - agent_pos
+				obs.append(enemy.get_hp_ratio() if enemy.has_method("get_hp_ratio") else 0.0)
+				obs.append(clampf(agent_pos.distance_to(enemy.global_position) / MAX_OBS_DIST, 0.0, 1.0))
+				obs.append(1.0)
+				obs.append(clampf(rel.x / MAX_OBS_DIST, -1.0, 1.0))
+				obs.append(clampf(rel.z / MAX_OBS_DIST, -1.0, 1.0))
+			else:
+				for _j in range(5): obs.append(0.0)
 			enemy_count += 1
 	while enemy_count < 4:
 		for _j in range(5): obs.append(0.0)

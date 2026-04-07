@@ -11,8 +11,8 @@ Usage:
     python3.10 prototypes/rl-training/train.py
 
   Terminal 2 (after Python prints "waiting for connection"):
-    godot --headless -- res://prototypes/rl-training/TrainingArena.tscn \
-      --speedup=10 --fixed-fps=2000 --disable-render-loop
+    godot --headless res://prototypes/rl-training/TrainingArena.tscn -- --speedup=10
+    # NOTE: Scene path goes BEFORE '--'. Everything after '--' is a user arg read by godot_rl.
 
 Models saved to: prototypes/rl-training/models/
 """
@@ -42,7 +42,8 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
         self.possible_agents = self._agent_ids
 
         # Evan/Evelyn Spaces
-        obs_48 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (48,), dtype=np.float32)})
+        # 54 = self(10) + casting(2) + allies×3(15) + enemies×4(20) + directive(7)
+        obs_48 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (54,), dtype=np.float32)})
         act_party = gym.spaces.Dict({
             "action":      gym.spaces.Discrete(11),  # 0=wait,1-4=skills,5-8=movement,9=basic,10=special
             "heal_target": gym.spaces.Discrete(2),  # 0=self, 1=lowest-HP ally
@@ -58,7 +59,8 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
         })
 
         # Enemy Hive Spaces (shared policy, 3 separate agents)
-        obs_23 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (23,), dtype=np.float32)})
+        # 25 = self(5) + party×2(10) + enemy_allies×2(10: added dist)
+        obs_23 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (25,), dtype=np.float32)})
         act_enemy = gym.spaces.Dict({
             "action": gym.spaces.Discrete(6),  # 0=wait,1=skill0,2=skill1,3-5=movement
         })
@@ -218,9 +220,9 @@ def main():
         )
         .training(
             lr=3e-4,
-            train_batch_size=4000,
+            train_batch_size=12000,  # ~10 episodes at Stage 1; was 4000 (~3 eps) — too noisy
             num_epochs=10,
-            entropy_coeff=0.01,
+            entropy_coeff=0.02,     # was 0.01 — more exploration pressure in early training
         )
         .env_runners(num_env_runners=0)
         .resources(num_gpus=1)
@@ -254,8 +256,8 @@ def main():
                 custom = result.get('custom_metrics', {})
                 win_rate = custom.get('team_victory_mean', 0.0) * 100.0
                 ep_len = result.get('episode_len_mean', 0.0)
-                
-                print(f"[{iteration}] reward: {reward_str} | win_rate: {win_rate:.1f}% | len: {ep_len:.1f}")
+
+                print(f"[{iteration}] reward: {reward_str} | wins: {win_rate:.1f}% | len: {ep_len:.1f}")
             if iteration % 50 == 0:
                 save_path = algo.save(MODELS_DIR)
                 print(f"Checkpoint saved: {save_path}")

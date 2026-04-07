@@ -22,12 +22,17 @@ var evelyn_role: int = 0
 var victory: bool = false
 var _context: Dictionary = {}
 var _step_count: int = 0
+## Tracks current episode length limit for step-normalised obs.
+## Updated via set_context() each episode when arena manager changes curriculum stage.
+var _max_episode_steps: int = 1200
 
 func _ready() -> void:
 	super._ready()
 
 func set_context(context: Dictionary) -> void:
 	_context = context
+	if context.has("max_episode_steps"):
+		_max_episode_steps = context["max_episode_steps"]
 
 # --- AIController3D interface ---
 
@@ -50,17 +55,21 @@ func get_obs() -> Dictionary:
 	obs.append(1.0 if evelyn_state and evelyn_state.is_alive else 0.0)
 
 	# Enemies × 4 (20): hp, dist, alive, rel_x, rel_z
+	# Dead enemies are zero-padded — alive=0.0 tells the network to ignore the entry.
 	var enemies: Array = _context.get("enemies", [])
 	var enemy_count: int = 0
 	for enemy in enemies:
 		if enemy_count >= 4: break
 		if enemy and is_instance_valid(enemy):
-			var rel: Vector3 = enemy.global_position - center
-			obs.append(enemy.get_hp_ratio() if enemy.has_method("get_hp_ratio") else 0.0)
-			obs.append(clampf(center.distance_to(enemy.global_position) / MAX_OBS_DIST, 0.0, 1.0))
-			obs.append(1.0 if enemy.get("is_alive") else 0.0)
-			obs.append(clampf(rel.x / MAX_OBS_DIST, -1.0, 1.0))
-			obs.append(clampf(rel.z / MAX_OBS_DIST, -1.0, 1.0))
+			if enemy.get("is_alive"):
+				var rel: Vector3 = enemy.global_position - center
+				obs.append(enemy.get_hp_ratio() if enemy.has_method("get_hp_ratio") else 0.0)
+				obs.append(clampf(center.distance_to(enemy.global_position) / MAX_OBS_DIST, 0.0, 1.0))
+				obs.append(1.0)
+				obs.append(clampf(rel.x / MAX_OBS_DIST, -1.0, 1.0))
+				obs.append(clampf(rel.z / MAX_OBS_DIST, -1.0, 1.0))
+			else:
+				for _j in range(5): obs.append(0.0)
 			enemy_count += 1
 	while enemy_count < 4:
 		for _j in range(5): obs.append(0.0)
@@ -68,7 +77,7 @@ func get_obs() -> Dictionary:
 
 	# Combat state (3): step_norm, alive_ratio, alive_enemies_ratio
 	_step_count += 1
-	obs.append(clampf(float(_step_count) / 2000.0, 0.0, 1.0))
+	obs.append(clampf(float(_step_count) / float(max(_max_episode_steps, 1)), 0.0, 1.0))
 	var alive_party: int = (1 if evan_state and evan_state.is_alive else 0) + (1 if evelyn_state and evelyn_state.is_alive else 0)
 	obs.append(float(alive_party) / 2.0)
 	var alive_enemies: int = 0
@@ -136,4 +145,6 @@ func on_ally_died() -> void:
 	reward -= 1.5
 
 func add_survival_reward(alive_ratio: float) -> void:
-	reward += 0.01 * alive_ratio
+	## Kept very small so terminal victory/defeat rewards dominate.
+	## 0.0001/step × 28800 steps (Stage 5) = 2.88 max, well below victory=+5.0.
+	reward += 0.0001 * alive_ratio

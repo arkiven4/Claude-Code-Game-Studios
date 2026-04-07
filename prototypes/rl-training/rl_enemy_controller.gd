@@ -11,6 +11,9 @@ var _initial_transform: Transform3D
 func _ready() -> void:
 	super._ready()
 	_initial_transform = global_transform
+	# Force rl_controlled regardless of Inspector value — this subclass exists only for RL
+	# training. Without this, the scripted AI brain runs and overwrites RL movement commands.
+	rl_controlled = true
 
 func _die() -> void:
 	## Override: suppress queue_free() — hive agent child must stay in scene tree

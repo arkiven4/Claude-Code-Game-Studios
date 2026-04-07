@@ -20,7 +20,7 @@ extends Node3D
 @export var curriculum_enabled: bool = true
 ## Episodes required before the scheduler checks for the first stage advance
 @export var curriculum_min_episodes: int = 50
-## Rolling window of recent episodes used to compute win rate for advancement
+## Rolling window of recent episodes used to compute avg damage progress for advancement
 @export var curriculum_eval_window: int = 100
 
 var evan_body: CharacterBody3D
@@ -40,8 +40,6 @@ var _enemies: Array[EnemyAIController] = []
 var _hive_agents: Array[RLEnemyHiveAgent] = []
 var _episode_step: int = 0
 var _episode_active: bool = false
-var _party: Array[PartyMemberState] = []
-
 ## Stagnation tracking — party
 var _steps_since_last_damage: int = 0
 var _damage_dealt_this_step: bool = false
@@ -56,7 +54,8 @@ var _party_wins: int = 0
 
 ## Curriculum state
 var _curriculum_stage: int = 0
-var _recent_results: Array[bool] = []  ## rolling window: true=party win, false=loss/timeout
+var _recent_results: Array[float] = []  ## rolling window: damage_dealt/total_enemy_max_hp per episode
+var _total_enemy_max_hp: float = 0.0    ## set at episode start; used to compute progress ratio
 
 ## Stage definitions: [episode_timeout_steps, win_rate_to_advance, display_label]
 ## Steps = game-time minutes × 60s × 60 ticks (at 60 FPS physics)
@@ -88,7 +87,6 @@ func _ready() -> void:
 		_evelyn_state = evelyn_body.get_node_or_null("PartyMemberState")
 		_initial_evelyn_pos = evelyn_body.global_position
 
-	_party = [_evan_state, _evelyn_state]
 	if _evan_state:   _evan_state.death.connect(_on_party_member_died)
 	if _evelyn_state: _evelyn_state.death.connect(_on_party_member_died)
 	if _evan_agent and _evan_agent.skill_execution:
@@ -165,17 +163,19 @@ func _find_enemies() -> void:
 		_hive_agents.append(hive)
 
 func _on_enemy_projectile_spawned(projectile: Projectile) -> void:
-	# Connect party agents to this projectile so they can get dodge rewards
+	# Use _on_enemy_projectile_missed (dodge-only) so the non-targeted party agent
+	# does not receive a false miss penalty.
 	if _evan_agent:
-		projectile.missed.connect(_evan_agent._on_projectile_missed)
+		projectile.missed.connect(_evan_agent._on_enemy_projectile_missed)
 	if _evelyn_agent:
-		projectile.missed.connect(_evelyn_agent._on_projectile_missed)
+		projectile.missed.connect(_evelyn_agent._on_enemy_projectile_missed)
 
 func _on_party_projectile_spawned(projectile: Projectile) -> void:
-	# Connect all active hive agents to this projectile so they can get dodge rewards
+	# Use _on_party_projectile_missed (dodge-only) so non-targeted hive agents
+	# do not receive a false miss penalty.
 	for hive in _hive_agents:
 		if is_instance_valid(hive):
-			projectile.missed.connect(hive._on_projectile_missed)
+			projectile.missed.connect(hive._on_party_projectile_missed)
 
 # --- Movement Execution ---
 
@@ -240,7 +240,7 @@ func _execute_enemy_movement(_delta: float) -> void:
 				if nearest != Vector3.ZERO:
 					move_dir = (enemy.global_position - nearest).normalized()
 			5:
-				var target_body: CharacterBody3D = _lowest_hp_alive_party_body(party_bodies, party_states)
+				var target_body: CharacterBody3D = _lowest_hp_alive_party_body(party_bodies)
 				if target_body:
 					move_dir = (target_body.global_position - enemy.global_position).normalized()
 			_:
@@ -269,6 +269,12 @@ func _start_episode() -> void:
 	_update_all_contexts()
 	_episode_active = true
 
+	# Snapshot total enemy HP for curriculum progress calculation
+	_total_enemy_max_hp = 0.0
+	for enemy in _enemies:
+		if is_instance_valid(enemy):
+			_total_enemy_max_hp += enemy.max_hp
+
 ## victory=true: party killed all enemies.
 ## victory=false + timeout=true: step limit reached, no winner.
 ## victory=false + timeout=false: party was wiped.
@@ -278,9 +284,17 @@ func _end_episode(victory: bool, timeout: bool = false) -> void:
 	_total_episodes += 1
 	if victory: _party_wins += 1
 
-	# Curriculum tracking — always record, independent of outcome signals
+	# Curriculum tracking — record damage progress (0.0–1.0) regardless of win/loss
 	if curriculum_enabled:
-		_recent_results.append(victory)
+		var progress: float = 0.0
+		if _total_enemy_max_hp > 0.0:
+			var damage_dealt: float = 0.0
+			for enemy in _enemies:
+				if is_instance_valid(enemy):
+					# Dead enemy: full max_hp dealt. Alive enemy: hp lost = max_hp - current_hp
+					damage_dealt += enemy.max_hp - (enemy.current_hp if enemy.is_alive else 0)
+			progress = clampf(damage_dealt / _total_enemy_max_hp, 0.0, 1.0)
+		_recent_results.append(progress)
 		if _recent_results.size() > curriculum_eval_window:
 			_recent_results.pop_front()
 		_update_curriculum()
@@ -349,19 +363,19 @@ func _update_curriculum() -> void:
 	if _curriculum_stage >= _CURRICULUM_STAGES.size() - 1:
 		return  ## Already at final stage
 
-	var wins: int = 0
-	for r: bool in _recent_results:
-		if r: wins += 1
-	var win_rate: float = float(wins) / float(_recent_results.size())
+	var total: float = 0.0
+	for r: float in _recent_results:
+		total += r
+	var avg_progress: float = total / float(_recent_results.size())
 
 	var threshold: float = _CURRICULUM_STAGES[_curriculum_stage]["advance_at"]
-	if win_rate >= threshold:
+	if avg_progress >= threshold:
 		_curriculum_stage += 1
 		max_episode_steps = _CURRICULUM_STAGES[_curriculum_stage]["steps"]
 		_recent_results.clear()  ## Reset window so next stage is judged fresh
-		print("[Curriculum] Advanced to %s — win rate was %.1f%% over last %d episodes. Timeout: %d steps." % [
+		print("[Curriculum] Advanced to %s — avg damage progress was %.1f%% over last %d episodes. Timeout: %d steps." % [
 			_CURRICULUM_STAGES[_curriculum_stage]["label"],
-			win_rate * 100.0,
+			avg_progress * 100.0,
 			curriculum_eval_window,
 			max_episode_steps,
 		])
@@ -369,7 +383,7 @@ func _update_curriculum() -> void:
 func _update_all_contexts() -> void:
 	if _evan_agent: _evan_agent.set_context({"enemies": _enemies, "allies": [_evelyn_state]})
 	if _evelyn_agent: _evelyn_agent.set_context({"enemies": _enemies, "allies": [_evan_state]})
-	if _team_agent: _team_agent.set_context({"enemies": _enemies})
+	if _team_agent: _team_agent.set_context({"enemies": _enemies, "max_episode_steps": max_episode_steps})
 
 	for i in range(_hive_agents.size()):
 		if is_instance_valid(_hive_agents[i]):
@@ -382,8 +396,8 @@ func _update_all_contexts() -> void:
 
 func _on_enemy_died(_enemy: EnemyAIController, _hive: RLEnemyHiveAgent) -> void:
 	if _team_agent: _team_agent.on_enemy_killed()
-	if _evan_agent: _evan_agent.reward += 0.5 * _evan_agent.w_team
-	if _evelyn_agent: _evelyn_agent.reward += 0.5 * _evelyn_agent.w_team
+	if _evan_agent: _evan_agent.add_team_reward(0.5)
+	if _evelyn_agent: _evelyn_agent.add_team_reward(0.5)
 	## Note: do NOT set hive.done = true here.
 	## Mid-episode individual termination causes RLlib/godot_rl sync mismatches.
 	## All agents terminate together at episode end.
@@ -409,7 +423,7 @@ func _check_protection_bonus() -> void:
 		var enemy_pos: Vector3 = enemy.global_position
 		var to_evelyn: Vector3 = (evelyn_pos - enemy_pos).normalized()
 		var to_evan: Vector3 = (evan_pos - enemy_pos).normalized()
-		if to_evan.dot(to_evelyn) > 0.7 and evan_pos.distance_to(enemy_pos) < evelyn_pos.distance_to(enemy_pos):
+		if to_evan.dot(to_evelyn) > 0.5 and evan_pos.distance_to(enemy_pos) < evelyn_pos.distance_to(enemy_pos):
 			_evan_agent.on_protection_bonus()
 			break
 
@@ -487,7 +501,7 @@ func _lowest_hp_ally_body(self_body: CharacterBody3D) -> CharacterBody3D:
 				best_body = body
 	return best_body
 
-func _lowest_hp_alive_party_body(party_bodies: Array, _party_states: Array) -> CharacterBody3D:
+func _lowest_hp_alive_party_body(party_bodies: Array) -> CharacterBody3D:
 	var best_ratio: float = INF
 	var best_body: CharacterBody3D = null
 	for body in party_bodies:
@@ -501,8 +515,13 @@ func _lowest_hp_alive_party_body(party_bodies: Array, _party_states: Array) -> C
 func _on_party_damage_dealt(_amount: int, _target: Node) -> void:
 	_damage_dealt_this_step = true
 
-func _on_enemy_damage_dealt(_amount: int, _target: Node) -> void:
+func _on_enemy_damage_dealt(amount: int, target: Node) -> void:
 	_enemy_damage_dealt_this_step = true
+	# Forward damage-received penalty to the correct party agent
+	if target == _evan_state and _evan_agent:
+		_evan_agent.on_damage_received(amount)
+	elif target == _evelyn_state and _evelyn_agent:
+		_evelyn_agent.on_damage_received(amount)
 
 func _check_stagnation_penalty() -> void:
 	if _damage_dealt_this_step:
@@ -563,7 +582,12 @@ func _update_hud() -> void:
 	var wr_label = get_node_or_null("%WinRate")
 	if wr_label:
 		var wr: float = (float(_party_wins) / float(_total_episodes)) * 100.0 if _total_episodes > 0 else 0.0
-		wr_label.text = "Win Rate: %.1f%% (%d/%d)" % [wr, _party_wins, _total_episodes]
+		var avg_prog: float = 0.0
+		if _recent_results.size() > 0:
+			var s: float = 0.0
+			for r: float in _recent_results: s += r
+			avg_prog = s / float(_recent_results.size())
+		wr_label.text = "Wins: %d/%d | Avg Dmg: %.1f%%" % [_party_wins, _total_episodes, avg_prog * 100.0]
 
 	var stage_label = get_node_or_null("%CurriculumStage")
 	if stage_label:

@@ -8,8 +8,8 @@ extends AIController3D
 @export var enemy_controller: EnemyAIController
 
 const MAX_OBS_DIST: float = 20.0
-## self(5) + party×2(10) + enemy_allies×2(8) = 23
-const N_OBS: int = 23
+## self(5) + party×2(10) + enemy_allies×2(10: hp,dist,alive,rel_x,rel_z) = 25
+const N_OBS: int = 25
 
 ## Pending movement action — executed by rl_arena_manager
 var pending_move_action: int = 0
@@ -34,10 +34,17 @@ func _on_projectile_hit(_target: Node) -> void:
 	reward += 0.02
 
 func _on_projectile_missed(target: Node) -> void:
+	# Called only for our OWN projectiles (connected in _on_projectile_spawned).
+	# target is the intended party member — we missed, apply miss penalty.
+	reward -= 0.01
+
+## Called for PARTY projectiles only (connected by rl_arena_manager).
+## Only gives a dodge reward when this enemy was the intended target.
+## Does NOT penalise — all hive agents are connected and the non-targeted
+## ones would receive a false miss penalty if the generic handler were used.
+func _on_party_projectile_missed(target: Node) -> void:
 	if target == enemy_controller:
-		reward += 0.05 # Dodge reward for enemy
-	else:
-		reward -= 0.01 # Miss penalty for enemy caster
+		reward += 0.05  # Dodge reward
 
 func _on_skill_fired(_index: int, skill: SkillData) -> void:
 	if skill.is_projectile:
@@ -70,38 +77,47 @@ func get_obs() -> Dictionary:
 	obs.append(enemy_controller.get_cast_progress())
 
 	# Party members × 2 (10): hp, dist, alive, rel_x, rel_z
+	# Dead members are zero-padded — alive=0.0 tells the network to ignore the entry.
 	var party: Array = _context.get("party", [])
 	var party_count: int = 0
 	for member_state in party:
 		if party_count >= 2: break
 		if is_instance_valid(member_state):
-			var member_body: Node3D = member_state.get_parent() as Node3D
-			var rel: Vector3 = (member_body.global_position - self_pos) if member_body else Vector3.ZERO
-			var dist: float = self_pos.distance_to(member_body.global_position) if member_body else 0.0
-			obs.append(member_state.get_hp_ratio())
-			obs.append(clampf(dist / MAX_OBS_DIST, 0.0, 1.0))
-			obs.append(1.0 if member_state.get("is_alive") else 0.0)
-			obs.append(clampf(rel.x / MAX_OBS_DIST, -1.0, 1.0))
-			obs.append(clampf(rel.z / MAX_OBS_DIST, -1.0, 1.0))
+			if member_state.get("is_alive"):
+				var member_body: Node3D = member_state.get_parent() as Node3D
+				var rel: Vector3 = (member_body.global_position - self_pos) if member_body else Vector3.ZERO
+				var dist: float = self_pos.distance_to(member_body.global_position) if member_body else 0.0
+				obs.append(member_state.get_hp_ratio())
+				obs.append(clampf(dist / MAX_OBS_DIST, 0.0, 1.0))
+				obs.append(1.0)
+				obs.append(clampf(rel.x / MAX_OBS_DIST, -1.0, 1.0))
+				obs.append(clampf(rel.z / MAX_OBS_DIST, -1.0, 1.0))
+			else:
+				for _j in range(5): obs.append(0.0)
 			party_count += 1
 	while party_count < 2:
 		for _j in range(5): obs.append(0.0)
 		party_count += 1
 
-	# Other enemies × 2 (8): hp, alive, rel_x, rel_z
+	# Other enemies × 2 (10): hp, dist, alive, rel_x, rel_z
+	# Dead allies zero-padded. Added dist (was missing vs party obs — now consistent).
 	var allies: Array = _context.get("enemy_allies", [])
 	var ally_count: int = 0
 	for ally in allies:
 		if ally_count >= 2: break
 		if is_instance_valid(ally) and ally != enemy_controller:
-			var rel: Vector3 = ally.global_position - self_pos
-			obs.append(ally.get_hp_ratio() if ally.has_method("get_hp_ratio") else 0.0)
-			obs.append(1.0 if ally.get("is_alive") else 0.0)
-			obs.append(clampf(rel.x / MAX_OBS_DIST, -1.0, 1.0))
-			obs.append(clampf(rel.z / MAX_OBS_DIST, -1.0, 1.0))
+			if ally.get("is_alive"):
+				var rel: Vector3 = ally.global_position - self_pos
+				obs.append(ally.get_hp_ratio() if ally.has_method("get_hp_ratio") else 0.0)
+				obs.append(clampf(self_pos.distance_to(ally.global_position) / MAX_OBS_DIST, 0.0, 1.0))
+				obs.append(1.0)
+				obs.append(clampf(rel.x / MAX_OBS_DIST, -1.0, 1.0))
+				obs.append(clampf(rel.z / MAX_OBS_DIST, -1.0, 1.0))
+			else:
+				for _j in range(5): obs.append(0.0)
 			ally_count += 1
 	while ally_count < 2:
-		for _j in range(4): obs.append(0.0)
+		for _j in range(5): obs.append(0.0)
 		ally_count += 1
 
 	return {"obs": obs}
