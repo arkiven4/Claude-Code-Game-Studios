@@ -142,8 +142,17 @@ class VectorizedGodotEnv(MultiAgentEnv):
                 res_trunc[key] = truncated[off + j]
                 res_info[key]  = info[off + j] if len(info) > off + j else {}
 
-        res_term["__all__"]  = all(terminated)
-        res_trunc["__all__"] = all(truncated)
+        # __all__ triggers when ANY arena has all its agents done.
+        # Using all(terminated) across all N*6 agents would never trigger since
+        # arenas finish at different times, causing unbounded episode length.
+        res_term["__all__"] = any(
+            all(terminated[i * _AGENTS_PER_ARENA + j] for j in range(_AGENTS_PER_ARENA))
+            for i in range(self.n_arenas)
+        )
+        res_trunc["__all__"] = any(
+            all(truncated[i * _AGENTS_PER_ARENA + j] for j in range(_AGENTS_PER_ARENA))
+            for i in range(self.n_arenas)
+        )
 
         return res_obs, res_rew, res_term, res_trunc, res_info
 

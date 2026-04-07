@@ -227,6 +227,32 @@ No `await` calls inside `_reset_episode()`. It must complete in a single frame.
 
 ---
 
+## Curriculum Scheduler — Signals to Watch
+
+The scheduler advances stages based on **avg damage progress** (damage dealt / total enemy HP) over a rolling window of recent episodes.
+
+### Healthy training signals
+| Signal | Meaning |
+|--------|---------|
+| Advancing stages steadily | Learning is progressing normally |
+| Avg damage well above threshold before advancing | Model has headroom — good |
+| Team reward trending upward across stages | Party coordination improving |
+
+### Warning signals
+| Signal | What to do |
+|--------|-----------|
+| Stuck on a stage for a long time | Lower that stage's `advance_at` threshold |
+| Avg damage drops after advancing to next stage | Episode too long too fast — lower that stage's `steps` or the previous stage's `advance_at` |
+| Entropy collapse warning in terminal | Policy became deterministic too early. Stop training, restore best checkpoint, raise `entropy_coeff` in `train_vectorized.py` |
+| Team reward keeps dropping while advancing | Overfitting to short episodes. Try longer `eval_window` before allowing advancement |
+
+### Observed training notes
+- **Stage 1 (~2s/ep):** Model reached ~32% avg damage early in training. Healthy start — agents learned to close distance and attack. Well above the 10% threshold.
+- **Stage 5→6 (6s→8s, threshold 35%):** Expected difficulty spike. Agents need to sustain fights, not just burst damage. Most likely stage to get stuck — lower `advance_at` to 0.30 if stuck here more than a few hundred episodes.
+- **Curriculum eval window bug:** Originally `curriculum_eval_window = 100` was applied to all stages. This blocked Stage 1 advancement even at 32% damage because 100 episodes hadn't completed yet. Fixed by adding per-stage `eval_window` (Stage 1 = 20 eps, scaling up to 100 for late stages).
+
+---
+
 ## Findings
 
 *(Update this when training concludes)*
