@@ -19,8 +19,8 @@ extends Node3D
 ## Enable automatic episode length scaling based on rolling win rate
 @export var curriculum_enabled: bool = true
 ## Episodes required before the scheduler checks for the first stage advance
-@export var curriculum_min_episodes: int = 50
-## Rolling window of recent episodes used to compute avg damage progress for advancement
+@export var curriculum_min_episodes: int = 20
+## Fallback rolling window size — overridden per-stage by "eval_window" in _CURRICULUM_STAGES
 @export var curriculum_eval_window: int = 100
 
 var evan_body: CharacterBody3D
@@ -62,20 +62,23 @@ var _total_enemy_max_hp: float = 0.0    ## set at episode start; used to compute
 ## Thresholds start low (10%) so the model can escape Stage 1 early in training
 ## when episodes are short and random-policy damage is near zero.
 ## Each stage raises the bar by ~5% and grows episode length gradually.
+## eval_window: episodes needed in rolling window before checking advancement.
+## Early stages use small windows (model is cycling fast, 20 eps is plenty).
+## Later stages use larger windows (longer episodes, need more signal).
 const _CURRICULUM_STAGES: Array = [
-	{"steps":  1200, "advance_at": 0.10, "label": "Stage 1  (~2s/ep)"},   ## just close distance + hit
-	{"steps":  1800, "advance_at": 0.15, "label": "Stage 2  (~3s/ep)"},
-	{"steps":  2400, "advance_at": 0.20, "label": "Stage 3  (~4s/ep)"},
-	{"steps":  3000, "advance_at": 0.25, "label": "Stage 4  (~5s/ep)"},
-	{"steps":  3600, "advance_at": 0.30, "label": "Stage 5  (~6s/ep)"},
-	{"steps":  4800, "advance_at": 0.35, "label": "Stage 6  (~8s/ep)"},
-	{"steps":  6000, "advance_at": 0.40, "label": "Stage 7  (~10s/ep)"},
-	{"steps":  7200, "advance_at": 0.45, "label": "Stage 8  (~12s/ep)"},
-	{"steps":  9600, "advance_at": 0.50, "label": "Stage 9  (~16s/ep)"},
-	{"steps": 12000, "advance_at": 0.55, "label": "Stage 10 (~20s/ep)"},
-	{"steps": 18000, "advance_at": 0.62, "label": "Stage 11 (~30s/ep)"},
-	{"steps": 24000, "advance_at": 0.68, "label": "Stage 12 (~40s/ep)"},
-	{"steps": 28800, "advance_at":  1.1, "label": "Stage 13 (~48s/ep)"},  ## final stage
+	{"steps":  1200, "advance_at": 0.10, "eval_window": 20,  "label": "Stage 1  (~2s/ep)"},
+	{"steps":  1800, "advance_at": 0.15, "eval_window": 20,  "label": "Stage 2  (~3s/ep)"},
+	{"steps":  2400, "advance_at": 0.20, "eval_window": 30,  "label": "Stage 3  (~4s/ep)"},
+	{"steps":  3000, "advance_at": 0.25, "eval_window": 30,  "label": "Stage 4  (~5s/ep)"},
+	{"steps":  3600, "advance_at": 0.30, "eval_window": 40,  "label": "Stage 5  (~6s/ep)"},
+	{"steps":  4800, "advance_at": 0.35, "eval_window": 40,  "label": "Stage 6  (~8s/ep)"},
+	{"steps":  6000, "advance_at": 0.40, "eval_window": 50,  "label": "Stage 7  (~10s/ep)"},
+	{"steps":  7200, "advance_at": 0.45, "eval_window": 50,  "label": "Stage 8  (~12s/ep)"},
+	{"steps":  9600, "advance_at": 0.50, "eval_window": 75,  "label": "Stage 9  (~16s/ep)"},
+	{"steps": 12000, "advance_at": 0.55, "eval_window": 75,  "label": "Stage 10 (~20s/ep)"},
+	{"steps": 18000, "advance_at": 0.62, "eval_window": 100, "label": "Stage 11 (~30s/ep)"},
+	{"steps": 24000, "advance_at": 0.68, "eval_window": 100, "label": "Stage 12 (~40s/ep)"},
+	{"steps": 28800, "advance_at":  1.1, "eval_window": 100, "label": "Stage 13 (~48s/ep)"},  ## final
 ]
 
 func _ready() -> void:
@@ -367,19 +370,23 @@ func _reset_episode() -> void:
 	_start_episode()
 
 func _update_curriculum() -> void:
-	if _total_episodes < curriculum_min_episodes:
-		return
-	if _recent_results.size() < curriculum_eval_window:
-		return
 	if _curriculum_stage >= _CURRICULUM_STAGES.size() - 1:
 		return  ## Already at final stage
+
+	var stage_def: Dictionary = _CURRICULUM_STAGES[_curriculum_stage]
+	var window: int = stage_def.get("eval_window", curriculum_eval_window)
+
+	if _total_episodes < curriculum_min_episodes:
+		return
+	if _recent_results.size() < window:
+		return
 
 	var total: float = 0.0
 	for r: float in _recent_results:
 		total += r
 	var avg_progress: float = total / float(_recent_results.size())
 
-	var threshold: float = _CURRICULUM_STAGES[_curriculum_stage]["advance_at"]
+	var threshold: float = stage_def["advance_at"]
 	if avg_progress >= threshold:
 		_curriculum_stage += 1
 		max_episode_steps = _CURRICULUM_STAGES[_curriculum_stage]["steps"]
@@ -387,7 +394,7 @@ func _update_curriculum() -> void:
 		print("[Curriculum] Advanced to %s — avg damage progress was %.1f%% over last %d episodes. Timeout: %d steps." % [
 			_CURRICULUM_STAGES[_curriculum_stage]["label"],
 			avg_progress * 100.0,
-			curriculum_eval_window,
+			window,
 			max_episode_steps,
 		])
 
