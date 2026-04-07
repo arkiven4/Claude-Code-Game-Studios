@@ -42,8 +42,9 @@ def main():
         ray.init(logging_level="error")
     print("DEBUG: Ray initialized.")
 
-    # Define spaces explicitly
-    obs_48 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (48,), dtype=np.float32)})
+    # Define spaces explicitly — must match train.py exactly
+    # 54 = self(10) + casting(2) + allies×3(15) + enemies×4(20) + directive(7)
+    obs_54 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (54,), dtype=np.float32)})
     act_party = gym.spaces.Dict({
         "action":      gym.spaces.Discrete(11),
         "heal_target": gym.spaces.Discrete(2),
@@ -55,7 +56,8 @@ def main():
         "evelyn_target": gym.spaces.Discrete(4),
         "evelyn_role":   gym.spaces.Discrete(3),
     })
-    obs_23 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (23,), dtype=np.float32)})
+    # 25 = self(5) + party×2(10) + enemy_allies×2(10: added dist)
+    obs_25 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (25,), dtype=np.float32)})
     act_enemy = gym.spaces.Dict({
         "action": gym.spaces.Discrete(6),
     })
@@ -73,10 +75,10 @@ def main():
         .environment("godot_multiagent", env_config={"port": args.port})
         .multi_agent(
             policies={
-                "evan_policy":       (None, obs_48, act_party, {}),
-                "evelyn_policy":     (None, obs_48, act_party, {}),
+                "evan_policy":       (None, obs_54, act_party, {}),
+                "evelyn_policy":     (None, obs_54, act_party, {}),
                 "team_policy":       (None, obs_33, act_team, {}),
-                "enemy_hive_policy": (None, obs_23, act_enemy, {}),
+                "enemy_hive_policy": (None, obs_25, act_enemy, {}),
             },
             policy_mapping_fn=lambda agent_id, *args, **kwargs: (
                 "enemy_hive_policy" if agent_id.startswith("enemy_") else f"{agent_id}_policy"
