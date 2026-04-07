@@ -71,9 +71,9 @@ The HUD in both Training and Inference arenas now displays a **Win Rate** counte
 | `evan` | `evan_policy` | 54 floats | `action`(11) + `heal_target`(2) | Party tanker |
 | `evelyn` | `evelyn_policy` | 54 floats | `action`(11) + `heal_target`(2) | Party mage |
 | `team` | `team_policy` | 33 floats | `evan_target`(4) + `evan_role`(3) + `evelyn_target`(4) + `evelyn_role`(3) | High-level coordinator |
-| `enemy_0` | `enemy_hive_policy` | 25 floats | `action`(6) | Grunt (melee) |
-| `enemy_1` | `enemy_hive_policy` | 25 floats | `action`(6) | Archer (ranged) |
-| `enemy_2` | `enemy_hive_policy` | 25 floats | `action`(6) | Mage |
+| `enemy_0` | `enemy_hive_policy` | 29 floats | `action`(6) | Grunt (melee) |
+| `enemy_1` | `enemy_hive_policy` | 29 floats | `action`(6) | Archer (ranged) |
+| `enemy_2` | `enemy_hive_policy` | 29 floats | `action`(6) | Mage |
 
 **Enemies share one policy** (`enemy_hive_policy`) — one brain controls all 3 bodies.
 **Self-play adversarial**: party and enemies train against each other simultaneously.
@@ -121,10 +121,12 @@ Combat (3):    step_norm, alive_party_ratio, alive_enemy_ratio
 Memory (4):    last evan_target, evan_role, evelyn_target, evelyn_role
 ```
 
-### Enemy hive agent (25 floats)
+### Enemy hive agent (29 floats)
 ```
-Self (5):            hp_ratio, skill0_cd_ratio, skill1_cd_ratio, rel_x, rel_z
-Party ×2 (10):       hp, dist, alive, rel_x, rel_z  (per member — dead zero-padded)
+Self (5):             hp_ratio, skill0_cd_ratio, skill1_cd_ratio, is_casting, cast_progress
+Party ×2 (14):        hp, dist, alive, rel_x, rel_z, is_casting, mp_ratio  (per member — dead zero-padded)
+                      is_casting: party member is stationary and vulnerable
+                      mp_ratio: Evelyn low mana = can't heal — press the attack
 Enemy allies ×2 (10): hp, dist, alive, rel_x, rel_z (other enemies — dead zero-padded)
 ```
 
@@ -256,3 +258,24 @@ The scheduler advances stages based on **avg damage progress** (damage dealt / t
 ## Findings
 
 *(Update this when training concludes)*
+
+---
+
+## Known Issues / TODO
+
+### Enemy Adversarial Imbalance
+**Observed:** After extended training, party reaches ~86% damage progress but win rate stays 0.
+Enemy hive never develops strategies to defeat the party.
+
+**Root causes identified:**
+1. Observation asymmetry — enemy hive sees 25 floats vs party's 54. Less info = slower learning.
+2. Policy count asymmetry — party has 3 specialized policies; enemy has 1 hive for 3 agents.
+3. Sparse win reward — if the party never dies, enemy gets near-zero positive signal all episode.
+4. Simultaneous training trap — party and enemy improve together but party keeps its head start.
+
+**Implemented fixes:**
+- [x] Focus-fire bonus (`+0.03/step`) when 2+ enemies within 5u of same party member — `rl_arena_manager.gd:_check_enemy_focus_fire()`
+- [x] Alternate `policies_to_train`: first 100 iters alternate party/enemy (even=enemy, odd=party), then free-for-all — `train_vectorized.py`
+- [x] `entropy_coeff=0.05` for `enemy_hive_policy` (party stays at 0.02) — `train_vectorized.py`
+- [x] Obs expanded 25→29: added `is_casting` + `mp_ratio` per party member — `rl_enemy_hive_agent.gd`
+- [ ] Curriculum against frozen party snapshot — harder, skip for now

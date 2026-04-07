@@ -8,8 +8,8 @@ extends AIController3D
 @export var enemy_controller: EnemyAIController
 
 const MAX_OBS_DIST: float = 20.0
-## self(5) + party×2(10) + enemy_allies×2(10: hp,dist,alive,rel_x,rel_z) = 25
-const N_OBS: int = 25
+## self(5) + party×2(14: hp,dist,alive,rel_x,rel_z,is_casting,mp_ratio) + enemy_allies×2(10) = 29
+const N_OBS: int = 29
 
 ## Pending movement action — executed by rl_arena_manager
 var pending_move_action: int = 0
@@ -76,7 +76,9 @@ func get_obs() -> Dictionary:
 	obs.append(1.0 if enemy_controller.is_casting() else 0.0)
 	obs.append(enemy_controller.get_cast_progress())
 
-	# Party members × 2 (10): hp, dist, alive, rel_x, rel_z
+	# Party members × 2 (14 each): hp, dist, alive, rel_x, rel_z, is_casting, mp_ratio
+	# is_casting tells enemy when the party member is stationary (vulnerable).
+	# mp_ratio tells enemy when Evelyn is low on mana (can't heal — press the attack).
 	# Dead members are zero-padded — alive=0.0 tells the network to ignore the entry.
 	var party: Array = _context.get("party", [])
 	var party_count: int = 0
@@ -87,16 +89,21 @@ func get_obs() -> Dictionary:
 				var member_body: Node3D = member_state.get_parent() as Node3D
 				var rel: Vector3 = (member_body.global_position - self_pos) if member_body else Vector3.ZERO
 				var dist: float = self_pos.distance_to(member_body.global_position) if member_body else 0.0
+				var skill_exec = member_body.get_node_or_null("SkillExecution") if member_body else null
+				var is_casting: float = 1.0 if (skill_exec and skill_exec.get("is_casting")) else 0.0
+				var mp_ratio: float = member_state.get_mp_ratio()
 				obs.append(member_state.get_hp_ratio())
 				obs.append(clampf(dist / MAX_OBS_DIST, 0.0, 1.0))
 				obs.append(1.0)
 				obs.append(clampf(rel.x / MAX_OBS_DIST, -1.0, 1.0))
 				obs.append(clampf(rel.z / MAX_OBS_DIST, -1.0, 1.0))
+				obs.append(is_casting)
+				obs.append(mp_ratio)
 			else:
-				for _j in range(5): obs.append(0.0)
+				for _j in range(7): obs.append(0.0)
 			party_count += 1
 	while party_count < 2:
-		for _j in range(5): obs.append(0.0)
+		for _j in range(7): obs.append(0.0)
 		party_count += 1
 
 	# Other enemies × 2 (10): hp, dist, alive, rel_x, rel_z
@@ -186,3 +193,9 @@ func on_party_wiped() -> void:
 func on_all_enemies_killed() -> void:
 	reward -= 3.0
 	done = true
+
+func on_focus_fire_bonus() -> void:
+	## Called by arena manager when 2+ enemies are converging on the same party member.
+	## Rewards coordinated group aggression — the key behavior the hive needs to learn
+	## to break through the party's healing loop.
+	reward += 0.03

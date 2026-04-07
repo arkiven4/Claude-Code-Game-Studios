@@ -61,7 +61,7 @@ class VectorizedGodotEnv(MultiAgentEnv):
         #   hive agent  : 25  (self=5, party×2=10, enemy_allies×2=10)
         obs_party  = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (54,), dtype=np.float32)})
         obs_team   = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (33,), dtype=np.float32)})
-        obs_enemy  = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (25,), dtype=np.float32)})
+        obs_enemy  = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (29,), dtype=np.float32)})
 
         act_party = gym.spaces.Dict({
             "action":      gym.spaces.Discrete(11),  # 0=wait,1-4=skills,5-8=movement,9=basic,10=special
@@ -132,27 +132,39 @@ class VectorizedGodotEnv(MultiAgentEnv):
         res_trunc = {}
         res_info  = {}
 
+        # Determine if the shared episode is over (any arena fully done).
+        # IMPORTANT: individual agents must NEVER be marked done unless __all__ is
+        # also True in the same step. If an individual agent gets terminated=True
+        # while __all__=False, RLlib opens a new sub-episode for that agent within
+        # the same rollout. When __all__ later fires, the agent's batch contains
+        # multiple eps_ids → "Batches must only contain steps from a single trajectory".
+        arena_done = [
+            all(terminated[i * _AGENTS_PER_ARENA + j] for j in range(_AGENTS_PER_ARENA))
+            for i in range(self.n_arenas)
+        ]
+        arena_trunc = [
+            all(truncated[i * _AGENTS_PER_ARENA + j] for j in range(_AGENTS_PER_ARENA))
+            for i in range(self.n_arenas)
+        ]
+        episode_over = any(arena_done) or any(arena_trunc)
+
         for i in range(self.n_arenas):
             off = i * _AGENTS_PER_ARENA
             p   = f"arena_{i}_"
             for j, name in enumerate(_BASE_AGENTS):
                 key = p + name
-                res_rew[key]   = reward[off + j]
-                res_term[key]  = terminated[off + j]
-                res_trunc[key] = truncated[off + j]
-                res_info[key]  = info[off + j] if len(info) > off + j else {}
+                res_rew[key]  = reward[off + j]
+                res_info[key] = info[off + j] if len(info) > off + j else {}
+                if episode_over:
+                    # Arena that naturally finished → terminated; others → truncated.
+                    res_term[key]  = arena_done[i]
+                    res_trunc[key] = not arena_done[i]
+                else:
+                    res_term[key]  = False
+                    res_trunc[key] = False
 
-        # __all__ triggers when ANY arena has all its agents done.
-        # Using all(terminated) across all N*6 agents would never trigger since
-        # arenas finish at different times, causing unbounded episode length.
-        res_term["__all__"] = any(
-            all(terminated[i * _AGENTS_PER_ARENA + j] for j in range(_AGENTS_PER_ARENA))
-            for i in range(self.n_arenas)
-        )
-        res_trunc["__all__"] = any(
-            all(truncated[i * _AGENTS_PER_ARENA + j] for j in range(_AGENTS_PER_ARENA))
-            for i in range(self.n_arenas)
-        )
+        res_term["__all__"]  = episode_over
+        res_trunc["__all__"] = episode_over
 
         return res_obs, res_rew, res_term, res_trunc, res_info
 
@@ -182,7 +194,7 @@ def _policy_for(agent_id: str) -> str:
 
 
 def main():
-    N_ARENAS = 8  # Tune to your CPU/GPU. Each arena adds ~6 agents worth of throughput.
+    N_ARENAS = 32  # Tune to your CPU/GPU. Each arena adds ~6 agents worth of throughput.
 
     if not ray.is_initialized():
         ray.init()
@@ -211,7 +223,9 @@ def main():
                 "evan_policy":       (None, None, None, {}),
                 "evelyn_policy":     (None, None, None, {}),
                 "team_policy":       (None, None, None, {}),
-                "enemy_hive_policy": (None, None, None, {}),
+                # Higher entropy so enemy explores more aggressively while it has
+                # no winning experience to exploit (party policies stay at 0.02).
+                "enemy_hive_policy": (None, None, None, {"entropy_coeff": 0.05}),
             },
             # Check evelyn before evan — "_evan" is a substring of "_evelyn"
             policy_mapping_fn=lambda agent_id, *args, **kwargs: _policy_for(agent_id),
@@ -256,11 +270,28 @@ def main():
     no_improve_iters  = 0
     best_ckpt_path    = None
 
+    # Alternating training schedule — prevents party from staying permanently ahead.
+    # Even iters: only enemy trains (dedicated catch-up time).
+    # Odd iters:  only party trains (party keeps improving, enemy must adapt).
+    # After ENEMY_CATCHUP_ITERS, switch to free-for-all (all policies always train).
+    ENEMY_CATCHUP_ITERS = 100  # How long to run alternating before going free-for-all
+    _PARTY_POLICIES = ["evan_policy", "evelyn_policy", "team_policy"]
+    _ENEMY_POLICIES = ["enemy_hive_policy"]
+    _ALL_POLICIES   = _PARTY_POLICIES + _ENEMY_POLICIES
+
     print("Training started. Ctrl+C to stop.")
     print(f"Early stopping: patience={PATIENCE} iters | min_reward_delta={MIN_REWARD_DELTA} "
           f"| entropy_stop={ENTROPY_STOP}")
+    print(f"Alternating training: first {ENEMY_CATCHUP_ITERS} iters alternate party/enemy, then free-for-all.")
     try:
         for iteration in range(500):
+            # Alternate which side trains to prevent party from staying permanently ahead.
+            if iteration < ENEMY_CATCHUP_ITERS:
+                to_train = _ENEMY_POLICIES if iteration % 2 == 0 else _PARTY_POLICIES
+            else:
+                to_train = _ALL_POLICIES
+            algo.config.multiagent["policies_to_train"] = to_train
+
             result = algo.train()
 
             policy_rewards = result.get("env_runners", {}).get("policy_reward_mean", {})

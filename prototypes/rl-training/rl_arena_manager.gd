@@ -142,6 +142,7 @@ func _physics_process(delta: float) -> void:
 	_check_stagnation_penalty()
 	_check_enemy_stagnation_penalty()
 	_check_protection_bonus()
+	_check_enemy_focus_fire()
 	_check_victory_or_defeat()
 	_update_hud()
 
@@ -561,6 +562,31 @@ func _check_stagnation_penalty() -> void:
 	if _team_agent:   _team_agent.reward -= w_stagnation
 	if _evan_agent:   _evan_agent.reward -= w_stagnation
 	if _evelyn_agent: _evelyn_agent.reward -= w_stagnation
+
+func _check_enemy_focus_fire() -> void:
+	## Give a focus-fire bonus when 2+ alive enemies are within 5 units of the same party member.
+	## This rewards the coordinated group pressure the enemy needs to burst through party healing.
+	var party_bodies: Array[CharacterBody3D] = []
+	if evan_body and _evan_state and _evan_state.is_alive:   party_bodies.append(evan_body)
+	if evelyn_body and _evelyn_state and _evelyn_state.is_alive: party_bodies.append(evelyn_body)
+	if party_bodies.is_empty(): return
+
+	const FOCUS_RANGE: float = 5.0
+	for target_body in party_bodies:
+		var enemies_near: int = 0
+		for i in range(_enemies.size()):
+			var enemy: EnemyAIController = _enemies[i]
+			if not is_instance_valid(enemy) or not enemy.is_alive: continue
+			if enemy.global_position.distance_to(target_body.global_position) <= FOCUS_RANGE:
+				enemies_near += 1
+		if enemies_near >= 2:
+			for i in range(_hive_agents.size()):
+				var hive: RLEnemyHiveAgent = _hive_agents[i]
+				var enemy: EnemyAIController = _enemies[i] if i < _enemies.size() else null
+				if is_instance_valid(hive) and is_instance_valid(enemy) and enemy.is_alive:
+					if enemy.global_position.distance_to(target_body.global_position) <= FOCUS_RANGE:
+						hive.on_focus_fire_bonus()
+			break  ## Only reward once per step even if both party members are surrounded
 
 func _check_enemy_stagnation_penalty() -> void:
 	if _enemy_damage_dealt_this_step:
