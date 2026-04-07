@@ -57,20 +57,25 @@ var _curriculum_stage: int = 0
 var _recent_results: Array[float] = []  ## rolling window: damage_dealt/total_enemy_max_hp per episode
 var _total_enemy_max_hp: float = 0.0    ## set at episode start; used to compute progress ratio
 
-## Stage definitions: [episode_timeout_steps, win_rate_to_advance, display_label]
-## Steps = game-time minutes × 60s × 60 ticks (at 60 FPS physics)
+## Stage definitions: [episode_timeout_steps, advance_at_avg_damage_progress, display_label]
 ## Steps at speed_up=10: real_seconds × 60 FPS × 10 speed_up = steps
-## Stage 1:  1200 steps =  2 real-seconds/episode — ultra-fast cycling, pure exploration
-## Stage 2:  3600 steps =  6 real-seconds/episode
-## Stage 3:  7200 steps = 12 real-seconds/episode
-## Stage 4: 14400 steps = 24 real-seconds/episode
-## Stage 5: 28800 steps = 48 real-seconds/episode — full fights once AI is competent
+## Thresholds start low (10%) so the model can escape Stage 1 early in training
+## when episodes are short and random-policy damage is near zero.
+## Each stage raises the bar by ~5% and grows episode length gradually.
 const _CURRICULUM_STAGES: Array = [
-	{"steps":  1200, "advance_at": 0.40, "label": "Stage 1 (~2s/ep)"},
-	{"steps":  3600, "advance_at": 0.45, "label": "Stage 2 (~6s/ep)"},
-	{"steps":  7200, "advance_at": 0.50, "label": "Stage 3 (~12s/ep)"},
-	{"steps": 14400, "advance_at": 0.55, "label": "Stage 4 (~24s/ep)"},
-	{"steps": 28800, "advance_at":  1.1, "label": "Stage 5 (~48s/ep)"},  ## final stage
+	{"steps":  1200, "advance_at": 0.10, "label": "Stage 1  (~2s/ep)"},   ## just close distance + hit
+	{"steps":  1800, "advance_at": 0.15, "label": "Stage 2  (~3s/ep)"},
+	{"steps":  2400, "advance_at": 0.20, "label": "Stage 3  (~4s/ep)"},
+	{"steps":  3000, "advance_at": 0.25, "label": "Stage 4  (~5s/ep)"},
+	{"steps":  3600, "advance_at": 0.30, "label": "Stage 5  (~6s/ep)"},
+	{"steps":  4800, "advance_at": 0.35, "label": "Stage 6  (~8s/ep)"},
+	{"steps":  6000, "advance_at": 0.40, "label": "Stage 7  (~10s/ep)"},
+	{"steps":  7200, "advance_at": 0.45, "label": "Stage 8  (~12s/ep)"},
+	{"steps":  9600, "advance_at": 0.50, "label": "Stage 9  (~16s/ep)"},
+	{"steps": 12000, "advance_at": 0.55, "label": "Stage 10 (~20s/ep)"},
+	{"steps": 18000, "advance_at": 0.62, "label": "Stage 11 (~30s/ep)"},
+	{"steps": 24000, "advance_at": 0.68, "label": "Stage 12 (~40s/ep)"},
+	{"steps": 28800, "advance_at":  1.1, "label": "Stage 13 (~48s/ep)"},  ## final stage
 ]
 
 func _ready() -> void:
@@ -573,6 +578,50 @@ func _check_enemy_stagnation_penalty() -> void:
 			continue  ## Near-death enemy may be repositioning — exempt
 		hive.reward -= w_stagnation
 
+
+## Returns a snapshot of this arena's stats for the vectorized stats overlay.
+## Called every ~30 frames by vectorized_training.gd on the best-ranked arena.
+func get_stats() -> Dictionary:
+	var avg_progress: float = 0.0
+	if _recent_results.size() > 0:
+		var s: float = 0.0
+		for r: float in _recent_results:
+			s += r
+		avg_progress = s / float(_recent_results.size())
+
+	var enemy_reward_sum: float = 0.0
+	var enemy_reward_count: int = 0
+	for i in range(_hive_agents.size()):
+		var hive: RLEnemyHiveAgent = _hive_agents[i] if i < _hive_agents.size() else null
+		var enemy: EnemyAIController = _enemies[i] if i < _enemies.size() else null
+		if is_instance_valid(hive) and is_instance_valid(enemy) and enemy.is_alive:
+			enemy_reward_sum += hive.reward
+			enemy_reward_count += 1
+
+	var enemies_alive: int = 0
+	for enemy in _enemies:
+		if is_instance_valid(enemy) and enemy.is_alive:
+			enemies_alive += 1
+
+	return {
+		"total_episodes":      _total_episodes,
+		"party_wins":          _party_wins,
+		"curriculum_stage":    _curriculum_stage,
+		"curriculum_label":    _CURRICULUM_STAGES[_curriculum_stage]["label"],
+		"avg_damage_progress": avg_progress,
+		"episode_step":        _episode_step,
+		"max_episode_steps":   max_episode_steps,
+		"evan_reward":         _evan_agent.reward   if _evan_agent   else 0.0,
+		"evelyn_reward":       _evelyn_agent.reward if _evelyn_agent else 0.0,
+		"team_reward":         _team_agent.reward   if _team_agent   else 0.0,
+		"enemy_avg_reward":    enemy_reward_sum / float(enemy_reward_count) if enemy_reward_count > 0 else 0.0,
+		"evan_hp":             _evan_state.current_hp   if _evan_state   else 0,
+		"evan_max_hp":         _evan_state.max_hp       if _evan_state   else 1,
+		"evelyn_hp":           _evelyn_state.current_hp if _evelyn_state else 0,
+		"evelyn_max_hp":       _evelyn_state.max_hp     if _evelyn_state else 1,
+		"enemies_alive":       enemies_alive,
+		"enemies_total":       _enemies.size(),
+	}
 
 func _update_hud() -> void:
 	if _evan_state:

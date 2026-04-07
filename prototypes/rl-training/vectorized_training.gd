@@ -18,6 +18,15 @@ extends Node3D
 ## Distance between arena centres. 100 u keeps physics/visuals fully separate.
 @export var grid_spacing: float = 100.0
 
+## How often (in physics frames) to refresh the stats overlay.
+@export var stats_refresh_interval: int = 30
+
+var _arena_managers: Array = []
+var _stats_frame: int = 0
+var _stat_labels: Dictionary = {}
+var _best_arena_idx: int = 0
+
+
 func _ready() -> void:
 	_parse_user_args()
 	print("[VectorizedTraining] Spawning %d arenas (spacing=%.0f u)..." % [n_arenas, grid_spacing])
@@ -29,11 +38,14 @@ func _ready() -> void:
 	# `await get_tree().root.ready` resolves when our _ready() returns.
 	# Adding sync AFTER _ready() returns means root.ready has already fired → permanent hang.
 	_add_sync_node()
+	_build_stats_ui()
+
 
 func _parse_user_args() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--n_arenas="):
 			n_arenas = arg.split("=")[1].to_int()
+
 
 func _spawn_arenas() -> void:
 	if not arena_scene:
@@ -60,7 +72,14 @@ func _spawn_arenas() -> void:
 
 		add_child(arena)
 
+	# Cache arena manager references (each arena root has rl_arena_manager.gd).
+	for i: int in range(n_arenas):
+		var arena: Node = get_node_or_null("Arena_%d" % i)
+		if arena:
+			_arena_managers.append(arena)
+
 	print("[VectorizedTraining] %d arenas ready." % n_arenas)
+
 
 func _add_sync_node() -> void:
 	# Read --speedup from user args (default 10)
@@ -83,3 +102,137 @@ func _add_sync_node() -> void:
 	# Godot is the CLIENT — it connects to Python's server socket.
 	# Python must already be running and listening before this point.
 	print("[VectorizedTraining] Sync active (speedup=%.1f). Connecting to Python server on port 11008..." % speedup)
+
+
+# ---------------------------------------------------------------------------
+#  Stats Overlay
+# ---------------------------------------------------------------------------
+
+func _build_stats_ui() -> void:
+	var canvas := CanvasLayer.new()
+	canvas.name = "StatsOverlay"
+	add_child(canvas)
+
+	var panel := PanelContainer.new()
+	panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	panel.position = Vector2(10.0, 10.0)
+	panel.custom_minimum_size = Vector2(300.0, 0.0)
+	canvas.add_child(panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 3)
+	panel.add_child(vbox)
+
+	# Define rows: key → initial text, optional color override
+	var rows: Array[Dictionary] = [
+		{"key": "title",             "text": "BEST ARENA",        "size": 15, "color": Color(1.0, 0.85, 0.3)},
+		{"key": "sep0",              "text": "─────────────────────────"},
+		{"key": "curriculum",        "text": "Stage : —"},
+		{"key": "episodes",          "text": "Eps   : 0  |  Wins: 0 (0%)"},
+		{"key": "avg_damage",        "text": "Dmg   : [░░░░░░░░░░] 0.0%"},
+		{"key": "step",              "text": "Step  : 0 / 0"},
+		{"key": "sep1",              "text": "─────────────────────────"},
+		{"key": "evan_hp",           "text": "Evan  : [░░░░░░░░░░] 0%"},
+		{"key": "evelyn_hp",         "text": "Evelyn: [░░░░░░░░░░] 0%"},
+		{"key": "enemies",           "text": "Enemies: 0 / 0 alive"},
+		{"key": "sep2",              "text": "─────────────────────────"},
+		{"key": "evan_r",            "text": "Evan R  :  0.000"},
+		{"key": "evelyn_r",          "text": "Evelyn R:  0.000"},
+		{"key": "team_r",            "text": "Team R  :  0.000"},
+		{"key": "enemy_r",           "text": "Enemy R :  0.000"},
+		{"key": "sep3",              "text": "─────────────────────────"},
+		{"key": "arenas_header",     "text": "ALL ARENAS  (★ = best)",  "color": Color(0.7, 0.7, 0.7)},
+		{"key": "arenas_list",       "text": ""},
+	]
+
+	for row: Dictionary in rows:
+		var lbl := Label.new()
+		lbl.text = row.get("text", "")
+		lbl.add_theme_font_size_override("font_size", row.get("size", 13))
+		if row.has("color"):
+			lbl.add_theme_color_override("font_color", row["color"])
+		elif row["key"].begins_with("sep"):
+			lbl.add_theme_color_override("font_color", Color(0.35, 0.35, 0.35))
+		_stat_labels[row["key"]] = lbl
+		vbox.add_child(lbl)
+
+
+func _physics_process(_delta: float) -> void:
+	_stats_frame += 1
+	if _stats_frame % stats_refresh_interval == 0:
+		_refresh_stats()
+
+
+func _refresh_stats() -> void:
+	if _arena_managers.is_empty() or _stat_labels.is_empty():
+		return
+
+	# --- Find best arena: highest curriculum stage, tie-break by avg damage progress ---
+	var best_mgr = null
+	var best_stage: int = -1
+	var best_progress: float = -1.0
+
+	for i: int in range(_arena_managers.size()):
+		var mgr = _arena_managers[i]
+		if not is_instance_valid(mgr) or not mgr.has_method("get_stats"):
+			continue
+		var s: Dictionary = mgr.get_stats()
+		var stage: int    = s.get("curriculum_stage", 0)
+		var prog: float   = s.get("avg_damage_progress", 0.0)
+		if stage > best_stage or (stage == best_stage and prog > best_progress):
+			best_stage    = stage
+			best_progress = prog
+			best_mgr      = mgr
+			_best_arena_idx = i
+
+	if not best_mgr:
+		return
+
+	var d: Dictionary = best_mgr.get_stats()
+
+	# --- Derived values ---
+	var win_pct: float = 0.0
+	if d["total_episodes"] > 0:
+		win_pct = float(d["party_wins"]) / float(d["total_episodes"]) * 100.0
+
+	var evan_pct:   float = float(d["evan_hp"])   / float(maxi(d["evan_max_hp"],   1)) * 100.0
+	var evelyn_pct: float = float(d["evelyn_hp"]) / float(maxi(d["evelyn_max_hp"], 1)) * 100.0
+
+	# --- Update best-arena labels ---
+	_stat_labels["title"].text      = "BEST ARENA: Arena_%d" % _best_arena_idx
+	_stat_labels["curriculum"].text = "Stage : %s" % d["curriculum_label"]
+	_stat_labels["episodes"].text   = "Eps   : %d  |  Wins: %d (%.0f%%)" \
+	                                  % [d["total_episodes"], d["party_wins"], win_pct]
+	_stat_labels["avg_damage"].text = "Dmg   : %s %.1f%%" \
+	                                  % [_bar(d["avg_damage_progress"], 10), d["avg_damage_progress"] * 100.0]
+	_stat_labels["step"].text       = "Step  : %d / %d" % [d["episode_step"], d["max_episode_steps"]]
+	_stat_labels["evan_hp"].text    = "Evan  : %s %.0f%%" % [_bar(evan_pct   / 100.0, 10), evan_pct]
+	_stat_labels["evelyn_hp"].text  = "Evelyn: %s %.0f%%" % [_bar(evelyn_pct / 100.0, 10), evelyn_pct]
+	_stat_labels["enemies"].text    = "Enemies: %d / %d alive" % [d["enemies_alive"], d["enemies_total"]]
+	_stat_labels["evan_r"].text     = "Evan R  : %+.3f" % d["evan_reward"]
+	_stat_labels["evelyn_r"].text   = "Evelyn R: %+.3f" % d["evelyn_reward"]
+	_stat_labels["team_r"].text     = "Team R  : %+.3f" % d["team_reward"]
+	_stat_labels["enemy_r"].text    = "Enemy R : %+.3f" % d["enemy_avg_reward"]
+
+	# --- Compact all-arenas summary ---
+	var lines: PackedStringArray = PackedStringArray()
+	for i: int in range(_arena_managers.size()):
+		var mgr = _arena_managers[i]
+		if not is_instance_valid(mgr) or not mgr.has_method("get_stats"):
+			continue
+		var s: Dictionary = mgr.get_stats()
+		var marker: String = "★" if i == _best_arena_idx else " "
+		var ep_prog: float  = float(s["episode_step"]) / float(maxi(s["max_episode_steps"], 1)) * 100.0
+		lines.append("%s A%-2d  S%-2d  dmg:%.0f%%  ep:%d%%" \
+		             % [marker, i, s["curriculum_stage"] + 1,
+		                s["avg_damage_progress"] * 100.0, ep_prog])
+	_stat_labels["arenas_list"].text = "\n".join(lines)
+
+
+## ASCII progress bar.  ratio is clamped 0–1.  width is number of characters.
+func _bar(ratio: float, width: int) -> String:
+	var filled: int = int(clampf(ratio, 0.0, 1.0) * float(width))
+	var s: String = "["
+	for i: int in range(width):
+		s += "█" if i < filled else "░"
+	return s + "]"
