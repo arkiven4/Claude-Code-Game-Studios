@@ -127,7 +127,8 @@ func _on_area_entered(area: Area3D) -> void:
 				hit.emit(state_node)
 				_target = null # Clear target so we don't emit missed signal
 			else:
-				print("[Projectile] Hit blocked by invincibility/dodge on: ", state_node.name)
+				pass
+				#print("[Projectile] Hit blocked by invincibility/dodge on: ", state_node.name)
 
 			# Always spawn impact VFX and destroy projectile on hit, even if dodged
 			if _vfx_impact:
