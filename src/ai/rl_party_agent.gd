@@ -52,6 +52,7 @@ func _ready() -> void:
 		skill_execution.damage_dealt.connect(_on_damage_dealt)
 		skill_execution.heal_applied.connect(_on_heal_applied)
 		skill_execution.skill_cast.connect(_on_skill_cast_complete)
+		skill_execution.attack_activated.connect(_on_attack_activated)
 		skill_execution.projectile_spawned.connect(_on_projectile_spawned)
 
 func _on_projectile_spawned(projectile: Projectile) -> void:
@@ -80,6 +81,13 @@ func _on_skill_cast_complete(skill: SkillData) -> void:
 	if skill.is_projectile:
 		reward += w_skill_hit * 0.5
 	else:
+		reward += w_skill_hit * 2.0
+
+func _on_attack_activated(is_special: bool, success: bool) -> void:
+	## Mirror of _on_skill_cast_complete for basic/special attacks.
+	## Without this, basic attacks give ~4x less completion reward than skills,
+	## causing the model to ignore actions 9 and 10 entirely.
+	if success:
 		reward += w_skill_hit * 2.0
 
 ## Called by rl_arena_manager each step after TeamPolicy outputs directives.

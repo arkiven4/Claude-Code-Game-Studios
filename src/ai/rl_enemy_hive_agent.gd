@@ -141,12 +141,12 @@ func set_action(action: Dictionary) -> void:
 	match act:
 		1, 2:
 			if enemy_controller.is_casting():
-				reward -= 0.001
+				reward -= 0.005
 				return
 			var skill_idx: int = act - 1
 			var cds: Array = enemy_controller.get("_skill_cooldowns")
 			if cds and skill_idx < cds.size() and cds[skill_idx] > 0.0:
-				reward -= 0.001  ## Penalty for trying to use a skill still on cooldown
+				reward -= 0.005  ## Penalty for trying to use a skill still on cooldown
 				return
 			if enemy_controller.enemy_data and skill_idx < enemy_controller.enemy_data.skill_list.size():
 				var target = enemy_controller.call("_get_target_state")
@@ -154,11 +154,14 @@ func set_action(action: Dictionary) -> void:
 					enemy_controller.call("_execute_skill", skill_idx, target)
 		3, 4, 5:
 			if enemy_controller.is_casting():
-				reward -= 0.001
+				reward -= 0.005
 				return
 			pending_move_action = act
 		_:
-			reward -= 0.001  ## idle penalty
+			## Idle penalty raised from 0.001 → 0.005 so the model cannot profitably
+			## "wait out" skill 0's cooldown in favour of skill 1.  Previously the tiny
+			## penalty made waiting cheaper than casting the weaker skill.
+			reward -= 0.005
 
 func reset() -> void:
 	super.reset()
