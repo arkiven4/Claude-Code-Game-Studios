@@ -48,13 +48,11 @@ var _damage_dealt_this_step: bool = false
 var _enemy_steps_since_last_damage: int = 0
 var _enemy_damage_dealt_this_step: bool = false
 
-## Inactivity timeout — tracks steps with no HP change on either side.
-## Uses HP snapshots each step instead of signals — works regardless of attack path.
+## Inactivity timeout — tracks steps with no activity (damage/heal) from either side.
+## Uses signal events to reset the timer.
 var _steps_since_any_damage: int = 0
 var _inactivity_timeout: int = 300  ## updated each stage advance from _CURRICULUM_STAGES
-var _prev_enemy_hp: Array[float] = []   ## enemy HP last step — detect any change
-var _prev_evan_hp: float = 0.0          ## party HP last step
-var _prev_evelyn_hp: float = 0.0
+var _activity_this_step: bool = false   ## any damage/heal from either side resets inactivity timer
 
 ## Long-term statistics
 var _total_episodes: int = 0
@@ -73,20 +71,23 @@ var _total_enemy_max_hp: float = 0.0    ## set at episode start; used to compute
 ##                 (at 60 FPS game time: 300 = 5s, 600 = 10s, 1020 = 17s)
 ##   advance_at  — avg damage progress needed to unlock next stage
 ##   eval_window — rolling window size before checking advancement
+## Stages 1-6: inactivity = steps (disabled — random policy rarely attacks, agents need full
+## episode length to stumble into attacks and learn).  Stage 7+: inactivity kicks in since
+## agents should be actively fighting by then; idle episodes are wasted compute.
 const _CURRICULUM_STAGES: Array = [
-	{"steps":  1200, "inactivity":  600, "advance_at": 0.10, "eval_window": 20,  "label": "Stage 1  (~2s/ep)"},
-	{"steps":  1800, "inactivity":  400, "advance_at": 0.15, "eval_window": 20,  "label": "Stage 2  (~3s/ep)"},
-	{"steps":  2400, "inactivity":  420, "advance_at": 0.20, "eval_window": 30,  "label": "Stage 3  (~4s/ep)"},
-	{"steps":  3000, "inactivity":  480, "advance_at": 0.25, "eval_window": 30,  "label": "Stage 4  (~5s/ep)"},
-	{"steps":  3600, "inactivity":  540, "advance_at": 0.30, "eval_window": 40,  "label": "Stage 5  (~6s/ep)"},
-	{"steps":  4800, "inactivity":  600, "advance_at": 0.35, "eval_window": 40,  "label": "Stage 6  (~8s/ep)"},
-	{"steps":  6000, "inactivity":  660, "advance_at": 0.40, "eval_window": 50,  "label": "Stage 7  (~10s/ep)"},
-	{"steps":  7200, "inactivity":  720, "advance_at": 0.45, "eval_window": 50,  "label": "Stage 8  (~12s/ep)"},
-	{"steps":  9600, "inactivity":  780, "advance_at": 0.50, "eval_window": 75,  "label": "Stage 9  (~16s/ep)"},
-	{"steps": 12000, "inactivity":  840, "advance_at": 0.55, "eval_window": 75,  "label": "Stage 10 (~20s/ep)"},
-	{"steps": 18000, "inactivity":  900, "advance_at": 0.62, "eval_window": 100, "label": "Stage 11 (~30s/ep)"},
-	{"steps": 24000, "inactivity":  960, "advance_at": 0.68, "eval_window": 100, "label": "Stage 12 (~40s/ep)"},
-	{"steps": 28800, "inactivity": 1020, "advance_at":  1.1, "eval_window": 100, "label": "Stage 13 (~48s/ep)"},  ## final
+	{"steps":  1200, "inactivity":  1200, "advance_at": 0.10, "eval_window": 20,  "label": "Stage 1  (~2s/ep)"},
+	{"steps":  1800, "inactivity":  1800, "advance_at": 0.15, "eval_window": 20,  "label": "Stage 2  (~3s/ep)"},
+	{"steps":  2400, "inactivity":  2400, "advance_at": 0.20, "eval_window": 30,  "label": "Stage 3  (~4s/ep)"},
+	{"steps":  3000, "inactivity":  3000, "advance_at": 0.25, "eval_window": 30,  "label": "Stage 4  (~5s/ep)"},
+	{"steps":  3600, "inactivity":  3600, "advance_at": 0.30, "eval_window": 40,  "label": "Stage 5  (~6s/ep)"},
+	{"steps":  4800, "inactivity":  4800, "advance_at": 0.35, "eval_window": 40,  "label": "Stage 6  (~8s/ep)"},
+	{"steps":  6000, "inactivity":  1200, "advance_at": 0.40, "eval_window": 50,  "label": "Stage 7  (~10s/ep)"},
+	{"steps":  7200, "inactivity":  1200, "advance_at": 0.45, "eval_window": 50,  "label": "Stage 8  (~12s/ep)"},
+	{"steps":  9600, "inactivity":  1500, "advance_at": 0.50, "eval_window": 75,  "label": "Stage 9  (~16s/ep)"},
+	{"steps": 12000, "inactivity":  1500, "advance_at": 0.55, "eval_window": 75,  "label": "Stage 10 (~20s/ep)"},
+	{"steps": 18000, "inactivity":  1800, "advance_at": 0.62, "eval_window": 100, "label": "Stage 11 (~30s/ep)"},
+	{"steps": 24000, "inactivity":  1800, "advance_at": 0.68, "eval_window": 100, "label": "Stage 12 (~40s/ep)"},
+	{"steps": 28800, "inactivity":  2400, "advance_at":  1.1, "eval_window": 100, "label": "Stage 13 (~48s/ep)"},  ## final
 ]
 
 func _ready() -> void:
@@ -107,9 +108,11 @@ func _ready() -> void:
 	if _evelyn_state: _evelyn_state.death.connect(_on_party_member_died)
 	if _evan_agent and _evan_agent.skill_execution:
 		_evan_agent.skill_execution.damage_dealt.connect(_on_party_damage_dealt)
+		_evan_agent.skill_execution.heal_applied.connect(_on_activity)
 		_evan_agent.skill_execution.projectile_spawned.connect(_on_party_projectile_spawned)
 	if _evelyn_agent and _evelyn_agent.skill_execution:
 		_evelyn_agent.skill_execution.damage_dealt.connect(_on_party_damage_dealt)
+		_evelyn_agent.skill_execution.heal_applied.connect(_on_activity)
 		_evelyn_agent.skill_execution.projectile_spawned.connect(_on_party_projectile_spawned)
 
 	# Apply initial curriculum stage limits
@@ -160,19 +163,6 @@ func _physics_process(delta: float) -> void:
 	## Snapshot approach works regardless of which code path caused the damage.
 	_tick_inactivity()
 	if _steps_since_any_damage >= _inactivity_timeout:
-		## Debug dump — shows what HP values _tick_inactivity was comparing.
-		## If values are changing but inactivity still fires, the snapshot logic has a bug.
-		var dbg: String = "[Inactivity Debug] idle=%d threshold=%d | " % [_steps_since_any_damage, _inactivity_timeout]
-		dbg += "evan=%d evelyn=%d | " % [
-			_evan_state.current_hp if _evan_state else -1,
-			_evelyn_state.current_hp if _evelyn_state else -1,
-		]
-		for i in range(_enemies.size()):
-			var e: EnemyAIController = _enemies[i]
-			if is_instance_valid(e):
-				dbg += "e%d=%d/%d " % [i, e.current_hp, e.max_hp]
-		dbg += "| prev_evan=%.0f prev_evelyn=%.0f prev_enemies=%s" % [_prev_evan_hp, _prev_evelyn_hp, str(_prev_enemy_hp)]
-		print(dbg)
 		_end_episode(false, true)  ## timeout — stalled, not a wipe
 		return
 
@@ -350,7 +340,7 @@ func _end_episode(victory: bool, timeout: bool = false) -> void:
 		if _steps_since_any_damage >= _inactivity_timeout: reason = "INACTIVITY (no damage for %d steps)" % _steps_since_any_damage
 		else:                                              reason = "STEP CAP (%d steps)" % _episode_step
 	else:             reason = "PARTY WIPE"
-	print("[Arena] Ep %d ended at step %d — %s" % [_total_episodes, _episode_step, reason])
+	#print("[Arena] Ep %d ended at step %d — %s" % [_total_episodes, _episode_step, reason])
 
 	# Curriculum tracking — record damage progress (0.0–1.0) regardless of win/loss
 	if curriculum_enabled:
@@ -398,14 +388,7 @@ func _reset_episode() -> void:
 	_enemy_steps_since_last_damage = 0
 	_enemy_damage_dealt_this_step = false
 	_steps_since_any_damage = 0
-
-	## Re-snapshot HP baselines so the first step of the new episode doesn't
-	## count the reset-to-full as "damage" (which would falsely reset the inactivity clock).
-	_prev_enemy_hp.clear()
-	for enemy in _enemies:
-		_prev_enemy_hp.append(float(enemy.max_hp) if is_instance_valid(enemy) else 0.0)
-	_prev_evan_hp = float(_evan_state.max_hp) if _evan_state else 0.0
-	_prev_evelyn_hp = float(_evelyn_state.max_hp) if _evelyn_state else 0.0
+	_activity_this_step = false
 
 	# Reset party — cancel any in-flight casts before resetting state
 	if _evan_agent and _evan_agent.skill_execution:   _evan_agent.skill_execution.cancel_cast()
@@ -606,14 +589,20 @@ func _lowest_hp_alive_party_body(party_bodies: Array) -> CharacterBody3D:
 
 func _on_party_damage_dealt(_amount: int, _target: Node) -> void:
 	_damage_dealt_this_step = true
+	_on_activity()
 
 func _on_enemy_damage_dealt(amount: int, target: Node) -> void:
 	_enemy_damage_dealt_this_step = true
+	_on_activity()
 	# Forward damage-received penalty to the correct party agent
 	if target == _evan_state and _evan_agent:
 		_evan_agent.on_damage_received(amount)
 	elif target == _evelyn_state and _evelyn_agent:
 		_evelyn_agent.on_damage_received(amount)
+
+func _on_activity(_a=0, _b=null) -> void:
+	## Signal handler to reset inactivity timer. Supports varying signal signatures.
+	_activity_this_step = true
 
 func _check_stagnation_penalty() -> void:
 	if _damage_dealt_this_step:
@@ -662,31 +651,10 @@ func _check_enemy_focus_fire() -> void:
 			break  ## Only reward once per step even if both party members are surrounded
 
 func _tick_inactivity() -> void:
-	## Compare current HP to last step's snapshot. Any change = someone took damage = combat active.
-	var any_change: bool = false
-
-	# Check enemy HP
-	for i in range(_enemies.size()):
-		var enemy: EnemyAIController = _enemies[i]
-		if not is_instance_valid(enemy): continue
-		var cur_hp: float = float(enemy.current_hp) if enemy.is_alive else 0.0
-		if i < _prev_enemy_hp.size() and cur_hp != _prev_enemy_hp[i]:
-			any_change = true
-		if i < _prev_enemy_hp.size():
-			_prev_enemy_hp[i] = cur_hp
-		else:
-			_prev_enemy_hp.append(cur_hp)
-
-	# Check party HP
-	var evan_hp: float = float(_evan_state.current_hp) if _evan_state and _evan_state.is_alive else 0.0
-	var evelyn_hp: float = float(_evelyn_state.current_hp) if _evelyn_state and _evelyn_state.is_alive else 0.0
-	if evan_hp != _prev_evan_hp or evelyn_hp != _prev_evelyn_hp:
-		any_change = true
-	_prev_evan_hp = evan_hp
-	_prev_evelyn_hp = evelyn_hp
-
-	if any_change:
+	## Resets timer if any activity (damage/heal) was detected via signals this step.
+	if _activity_this_step:
 		_steps_since_any_damage = 0
+		_activity_this_step = false
 	else:
 		_steps_since_any_damage += 1
 
