@@ -74,8 +74,8 @@ var _total_enemy_max_hp: float = 0.0    ## set at episode start; used to compute
 ##   advance_at  — avg damage progress needed to unlock next stage
 ##   eval_window — rolling window size before checking advancement
 const _CURRICULUM_STAGES: Array = [
-	{"steps":  1200, "inactivity":  300, "advance_at": 0.10, "eval_window": 20,  "label": "Stage 1  (~2s/ep)"},
-	{"steps":  1800, "inactivity":  360, "advance_at": 0.15, "eval_window": 20,  "label": "Stage 2  (~3s/ep)"},
+	{"steps":  1200, "inactivity":  900, "advance_at": 0.10, "eval_window": 20,  "label": "Stage 1  (~2s/ep)"},
+	{"steps":  1800, "inactivity":  1500, "advance_at": 0.15, "eval_window": 20,  "label": "Stage 2  (~3s/ep)"},
 	{"steps":  2400, "inactivity":  420, "advance_at": 0.20, "eval_window": 30,  "label": "Stage 3  (~4s/ep)"},
 	{"steps":  3000, "inactivity":  480, "advance_at": 0.25, "eval_window": 30,  "label": "Stage 4  (~5s/ep)"},
 	{"steps":  3600, "inactivity":  540, "advance_at": 0.30, "eval_window": 40,  "label": "Stage 5  (~6s/ep)"},
