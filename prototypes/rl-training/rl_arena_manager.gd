@@ -144,6 +144,7 @@ func _physics_process(delta: float) -> void:
 	_check_enemy_stagnation_penalty()
 	_check_protection_bonus()
 	_check_enemy_focus_fire()
+	_check_enemy_positioning()
 	_check_victory_or_defeat()
 	_update_hud()
 
@@ -199,10 +200,14 @@ func _execute_party_movement(delta: float) -> void:
 	_execute_agent_movement(evan_body, _evan_agent, delta)
 	_execute_agent_movement(evelyn_body, _evelyn_agent, delta)
 
-func _execute_agent_movement(body: CharacterBody3D, agent: RLPartyAgent, _delta: float) -> void:
+func _execute_agent_movement(body: CharacterBody3D, agent: RLPartyAgent, delta: float) -> void:
 	if not body or not agent or not agent.state or not agent.state.is_alive:
 		if body:
-			body.velocity = Vector3.ZERO
+			body.velocity.x = 0.0
+			body.velocity.z = 0.0
+			## Keep velocity.y so gravity continues to accumulate even when dead
+			if not body.is_on_floor():
+				body.velocity += body.get_gravity() * delta
 			body.move_and_slide()
 		return
 
@@ -213,21 +218,30 @@ func _execute_agent_movement(body: CharacterBody3D, agent: RLPartyAgent, _delta:
 		5:
 			var target_idx: int = agent.directive_target
 			if target_idx < enemies.size() and is_instance_valid(enemies[target_idx]) and enemies[target_idx].is_alive:
-				move_dir = (enemies[target_idx].global_position - body.global_position).normalized()
+				move_dir = (enemies[target_idx].global_position - body.global_position)
 			else:
 				move_dir = _toward_nearest_enemy(body.global_position, enemies)
 		6:
 			var nearest: Vector3 = _nearest_enemy_pos(body.global_position, enemies)
 			if nearest != Vector3.ZERO:
-				move_dir = (body.global_position - nearest).normalized()
+				move_dir = (body.global_position - nearest)
 		7:
 			var ally_body: CharacterBody3D = _lowest_hp_ally_body(body)
 			if ally_body:
-				move_dir = (ally_body.global_position - body.global_position).normalized()
+				move_dir = (ally_body.global_position - body.global_position)
 		8:
 			move_dir = Vector3.ZERO
 
-	body.velocity = move_dir * move_speed
+	## Flatten to XZ — never let target height difference produce vertical velocity
+	move_dir.y = 0.0
+	if move_dir.length_squared() > 0.0001:
+		move_dir = move_dir.normalized()
+
+	## Only override horizontal velocity — let y accumulate so gravity works
+	body.velocity.x = move_dir.x * move_speed
+	body.velocity.z = move_dir.z * move_speed
+	if not body.is_on_floor():
+		body.velocity += body.get_gravity() * delta
 	body.move_and_slide()
 
 func _execute_enemy_movement(_delta: float) -> void:
@@ -597,6 +611,42 @@ func _check_enemy_focus_fire() -> void:
 					if enemy.global_position.distance_to(target_body.global_position) <= FOCUS_RANGE:
 						hive.on_focus_fire_bonus()
 			break  ## Only reward once per step even if both party members are surrounded
+
+func _check_enemy_positioning() -> void:
+	## Reward ranged/mage enemies for staying at their preferred range.
+	## Penalise them for swarming into melee range — only melee enemies should be close.
+	## Uses stop_distance as a proxy for enemy type: <= 2.5 = melee, > 2.5 = ranged/mage.
+	var party_bodies: Array[CharacterBody3D] = []
+	if evan_body and _evan_state and _evan_state.is_alive: party_bodies.append(evan_body)
+	if evelyn_body and _evelyn_state and _evelyn_state.is_alive: party_bodies.append(evelyn_body)
+	if party_bodies.is_empty(): return
+
+	const MELEE_STOP_DIST: float = 2.5  ## Enemies with stop_distance <= this are melee
+	const TOO_CLOSE_DIST: float = 3.5   ## Ranged/mage at this distance or closer are penalised
+	const PREFERRED_MARGIN: float = 2.0 ## Acceptable band around stop_distance: [pref-2, pref+4]
+
+	for i in range(_enemies.size()):
+		var enemy: EnemyAIController = _enemies[i]
+		var hive: RLEnemyHiveAgent = _hive_agents[i] if i < _hive_agents.size() else null
+		if not is_instance_valid(enemy) or not enemy.is_alive or not is_instance_valid(hive):
+			continue
+		if enemy.stop_distance <= MELEE_STOP_DIST:
+			continue  ## Melee units — no positioning reward/penalty
+
+		## Find nearest alive party member distance
+		var nearest_dist: float = INF
+		for pb in party_bodies:
+			var d: float = enemy.global_position.distance_to(pb.global_position)
+			if d < nearest_dist:
+				nearest_dist = d
+
+		if nearest_dist < TOO_CLOSE_DIST:
+			## Ranged unit swarming into melee — punish
+			hive.reward -= 0.002
+		elif nearest_dist >= (enemy.stop_distance - PREFERRED_MARGIN) and \
+			 nearest_dist <= (enemy.stop_distance + 4.0):
+			## In preferred engagement band — reward spacing discipline
+			hive.reward += 0.001
 
 func _check_enemy_stagnation_penalty() -> void:
 	if _enemy_damage_dealt_this_step:

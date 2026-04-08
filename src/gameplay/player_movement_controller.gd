@@ -51,6 +51,10 @@ func _physics_process(delta: float) -> void:
 						dodge_speed *= active_effect.effective_value
 			character_node.velocity.x = _dodge_dir.x * dodge_speed * dodge_multiplier
 			character_node.velocity.z = _dodge_dir.z * dodge_speed * dodge_multiplier
+			## Apply gravity during dodge — without this, velocity.y is frozen for the full
+			## dodge duration, which launches the character upward if they had any Y velocity.
+			if not character_node.is_on_floor():
+				character_node.velocity += character_node.get_gravity() * delta
 			character_node.move_and_slide()
 			return
 
@@ -147,8 +151,11 @@ func dodge() -> void:
 		var inv_def := preload("res://assets/data/status_effects/invincibility.tres")
 		sfx.apply_effect(inv_def, "dodge", 1, dodge_duration)
 
-	# Dodge in current move direction, or forward if standing still
-	if character_node.velocity.length() > 0.1:
-		_dodge_dir = character_node.velocity.normalized()
+	# Dodge in current move direction, or forward if standing still.
+	# Use flat (XZ-only) velocity — prevents slope/gravity Y from being baked
+	# into dodge direction, which would launch the character into the air.
+	var flat_velocity := Vector3(character_node.velocity.x, 0.0, character_node.velocity.z)
+	if flat_velocity.length() > 0.1:
+		_dodge_dir = flat_velocity.normalized()
 	else:
 		_dodge_dir = -character_node.global_transform.basis.z

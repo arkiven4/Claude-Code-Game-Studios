@@ -65,7 +65,8 @@ func _on_projectile_hit(_target: Node) -> void:
 func _on_projectile_missed(target: Node) -> void:
 	# Called only for our OWN projectiles (connected in _on_projectile_spawned).
 	# target is the intended enemy — we missed, apply miss penalty.
-	reward -= w_skill_hit * 1.0
+	# Penalty kept below shoot-intent reward so net on miss remains positive.
+	reward -= w_skill_hit * 1.0  ## net = +1.5 - 1.0 = +0.5 × w_skill_hit
 
 ## Called for ENEMY projectiles only (connected by rl_arena_manager).
 ## Only gives a dodge reward when this agent was the intended target.
@@ -76,10 +77,13 @@ func _on_enemy_projectile_missed(target: Node) -> void:
 		reward += w_skill_hit * 1.5  # Dodge reward
 
 func _on_skill_cast_complete(skill: SkillData) -> void:
-	## Reward for completing the cast/skill execution
-	# If it's a projectile, we wait for hit/miss signal for the bulk of the reward
+	## Reward for completing the cast/skill execution.
+	## Projectile: shoot-intent reward is set LARGER than the miss penalty so the agent
+	## always profits from attempting a shot (net positive even on miss).
+	## Net on miss: +w_skill_hit*1.5 - w_skill_hit*1.0 = +w_skill_hit*0.5 (positive)
+	## Net on hit:  +w_skill_hit*1.5 + w_skill_hit*2.0 = +w_skill_hit*3.5 (better)
 	if skill.is_projectile:
-		reward += w_skill_hit * 0.5
+		reward += w_skill_hit * 1.5
 	else:
 		reward += w_skill_hit * 2.0
 

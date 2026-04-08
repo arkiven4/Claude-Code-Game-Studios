@@ -36,6 +36,7 @@ func _on_projectile_hit(_target: Node) -> void:
 func _on_projectile_missed(target: Node) -> void:
 	# Called only for our OWN projectiles (connected in _on_projectile_spawned).
 	# target is the intended party member — we missed, apply miss penalty.
+	# Kept below shoot-intent (0.015) so net on miss stays positive (+0.005).
 	reward -= 0.01
 
 ## Called for PARTY projectiles only (connected by rl_arena_manager).
@@ -47,10 +48,13 @@ func _on_party_projectile_missed(target: Node) -> void:
 		reward += 0.05  # Dodge reward
 
 func _on_skill_fired(_index: int, skill: SkillData) -> void:
+	## Projectile shoot-intent is set above miss penalty so net on miss is positive.
+	## Net on miss: +0.015 - 0.01 = +0.005 (positive — always worth shooting)
+	## Net on hit:  +0.015 + 0.02  = +0.035 (much better)
 	if skill.is_projectile:
-		reward += 0.005 # Small intent reward, bulk comes from hit
+		reward += 0.015
 	else:
-		reward += 0.01  ## Reward for finishing a cast
+		reward += 0.01  ## Reward for finishing a melee/AoE cast
 
 func set_context(context: Dictionary) -> void:
 	_context = context

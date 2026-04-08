@@ -214,9 +214,9 @@ func _refresh_stats() -> void:
 	_stat_labels["title"].text      = "BEST ARENA: Arena_%d" % _best_arena_idx
 	_stat_labels["curriculum"].text = "Stage : %s" % d["curriculum_label"]
 	_stat_labels["episodes"].text   = "Eps   : %d  |  Party: %d (%.0f%%)  Enemy: %d (%.0f%%)" \
-	                                  % [total_eps, total_party_wins, party_pct, total_enemy_wins, enemy_pct]
+									  % [total_eps, total_party_wins, party_pct, total_enemy_wins, enemy_pct]
 	_stat_labels["avg_damage"].text = "Dmg   : %s %.1f%%" \
-	                                  % [_bar(d["avg_damage_progress"], 10), d["avg_damage_progress"] * 100.0]
+									  % [_bar(d["avg_damage_progress"], 10), d["avg_damage_progress"] * 100.0]
 	_stat_labels["step"].text       = "Step  : %d / %d" % [d["episode_step"], d["max_episode_steps"]]
 	_stat_labels["evan_hp"].text    = "Evan  : %s %.0f%%" % [_bar(evan_pct   / 100.0, 10), evan_pct]
 	_stat_labels["evelyn_hp"].text  = "Evelyn: %s %.0f%%" % [_bar(evelyn_pct / 100.0, 10), evelyn_pct]
@@ -236,8 +236,8 @@ func _refresh_stats() -> void:
 		var marker: String = "★" if i == _best_arena_idx else " "
 		var ep_prog: float  = float(s["episode_step"]) / float(maxi(s["max_episode_steps"], 1)) * 100.0
 		lines.append("%s A%-2d  S%-2d  dmg:%.0f%%  ep:%d%%" \
-		             % [marker, i, s["curriculum_stage"] + 1,
-		                s["avg_damage_progress"] * 100.0, ep_prog])
+					 % [marker, i, s["curriculum_stage"] + 1,
+						s["avg_damage_progress"] * 100.0, ep_prog])
 	_stat_labels["arenas_list"].text = "\n".join(lines)
 
 
