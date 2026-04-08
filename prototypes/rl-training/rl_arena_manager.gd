@@ -40,13 +40,19 @@ var _enemies: Array[EnemyAIController] = []
 var _hive_agents: Array[RLEnemyHiveAgent] = []
 var _episode_step: int = 0
 var _episode_active: bool = false
-## Stagnation tracking — party
+## Stagnation tracking — party (for stagnation penalty only)
 var _steps_since_last_damage: int = 0
 var _damage_dealt_this_step: bool = false
 
-## Stagnation tracking — enemies
+## Stagnation tracking — enemies (for stagnation penalty only)
 var _enemy_steps_since_last_damage: int = 0
 var _enemy_damage_dealt_this_step: bool = false
+
+## Inactivity timeout — resets when EITHER side deals damage.
+## When this exceeds _inactivity_timeout the episode ends (stalled combat = no signal).
+## Distinct from stagnation penalty counters above which track each side independently.
+var _steps_since_any_damage: int = 0
+var _inactivity_timeout: int = 300  ## updated each stage advance from _CURRICULUM_STAGES
 
 ## Long-term statistics
 var _total_episodes: int = 0
@@ -58,28 +64,27 @@ var _curriculum_stage: int = 0
 var _recent_results: Array[float] = []  ## rolling window: damage_dealt/total_enemy_max_hp per episode
 var _total_enemy_max_hp: float = 0.0    ## set at episode start; used to compute progress ratio
 
-## Stage definitions: [episode_timeout_steps, advance_at_avg_damage_progress, display_label]
-## Steps at speed_up=10: real_seconds × 60 FPS × 10 speed_up = steps
-## Thresholds start low (10%) so the model can escape Stage 1 early in training
-## when episodes are short and random-policy damage is near zero.
-## Each stage raises the bar by ~5% and grows episode length gradually.
-## eval_window: episodes needed in rolling window before checking advancement.
-## Early stages use small windows (model is cycling fast, 20 eps is plenty).
-## Later stages use larger windows (longer episodes, need more signal).
+## Stage definitions:
+##   steps       — hard safety cap (episode cannot exceed this regardless)
+##   inactivity  — steps with NO damage from either side before episode ends early
+##                 grows with stage so longer fights have more breathing room
+##                 (at 60 FPS game time: 300 = 5s, 600 = 10s, 1020 = 17s)
+##   advance_at  — avg damage progress needed to unlock next stage
+##   eval_window — rolling window size before checking advancement
 const _CURRICULUM_STAGES: Array = [
-	{"steps":  1200, "advance_at": 0.10, "eval_window": 20,  "label": "Stage 1  (~2s/ep)"},
-	{"steps":  1800, "advance_at": 0.15, "eval_window": 20,  "label": "Stage 2  (~3s/ep)"},
-	{"steps":  2400, "advance_at": 0.20, "eval_window": 30,  "label": "Stage 3  (~4s/ep)"},
-	{"steps":  3000, "advance_at": 0.25, "eval_window": 30,  "label": "Stage 4  (~5s/ep)"},
-	{"steps":  3600, "advance_at": 0.30, "eval_window": 40,  "label": "Stage 5  (~6s/ep)"},
-	{"steps":  4800, "advance_at": 0.35, "eval_window": 40,  "label": "Stage 6  (~8s/ep)"},
-	{"steps":  6000, "advance_at": 0.40, "eval_window": 50,  "label": "Stage 7  (~10s/ep)"},
-	{"steps":  7200, "advance_at": 0.45, "eval_window": 50,  "label": "Stage 8  (~12s/ep)"},
-	{"steps":  9600, "advance_at": 0.50, "eval_window": 75,  "label": "Stage 9  (~16s/ep)"},
-	{"steps": 12000, "advance_at": 0.55, "eval_window": 75,  "label": "Stage 10 (~20s/ep)"},
-	{"steps": 18000, "advance_at": 0.62, "eval_window": 100, "label": "Stage 11 (~30s/ep)"},
-	{"steps": 24000, "advance_at": 0.68, "eval_window": 100, "label": "Stage 12 (~40s/ep)"},
-	{"steps": 28800, "advance_at":  1.1, "eval_window": 100, "label": "Stage 13 (~48s/ep)"},  ## final
+	{"steps":  1200, "inactivity":  300, "advance_at": 0.10, "eval_window": 20,  "label": "Stage 1  (~2s/ep)"},
+	{"steps":  1800, "inactivity":  360, "advance_at": 0.15, "eval_window": 20,  "label": "Stage 2  (~3s/ep)"},
+	{"steps":  2400, "inactivity":  420, "advance_at": 0.20, "eval_window": 30,  "label": "Stage 3  (~4s/ep)"},
+	{"steps":  3000, "inactivity":  480, "advance_at": 0.25, "eval_window": 30,  "label": "Stage 4  (~5s/ep)"},
+	{"steps":  3600, "inactivity":  540, "advance_at": 0.30, "eval_window": 40,  "label": "Stage 5  (~6s/ep)"},
+	{"steps":  4800, "inactivity":  600, "advance_at": 0.35, "eval_window": 40,  "label": "Stage 6  (~8s/ep)"},
+	{"steps":  6000, "inactivity":  660, "advance_at": 0.40, "eval_window": 50,  "label": "Stage 7  (~10s/ep)"},
+	{"steps":  7200, "inactivity":  720, "advance_at": 0.45, "eval_window": 50,  "label": "Stage 8  (~12s/ep)"},
+	{"steps":  9600, "inactivity":  780, "advance_at": 0.50, "eval_window": 75,  "label": "Stage 9  (~16s/ep)"},
+	{"steps": 12000, "inactivity":  840, "advance_at": 0.55, "eval_window": 75,  "label": "Stage 10 (~20s/ep)"},
+	{"steps": 18000, "inactivity":  900, "advance_at": 0.62, "eval_window": 100, "label": "Stage 11 (~30s/ep)"},
+	{"steps": 24000, "inactivity":  960, "advance_at": 0.68, "eval_window": 100, "label": "Stage 12 (~40s/ep)"},
+	{"steps": 28800, "inactivity": 1020, "advance_at":  1.1, "eval_window": 100, "label": "Stage 13 (~48s/ep)"},  ## final
 ]
 
 func _ready() -> void:
@@ -105,9 +110,10 @@ func _ready() -> void:
 		_evelyn_agent.skill_execution.damage_dealt.connect(_on_party_damage_dealt)
 		_evelyn_agent.skill_execution.projectile_spawned.connect(_on_party_projectile_spawned)
 
-	# Apply initial curriculum stage timeout
+	# Apply initial curriculum stage limits
 	if curriculum_enabled:
 		max_episode_steps = _CURRICULUM_STAGES[0]["steps"]
+		_inactivity_timeout = _CURRICULUM_STAGES[0]["inactivity"]
 
 	# Discover static enemies — already registered with godot_rl at scene load
 	_find_enemies()
@@ -148,8 +154,16 @@ func _physics_process(delta: float) -> void:
 	_check_victory_or_defeat()
 	_update_hud()
 
+	## Inactivity timeout: end episode when neither side has dealt damage for N steps.
+	## Stalled combat gives no training signal — better to reset and try again.
+	_steps_since_any_damage += 1
+	if _steps_since_any_damage >= _inactivity_timeout:
+		_end_episode(false, true)  ## timeout — stalled, not a wipe
+		return
+
+	## Hard safety cap: episode cannot run forever even if damage trickles in
 	if _episode_step >= max_episode_steps:
-		_end_episode(false, true)  ## timeout — not a party wipe
+		_end_episode(false, true)  ## timeout — hit absolute step limit
 
 # --- Enemy Discovery ---
 
@@ -360,6 +374,7 @@ func _reset_episode() -> void:
 	_damage_dealt_this_step = false
 	_enemy_steps_since_last_damage = 0
 	_enemy_damage_dealt_this_step = false
+	_steps_since_any_damage = 0
 
 	# Reset party — cancel any in-flight casts before resetting state
 	if _evan_agent and _evan_agent.skill_execution:   _evan_agent.skill_execution.cancel_cast()
@@ -414,12 +429,15 @@ func _update_curriculum() -> void:
 	var threshold: float = stage_def["advance_at"]
 	if avg_progress >= threshold:
 		_curriculum_stage += 1
-		max_episode_steps = _CURRICULUM_STAGES[_curriculum_stage]["steps"]
+		var new_stage: Dictionary = _CURRICULUM_STAGES[_curriculum_stage]
+		max_episode_steps   = new_stage["steps"]
+		_inactivity_timeout = new_stage["inactivity"]
 		_recent_results.clear()  ## Reset window so next stage is judged fresh
-		print("[Curriculum] Advanced to %s — avg damage progress was %.1f%% over last %d episodes. Timeout: %d steps." % [
-			_CURRICULUM_STAGES[_curriculum_stage]["label"],
+		print("[Curriculum] Advanced to %s — avg damage progress was %.1f%% over last %d episodes. Inactivity timeout: %d steps. Safety cap: %d steps." % [
+			new_stage["label"],
 			avg_progress * 100.0,
 			window,
+			_inactivity_timeout,
 			max_episode_steps,
 		])
 
@@ -557,9 +575,11 @@ func _lowest_hp_alive_party_body(party_bodies: Array) -> CharacterBody3D:
 
 func _on_party_damage_dealt(_amount: int, _target: Node) -> void:
 	_damage_dealt_this_step = true
+	_steps_since_any_damage = 0  ## Combat is active — reset inactivity clock
 
 func _on_enemy_damage_dealt(amount: int, target: Node) -> void:
 	_enemy_damage_dealt_this_step = true
+	_steps_since_any_damage = 0  ## Combat is active — reset inactivity clock
 	# Forward damage-received penalty to the correct party agent
 	if target == _evan_state and _evan_agent:
 		_evan_agent.on_damage_received(amount)
