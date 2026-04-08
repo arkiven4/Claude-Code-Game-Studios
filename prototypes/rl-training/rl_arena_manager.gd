@@ -155,7 +155,7 @@ func _physics_process(delta: float) -> void:
 	_update_hud()
 
 	## Inactivity timeout: end episode when neither side has dealt damage for N steps.
-	## Stalled combat gives no training signal — better to reset and try again.
+	## Each arena manages this independently — other arenas are unaffected.
 	_steps_since_any_damage += 1
 	if _steps_since_any_damage >= _inactivity_timeout:
 		_end_episode(false, true)  ## timeout — stalled, not a wipe
@@ -328,6 +328,14 @@ func _end_episode(victory: bool, timeout: bool = false) -> void:
 	_total_episodes += 1
 	if victory:        _party_wins += 1
 	elif not timeout:  _enemy_wins += 1
+
+	var reason: String
+	if victory:       reason = "VICTORY (all enemies dead)"
+	elif timeout:
+		if _steps_since_any_damage >= _inactivity_timeout: reason = "INACTIVITY (no damage for %d steps)" % _steps_since_any_damage
+		else:                                              reason = "STEP CAP (%d steps)" % _episode_step
+	else:             reason = "PARTY WIPE"
+	print("[Arena] Ep %d ended at step %d — %s" % [_total_episodes, _episode_step, reason])
 
 	# Curriculum tracking — record damage progress (0.0–1.0) regardless of win/loss
 	if curriculum_enabled:

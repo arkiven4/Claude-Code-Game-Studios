@@ -21,6 +21,7 @@ extends Node3D
 ## How often (in physics frames) to refresh the stats overlay.
 @export var stats_refresh_interval: int = 30
 
+
 var _arena_managers: Array = []
 var _stats_frame: int = 0
 var _stat_labels: Dictionary = {}
