@@ -19,12 +19,20 @@ from ray.rllib.algorithms.ppo import PPOConfig
 from ray.tune.registry import register_env
 import sys
 
-# Add current script directory to path so we can import train.py
+# Add current script directory to path so we can import modules
 script_dir = os.path.dirname(os.path.abspath(__file__))
 if script_dir not in sys.path:
     sys.path.append(script_dir)
 
 from train import RayMultiAgentGodotEnv
+from agent_config import (
+    get_observation_spaces,
+    get_action_spaces,
+    get_agent_ids,
+    get_policies_with_spaces,
+    get_policy_mapping_fn,
+    load_config,
+)
 
 def env_creator(env_config):
     # This creator is used by RLlib internally to initialize spaces
@@ -43,25 +51,22 @@ def main():
         ray.init(logging_level="error")
     print("DEBUG: Ray initialized.")
 
-    # Define spaces explicitly — must match train.py exactly
-    # 54 = self(10) + casting(2) + allies×3(15) + enemies×4(20) + directive(7)
-    obs_54 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (54,), dtype=np.float32)})
-    act_party = gym.spaces.Dict({
-        "action":      gym.spaces.Discrete(11),
-        "heal_target": gym.spaces.Discrete(2),
-    })
-    obs_33 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (33,), dtype=np.float32)})
-    act_team = gym.spaces.Dict({
-        "evan_target":   gym.spaces.Discrete(4),
-        "evan_role":     gym.spaces.Discrete(3),
-        "evelyn_target": gym.spaces.Discrete(4),
-        "evelyn_role":   gym.spaces.Discrete(3),
-    })
-    # 25 = self(5) + party×2(10) + enemy_allies×2(10: added dist)
-    obs_25 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (25,), dtype=np.float32)})
-    act_enemy = gym.spaces.Dict({
-        "action": gym.spaces.Discrete(6),
-    })
+    # Load agent config from checkpoint (or use current if not found)
+    print(f"DEBUG: Loading agent config from {args.checkpoint}...")
+    obs_spaces, act_spaces, agent_ids = load_config(args.checkpoint)
+    print(f"DEBUG: Loaded config for agents: {agent_ids}")
+
+    # Build policies with loaded spaces
+    policies = {}
+    for policy_name in ["evan_policy", "evelyn_policy", "team_policy", "enemy_hive_policy"]:
+        if policy_name == "evan_policy":
+            policies[policy_name] = (None, obs_spaces["evan"], act_spaces["evan"], {})
+        elif policy_name == "evelyn_policy":
+            policies[policy_name] = (None, obs_spaces["evelyn"], act_spaces["evelyn"], {})
+        elif policy_name == "team_policy":
+            policies[policy_name] = (None, obs_spaces["team"], act_spaces["team"], {})
+        elif policy_name == "enemy_hive_policy":
+            policies[policy_name] = (None, obs_spaces["enemy_0"], act_spaces["enemy_0"], {})
 
     print("DEBUG: Registering environment...")
     register_env("godot_multiagent", env_creator)
@@ -75,15 +80,8 @@ def main():
         )
         .environment("godot_multiagent", env_config={"port": args.port})
         .multi_agent(
-            policies={
-                "evan_policy":       (None, obs_54, act_party, {}),
-                "evelyn_policy":     (None, obs_54, act_party, {}),
-                "team_policy":       (None, obs_33, act_team, {}),
-                "enemy_hive_policy": (None, obs_25, act_enemy, {}),
-            },
-            policy_mapping_fn=lambda agent_id, *args, **kwargs: (
-                "enemy_hive_policy" if agent_id.startswith("enemy_") else f"{agent_id}_policy"
-            ),
+            policies=policies,
+            policy_mapping_fn=get_policy_mapping_fn(),
         )
         .env_runners(num_env_runners=0)
     )

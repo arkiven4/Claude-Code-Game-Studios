@@ -18,6 +18,7 @@ Models saved to: prototypes/rl-training/models/
 """
 
 import os
+import sys
 import ray
 import numpy as np
 import gymnasium as gym
@@ -25,6 +26,16 @@ from ray.rllib.algorithms.ppo import PPOConfig
 from ray.tune.registry import register_env
 from ray.rllib.env.multi_agent_env import MultiAgentEnv
 from godot_rl.core.godot_env import GodotEnv
+
+# Import unified config
+from agent_config import (
+    get_observation_spaces,
+    get_action_spaces,
+    get_agent_ids,
+    get_policies,
+    get_policy_mapping_fn,
+    save_config,
+)
 
 MODELS_DIR = os.path.join(os.path.dirname(__file__), "models")
 os.makedirs(MODELS_DIR, exist_ok=True)
@@ -36,51 +47,16 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
         self.seed = env_config.get("seed", 42)
         self.env_config = env_config
         self._env = None
-        
-        # Define IDs for space initialization
-        self._agent_ids = {"evan", "evelyn", "team", "enemy_0", "enemy_1", "enemy_2"}
+
+        # Get IDs and spaces from unified config
+        self._agent_ids = get_agent_ids()
         self.possible_agents = self._agent_ids
 
-        # Evan/Evelyn Spaces
-        # 54 = self(10) + casting(2) + allies×3(15) + enemies×4(20) + directive(7)
-        obs_48 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (54,), dtype=np.float32)})
-        act_party = gym.spaces.Dict({
-            "action":      gym.spaces.Discrete(11),  # 0=wait,1-4=skills,5-8=movement,9=basic,10=special
-            "heal_target": gym.spaces.Discrete(2),  # 0=self, 1=lowest-HP ally
-        })
+        obs_spaces = get_observation_spaces()
+        act_spaces = get_action_spaces()
 
-        # Team Spaces
-        obs_33 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (33,), dtype=np.float32)})
-        act_team = gym.spaces.Dict({
-            "evan_target":   gym.spaces.Discrete(4),
-            "evan_role":     gym.spaces.Discrete(3),
-            "evelyn_target": gym.spaces.Discrete(4),
-            "evelyn_role":   gym.spaces.Discrete(3),
-        })
-
-        # Enemy Hive Spaces (shared policy, 3 separate agents)
-        # 25 = self(5) + party×2(10) + enemy_allies×2(10: added dist)
-        obs_23 = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (25,), dtype=np.float32)})
-        act_enemy = gym.spaces.Dict({
-            "action": gym.spaces.Discrete(6),  # 0=wait,1=skill0,2=skill1,3-5=movement
-        })
-
-        self.observation_space = gym.spaces.Dict({
-            "evan":    obs_48,
-            "evelyn":  obs_48,
-            "team":    obs_33,
-            "enemy_0": obs_23,
-            "enemy_1": obs_23,
-            "enemy_2": obs_23,
-        })
-        self.action_space = gym.spaces.Dict({
-            "evan":    act_party,
-            "evelyn":  act_party,
-            "team":    act_team,
-            "enemy_0": act_enemy,
-            "enemy_1": act_enemy,
-            "enemy_2": act_enemy,
-        })
+        self.observation_space = gym.spaces.Dict(obs_spaces)
+        self.action_space = gym.spaces.Dict(act_spaces)
 
     def reset(self, *, seed=None, options=None):
         if self._env is None:
@@ -208,15 +184,8 @@ def main():
         )
         .environment("godot_multiagent", env_config={"port": 11008})
         .multi_agent(
-            policies={
-                "evan_policy":       (None, None, None, {}),
-                "evelyn_policy":     (None, None, None, {}),
-                "team_policy":       (None, None, None, {}),
-                "enemy_hive_policy": (None, None, None, {}),
-            },
-            policy_mapping_fn=lambda agent_id, *args, **kwargs: (
-                "enemy_hive_policy" if agent_id.startswith("enemy_") else f"{agent_id}_policy"
-            ),
+            policies=get_policies(),
+            policy_mapping_fn=get_policy_mapping_fn(),
         )
         .training(
             lr=3e-4,
@@ -260,11 +229,13 @@ def main():
                 print(f"[{iteration}] reward: {reward_str} | wins: {win_rate:.1f}% | len: {ep_len:.1f}")
             if iteration % 50 == 0:
                 save_path = algo.save(MODELS_DIR)
+                save_config(save_path)  # Save agent config with checkpoint
                 print(f"Checkpoint saved: {save_path}")
     except KeyboardInterrupt:
         print("Training interrupted.")
 
-    algo.save(os.path.join(MODELS_DIR, "final"))
+    final_path = algo.save(os.path.join(MODELS_DIR, "final"))
+    save_config(final_path)  # Save agent config with final checkpoint
     print(f"Training complete. Models saved to {MODELS_DIR}")
     ray.shutdown()
 

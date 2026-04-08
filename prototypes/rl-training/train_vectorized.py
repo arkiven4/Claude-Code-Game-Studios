@@ -30,11 +30,21 @@ from ray.tune.registry import register_env
 from ray.rllib.env.multi_agent_env import MultiAgentEnv
 from godot_rl.core.godot_env import GodotEnv
 
+# Import unified config
+from agent_config import (
+    get_observation_spaces,
+    get_action_spaces,
+    get_base_agents,
+    get_policy_mapping_fn,
+    get_policies,
+    save_config,
+)
+
 MODELS_DIR = os.path.join(os.path.dirname(__file__), "models")
 os.makedirs(MODELS_DIR, exist_ok=True)
 
 # Agents per arena (must match scene registration order)
-_BASE_AGENTS = ["evan", "evelyn", "team", "enemy_0", "enemy_1", "enemy_2"]
+_BASE_AGENTS = get_base_agents()
 _AGENTS_PER_ARENA = len(_BASE_AGENTS)
 
 
@@ -55,44 +65,17 @@ class VectorizedGodotEnv(MultiAgentEnv):
         self.possible_agents = self._agent_ids
 
         # --- Observation / action spaces ---
-        # Sizes must match GDScript N_OBS constants (updated after recent fixes):
-        #   party agent : 54  (self=10, casting=2, allies×3=15, enemies×4=20, directive=7)
-        #   team agent  : 33  (unchanged)
-        #   hive agent  : 25  (self=5, party×2=10, enemy_allies×2=10)
-        obs_party  = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (54,), dtype=np.float32)})
-        obs_team   = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (33,), dtype=np.float32)})
-        obs_enemy  = gym.spaces.Dict({"obs": gym.spaces.Box(-10.0, 10.0, (29,), dtype=np.float32)})
-
-        act_party = gym.spaces.Dict({
-            "action":      gym.spaces.Discrete(11),  # 0=wait,1-4=skills,5-8=movement,9=basic,10=special
-            "heal_target": gym.spaces.Discrete(2),   # 0=self, 1=lowest-HP ally
-        })
-        act_team = gym.spaces.Dict({
-            "evan_target":   gym.spaces.Discrete(4),
-            "evan_role":     gym.spaces.Discrete(3),
-            "evelyn_target": gym.spaces.Discrete(4),
-            "evelyn_role":   gym.spaces.Discrete(3),
-        })
-        act_enemy = gym.spaces.Dict({
-            "action": gym.spaces.Discrete(6),  # 0=wait,1=skill0,2=skill1,3-5=movement
-        })
+        # Get base spaces from unified config
+        base_obs_spaces = get_observation_spaces()
+        base_act_spaces = get_action_spaces()
 
         obs_spaces = {}
         act_spaces = {}
         for i in range(self.n_arenas):
-            obs_spaces[f"arena_{i}_evan"]    = obs_party
-            obs_spaces[f"arena_{i}_evelyn"]  = obs_party
-            obs_spaces[f"arena_{i}_team"]    = obs_team
-            obs_spaces[f"arena_{i}_enemy_0"] = obs_enemy
-            obs_spaces[f"arena_{i}_enemy_1"] = obs_enemy
-            obs_spaces[f"arena_{i}_enemy_2"] = obs_enemy
-
-            act_spaces[f"arena_{i}_evan"]    = act_party
-            act_spaces[f"arena_{i}_evelyn"]  = act_party
-            act_spaces[f"arena_{i}_team"]    = act_team
-            act_spaces[f"arena_{i}_enemy_0"] = act_enemy
-            act_spaces[f"arena_{i}_enemy_1"] = act_enemy
-            act_spaces[f"arena_{i}_enemy_2"] = act_enemy
+            for j, agent_name in enumerate(_BASE_AGENTS):
+                key = f"arena_{i}_{agent_name}"
+                obs_spaces[key] = base_obs_spaces[agent_name]
+                act_spaces[key] = base_act_spaces[agent_name]
 
         self.observation_space = gym.spaces.Dict(obs_spaces)
         self.action_space = gym.spaces.Dict(act_spaces)
@@ -184,13 +167,10 @@ class VectorizedGodotEnv(MultiAgentEnv):
 
 def _policy_for(agent_id: str) -> str:
     """Map vectorized agent IDs (arena_N_<name>) to shared policy names."""
-    if "enemy_" in agent_id:
-        return "enemy_hive_policy"
-    if agent_id.endswith("evelyn"):
-        return "evelyn_policy"
-    if agent_id.endswith("evan"):
-        return "evan_policy"
-    return "team_policy"
+    mapping_fn = get_policy_mapping_fn()
+    # Extract base agent name from arena_N_<name> format
+    base_name = "_".join(agent_id.split("_")[2:])  # everything after "arena_N_"
+    return mapping_fn(base_name)
 
 
 def main():
@@ -223,11 +203,9 @@ def main():
                 "evan_policy":       (None, None, None, {}),
                 "evelyn_policy":     (None, None, None, {}),
                 "team_policy":       (None, None, None, {}),
-                # Higher entropy so enemy explores more aggressively while it has
-                # no winning experience to exploit (party policies stay at 0.02).
+                # Higher entropy so enemy explores more aggressively
                 "enemy_hive_policy": (None, None, None, {"entropy_coeff": 0.05}),
             },
-            # Check evelyn before evan — "_evan" is a substring of "_evelyn"
             policy_mapping_fn=lambda agent_id, *args, **kwargs: _policy_for(agent_id),
         )
         .training(
@@ -323,6 +301,7 @@ def main():
                 best_team_reward = team_reward
                 no_improve_iters = 0
                 best_ckpt_path   = algo.save(os.path.join(MODELS_DIR, "best"))
+                save_config(best_ckpt_path)  # Save agent config with checkpoint
                 print(f"  [BEST] team_reward={team_reward:.2f} — checkpoint: {best_ckpt_path}")
             elif team_reward == team_reward:  # only count non-NaN iterations
                 no_improve_iters += 1
@@ -330,6 +309,7 @@ def main():
             # --- Periodic checkpoint ---
             if iteration % 50 == 0:
                 save_path = algo.save(MODELS_DIR)
+                save_config(save_path)  # Save agent config with checkpoint
                 print(f"Checkpoint saved: {save_path}")
 
             # --- Early stopping ---
@@ -343,7 +323,8 @@ def main():
     except KeyboardInterrupt:
         print("Training interrupted.")
 
-    algo.save(os.path.join(MODELS_DIR, "final_vec"))
+    final_path = algo.save(os.path.join(MODELS_DIR, "final_vec"))
+    save_config(final_path)  # Save agent config with final checkpoint
     print(f"Training complete. Best team reward: {best_team_reward:.2f}")
     if best_ckpt_path:
         print(f"Best checkpoint: {best_ckpt_path}")
