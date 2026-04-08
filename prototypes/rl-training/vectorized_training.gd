@@ -28,6 +28,9 @@ var _best_arena_idx: int = 0
 
 
 func _ready() -> void:
+	# Cap rendering so the GPU/compositor doesn't starve at high physics speedup.
+	# Without this, the window goes blank after many episodes in non-headless mode.
+	Engine.max_fps = 30
 	_parse_user_args()
 	print("[VectorizedTraining] Spawning %d arenas (spacing=%.0f u)..." % [n_arenas, grid_spacing])
 	_spawn_arenas()

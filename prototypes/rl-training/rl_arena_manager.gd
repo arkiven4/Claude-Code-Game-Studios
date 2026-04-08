@@ -359,9 +359,17 @@ func _reset_episode() -> void:
 			(enemy as RLEnemyController).reset_to_start()
 
 	# Reset all AI controllers (agent.reset() clears needs_reset and n_steps)
-	if _evan_agent:   _evan_agent.reset()
-	if _evelyn_agent: _evelyn_agent.reset()
-	if _team_agent:   _team_agent.reset()
+	# AIController3D.reset() does NOT clear done — set it explicitly so the next
+	# episode's first step doesn't appear already-terminated to Python.
+	if _evan_agent:
+		_evan_agent.reset()
+		_evan_agent.done = false
+	if _evelyn_agent:
+		_evelyn_agent.reset()
+		_evelyn_agent.done = false
+	if _team_agent:
+		_team_agent.reset()
+		_team_agent.done = false
 	for hive in _hive_agents:
 		if is_instance_valid(hive):
 			hive.reset()
