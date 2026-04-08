@@ -74,8 +74,8 @@ var _total_enemy_max_hp: float = 0.0    ## set at episode start; used to compute
 ##   advance_at  — avg damage progress needed to unlock next stage
 ##   eval_window — rolling window size before checking advancement
 const _CURRICULUM_STAGES: Array = [
-	{"steps":  1200, "inactivity":  900, "advance_at": 0.10, "eval_window": 20,  "label": "Stage 1  (~2s/ep)"},
-	{"steps":  1800, "inactivity":  1500, "advance_at": 0.15, "eval_window": 20,  "label": "Stage 2  (~3s/ep)"},
+	{"steps":  1200, "inactivity":  600, "advance_at": 0.10, "eval_window": 20,  "label": "Stage 1  (~2s/ep)"},
+	{"steps":  1800, "inactivity":  400, "advance_at": 0.15, "eval_window": 20,  "label": "Stage 2  (~3s/ep)"},
 	{"steps":  2400, "inactivity":  420, "advance_at": 0.20, "eval_window": 30,  "label": "Stage 3  (~4s/ep)"},
 	{"steps":  3000, "inactivity":  480, "advance_at": 0.25, "eval_window": 30,  "label": "Stage 4  (~5s/ep)"},
 	{"steps":  3600, "inactivity":  540, "advance_at": 0.30, "eval_window": 40,  "label": "Stage 5  (~6s/ep)"},
@@ -160,6 +160,19 @@ func _physics_process(delta: float) -> void:
 	## Snapshot approach works regardless of which code path caused the damage.
 	_tick_inactivity()
 	if _steps_since_any_damage >= _inactivity_timeout:
+		## Debug dump — shows what HP values _tick_inactivity was comparing.
+		## If values are changing but inactivity still fires, the snapshot logic has a bug.
+		var dbg: String = "[Inactivity Debug] idle=%d threshold=%d | " % [_steps_since_any_damage, _inactivity_timeout]
+		dbg += "evan=%d evelyn=%d | " % [
+			_evan_state.current_hp if _evan_state else -1,
+			_evelyn_state.current_hp if _evelyn_state else -1,
+		]
+		for i in range(_enemies.size()):
+			var e: EnemyAIController = _enemies[i]
+			if is_instance_valid(e):
+				dbg += "e%d=%d/%d " % [i, e.current_hp, e.max_hp]
+		dbg += "| prev_evan=%.0f prev_evelyn=%.0f prev_enemies=%s" % [_prev_evan_hp, _prev_evelyn_hp, str(_prev_enemy_hp)]
+		print(dbg)
 		_end_episode(false, true)  ## timeout — stalled, not a wipe
 		return
 
