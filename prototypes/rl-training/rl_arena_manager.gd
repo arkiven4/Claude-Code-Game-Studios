@@ -51,6 +51,7 @@ var _enemy_damage_dealt_this_step: bool = false
 ## Long-term statistics
 var _total_episodes: int = 0
 var _party_wins: int = 0
+var _enemy_wins: int = 0  ## party wiped (not timeout, not victory)
 
 ## Curriculum state
 var _curriculum_stage: int = 0
@@ -297,7 +298,8 @@ func _end_episode(victory: bool, timeout: bool = false) -> void:
 	if not _episode_active: return
 	_episode_active = false
 	_total_episodes += 1
-	if victory: _party_wins += 1
+	if victory:        _party_wins += 1
+	elif not timeout:  _enemy_wins += 1
 
 	# Curriculum tracking — record damage progress (0.0–1.0) regardless of win/loss
 	if curriculum_enabled:
@@ -647,6 +649,7 @@ func get_stats() -> Dictionary:
 	return {
 		"total_episodes":      _total_episodes,
 		"party_wins":          _party_wins,
+		"enemy_wins":          _enemy_wins,
 		"curriculum_stage":    _curriculum_stage,
 		"curriculum_label":    _CURRICULUM_STAGES[_curriculum_stage]["label"],
 		"avg_damage_progress": avg_progress,

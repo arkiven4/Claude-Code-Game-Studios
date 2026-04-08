@@ -193,10 +193,19 @@ func _refresh_stats() -> void:
 
 	var d: Dictionary = best_mgr.get_stats()
 
-	# --- Derived values ---
-	var win_pct: float = 0.0
-	if d["total_episodes"] > 0:
-		win_pct = float(d["party_wins"]) / float(d["total_episodes"]) * 100.0
+	# --- Aggregate wins across ALL arenas ---
+	var total_party_wins: int = 0
+	var total_enemy_wins: int = 0
+	var total_eps: int = 0
+	for mgr in _arena_managers:
+		if is_instance_valid(mgr) and mgr.has_method("get_stats"):
+			var s: Dictionary = mgr.get_stats()
+			total_party_wins += s.get("party_wins", 0)
+			total_enemy_wins += s.get("enemy_wins", 0)
+			total_eps        += s.get("total_episodes", 0)
+
+	var party_pct: float = float(total_party_wins) / float(maxi(total_eps, 1)) * 100.0
+	var enemy_pct: float = float(total_enemy_wins) / float(maxi(total_eps, 1)) * 100.0
 
 	var evan_pct:   float = float(d["evan_hp"])   / float(maxi(d["evan_max_hp"],   1)) * 100.0
 	var evelyn_pct: float = float(d["evelyn_hp"]) / float(maxi(d["evelyn_max_hp"], 1)) * 100.0
@@ -204,8 +213,8 @@ func _refresh_stats() -> void:
 	# --- Update best-arena labels ---
 	_stat_labels["title"].text      = "BEST ARENA: Arena_%d" % _best_arena_idx
 	_stat_labels["curriculum"].text = "Stage : %s" % d["curriculum_label"]
-	_stat_labels["episodes"].text   = "Eps   : %d  |  Wins: %d (%.0f%%)" \
-	                                  % [d["total_episodes"], d["party_wins"], win_pct]
+	_stat_labels["episodes"].text   = "Eps   : %d  |  Party: %d (%.0f%%)  Enemy: %d (%.0f%%)" \
+	                                  % [total_eps, total_party_wins, party_pct, total_enemy_wins, enemy_pct]
 	_stat_labels["avg_damage"].text = "Dmg   : %s %.1f%%" \
 	                                  % [_bar(d["avg_damage_progress"], 10), d["avg_damage_progress"] * 100.0]
 	_stat_labels["step"].text       = "Step  : %d / %d" % [d["episode_step"], d["max_episode_steps"]]
