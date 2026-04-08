@@ -31,6 +31,9 @@ def get_observation_spaces():
         "enemy_0": obs_29,
         "enemy_1": obs_29,
         "enemy_2": obs_29,
+        "enemy_3": obs_29,
+        "enemy_4": obs_29,
+        "enemy_5": obs_29,
     }
 
 
@@ -62,17 +65,20 @@ def get_action_spaces():
         "enemy_0": act_enemy,
         "enemy_1": act_enemy,
         "enemy_2": act_enemy,
+        "enemy_3": act_enemy,
+        "enemy_4": act_enemy,
+        "enemy_5": act_enemy,
     }
 
 
 def get_agent_ids():
     """Return the set of all agent IDs."""
-    return {"evan", "evelyn", "team", "enemy_0", "enemy_1", "enemy_2"}
+    return {"evan", "evelyn", "team", "enemy_0", "enemy_1", "enemy_2", "enemy_3", "enemy_4", "enemy_5"}
 
 
 def get_base_agents():
     """Return list of base agent names (for vectorized training)."""
-    return ["evan", "evelyn", "team", "enemy_0", "enemy_1", "enemy_2"]
+    return ["evan", "evelyn", "team", "enemy_0", "enemy_1", "enemy_2", "enemy_3", "enemy_4", "enemy_5"]
 
 
 def get_policy_mapping_fn():
@@ -92,10 +98,14 @@ def get_policies():
     }
 
 
-def get_policies_with_spaces():
-    """Return policy definitions with explicit spaces (inference mode)."""
-    obs_spaces = get_observation_spaces()
-    act_spaces = get_action_spaces()
+def get_policies_with_spaces(obs_spaces=None, act_spaces=None):
+    """Return policy definitions with explicit spaces (inference mode).
+    Pass loaded spaces from load_config() or leave None to use current definitions.
+    """
+    if obs_spaces is None:
+        obs_spaces = get_observation_spaces()
+    if act_spaces is None:
+        act_spaces = get_action_spaces()
 
     return {
         "evan_policy":       (None, obs_spaces["evan"],    act_spaces["evan"],    {}),

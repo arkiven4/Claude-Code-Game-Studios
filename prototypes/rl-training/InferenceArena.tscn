@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://b5f1h9j3k7l2m4"]
+[gd_scene format=3 uid="uid://cliktnej6d2iv"]
 
 [ext_resource type="Script" uid="uid://b8nn4emerxgmh" path="res://prototypes/rl-training/rl_arena_manager.gd" id="1_manager"]
 [ext_resource type="Script" uid="uid://qsa1ddhuicgl" path="res://addons/godot_rl_agents/sync.gd" id="2_sync"]
@@ -36,7 +36,6 @@ enemy_container_path = NodePath("Enemies")
 
 [node name="Sync" type="Node" parent="." unique_id=900390836]
 script = ExtResource("2_sync")
-speed_up = 1.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=248893211]
 environment = SubResource("Environment_1")
@@ -92,7 +91,7 @@ reset_after = 200000
 policy_name = "enemy_hive"
 
 [node name="ArcherRanged" parent="Enemies" unique_id=1340772790 instance=ExtResource("10_archer")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5078235, 0.9, 9.701473)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9796424, 0.9, 10.046849)
 script = ExtResource("7_rl_enemy_ctrl")
 
 [node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/ArcherRanged" unique_id=2138015917]
@@ -105,6 +104,33 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 11)
 script = ExtResource("7_rl_enemy_ctrl")
 
 [node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/MageEnemy" unique_id=1211924896]
+script = ExtResource("8_hive_agent")
+reset_after = 200000
+policy_name = "enemy_hive"
+
+[node name="GruntMelee2" parent="Enemies" unique_id=1843357047 instance=ExtResource("9_grunt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.9, 8)
+script = ExtResource("7_rl_enemy_ctrl")
+
+[node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/GruntMelee2" unique_id=1051249759]
+script = ExtResource("8_hive_agent")
+reset_after = 200000
+policy_name = "enemy_hive"
+
+[node name="GruntMelee3" parent="Enemies" unique_id=1943357047 instance=ExtResource("9_grunt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8335857, 0.9, 8.027418)
+script = ExtResource("7_rl_enemy_ctrl")
+
+[node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/GruntMelee3" unique_id=1151249759]
+script = ExtResource("8_hive_agent")
+reset_after = 200000
+policy_name = "enemy_hive"
+
+[node name="ArcherRanged2" parent="Enemies" unique_id=-1994830959 instance=ExtResource("10_archer")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.9, 10)
+script = ExtResource("7_rl_enemy_ctrl")
+
+[node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/ArcherRanged2" unique_id=750238191]
 script = ExtResource("8_hive_agent")
 reset_after = 200000
 policy_name = "enemy_hive"

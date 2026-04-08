@@ -22,12 +22,10 @@ import sys
 import ray
 import numpy as np
 import gymnasium as gym
-from ray.rllib.algorithms.ppo import PPOConfig
 from ray.tune.registry import register_env
 from ray.rllib.env.multi_agent_env import MultiAgentEnv
 from godot_rl.core.godot_env import GodotEnv
 
-# Import unified config
 from agent_config import (
     get_observation_spaces,
     get_action_spaces,
@@ -36,9 +34,7 @@ from agent_config import (
     get_policy_mapping_fn,
     save_config,
 )
-
-MODELS_DIR = os.path.join(os.path.dirname(__file__), "models")
-os.makedirs(MODELS_DIR, exist_ok=True)
+from utils import MODELS_DIR, init_ray, make_logger_creator, build_base_ppo_config
 
 class RayMultiAgentGodotEnv(MultiAgentEnv):
     def __init__(self, env_config):
@@ -80,6 +76,9 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
             "enemy_0": {"obs": np.array(obs[3]["obs"], dtype=np.float32)},
             "enemy_1": {"obs": np.array(obs[4]["obs"], dtype=np.float32)},
             "enemy_2": {"obs": np.array(obs[5]["obs"], dtype=np.float32)},
+            "enemy_3": {"obs": np.array(obs[6]["obs"], dtype=np.float32)},
+            "enemy_4": {"obs": np.array(obs[7]["obs"], dtype=np.float32)},
+            "enemy_5": {"obs": np.array(obs[8]["obs"], dtype=np.float32)},
         }, {}
 
     def step(self, action_dict):
@@ -91,6 +90,9 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
         e0_act     = action_dict.get("enemy_0", {"action": 0})
         e1_act     = action_dict.get("enemy_1", {"action": 0})
         e2_act     = action_dict.get("enemy_2", {"action": 0})
+        e3_act     = action_dict.get("enemy_3", {"action": 0})
+        e4_act     = action_dict.get("enemy_4", {"action": 0})
+        e5_act     = action_dict.get("enemy_5", {"action": 0})
 
         actions = [
             [int(evan_act["action"]),   int(evan_act["heal_target"])],
@@ -104,6 +106,9 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
             [int(e0_act["action"])],
             [int(e1_act["action"])],
             [int(e2_act["action"])],
+            [int(e3_act["action"])],
+            [int(e4_act["action"])],
+            [int(e5_act["action"])],
         ]
         obs, reward, terminated, truncated, info = self._env.step(actions, order_ij=True)
 
@@ -116,6 +121,9 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
             "enemy_0": info[3] if len(info) > 3 else {},
             "enemy_1": info[4] if len(info) > 4 else {},
             "enemy_2": info[5] if len(info) > 5 else {},
+            "enemy_3": info[6] if len(info) > 6 else {},
+            "enemy_4": info[7] if len(info) > 7 else {},
+            "enemy_5": info[8] if len(info) > 8 else {},
         }
 
         res_obs = {
@@ -125,6 +133,9 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
             "enemy_0": {"obs": np.array(obs[3]["obs"], dtype=np.float32)},
             "enemy_1": {"obs": np.array(obs[4]["obs"], dtype=np.float32)},
             "enemy_2": {"obs": np.array(obs[5]["obs"], dtype=np.float32)},
+            "enemy_3": {"obs": np.array(obs[6]["obs"], dtype=np.float32)},
+            "enemy_4": {"obs": np.array(obs[7]["obs"], dtype=np.float32)},
+            "enemy_5": {"obs": np.array(obs[8]["obs"], dtype=np.float32)},
         }
         res_rew = {
             "evan":    reward[0],
@@ -133,6 +144,9 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
             "enemy_0": reward[3],
             "enemy_1": reward[4],
             "enemy_2": reward[5],
+            "enemy_3": reward[6],
+            "enemy_4": reward[7],
+            "enemy_5": reward[8],
         }
         res_term = {
             "evan":    terminated[0],
@@ -141,6 +155,9 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
             "enemy_0": terminated[3],
             "enemy_1": terminated[4],
             "enemy_2": terminated[5],
+            "enemy_3": terminated[6],
+            "enemy_4": terminated[7],
+            "enemy_5": terminated[8],
             "__all__": all(terminated)
         }
         res_trunc = {
@@ -150,6 +167,9 @@ class RayMultiAgentGodotEnv(MultiAgentEnv):
             "enemy_0": truncated[3],
             "enemy_1": truncated[4],
             "enemy_2": truncated[5],
+            "enemy_3": truncated[6],
+            "enemy_4": truncated[7],
+            "enemy_5": truncated[8],
             "__all__": all(truncated)
         }
 
@@ -163,25 +183,14 @@ def env_creator(env_config):
     return RayMultiAgentGodotEnv(env_config)
 
 def main():
-    if not ray.is_initialized():
-        ray.init()
-    
-    import torch
-    print(f"CUDA available: {torch.cuda.is_available()}")
-    if torch.cuda.is_available():
-        print(f"Using GPU: {torch.cuda.get_device_name(0)}")
-    
+    init_ray()
     register_env("godot_multiagent", env_creator)
 
     print("Python server listening on port 11008 — launch Godot now.")
     print("Launch: godot --headless -- res://prototypes/rl-training/TrainingArena.tscn")
 
     config = (
-        PPOConfig()
-        .api_stack(
-            enable_rl_module_and_learner=False,
-            enable_env_runner_and_connector_v2=False,
-        )
+        build_base_ppo_config()
         .environment("godot_multiagent", env_config={"port": 11008})
         .multi_agent(
             policies=get_policies(),
@@ -197,20 +206,7 @@ def main():
         .resources(num_gpus=1)
     )
 
-    # Redirect logs to project directory
-    from ray.tune.logger import UnifiedLogger
-    import datetime
-
-    def custom_logger_creator(config):
-        base_logdir = os.path.join(os.path.dirname(__file__), "ray_results")
-        os.makedirs(base_logdir, exist_ok=True)
-        # Create a unique subfolder for this run
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        run_logdir = os.path.join(base_logdir, f"PPO_godot_{timestamp}")
-        os.makedirs(run_logdir, exist_ok=True)
-        return UnifiedLogger(config, run_logdir)
-
-    algo = config.build_algo(logger_creator=custom_logger_creator)
+    algo = config.build_algo(logger_creator=make_logger_creator("PPO_godot"))
 
     print("Training started. Ctrl+C to stop.")
     try:

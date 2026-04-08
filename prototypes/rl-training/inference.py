@@ -14,8 +14,6 @@ import os
 import argparse
 import ray
 import numpy as np
-import gymnasium as gym
-from ray.rllib.algorithms.ppo import PPOConfig
 from ray.tune.registry import register_env
 import sys
 
@@ -25,14 +23,8 @@ if script_dir not in sys.path:
     sys.path.append(script_dir)
 
 from train import RayMultiAgentGodotEnv
-from agent_config import (
-    get_observation_spaces,
-    get_action_spaces,
-    get_agent_ids,
-    get_policies_with_spaces,
-    get_policy_mapping_fn,
-    load_config,
-)
+from agent_config import get_policies_with_spaces, get_policy_mapping_fn, load_config
+from utils import build_base_ppo_config
 
 def env_creator(env_config):
     # This creator is used by RLlib internally to initialize spaces
@@ -57,27 +49,14 @@ def main():
     print(f"DEBUG: Loaded config for agents: {agent_ids}")
 
     # Build policies with loaded spaces
-    policies = {}
-    for policy_name in ["evan_policy", "evelyn_policy", "team_policy", "enemy_hive_policy"]:
-        if policy_name == "evan_policy":
-            policies[policy_name] = (None, obs_spaces["evan"], act_spaces["evan"], {})
-        elif policy_name == "evelyn_policy":
-            policies[policy_name] = (None, obs_spaces["evelyn"], act_spaces["evelyn"], {})
-        elif policy_name == "team_policy":
-            policies[policy_name] = (None, obs_spaces["team"], act_spaces["team"], {})
-        elif policy_name == "enemy_hive_policy":
-            policies[policy_name] = (None, obs_spaces["enemy_0"], act_spaces["enemy_0"], {})
+    policies = get_policies_with_spaces(obs_spaces, act_spaces)
 
     print("DEBUG: Registering environment...")
     register_env("godot_multiagent", env_creator)
 
     print("DEBUG: Setting up PPOConfig...")
     config = (
-        PPOConfig()
-        .api_stack(
-            enable_rl_module_and_learner=False,
-            enable_env_runner_and_connector_v2=False,
-        )
+        build_base_ppo_config()
         .environment("godot_multiagent", env_config={"port": args.port})
         .multi_agent(
             policies=policies,

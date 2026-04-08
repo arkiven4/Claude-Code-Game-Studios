@@ -91,7 +91,7 @@ reset_after = 200000
 policy_name = "enemy_hive"
 
 [node name="ArcherRanged" parent="Enemies" unique_id=2100136336 instance=ExtResource("10_archer")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5078235, 0.9, 9.701473)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7276492, 0.9, 9.881514)
 script = ExtResource("7_rl_enemy_ctrl")
 
 [node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/ArcherRanged" unique_id=550238190]
@@ -100,10 +100,37 @@ reset_after = 200000
 policy_name = "enemy_hive"
 
 [node name="MageEnemy" parent="Enemies" unique_id=619761911 instance=ExtResource("11_mage")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 11)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3087082, 0.9, 11)
 script = ExtResource("7_rl_enemy_ctrl")
 
 [node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/MageEnemy" unique_id=180865778]
+script = ExtResource("8_hive_agent")
+reset_after = 200000
+policy_name = "enemy_hive"
+
+[node name="GruntMelee2" parent="Enemies" unique_id=1843357046 instance=ExtResource("9_grunt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.9, 8)
+script = ExtResource("7_rl_enemy_ctrl")
+
+[node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/GruntMelee2" unique_id=1051249758]
+script = ExtResource("8_hive_agent")
+reset_after = 200000
+policy_name = "enemy_hive"
+
+[node name="GruntMelee3" parent="Enemies" unique_id=1943357046 instance=ExtResource("9_grunt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7400513, 0.9, 8.075702)
+script = ExtResource("7_rl_enemy_ctrl")
+
+[node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/GruntMelee3" unique_id=1151249758]
+script = ExtResource("8_hive_agent")
+reset_after = 200000
+policy_name = "enemy_hive"
+
+[node name="ArcherRanged2" parent="Enemies" unique_id=-1994830960 instance=ExtResource("10_archer")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.9, 10)
+script = ExtResource("7_rl_enemy_ctrl")
+
+[node name="RLEnemyHiveAgent" type="Node3D" parent="Enemies/ArcherRanged2" unique_id=750238190]
 script = ExtResource("8_hive_agent")
 reset_after = 200000
 policy_name = "enemy_hive"

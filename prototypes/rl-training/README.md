@@ -125,8 +125,8 @@ Memory (4):    last evan_target, evan_role, evelyn_target, evelyn_role
 ```
 Self (5):             hp_ratio, skill0_cd_ratio, skill1_cd_ratio, is_casting, cast_progress
 Party ×2 (14):        hp, dist, alive, rel_x, rel_z, is_casting, mp_ratio  (per member — dead zero-padded)
-                      is_casting: party member is stationary and vulnerable
-                      mp_ratio: Evelyn low mana = can't heal — press the attack
+					  is_casting: party member is stationary and vulnerable
+					  mp_ratio: Evelyn low mana = can't heal — press the attack
 Enemy allies ×2 (10): hp, dist, alive, rel_x, rel_z (other enemies — dead zero-padded)
 ```
 

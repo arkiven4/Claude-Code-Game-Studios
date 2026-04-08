@@ -25,12 +25,10 @@ import os
 import ray
 import numpy as np
 import gymnasium as gym
-from ray.rllib.algorithms.ppo import PPOConfig
 from ray.tune.registry import register_env
 from ray.rllib.env.multi_agent_env import MultiAgentEnv
 from godot_rl.core.godot_env import GodotEnv
 
-# Import unified config
 from agent_config import (
     get_observation_spaces,
     get_action_spaces,
@@ -39,9 +37,7 @@ from agent_config import (
     get_policies,
     save_config,
 )
-
-MODELS_DIR = os.path.join(os.path.dirname(__file__), "models")
-os.makedirs(MODELS_DIR, exist_ok=True)
+from utils import MODELS_DIR, init_ray, make_logger_creator, build_base_ppo_config
 
 # Agents per arena (must match scene registration order)
 _BASE_AGENTS = get_base_agents()
@@ -98,6 +94,9 @@ class VectorizedGodotEnv(MultiAgentEnv):
             e0     = action_dict.get(p + "enemy_0", {"action": 0})
             e1     = action_dict.get(p + "enemy_1", {"action": 0})
             e2     = action_dict.get(p + "enemy_2", {"action": 0})
+            e3     = action_dict.get(p + "enemy_3", {"action": 0})
+            e4     = action_dict.get(p + "enemy_4", {"action": 0})
+            e5     = action_dict.get(p + "enemy_5", {"action": 0})
 
             actions.append([int(evan["action"]),   int(evan["heal_target"])])
             actions.append([int(evelyn["action"]), int(evelyn["heal_target"])])
@@ -106,6 +105,9 @@ class VectorizedGodotEnv(MultiAgentEnv):
             actions.append([int(e0["action"])])
             actions.append([int(e1["action"])])
             actions.append([int(e2["action"])])
+            actions.append([int(e3["action"])])
+            actions.append([int(e4["action"])])
+            actions.append([int(e5["action"])])
 
         obs, reward, terminated, truncated, info = self._env.step(actions, order_ij=True)
 
@@ -176,13 +178,7 @@ def _policy_for(agent_id: str) -> str:
 def main():
     N_ARENAS = 32  # Tune to your CPU/GPU. Each arena adds ~6 agents worth of throughput.
 
-    if not ray.is_initialized():
-        ray.init()
-
-    import torch
-    print(f"CUDA available: {torch.cuda.is_available()}")
-    if torch.cuda.is_available():
-        print(f"Using GPU: {torch.cuda.get_device_name(0)}")
+    init_ray()
 
     register_env("godot_vec", lambda cfg: VectorizedGodotEnv(cfg))
 
@@ -192,11 +188,7 @@ def main():
           f"-- --n_arenas={N_ARENAS} --speedup=10")
 
     config = (
-        PPOConfig()
-        .api_stack(
-            enable_rl_module_and_learner=False,
-            enable_env_runner_and_connector_v2=False,
-        )
+        build_base_ppo_config()
         .environment("godot_vec", env_config={"port": 11008, "n_arenas": N_ARENAS})
         .multi_agent(
             policies={
@@ -219,18 +211,7 @@ def main():
         .resources(num_gpus=1)
     )
 
-    import datetime
-    from ray.tune.logger import UnifiedLogger
-
-    def custom_logger_creator(cfg):
-        base = os.path.join(os.path.dirname(__file__), "ray_results")
-        os.makedirs(base, exist_ok=True)
-        ts = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        run_dir = os.path.join(base, f"PPO_vec_{N_ARENAS}arenas_{ts}")
-        os.makedirs(run_dir, exist_ok=True)
-        return UnifiedLogger(cfg, run_dir)
-
-    algo = config.build_algo(logger_creator=custom_logger_creator)
+    algo = config.build_algo(logger_creator=make_logger_creator(f"PPO_vec_{N_ARENAS}arenas"))
 
     # --- Early stopping config ---
     # Primary metric: team_policy reward (rises as damage progress improves —
