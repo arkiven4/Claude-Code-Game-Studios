@@ -48,11 +48,13 @@ var _damage_dealt_this_step: bool = false
 var _enemy_steps_since_last_damage: int = 0
 var _enemy_damage_dealt_this_step: bool = false
 
-## Inactivity timeout — resets when EITHER side deals damage.
-## When this exceeds _inactivity_timeout the episode ends (stalled combat = no signal).
-## Distinct from stagnation penalty counters above which track each side independently.
+## Inactivity timeout — tracks steps with no HP change on either side.
+## Uses HP snapshots each step instead of signals — works regardless of attack path.
 var _steps_since_any_damage: int = 0
 var _inactivity_timeout: int = 300  ## updated each stage advance from _CURRICULUM_STAGES
+var _prev_enemy_hp: Array[float] = []   ## enemy HP last step — detect any change
+var _prev_evan_hp: float = 0.0          ## party HP last step
+var _prev_evelyn_hp: float = 0.0
 
 ## Long-term statistics
 var _total_episodes: int = 0
@@ -154,9 +156,9 @@ func _physics_process(delta: float) -> void:
 	_check_victory_or_defeat()
 	_update_hud()
 
-	## Inactivity timeout: end episode when neither side has dealt damage for N steps.
-	## Each arena manages this independently — other arenas are unaffected.
-	_steps_since_any_damage += 1
+	## Inactivity timeout: compare HP snapshots from last step — any HP change = combat active.
+	## Snapshot approach works regardless of which code path caused the damage.
+	_tick_inactivity()
 	if _steps_since_any_damage >= _inactivity_timeout:
 		_end_episode(false, true)  ## timeout — stalled, not a wipe
 		return
@@ -384,6 +386,14 @@ func _reset_episode() -> void:
 	_enemy_damage_dealt_this_step = false
 	_steps_since_any_damage = 0
 
+	## Re-snapshot HP baselines so the first step of the new episode doesn't
+	## count the reset-to-full as "damage" (which would falsely reset the inactivity clock).
+	_prev_enemy_hp.clear()
+	for enemy in _enemies:
+		_prev_enemy_hp.append(float(enemy.max_hp) if is_instance_valid(enemy) else 0.0)
+	_prev_evan_hp = float(_evan_state.max_hp) if _evan_state else 0.0
+	_prev_evelyn_hp = float(_evelyn_state.max_hp) if _evelyn_state else 0.0
+
 	# Reset party — cancel any in-flight casts before resetting state
 	if _evan_agent and _evan_agent.skill_execution:   _evan_agent.skill_execution.cancel_cast()
 	if _evelyn_agent and _evelyn_agent.skill_execution: _evelyn_agent.skill_execution.cancel_cast()
@@ -583,11 +593,9 @@ func _lowest_hp_alive_party_body(party_bodies: Array) -> CharacterBody3D:
 
 func _on_party_damage_dealt(_amount: int, _target: Node) -> void:
 	_damage_dealt_this_step = true
-	_steps_since_any_damage = 0  ## Combat is active — reset inactivity clock
 
 func _on_enemy_damage_dealt(amount: int, target: Node) -> void:
 	_enemy_damage_dealt_this_step = true
-	_steps_since_any_damage = 0  ## Combat is active — reset inactivity clock
 	# Forward damage-received penalty to the correct party agent
 	if target == _evan_state and _evan_agent:
 		_evan_agent.on_damage_received(amount)
@@ -639,6 +647,35 @@ func _check_enemy_focus_fire() -> void:
 					if enemy.global_position.distance_to(target_body.global_position) <= FOCUS_RANGE:
 						hive.on_focus_fire_bonus()
 			break  ## Only reward once per step even if both party members are surrounded
+
+func _tick_inactivity() -> void:
+	## Compare current HP to last step's snapshot. Any change = someone took damage = combat active.
+	var any_change: bool = false
+
+	# Check enemy HP
+	for i in range(_enemies.size()):
+		var enemy: EnemyAIController = _enemies[i]
+		if not is_instance_valid(enemy): continue
+		var cur_hp: float = float(enemy.current_hp) if enemy.is_alive else 0.0
+		if i < _prev_enemy_hp.size() and cur_hp != _prev_enemy_hp[i]:
+			any_change = true
+		if i < _prev_enemy_hp.size():
+			_prev_enemy_hp[i] = cur_hp
+		else:
+			_prev_enemy_hp.append(cur_hp)
+
+	# Check party HP
+	var evan_hp: float = float(_evan_state.current_hp) if _evan_state and _evan_state.is_alive else 0.0
+	var evelyn_hp: float = float(_evelyn_state.current_hp) if _evelyn_state and _evelyn_state.is_alive else 0.0
+	if evan_hp != _prev_evan_hp or evelyn_hp != _prev_evelyn_hp:
+		any_change = true
+	_prev_evan_hp = evan_hp
+	_prev_evelyn_hp = evelyn_hp
+
+	if any_change:
+		_steps_since_any_damage = 0
+	else:
+		_steps_since_any_damage += 1
 
 func _check_enemy_positioning() -> void:
 	## Reward ranged/mage enemies for staying at their preferred range.
