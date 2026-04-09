@@ -134,6 +134,7 @@ func _build_stats_ui() -> void:
 		{"key": "curriculum",        "text": "Stage : —"},
 		{"key": "episodes",          "text": "Eps   : 0  |  Wins: 0 (0%)"},
 		{"key": "avg_damage",        "text": "Dmg   : [░░░░░░░░░░] 0.0%"},
+		{"key": "efficiency",        "text": "Eff   : 0.00"},
 		{"key": "step",              "text": "Step  : 0 / 0"},
 		{"key": "sep1",              "text": "─────────────────────────"},
 		{"key": "evan_hp",           "text": "Evan  : [░░░░░░░░░░] 0%"},
@@ -218,6 +219,7 @@ func _refresh_stats() -> void:
 									  % [total_eps, total_party_wins, party_pct, total_enemy_wins, enemy_pct]
 	_stat_labels["avg_damage"].text = "Dmg   : %s %.1f%%" \
 									  % [_bar(d["avg_damage_progress"], 10), d["avg_damage_progress"] * 100.0]
+	_stat_labels["efficiency"].text = "Eff   : %.2f" % d["efficiency"]
 	_stat_labels["step"].text       = "Step  : %d / %d" % [d["episode_step"], d["max_episode_steps"]]
 	_stat_labels["evan_hp"].text    = "Evan  : %s %.0f%%" % [_bar(evan_pct   / 100.0, 10), evan_pct]
 	_stat_labels["evelyn_hp"].text  = "Evelyn: %s %.0f%%" % [_bar(evelyn_pct / 100.0, 10), evelyn_pct]
