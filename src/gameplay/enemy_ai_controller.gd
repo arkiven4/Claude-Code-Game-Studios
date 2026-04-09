@@ -15,6 +15,7 @@ enum CombatState { IDLE, CHASING, ATTACKING, STRAFING, WAITING }
 signal died
 signal damage_taken(amount: int)
 signal damage_dealt(amount: int, target: Node)
+signal attack_missed(target: Node)
 signal shield_changed(new_value: int)
 signal skill_fired(index: int, skill: SkillData)
 signal projectile_spawned(projectile: Projectile)
@@ -491,6 +492,9 @@ func take_damage(data) -> void:
 	if current_hp <= enemy_data.death_threshold:
 		_die()
 
+func _on_projectile_missed(target: Node) -> void:
+	attack_missed.emit(target)
+
 func _die() -> void:
 	is_alive = false
 	died.emit()
@@ -783,6 +787,7 @@ func _execute_skill_with_target(skill: SkillData, entry: EnemySkillEntry, target
 					false, true, lifetime, target_node)
 			if spawned:
 				projectile_spawned.emit(spawned)
+				spawned.missed.connect(_on_projectile_missed)
 			else:
 				push_error("[EnemyAIController] %s: Failed to spawn projectile for '%s' (projectile_scene=%s)" % [name, skill.display_name, str(projectile_scene)])
 		else:

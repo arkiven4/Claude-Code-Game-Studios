@@ -14,7 +14,7 @@ enum Role { TANKER, MAGE, SUPPORT }
 
 ## Reward weights — tuned per role via Inspector
 @export var w_damage_dealt: float = 0.001
-@export var w_damage_received: float = 0.0003
+@export var w_damage_received: float = 0.0008
 @export var w_skill_hit: float = 0.005
 @export var w_heal_given: float = 0.002
 @export var w_idle: float = 0.001

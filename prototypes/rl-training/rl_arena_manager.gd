@@ -9,11 +9,14 @@ extends Node3D
 
 @export var move_speed: float = 4.0
 @export var max_episode_steps: int = 18000
+@export var arena_half_size: float = 30.0  ## Boundary penalty starts if |x| or |z| exceeds this (60x60 platform)
 
 ## Stagnation penalty: steps of no damage before penalty fires (60 = ~1 second at 60 FPS)
 @export var stagnation_threshold: int = 60
 ## Penalty applied to team reward and each party agent per step while stagnating
 @export var w_stagnation: float = 0.002
+## Penalty per step for being outside the arena platform
+@export var w_boundary_penalty: float = 0.05
 
 @export_group("Curriculum Scheduler")
 ## Enable automatic episode length scaling based on rolling win rate
@@ -53,6 +56,14 @@ var _enemy_damage_dealt_this_step: bool = false
 var _steps_since_any_damage: int = 0
 var _inactivity_timeout: int = 300  ## updated each stage advance from _CURRICULUM_STAGES
 var _activity_this_step: bool = false   ## any damage/heal from either side resets inactivity timer
+
+## Hit and Dodge tracking
+var _evan_last_hit_step: int = -1000
+var _evelyn_last_hit_step: int = -1000
+var _evan_took_damage_since_hit: bool = false
+var _evelyn_took_damage_since_hit: bool = false
+var _episode_damage_dealt: float = 0.0
+var _episode_damage_received: float = 0.0
 
 ## Long-term statistics
 var _total_episodes: int = 0
@@ -107,11 +118,11 @@ func _ready() -> void:
 	if _evan_state:   _evan_state.death.connect(_on_party_member_died)
 	if _evelyn_state: _evelyn_state.death.connect(_on_party_member_died)
 	if _evan_agent and _evan_agent.skill_execution:
-		_evan_agent.skill_execution.damage_dealt.connect(_on_party_damage_dealt)
+		_evan_agent.skill_execution.damage_dealt.connect(_on_party_agent_damage_dealt.bind(_evan_agent))
 		_evan_agent.skill_execution.heal_applied.connect(_on_activity)
 		_evan_agent.skill_execution.projectile_spawned.connect(_on_party_projectile_spawned)
 	if _evelyn_agent and _evelyn_agent.skill_execution:
-		_evelyn_agent.skill_execution.damage_dealt.connect(_on_party_damage_dealt)
+		_evelyn_agent.skill_execution.damage_dealt.connect(_on_party_agent_damage_dealt.bind(_evelyn_agent))
 		_evelyn_agent.skill_execution.heal_applied.connect(_on_activity)
 		_evelyn_agent.skill_execution.projectile_spawned.connect(_on_party_projectile_spawned)
 
@@ -156,6 +167,9 @@ func _physics_process(delta: float) -> void:
 	_check_protection_bonus()
 	_check_enemy_focus_fire()
 	_check_enemy_positioning()
+	_check_party_spacing()
+	_check_flawless_hits()
+	_check_arena_boundaries()
 	_check_victory_or_defeat()
 	_update_hud()
 
@@ -187,6 +201,7 @@ func _find_enemies() -> void:
 			continue
 		enemy.died.connect(_on_enemy_died.bind(enemy, hive))
 		enemy.damage_dealt.connect(_on_enemy_damage_dealt)
+		enemy.attack_missed.connect(_on_enemy_attack_missed)
 		enemy.projectile_spawned.connect(_on_enemy_projectile_spawned)
 		hive.enemy_controller = enemy
 		_enemies.append(enemy)
@@ -363,6 +378,19 @@ func _end_episode(victory: bool, timeout: bool = false) -> void:
 	for hive in _hive_agents:
 		if is_instance_valid(hive): hive.done = true
 
+	# Efficiency reward — Grant final bonus based on Dealt / Received ratio
+	# Only applies if some damage was dealt (prevents rewarding cowardice)
+	if _episode_damage_dealt > 0:
+		var efficiency: float = _episode_damage_dealt / maxf(1.0, _episode_damage_received)
+		# Reward formula: log2(efficiency) * 0.1
+		# 1:1 ratio = 0 bonus
+		# 2:1 ratio = +0.1 bonus
+		# 4:1 ratio = +0.2 bonus
+		# maxed at +0.5 to prevent exploding rewards
+		var eff_bonus: float = clampf(log(_episode_damage_dealt / maxf(1.0, _episode_damage_received)) / log(2.0) * 0.1, -0.2, 0.5)
+		if _evan_agent: _evan_agent.reward += eff_bonus
+		if _evelyn_agent: _evelyn_agent.reward += eff_bonus
+
 	if victory:
 		if _team_agent: _team_agent.on_victory()
 		for hive in _hive_agents:
@@ -389,6 +417,13 @@ func _reset_episode() -> void:
 	_enemy_damage_dealt_this_step = false
 	_steps_since_any_damage = 0
 	_activity_this_step = false
+	
+	_evan_last_hit_step = -1000
+	_evelyn_last_hit_step = -1000
+	_evan_took_damage_since_hit = false
+	_evelyn_took_damage_since_hit = false
+	_episode_damage_dealt = 0.0
+	_episode_damage_received = 0.0
 
 	# Reset party — cancel any in-flight casts before resetting state
 	if _evan_agent and _evan_agent.skill_execution:   _evan_agent.skill_execution.cancel_cast()
@@ -502,6 +537,61 @@ func _check_protection_bonus() -> void:
 			_evan_agent.on_protection_bonus()
 			break
 
+func _check_party_spacing() -> void:
+	## Reward/Penalise party members based on their role and distance to enemies.
+	## This helps them learn "Hit and Run" by making bad positioning expensive.
+	
+	# 1. Evelyn (Mage) — Reward for staying at range, Penalise for being in melee
+	if _evelyn_agent and _evelyn_state and _evelyn_state.is_alive and evelyn_body:
+		var nearest := _nearest_enemy_pos(evelyn_body.global_position, _enemies)
+		if nearest != Vector3.ZERO:
+			var dist := evelyn_body.global_position.distance_to(nearest)
+			if dist < 4.5:
+				_evelyn_agent.reward -= 0.002  ## Too close for a mage
+			elif dist >= 6.0 and dist <= 12.0:
+				_evelyn_agent.reward += 0.001  ## Good kiting distance
+	
+	# 2. Evan (Tanker) — Tactical behavior based on health
+	if _evan_agent and _evan_state and _evan_state.is_alive and evan_body:
+		var nearest := _nearest_enemy_pos(evan_body.global_position, _enemies)
+		if nearest != Vector3.ZERO:
+			var dist := evan_body.global_position.distance_to(nearest)
+			var hp_ratio := _evan_state.get_hp_ratio()
+			
+			if hp_ratio > 0.5:
+				if dist < 3.0:
+					_evan_agent.reward += 0.001  ## Healthy tanker: stay in melee
+			else:
+				# Critical health: Tanker should retreat and wait for Evelyn's heal
+				if dist < 4.5:
+					_evan_agent.reward -= 0.003  ## Penalty for staying in melee while dying
+				elif dist > 7.0:
+					_evan_agent.reward += 0.001  ## Reward for backing off to survive until healed
+
+func _check_arena_boundaries() -> void:
+	## Apply a step-penalty if any agent is outside the 60x60 square ground platform
+	## or falls off the edge (Y < 0.5).
+	
+	# Check Party
+	for body in [evan_body, evelyn_body]:
+		if body:
+			var rel_pos := body.global_position - global_position
+			var outside := abs(rel_pos.x) > arena_half_size or abs(rel_pos.z) > arena_half_size or rel_pos.y < 0.5
+			if outside:
+				var agent: RLPartyAgent = body.get_node_or_null("RLPartyAgent")
+				if agent:
+					agent.reward -= w_boundary_penalty
+	
+	# Check Enemies
+	for i in range(_enemies.size()):
+		var enemy := _enemies[i]
+		var hive := _hive_agents[i]
+		if is_instance_valid(enemy) and enemy.is_alive and hive:
+			var rel_pos := enemy.global_position - global_position
+			var outside := abs(rel_pos.x) > arena_half_size or abs(rel_pos.z) > arena_half_size or rel_pos.y < 0.5
+			if outside:
+				hive.reward -= w_boundary_penalty
+
 func _check_victory_or_defeat() -> void:
 	if not _episode_active:
 		return
@@ -586,46 +676,81 @@ func _lowest_hp_alive_party_body(party_bodies: Array) -> CharacterBody3D:
 			best_ratio = state.get_hp_ratio()
 			best_body = body
 	return best_body
+func _check_flawless_hits() -> void:
+	## Reward agents for "Hit and Run": deal damage, then avoid taking any for 2 seconds (120 steps).
+	const WINDOW: int = 120
 
-func _on_party_damage_dealt(_amount: int, _target: Node) -> void:
+	if _evan_agent and _evan_last_hit_step > 0 and _episode_step == _evan_last_hit_step + WINDOW:
+		if not _evan_took_damage_since_hit:
+			_evan_agent.reward += 0.05  ## Flawless Hit Bonus
+
+	if _evelyn_agent and _evelyn_last_hit_step > 0 and _episode_step == _evelyn_last_hit_step + WINDOW:
+		if not _evelyn_took_damage_since_hit:
+			_evelyn_agent.reward += 0.05  ## Flawless Hit Bonus
+
+func _on_party_agent_damage_dealt(amount: int, _target: Node, agent: RLPartyAgent) -> void:
 	_damage_dealt_this_step = true
+	_episode_damage_dealt += amount
 	_on_activity()
+
+	if agent == _evan_agent:
+		_evan_last_hit_step = _episode_step
+		_evan_took_damage_since_hit = false
+	elif agent == _evelyn_agent:
+		_evelyn_last_hit_step = _episode_step
+		_evelyn_took_damage_since_hit = false
 
 func _on_enemy_damage_dealt(amount: int, target: Node) -> void:
 	_enemy_damage_dealt_this_step = true
+	_episode_damage_received += amount
 	_on_activity()
+
+	if target == _evan_state:
+		_evan_took_damage_since_hit = true
+	elif target == _evelyn_state:
+		_evelyn_took_damage_since_hit = true
+
 	# Forward damage-received penalty to the correct party agent
 	if target == _evan_state and _evan_agent:
 		_evan_agent.on_damage_received(amount)
 	elif target == _evelyn_state and _evelyn_agent:
 		_evelyn_agent.on_damage_received(amount)
 
+func _on_enemy_attack_missed(target: Node) -> void:
+	# Forward dodge reward to the correct party agent
+	if target == _evan_state and _evan_agent:
+		_evan_agent.reward += 0.01  ## Dodge reward
+	elif target == _evelyn_state and _evelyn_agent:
+		_evelyn_agent.reward += 0.01  ## Dodge reward
 func _on_activity(_a=0, _b=null) -> void:
 	## Signal handler to reset inactivity timer. Supports varying signal signatures.
 	_activity_this_step = true
 
-func _check_stagnation_penalty() -> void:
-	if _damage_dealt_this_step:
-		_steps_since_last_damage = 0
-		_damage_dealt_this_step = false
-		return
+func _check_arena_boundaries() -> void:
+	## Apply a step-penalty if any agent is outside the 60x60 square ground platform
+	## or falls off the edge (Y < 0.5).
 
-	_steps_since_last_damage += 1
+	# Check Party
+	for body in [evan_body, evelyn_body]:
+		if body:
+			var rel_pos := body.global_position - global_position
+			var outside := abs(rel_pos.x) > arena_half_size or abs(rel_pos.z) > arena_half_size or rel_pos.y < 0.5
+			if outside:
+				var agent: RLPartyAgent = body.get_node_or_null("RLPartyAgent")
+				if agent:
+					agent.reward -= w_boundary_penalty
 
-	var any_enemy_alive: bool = false
-	for enemy in _enemies:
-		if is_instance_valid(enemy) and enemy.is_alive:
-			any_enemy_alive = true
-			break
+	# Check Enemies
+	for i in range(_enemies.size()):
+		var enemy := _enemies[i]
+		var hive := _hive_agents[i]
+		if is_instance_valid(enemy) and enemy.is_alive and hive:
+			var rel_pos := enemy.global_position - global_position
+			var outside := abs(rel_pos.x) > arena_half_size or abs(rel_pos.z) > arena_half_size or rel_pos.y < 0.5
+			if outside:
+				hive.reward -= w_boundary_penalty
 
-	if not any_enemy_alive or _steps_since_last_damage < stagnation_threshold:
-		return
-
-	if _team_agent:   _team_agent.reward -= w_stagnation
-	if _evan_agent:   _evan_agent.reward -= w_stagnation
-	if _evelyn_agent: _evelyn_agent.reward -= w_stagnation
-
-func _check_enemy_focus_fire() -> void:
+func _check_victory_or_defeat() -> void:
 	## Give a focus-fire bonus when 2+ alive enemies are within 5 units of the same party member.
 	## This rewards the coordinated group pressure the enemy needs to burst through party healing.
 	var party_bodies: Array[CharacterBody3D] = []
@@ -742,10 +867,13 @@ func get_stats() -> Dictionary:
 		if is_instance_valid(enemy) and enemy.is_alive:
 			enemies_alive += 1
 
+	var efficiency: float = _episode_damage_dealt / maxf(1.0, _episode_damage_received)
+
 	return {
 		"total_episodes":      _total_episodes,
 		"party_wins":          _party_wins,
 		"enemy_wins":          _enemy_wins,
+		"efficiency":          efficiency,
 		"curriculum_stage":    _curriculum_stage,
 		"curriculum_label":    _CURRICULUM_STAGES[_curriculum_stage]["label"],
 		"avg_damage_progress": avg_progress,
@@ -782,7 +910,8 @@ func _update_hud() -> void:
 			var s: float = 0.0
 			for r: float in _recent_results: s += r
 			avg_prog = s / float(_recent_results.size())
-		wr_label.text = "Wins: %d/%d | Avg Dmg: %.1f%%" % [_party_wins, _total_episodes, avg_prog * 100.0]
+		var eff: float = _episode_damage_dealt / maxf(1.0, _episode_damage_received)
+		wr_label.text = "Wins: %d/%d | Eff: %.2f | Avg: %.1f%%" % [_party_wins, _total_episodes, eff, avg_prog * 100.0]
 
 	var stage_label = get_node_or_null("%CurriculumStage")
 	if stage_label:
