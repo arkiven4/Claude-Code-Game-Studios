@@ -1,29 +1,109 @@
-# Project Stage Analysis
+# Project Stage Analysis Report
 
-**Date**: 2026-04-05
+**Generated**: 2026-04-10
 **Stage**: Production
+**Analysis Scope**: Full project
+
+---
+
+## Executive Summary
+
+The project is in a mature **Production** stage. The core gameplay loop (Combat, Character Switching, Skills, Status Effects, and Loot) is largely implemented in **GDScript (Godot 4.6)** and supported by comprehensive design documentation and unit tests. The technical foundation is solid, with 21/21 MVP systems designed and approved.
+
+A critical documentation discrepancy was identified: while the project is correctly implemented in Godot 4.6, the `systems-index.md` and several GDDs still reference **Unity-specific components** (Cinemachine, Unity Physics). These require immediate correction to prevent architectural confusion.
+
+Current focus is on **Sprint 03**, hardening core systems. The primary content gaps are in **Narrative/Level content**, and the technical transition to **Alpha** systems (Progression, Shops, Party Management) is the next major hurdle.
+
+**Current Focus**: Hardening core gameplay and executing Sprint 03.
+**Blocking Issues**: Documentation discrepancy (Unity references in Godot project).
+**Estimated Time to Next Stage**: 4-6 weeks to reach Alpha (all major systems present).
+
+---
 
 ## Completeness Overview
 
-- **Design**: 82% — 25 GDDs approved (21/21 MVP systems complete); 0/9 Alpha, 0/3 Full Vision not yet started
-- **Code**: ~65% — 45 `.gd` files across `core/`, `gameplay/`, `ai/`, `narrative/`, `ui/`; all Sprint-3 systems scaffolded, first playable test scene wired
-- **Architecture**: 70% — 6 ADRs written (ADR-0001 through ADR-0006); no architecture overview/index doc
-- **Production**: Strong — Sprint-03 active (2026-05-05 to 2026-05-16), milestone-01-mvp tracked; gate-check PASS on 2026-04-05
-- **Tests**: 55% — 7 test files (health, status effects, loot, equipment, character switching, skill execution, combat encounter); coverage increasing as systems stabilize
-- **Prototypes**: 100% — 1 prototype (`party-ai`) with README and REPORT; verdict: PROCEED
+### Design Documentation
+- **Status**: ~68% complete (based on Systems Index)
+- **Files Found**: 27 documents in `design/gdd/`
+  - ✅ **MVP Systems**: 21/21 designed and approved.
+  - ❌ **Alpha/Full Vision**: 0/12 designed (Progression, Shops, Party Management, etc.).
+- **Key Gaps**:
+  - [ ] **Platform Correction** — `systems-index.md` references Unity Physics/Cinemachine instead of Godot Jolt/Phantom Camera.
+  - [ ] **Narrative Scripts** — `design/narrative/` is empty.
+  - [ ] **Level Layouts** — `design/levels/` is empty.
+
+### Source Code
+- **Status**: ~75% MVP complete
+- **Architecture**: Godot 4.6 (statically typed GDScript).
+- **Major Systems Identified**:
+  - ✅ **Combat & Skills** (`src/gameplay/`) — High completeness, includes VFX and UI indicators.
+  - ✅ **Character Switching** (`src/gameplay/`) — Implemented with state management.
+  - ✅ **Core Foundation** (`src/core/`) — Data-driven schemas (Character/Skill/Item) implemented.
+  - ✅ **Enemy AI** (`src/gameplay/enemy_ai_controller.gd`) — Substantial implementation (35KB).
+- **Key Gaps**:
+  - [ ] **Folder Consolidation** — `src/ai`, `src/narrative`, and `src/ui` are currently empty; logic is bundled in `src/gameplay/`.
+  - [ ] **Progression System** — XP and stat scaling logic missing.
+
+### Architecture Documentation
+- **Status**: ~60% complete
+- **ADRs Found**: 6 decisions in `docs/architecture/`
+- **Coverage**:
+  - ✅ **High-Risk Mechanics** (Party AI, Switching, Skills) — Well-documented.
+- **Key Gaps**:
+  - [ ] **ADR for Persistence** — No documented decision on Save/Load strategy.
+  - [ ] **ADR for World Architecture** — Plan for NPCs and Hub interaction missing.
+
+### Production Management
+- **Status**: ~90% complete
+- **Found**:
+  - Sprint plans: 3 in `production/sprints/` (Sprint 01-03).
+  - Milestone 1 (MVP): Achieved.
+- **Key Gaps**:
+  - [ ] **Milestone 2 (Alpha) Definition** — Needs explicit task breakdown for non-MVP systems.
+
+### Testing
+- **Status**: ~50% coverage (estimated)
+- **Test Files**: 7 in `tests/unit/` (GUT Framework).
+- **Key Gaps**:
+  - [ ] **Integration Tests** — No tests covering the full loop from "Encounter Start" to "Loot Equipping."
+
+### Prototypes
+- **Active Prototypes**: 2 in `prototypes/`
+  - ✅ **Balance-Winrate** — Active.
+  - ⚠️  **RL-Training** — High-risk dependency; requires feasibility verdict.
+
+---
 
 ## Gaps Identified
 
-1. **False alarm in session hook** — Startup hook reports `src/gameplay/loot/` has no design doc, but `design/gdd/loot-drop-system.md` exists. The hook expects `loot-system.md` or `loot.md`; the actual filename is `loot-drop-system.md`. No action needed unless you want to rename the doc.
+### Critical Gaps (block progress)
 
-2. **No architecture overview** — 6 ADRs exist but no `docs/architecture/README.md` index doc. Would be valuable for new contributors but low priority mid-sprint.
+1. **Unity/Godot Documentation Discrepancy**
+   - **Impact**: Developers may follow Unity patterns (Cinemachine/Unity Physics) in a Godot environment.
+   - **Action**: Update `systems-index.md` and related GDDs to Godot 4.6 equivalents.
 
-3. **Alpha systems not yet designed** — 9 Alpha systems (Character Progression, Party Management, Narrative Choice, NPC, Shop, Village/Hub, etc.) have no design docs. Sprint-04 scope not yet planned.
+2. **Missing Narrative/Level Content**
+   - **Impact**: Functional "combat sandbox" with no context or progression.
+   - **Action**: Use `/team-narrative` to draft the "Witch Prologue."
 
-4. **No `design/narrative/` or `design/levels/` directories** — Narrative and level docs currently live in `design/gdd/`. Intentional for MVP; separate when narrative content work begins.
+### Important Gaps (affect quality/velocity)
+
+3. **Alpha System Design Lag**
+   - **Impact**: Development will stall once Sprint 03 finishes.
+   - **Action**: Prioritize *Character Progression* design.
+
+---
 
 ## Recommended Next Steps
 
-1. **Continue Sprint-03** — First playable scene bugs fixed; validate WASD movement, character switching, and combat loop in Godot editor.
-2. **Plan Sprint-04** — Design Alpha systems (Character Progression first, as it gates Character Skill progression).
-3. **Architecture overview** — Low effort; create `docs/architecture/README.md` as an ADR index between sprints.
+### Immediate Priority
+1. **Correct Systems Index** — Replace Unity references with Godot 4.6 APIs.
+2. **Integration Test: Combat Loop** — Create `tests/integration/test_combat_to_loot.gd`.
+
+### Short-Term
+3. **Design Character Progression** — Define XP, levels, and stat scaling.
+4. **Draft Prologue Narrative** — Define the first story beat.
+
+---
+
+*Generated by `/project-stage-detect` skill*

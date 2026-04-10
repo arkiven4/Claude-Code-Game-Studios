@@ -8,7 +8,7 @@
 ## Overview
 
 The Hit Detection System is the bridge between physical attacks landing and damage being
-dealt. It uses Unity's Physics (PhysX for 3D) collision detection to determine which
+dealt. It uses Godot Physics (Jolt for 3D) collision detection to determine which
 attacks hit which targets, then delegates to the Health & Damage System to calculate the
 result. It handles four attack shapes: point/single-target (melee swings), line/raycast
 (projectiles and cleaves), cone/AoE (breath weapons and frontal area attacks), and
@@ -48,7 +48,7 @@ Impact's elemental skill AoE shapes (cone, line, sphere all feel distinct).
    - **Sphere** — spherical AoE centered at a point. Returns all targets within radius.
      Used for explosions, ground slams, and party-wide heals.
 
-2. **Collision Layers**: The system uses Unity's layer-based collision matrix:
+2. **Collision Layers**: The system uses Godot's layer-based collision matrix:
    - `Player` — all playable characters
    - `Enemy` — all enemy entities
    - `Environment` — static obstacles (walls, terrain)
@@ -58,7 +58,7 @@ Impact's elemental skill AoE shapes (cone, line, sphere all feel distinct).
 3. **Hit Detection Flow**:
    1. Attacker initiates skill → Skill Execution calls `HitDetection.DetectTargets()`
    2. System reads skill's `AttackShape` (Point/Line/Cone/Sphere) and parameters
-   3. System performs the appropriate Unity Physics query:
+   3. System performs the appropriate Godot Physics query:
       - Point: `Physics.OverlapSphere(origin, radius, targetLayer)`
       - Line: `Physics.RaycastAll()` with sphere cast for width
       - Cone: Custom cone overlap (multiple raycasts or mesh overlap)
@@ -70,7 +70,7 @@ Impact's elemental skill AoE shapes (cone, line, sphere all feel distinct).
 4. **HitResult Structure** returned per target:
    ```csharp
    public struct HitResult {
-       public GameObject Target;
+       public Node Target;
        public Vector3 HitPoint;
        public Vector3 HitNormal;    // for impact direction
        public float Distance;       // distance from attacker to target
@@ -197,7 +197,7 @@ Hit Detection is physics-based, not formula-driven. Key parameters:
 
 ## Dependencies
 
-- **Depends on**: Unity Physics (PhysX), Unity Physics Layers configuration
+- **Depends on**: Godot Physics (Jolt Physics), Godot Physics Layers configuration
 - **Depended on by**: Skill Execution, Enemy AI, Health & Damage, Combat System
 
 ## Tuning Knobs

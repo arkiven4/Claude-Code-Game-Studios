@@ -266,9 +266,11 @@ func add_team_reward(amount: float) -> void:
 	reward += amount * w_team
 
 func on_protection_bonus() -> void:
-	## Called when Evan (Tanker) is positioned between enemy and Evelyn
+	## Called when Evan (Tanker) is positioned between enemy and Evelyn.
+	## Small value (0.001) so kite delta reward dominates — Evan can still kite
+	## rather than being pinned to the "line between enemy and Evelyn" position.
 	if role == Role.TANKER:
-		reward += 0.003
+		reward += 0.001
 
 func _on_damage_dealt(amount: int, _target: Node) -> void:
 	reward += amount * w_damage_dealt

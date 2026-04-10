@@ -10,7 +10,7 @@
 
 The Character Switching System enables the player to transfer input authority between
 any alive party member in real-time during combat and exploration. Implemented as a
-`CharacterSwitchController` MonoBehaviour located via `FindFirstObjectByType`, the
+`CharacterSwitchController` Node located via `FindFirstObjectByType`, the
 system manages a 0.3-second switch window during which the outgoing character transitions
 to AI control and the incoming character is visually highlighted before accepting player
 input. The system is built on the ADR-0002 Distributed State architecture: each party

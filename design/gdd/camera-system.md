@@ -7,7 +7,7 @@
 
 ## 1. Overview
 
-The Camera System defines how the player perceives the game world and targets enemies during combat. Heavily inspired by modern Action RPGs (Elden Ring, Genshin Impact), it is built on Unity Cinemachine and features three primary modes: **Free Orbit** (player-controlled third-person camera), **Hard Lock-On** (rigid framing of the player and a specific enemy), and **Cinematic Burst** (temporary authored angles for ultimate skills). The camera is designed to give the player maximum situational awareness and control during standard gameplay while delivering high-impact visual flair during major abilities.
+The Camera System defines how the player perceives the game world and targets enemies during combat. Heavily inspired by modern Action RPGs (Elden Ring, Genshin Impact), it is built on Phantom Camera and features three primary modes: **Free Orbit** (player-controlled third-person camera), **Hard Lock-On** (rigid framing of the player and a specific enemy), and **Cinematic Burst** (temporary authored angles for ultimate skills). The camera is designed to give the player maximum situational awareness and control during standard gameplay while delivering high-impact visual flair during major abilities.
 
 ## 2. Player Fantasy
 
@@ -22,7 +22,7 @@ The Camera System serves the fantasy of **fluid, responsive action with moments 
 1. **Three Camera States**:
    - **Free Orbit (Default)**: A third-person over-the-shoulder camera controlled entirely by the player's right stick (or mouse). It softly interpolates to align behind the character only when the player is moving forward without actively providing camera input.
    - **Target Lock-On**: Triggered by the "Target Lock" input. The camera rigidly frames the active character and the locked-on enemy. Pitch and yaw are automatically calculated to keep both entities on screen. Flicking the right stick switches the lock to the next nearest enemy in that direction.
-   - **Cinematic Burst**: Triggered when a character activates a Tier 3 (Ultimate) skill. The camera cuts instantly to an authored animation (a Cinemachine Timeline sequence) for 1–2 seconds, ignoring player input, before cutting back to the previous state.
+   - **Cinematic Burst**: Triggered when a character activates a Tier 3 (Ultimate) skill. The camera cuts instantly to an authored animation (a Phantom Camera sequence) for 1–2 seconds, ignoring player input, before cutting back to the previous state.
 
 2. **Target Lock-On Mechanics**:
    - Pressing the Target Lock button casts a sphere overlap (radius: 20 units) to find the nearest enemy relative to the center of the screen.
@@ -67,7 +67,7 @@ The Camera System serves the fantasy of **fluid, responsive action with moments 
 
 ## 6. Dependencies
 
-- **Depends on**: Unity Cinemachine package, Unity Input System (for right stick/mouse orbit), Unity Physics (for camera collision raycasts).
+- **Depends on**: Phantom Camera package, Godot Input Map (for right stick/mouse orbit), Godot Physics (for camera collision raycasts).
 - **Depended on by**: Combat System, Skill Execution System (triggers Cinematic Bursts), Character Switching, Hit Detection.
 
 ## 7. Tuning Knobs

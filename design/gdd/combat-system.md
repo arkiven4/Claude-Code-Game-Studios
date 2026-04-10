@@ -37,7 +37,7 @@ Combat System serves the fantasy of **winning through smart decisions, not fast 
 4. **No Fleeing**: Once combat starts, the player cannot leave. Story encounters have locked boundaries (invisible walls or arena geometry). Optional fights, once triggered, must be completed. There is no "run past enemies" or "disengage" mechanic.
 
 5. **Skill Combo Windows**: When a character uses Skill A, a combo window opens for 1.5 seconds. If the player (or Party AI) uses Skill B within that window, the combo triggers a bonus effect:
-   - **Combo Definition**: Stored as pairs in a `CombatComboSO` ScriptableObject:
+   - **Combo Definition**: Stored as pairs in a `CombatComboSO` Resource:
      | Field | Type | Description |
      |-------|------|-------------|
      | `SkillA` | SkillDataSO reference | First skill in the combo |

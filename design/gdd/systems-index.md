@@ -16,7 +16,7 @@ world/hub infrastructure, and UI presentation. The mechanical core is compact �
 switching, and loot form a tight loop — but the narrative infrastructure (dialogue,
 chapter state, cutscenes, choices, multiple endings) adds significant design scope.
 
-The most critical architectural decision is the **Character Data** ScriptableObject
+The most critical architectural decision is the **Character Data** Resource
 schema: it is a dependency root with 10+ systems depending on it. It must be designed
 first and changed as little as possible afterward. The second-highest risk is the
 **Party AI System** (RL training feasibility) — prototype this in Month 1 before
@@ -36,8 +36,8 @@ committing the Alpha schedule to it.
 | 6 | Audio System | Foundation | MVP | Approved | design/gdd/audio-system.md | — |
 | 7 | Save / Load System | Foundation | MVP | Approved | design/gdd/save-load-system.md | — |
 | 8 | Health & Damage System | Core | MVP | Approved | design/gdd/health-damage-system.md | Character Data |
-| 9 | Hit Detection System | Core | MVP | Approved | design/gdd/hit-detection-system.md | Unity Physics |
-| 10 | Camera System | Core | MVP | Approved | design/gdd/camera-system.md | Unity Cinemachine |
+| 9 | Hit Detection System | Core | MVP | Approved | design/gdd/hit-detection-system.md | Godot Physics |
+| 10 | Camera System | Core | MVP | Approved | design/gdd/camera-system.md | Phantom Camera |
 | 11 | Chapter State System | Core | MVP | Approved | design/gdd/chapter-state-system.md | Save / Load |
 | 12 | Scene Management System | Core | MVP | Approved | design/gdd/scene-management-system.md | Save / Load, Audio |
 | 13 | Status Effects System | Gameplay | MVP | Approved | design/gdd/status-effects-system.md | Health & Damage, Character Data |
@@ -100,18 +100,18 @@ committing the Alpha schedule to it.
 ### Foundation Layer (no dependencies)
 
 1. **Character Data** — Root data definition for every playable and party character; schema changes ripple through 10+ systems
-2. **Item Database** — All equippable items defined as ScriptableObjects; Item Rarity lives here
+2. **Item Database** — All equippable items defined as Resources; Item Rarity lives here
 3. **Item Rarity System** — Rarity tier enum and stat range multipliers; property of Item Database
-4. **Skill Database** — All skills defined as ScriptableObjects; skill effects, cooldowns, character assignments
-5. **Input System** — Unity Input System action maps; no player action exists without this
+4. **Skill Database** — All skills defined as Resources; skill effects, cooldowns, character assignments
+5. **Input System** — Godot Input Map action maps; no player action exists without this
 6. **Audio System** — Music playback, SFX triggering, mixer management; referenced by almost every system
 7. **Save / Load System** — JSON or binary serialization of all game state; required before any persistent data is designed
 
 ### Core Layer (depends on foundation only)
 
 1. **Health & Damage System** — depends on: Character Data (stats define max HP, defense)
-2. **Hit Detection System** — depends on: Unity Physics (hitboxes, collision layers)
-3. **Camera System** — depends on: Unity Cinemachine (combat tracking, cinematic mode)
+2. **Hit Detection System** — depends on: Godot Physics (hitboxes, collision layers)
+3. **Camera System** — depends on: Phantom Camera (combat tracking, cinematic mode)
 4. **Chapter State System** — depends on: Save / Load (story flags must persist)
 5. **Scene Management System** — depends on: Save / Load, Audio (music crossfade on scene change)
 
@@ -224,7 +224,7 @@ doesn't depend on NPC System. NPCs call into the Dialogue System, not the revers
 | **Character Data** | Design | Schema is a dependency root — wrong design cascades to 10+ systems | Design this first, thoroughly; use `/design-system character-data` with extra review |
 | **Party AI System** | Technical | RL training for real-time ARPG combat is unproven; training loop time is hard to estimate | Prototype Month 1 with `/prototype party-ai`; fallback: behavior trees with noise simulation |
 | **Character State Manager** | Technical | Mid-combat state sync (HP, buffs, cooldowns on character swap) is error-prone | Prototype switching with 2 characters before designing the full system |
-| **Character Skill System** | Scope | Multiple characters per role × unique skill sets = large balance surface | Design the data schema carefully; use ScriptableObjects to keep skills data-driven |
+| **Character Skill System** | Scope | Multiple characters per role × unique skill sets = large balance surface | Design the data schema carefully; use Resources to keep skills data-driven |
 | **Multiple Endings System** | Design | Choice tracking across 4 chapters must feel earned, not arbitrary | Design Narrative Choice System first; endings are derived, not parallel branches |
 | **Equipment Enhancement System** | Design | Enhancement levels could make base loot feel irrelevant if balance is wrong | Design after Loot & Drop; tuning knobs must be explicit |
 

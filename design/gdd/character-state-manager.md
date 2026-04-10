@@ -7,7 +7,7 @@
 
 ## Overview
 
-The Character State Manager is the runtime state container for every party member in My Vampire. Implemented as a `PartyMemberState` MonoBehaviour that lives permanently on each character's GameObject, it owns and continuously ticks the four mutable values that define a character's combat state: current HP, current MP, skill cooldowns, and active status effects. It initializes from `CharacterDataSO` on scene load, exposes read-only state to all other systems (Combat HUD, Party AI, Enemy AI), and accepts writes only from the systems authorized to change each value — Health & Damage writes HP/MP, Skill Execution writes cooldowns, Status Effects writes active effects, Character Switch Controller writes control authority. No state is ever frozen or copied on a character switch — the system ticks for all 4 party members simultaneously, whether player-controlled or AI-controlled.
+The Character State Manager is the runtime state container for every party member in My Vampire. Implemented as a `PartyMemberState` Node that lives permanently on each character's GameObject, it owns and continuously ticks the four mutable values that define a character's combat state: current HP, current MP, skill cooldowns, and active status effects. It initializes from `CharacterData` on scene load, exposes read-only state to all other systems (Combat HUD, Party AI, Enemy AI), and accepts writes only from the systems authorized to change each value — Health & Damage writes HP/MP, Skill Execution writes cooldowns, Status Effects writes active effects, Character Switch Controller writes control authority. No state is ever frozen or copied on a character switch — the system ticks for all 4 party members simultaneously, whether player-controlled or AI-controlled.
 
 ## Player Fantasy
 
@@ -17,14 +17,14 @@ The Character State Manager serves the fantasy of **a party that keeps fighting 
 
 ### Core Rules
 
-1. **One `PartyMemberState` per character**: Every party member has exactly one `PartyMemberState` MonoBehaviour on their root GameObject. It is never duplicated, pooled, or shared.
+1. **One `PartyMemberState` per character**: Every party member has exactly one `PartyMemberState` Node on their root GameObject. It is never duplicated, pooled, or shared.
 
 2. **State fields** (all runtime-mutable; read-only to external systems except authorized writers):
 
    | Field | Type | Default | Authorized Writer | Description |
    |-------|------|---------|-------------------|-------------|
-   | `CurrentHP` | int | `CharacterDataSO.MaxHP` | Health & Damage System | Current health points, clamped 0–MaxHP |
-   | `CurrentMP` | int | `CharacterDataSO.MaxMP` | Skill Execution System | Current mana points, clamped 0–MaxMP |
+   | `CurrentHP` | int | `CharacterData.MaxHP` | Health & Damage System | Current health points, clamped 0–MaxHP |
+   | `CurrentMP` | int | `CharacterData.MaxMP` | Skill Execution System | Current mana points, clamped 0–MaxMP |
    | `SkillCooldowns` | `float[4]` | `0f` each | Skill Execution System | Remaining cooldown in seconds per skill slot |
    | `SkillCharges` | `int[4]` | `MaxCharges` each | Skill Execution System | Remaining charges per skill slot |
    | `ActiveEffects` | `List<ActiveEffect>` | empty | Status Effects System | All active buffs, debuffs, DoTs, shields |
@@ -36,9 +36,9 @@ The Character State Manager serves the fantasy of **a party that keeps fighting 
    | `ControlState` | enum | `AIControlled` | CharacterSwitchController | `PlayerControlled`, `AIControlled`, `SwitchingIn`, `SwitchingOut` |
 
 3. **Initialization** (on `Awake()`, before any other system runs):
-   1. Read assigned `CharacterDataSO` reference (set in Inspector)
-   2. `CurrentHP = CharacterDataSO.MaxHP`
-   3. `CurrentMP = CharacterDataSO.MaxMP`
+   1. Read assigned `CharacterData` reference (set in Inspector)
+   2. `CurrentHP = CharacterData.MaxHP`
+   3. `CurrentMP = CharacterData.MaxMP`
    4. `SkillCooldowns[0..3] = 0f`
    5. `SkillCharges[i] = SkillDataSO[i].MaxCharges` for each slot
    6. `ActiveEffects = new List<ActiveEffect>()`
@@ -92,9 +92,9 @@ The Character State Manager serves the fantasy of **a party that keeps fighting 
 
 7. **Effective stat calculation** (accounts for all active buffs/debuffs):
    ```
-   EffectiveATK = (CharacterDataSO.ATK × (1 + ΣPercentageBuffs_ATK - ΣPercentageDebuffs_ATK)) + ΣFlatBuffs_ATK - ΣFlatDebuffs_ATK
+   EffectiveATK = (CharacterData.ATK × (1 + ΣPercentageBuffs_ATK - ΣPercentageDebuffs_ATK)) + ΣFlatBuffs_ATK - ΣFlatDebuffs_ATK
    ```
-   Clamped to minimum `CharacterDataSO.ATK × 0.1`. Same formula for DEF, SPD, CRIT, MaxHP, MaxMP. Recalculated on every buff/debuff application or removal — not cached (stats change too frequently to cache safely).
+   Clamped to minimum `CharacterData.ATK × 0.1`. Same formula for DEF, SPD, CRIT, MaxHP, MaxMP. Recalculated on every buff/debuff application or removal — not cached (stats change too frequently to cache safely).
 
 8. **HealthState enum** (derived, never stored — computed from HP ratio each query):
 
@@ -251,7 +251,7 @@ This system is primarily infrastructure — most tuning lives in the systems tha
 ## Acceptance Criteria
 
 - [ ] Every party member has exactly one `PartyMemberState` component; no two characters share an instance — verified by Editor validator
-- [ ] `CurrentHP` initializes to `CharacterDataSO.MaxHP` and `CurrentMP` to `CharacterDataSO.MaxMP` on scene load — verified by unit test
+- [ ] `CurrentHP` initializes to `CharacterData.MaxHP` and `CurrentMP` to `CharacterData.MaxMP` on scene load — verified by unit test
 - [ ] `SkillCooldowns[i]` ticks down each frame for all 4 party members simultaneously, regardless of which character the player controls — verified by unit test
 - [ ] `SkillCooldowns[i]` continues ticking on a dead character — verified by unit test
 - [ ] `ApplyDamage()` on a dead character is a no-op — verified by unit test

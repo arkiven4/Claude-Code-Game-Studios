@@ -10,8 +10,10 @@ extends Node3D
 @export var move_speed: float = 4.0
 @export var arena_half_size: float = 30.0  ## Boundary penalty starts if |x| or |z| exceeds this (60x60 platform)
 
-## Stagnation penalty: steps of no damage before penalty fires (60 = ~1 second at 60 FPS)
-@export var stagnation_threshold: int = 60
+## Stagnation penalty: steps of no damage before penalty fires (90 = ~1.5s at 60 FPS)
+## Raised from 60 to give the kite retreat window (60 steps) breathing room to
+## complete a hit -> retreat -> hit cycle before stagnation fires.
+@export var stagnation_threshold: int = 90
 ## Penalty applied to team reward and each party agent per step while stagnating
 @export var w_stagnation: float = 0.002
 ## Penalty per step for being outside the arena platform
@@ -57,6 +59,12 @@ var _evan_took_damage_since_hit: bool = false
 var _evelyn_took_damage_since_hit: bool = false
 var _episode_damage_dealt: float = 0.0
 var _episode_damage_received: float = 0.0
+
+## Kite ("hit-and-run") tracking — delta-based distance shaping + loop completion bonus
+var _evan_prev_enemy_dist: float = 0.0
+var _evelyn_prev_enemy_dist: float = 0.0
+var _evan_kite_ready: bool = false
+var _evelyn_kite_ready: bool = false
 
 ## Long-term statistics
 var _total_episodes: int = 0
@@ -135,6 +143,7 @@ func _physics_process(delta: float) -> void:
 	_check_stagnation_penalty()
 	_check_enemy_stagnation_penalty()
 	_check_protection_bonus()
+	_check_tank_priority()
 	_check_enemy_focus_fire()
 	_check_enemy_positioning()
 	_check_party_spacing()
@@ -305,6 +314,8 @@ func _reset_episode() -> void:
 	_enemy_steps_since_last_damage = 0; _enemy_damage_dealt_this_step = false
 	_evan_last_hit_step = -1000; _evelyn_last_hit_step = -1000
 	_evan_took_damage_since_hit = false; _evelyn_took_damage_since_hit = false
+	_evan_prev_enemy_dist = 0.0; _evelyn_prev_enemy_dist = 0.0
+	_evan_kite_ready = false; _evelyn_kite_ready = false
 	_episode_damage_dealt = 0.0; _episode_damage_received = 0.0
 
 	if _evan_agent and _evan_agent.skill_execution:   _evan_agent.skill_execution.cancel_cast()
@@ -394,6 +405,27 @@ func _check_protection_bonus() -> void:
 		if to_evan.dot(to_evelyn) > 0.5 and evan_body.global_position.distance_to(enemy.global_position) < evelyn_body.global_position.distance_to(enemy.global_position):
 			_evan_agent.on_protection_bonus(); break
 
+func _check_tank_priority() -> void:
+	## Tank role: Evan should absorb damage so Evelyn stays ~25% healthier.
+	## Per-step shaping reward encouraging the state: evelyn_hp - evan_hp >= 0.25.
+	## Only runs when both are alive — a dead mage can't be "protected".
+	const TARGET_GAP: float = 0.25   # Evelyn should be 25% healthier than Evan
+	const W_TANK_GOOD: float = 0.002 # per-step bonus when gap is healthy
+	const W_TANK_BAD: float = 0.002  # per-step penalty when Evelyn is the lower one
+	if not _evan_agent or not _evelyn_agent: return
+	if not _evan_state or not _evan_state.is_alive: return
+	if not _evelyn_state or not _evelyn_state.is_alive: return
+	var evan_hp: float = _evan_state.get_hp_ratio()
+	var evelyn_hp: float = _evelyn_state.get_hp_ratio()
+	var gap: float = evelyn_hp - evan_hp  # positive = Evelyn healthier (desired)
+	if gap >= TARGET_GAP:
+		# Tank is doing his job — Evelyn is safely ahead.
+		_evan_agent.reward += W_TANK_GOOD
+	elif gap < 0.0:
+		# Evelyn is the one eating damage — tank failed.
+		_evan_agent.reward -= W_TANK_BAD
+	# Between 0.0 and 0.25: neutral, no shaping either way.
+
 func _check_enemy_focus_fire() -> void:
 	var party_bodies: Array[CharacterBody3D] = []
 	if evan_body and _evan_state and _evan_state.is_alive: party_bodies.append(evan_body)
@@ -443,32 +475,51 @@ func _check_party_spacing() -> void:
 				elif dist > 7.0: _evan_agent.reward += 0.001
 
 func _check_flawless_hits() -> void:
-	const WINDOW: int = 120
-	const RETREAT_WINDOW: int = 60 # 1s reward for backing off after hit
-	const RETREAT_REWARD: float = 0.001
-	
-	if _evan_agent and _evan_last_hit_step > 0:
-		if _episode_step == _evan_last_hit_step + WINDOW:
-			if not _evan_took_damage_since_hit: _evan_agent.reward += 0.2
-		
-		# Active retreat bonus: rewarding moving away from enemies after hitting
-		if _episode_step < _evan_last_hit_step + RETREAT_WINDOW and not _evan_took_damage_since_hit:
-			var nearest_pos = _nearest_enemy_pos(evan_body.global_position, _enemies)
-			if nearest_pos != Vector3.ZERO:
-				var dist = evan_body.global_position.distance_to(nearest_pos)
-				# Only reward if moving away (this is slightly simplified, usually we'd check velocity dot to enemy)
-				# But for now, we'll just give a small per-step reward if they are > safe distance
-				if dist > 5.0: _evan_agent.reward += RETREAT_REWARD
+	## "Hit and run" kite shaping: reward opening distance AFTER landing a hit,
+	## then pay a large bonus when the agent lands the NEXT hit from safe range.
+	## Teaches: strike → back off → strike again, rather than face-tanking.
+	const FLAWLESS_WINDOW: int = 120         # full-avoidance bonus window (preserved)
+	const RETREAT_WINDOW: int = 60           # 1s window to open distance after a hit
+	const DIST_DELTA_REWARD: float = 0.008   # per meter opened (delta-based, not threshold)
+	const DIST_DELTA_PENALTY: float = 0.005  # per meter closed during retreat window
+	const SAFE_DIST_EVAN: float = 5.0        # tank can fight closer
+	const SAFE_DIST_EVELYN: float = 7.0      # mage needs more room
 
-	if _evelyn_agent and _evelyn_last_hit_step > 0:
-		if _episode_step == _evelyn_last_hit_step + WINDOW:
-			if not _evelyn_took_damage_since_hit: _evelyn_agent.reward += 0.2
-			
-		if _episode_step < _evelyn_last_hit_step + RETREAT_WINDOW and not _evelyn_took_damage_since_hit:
-			var nearest_pos = _nearest_enemy_pos(evelyn_body.global_position, _enemies)
-			if nearest_pos != Vector3.ZERO:
-				var dist = evelyn_body.global_position.distance_to(nearest_pos)
-				if dist > 8.0: _evelyn_agent.reward += RETREAT_REWARD
+	# --- Evan ---
+	if _evan_agent and _evan_last_hit_step > 0 and evan_body and _evan_state and _evan_state.is_alive:
+		var nearest_pos: Vector3 = _nearest_enemy_pos(evan_body.global_position, _enemies)
+		if nearest_pos != Vector3.ZERO:
+			var dist: float = evan_body.global_position.distance_to(nearest_pos)
+			if _episode_step == _evan_last_hit_step + FLAWLESS_WINDOW and not _evan_took_damage_since_hit:
+				_evan_agent.reward += 0.2
+			if _episode_step <= _evan_last_hit_step + RETREAT_WINDOW and not _evan_took_damage_since_hit:
+				if _evan_prev_enemy_dist > 0.0:
+					var delta: float = dist - _evan_prev_enemy_dist
+					if delta > 0.0:
+						_evan_agent.reward += delta * DIST_DELTA_REWARD
+					else:
+						_evan_agent.reward += delta * DIST_DELTA_PENALTY  # delta negative -> penalty
+				if dist >= SAFE_DIST_EVAN:
+					_evan_kite_ready = true
+			_evan_prev_enemy_dist = dist
+
+	# --- Evelyn ---
+	if _evelyn_agent and _evelyn_last_hit_step > 0 and evelyn_body and _evelyn_state and _evelyn_state.is_alive:
+		var nearest_pos: Vector3 = _nearest_enemy_pos(evelyn_body.global_position, _enemies)
+		if nearest_pos != Vector3.ZERO:
+			var dist: float = evelyn_body.global_position.distance_to(nearest_pos)
+			if _episode_step == _evelyn_last_hit_step + FLAWLESS_WINDOW and not _evelyn_took_damage_since_hit:
+				_evelyn_agent.reward += 0.2
+			if _episode_step <= _evelyn_last_hit_step + RETREAT_WINDOW and not _evelyn_took_damage_since_hit:
+				if _evelyn_prev_enemy_dist > 0.0:
+					var delta: float = dist - _evelyn_prev_enemy_dist
+					if delta > 0.0:
+						_evelyn_agent.reward += delta * DIST_DELTA_REWARD
+					else:
+						_evelyn_agent.reward += delta * DIST_DELTA_PENALTY
+				if dist >= SAFE_DIST_EVELYN:
+					_evelyn_kite_ready = true
+			_evelyn_prev_enemy_dist = dist
 
 func _check_arena_boundaries() -> void:
 	for body in [evan_body, evelyn_body]:
@@ -495,9 +546,25 @@ func _check_victory_or_defeat() -> void:
 # --- Handlers ---
 
 func _on_party_agent_damage_dealt(amount: int, _target: Node, agent: RLPartyAgent) -> void:
+	## Kite loop bonus: if the agent successfully retreated to safe range after their
+	## last hit, landing THIS hit completes the hit->run->hit cycle. Pay a large bonus
+	## so the policy learns the full sequence, not just the retreat.
+	const KITE_LOOP_BONUS: float = 0.1
 	_damage_dealt_this_step = true; _episode_damage_dealt += amount
-	if agent == _evan_agent: _evan_last_hit_step = _episode_step; _evan_took_damage_since_hit = false
-	elif agent == _evelyn_agent: _evelyn_last_hit_step = _episode_step; _evelyn_took_damage_since_hit = false
+	if agent == _evan_agent:
+		if _evan_kite_ready:
+			_evan_agent.reward += KITE_LOOP_BONUS
+			_evan_kite_ready = false
+		_evan_last_hit_step = _episode_step
+		_evan_took_damage_since_hit = false
+		_evan_prev_enemy_dist = 0.0  # reset baseline for the new retreat window
+	elif agent == _evelyn_agent:
+		if _evelyn_kite_ready:
+			_evelyn_agent.reward += KITE_LOOP_BONUS
+			_evelyn_kite_ready = false
+		_evelyn_last_hit_step = _episode_step
+		_evelyn_took_damage_since_hit = false
+		_evelyn_prev_enemy_dist = 0.0
 
 func _on_enemy_damage_dealt(amount: int, target: Node) -> void:
 	_enemy_damage_dealt_this_step = true; _episode_damage_received += amount

@@ -38,7 +38,7 @@ someone decides).
 ### Core Rules
 
 1. **Loot Table Definition**: Each enemy and encounter has a loot table defined as a
-   ScriptableObject (`LootTableSO`):
+   Resource (`LootTableSO`):
    ```
    LootTableSO fields:
    ┌─────────────────────────────────────────────────┐
@@ -52,7 +52,7 @@ someone decides).
 
    DropEntry:
    ┌─────────────────────────────────────────────────┐
-   | ItemRef: ScriptableObject reference              |
+   | ItemRef: Resource reference              |
    | DropChance: float (0.0–1.0)                      |
    | MinQuantity: int (default 1)                     |
    | MaxQuantity: int (default 1)                     |

@@ -9,7 +9,7 @@
 
 The Item Database is the master definition for all items in the game — equipment,
 consumables, key/quest items, and enhancement materials. Stored as multiple
-ScriptableObject types (`ItemEquipmentSO`, `ItemConsumableSO`, `ItemKeySO`,
+Resource types (`ItemEquipmentSO`, `ItemConsumableSO`, `ItemKeySO`,
 `ItemMaterialSO`), each item's data card defines its identity, stats, rarity tier,
 character class restrictions, and usage rules. Players interact with the Item Database
 indirectly: when they see a sword drop, read its stats, equip it to Evan, or notice
@@ -43,7 +43,7 @@ it had the highest DPS at level 8.
 
 ### Core Rules
 
-1. **Four ScriptableObject types** exist, one per item category:
+1. **Four Resource types** exist, one per item category:
    - `ItemEquipmentSO` — equippable items (weapons, armor, accessories)
    - `ItemConsumableSO` — single-use items (potions, buffs, revives)
    - `ItemKeySO` — quest/story items that cannot be used, sold, or dropped
@@ -85,11 +85,11 @@ it had the highest DPS at level 8.
    - `StatIncrease` — the flat or percentage boost applied to the target equipment
    - `BaseGoldCost` (int) — the gold value of this material; used when calculating the 30% refund on enhanced item sale
 
-10. **No system may write to item ScriptableObjects at runtime**. Equipment state (current enhancement level, durability) lives in a separate runtime state container. Item ScriptableObjects are read-only definitions.
+10. **No system may write to item Resources at runtime**. Equipment state (current enhancement level, durability) lives in a separate runtime state container. Item Resources are read-only definitions.
 
 ### States and Transitions
 
-`ItemEquipmentSO`, `ItemConsumableSO`, `ItemKeySO`, and `ItemMaterialSO` are **stateless** ScriptableObjects — they define item templates and never change at runtime.
+`ItemEquipmentSO`, `ItemConsumableSO`, `ItemKeySO`, and `ItemMaterialSO` are **stateless** Resources — they define item templates and never change at runtime.
 
 Runtime state for equipment instances is tracked in `EquipmentInstance`, a separate runtime container:
 
@@ -115,10 +115,10 @@ Runtime state for equipment instances is tracked in `EquipmentInstance`, a separ
 
 | System | Direction | What It Reads |
 |--------|-----------|---------------|
-| Inventory & Equipment System | Reads Item ScriptableObjects + EquipmentInstance | ItemDisplayName, Icon, StatBonuses, RequiredLevel, CharacterClass; tracks EquipmentInstance state |
-| Loot & Drop System | Reads Item ScriptableObjects | Rarity, CharacterClass restriction, RequiredLevel (filters drops to appropriate characters) |
+| Inventory & Equipment System | Reads Item Resources + EquipmentInstance | ItemDisplayName, Icon, StatBonuses, RequiredLevel, CharacterClass; tracks EquipmentInstance state |
+| Loot & Drop System | Reads Item Resources | Rarity, CharacterClass restriction, RequiredLevel (filters drops to appropriate characters) |
 | Character Progression System | Reads ItemEquipmentSO.RequiredLevel | Gates equipment equipping behind character level |
-| Shop System | Reads Item ScriptableObjects | BaseGoldValue (calculated from Rarity + StatBonuses) |
+| Shop System | Reads Item Resources | BaseGoldValue (calculated from Rarity + StatBonuses) |
 | Equipment Enhancement System | Reads ItemEquipmentSO + EquipmentInstance | EnhancementTier compatibility; applies stat recalculation on enhancement |
 | Combat HUD | Reads EquipmentInstance (via Inventory System) | Active equipment bonuses applied to character stats |
 | Health & Damage System | Reads EquipmentInstance bonuses | Effective DEF and MaxHP after equipment bonuses applied |
@@ -126,7 +126,7 @@ Runtime state for equipment instances is tracked in `EquipmentInstance`, a separ
 | Combat System | Reads EquipmentInstance bonuses | All stat bonuses applied during combat calculations |
 | Save / Load System | Reads EquipmentInstance state | Serializes IsEquipped, EnhancementLevel, Durability per item |
 
-**Interface ownership**: The Item Database **owns** the item definition schema. Other systems **read** from it. Only the Inventory & Equipment System and Equipment Enhancement System **write** to EquipmentInstance state at runtime. No system writes to the base ScriptableObject.
+**Interface ownership**: The Item Database **owns** the item definition schema. Other systems **read** from it. Only the Inventory & Equipment System and Equipment Enhancement System **write** to EquipmentInstance state at runtime. No system writes to the base Resource.
 
 ## Formulas
 
@@ -252,11 +252,11 @@ EnhancedStat = BaseItemStat × (1 + (EnhancementLevel × EnhancementBonusPerLeve
 | **Loot & Drop System** | Depends on Item Database | Hard | Reads item rarity, class restrictions, required level, and drop pool membership to filter valid drops per encounter |
 | **Shop System** | Depends on Item Database | Hard | Reads BaseGoldValue formula inputs (rarity, required level, stat bonuses) to calculate buy/sell prices |
 | **Equipment Enhancement System** | Depends on Item Database | Hard | Reads EnhancementTier compatibility and EnhancementGrowth per item; writes EquipmentInstance.EnhancementLevel |
-| **Item Rarity System** | Embedded in Item Database | N/A | Rarity is a property of every item ScriptableObject; not a separate system at runtime |
+| **Item Rarity System** | Embedded in Item Database | N/A | Rarity is a property of every item Resource; not a separate system at runtime |
 | **Combat System** | Reads Item Database (via Inventory) | Soft | Reads effective stat bonuses from equipped items; does not modify item state |
 | **Health & Damage System** | Reads Item Database (via Inventory) | Soft | Reads DEF and MaxHP bonuses from equipped items for damage calculation |
 | **Skill Execution System** | Reads Item Database (via Inventory) | Soft | Reads SPD and CRIT bonuses from equipped items for skill timing and crit calculation |
-| **Save / Load System** | Depends on Item Database | Hard | Serializes EquipmentInstance state (IsEquipped, EnhancementLevel, Durability) per item instance; reads item GUIDs from ScriptableObjects |
+| **Save / Load System** | Depends on Item Database | Hard | Serializes EquipmentInstance state (IsEquipped, EnhancementLevel, Durability) per item instance; reads item GUIDs from Resources |
 
 **No upstream dependencies**: Item Database is a foundation root — it depends on no other system for its definition. The only soft dependency is reading the CharacterClass enum from Character Data, which is a shared data type, not a system dependency.
 
@@ -318,7 +318,7 @@ EnhancedStat = BaseItemStat × (1 + (EnhancementLevel × EnhancementBonusPerLeve
 
 ## Acceptance Criteria
 
-- [ ] All four ScriptableObject types (`ItemEquipmentSO`, `ItemConsumableSO`, `ItemKeySO`, `ItemMaterialSO`) can be created in the Unity Editor and saved as `.asset` files
+- [ ] All four Resource types (`ItemEquipmentSO`, `ItemConsumableSO`, `ItemKeySO`, `ItemMaterialSO`) can be created in the Godot Editor and saved as `.tres` files
 - [ ] Equipment items correctly enforce CharacterClass restrictions — a Mage-only staff cannot be equipped by an Archer character (verified by unit test)
 - [ ] RequiredLevel gating works — a Level 5 character cannot equip a Level 15 sword (verified by unit test)
 - [ ] Effective stat calculation formula produces correct results: `(BaseStat + FlatBonus) × (1 + PercentageBonus)` — verified by unit test with known inputs
@@ -332,7 +332,7 @@ EnhancedStat = BaseItemStat × (1 + (EnhancementLevel × EnhancementBonusPerLeve
 - [ ] Null or invalid item fields log errors at scene load and use zero-value fallback stats without crashing (verified by unit test)
 - [ ] Key items cannot be sold, dropped, or consumed — they are permanently owned once acquired (verified by unit test)
 - [ ] Consumable items correctly apply their effect type (RestoreHP, RestoreMP, Buff, Revive, Cleanse) to the correct target scope (verified by integration test)
-- [ ] Performance: reading item ScriptableObject fields adds no measurable frame time (< 0.01ms per item lookup); loading 100 items at scene load takes < 50ms
+- [ ] Performance: reading item Resource fields adds no measurable frame time (< 0.01ms per item lookup); loading 100 items at scene load takes < 50ms
 - [ ] Save/Load correctly serializes and deserializes EquipmentInstance state (IsEquipped, EnhancementLevel, Durability) — verified by round-trip test
 
 ## Open Questions

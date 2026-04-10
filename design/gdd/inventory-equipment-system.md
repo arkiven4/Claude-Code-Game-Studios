@@ -16,7 +16,7 @@ Accessory, Relic) defined by the Item Database. Equipping validates both the cha
 class and level against the item's restrictions. Consumable items can be used both in
 combat and during exploration. The system exposes its state to the Combat HUD, Health &
 Damage System (for equipment stat bonuses), and Save / Load System. All inventory data
-is a runtime state container — it reads from Item ScriptableObjects but never writes to
+is a runtime state container — it reads from Item Resources but never writes to
 them.
 
 ## Player Fantasy
@@ -42,7 +42,7 @@ spatial management).
    ```
    InventoryStack:
    ┌─────────────────────────────────────────────────┐
-   | ItemRef: ScriptableObject reference              |
+   | ItemRef: Resource reference              |
    | ItemType: enum (Equipment, Consumable, Key, Mat)|
    | Quantity: int                                    |
    | EquipmentData: EquipmentInstance? (if Equipment) |
@@ -235,7 +235,7 @@ Transitions:
 7. **Equipment enhancement level is at cap (+10) and player tries to enhance again**:
    Operation fails. Material is not consumed. Tooltip: "Enhancement level is at maximum."
 
-8. **Save file loaded with an equipment item that no longer exists (deleted ScriptableObject)**:
+8. **Save file loaded with an equipment item that no longer exists (deleted Resource)**:
    The EquipmentInstance references a null ItemRef. The item is removed from inventory.
    A critical error is logged. The character's slot is freed.
 

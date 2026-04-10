@@ -8,7 +8,7 @@
 ## Overview
 
 Character Data is the master definition for every character in the game — Evelyn, Evan,
-the Witch, and all party members. Stored as Unity ScriptableObjects, each character's
+the Witch, and all party members. Stored as Resources, each character's
 data card defines their six base stats (MaxHP, ATK, DEF, SPD, MP, CRIT), their four
 skill slots with three upgrade tiers each, their role in the party, and their per-level
 growth rates. Players interact with Character Data indirectly: when they read a stat
@@ -33,7 +33,7 @@ a personality expressed through their numbers.
 
 ### Core Rules
 
-1. Every character has exactly one `CharacterDataSO` ScriptableObject. It is read-only
+1. Every character has exactly one `CharacterData` Resource. It is read-only
    at runtime — only base/maximum values live here. Runtime state (current HP, cooldowns,
    buffs) lives in `PartyMemberState` (see ADR-0002).
 
@@ -61,7 +61,7 @@ a personality expressed through their numbers.
    combination.
 
 5. Every character has exactly **4 skill slots** (`SkillSlot0`–`SkillSlot3`). Each slot
-   references a `SkillDataSO` and stores the level thresholds at which Tier 2 and Tier 3
+   references a `SkillData` and stores the level thresholds at which Tier 2 and Tier 3
    unlock (see Skill Tier System).
 
 6. Every character has a **growth profile** — a set of per-stat multipliers applied each
@@ -73,7 +73,7 @@ a personality expressed through their numbers.
    - `RoleDescription` (string) — one-line description shown in party selection UI
    - `IsMainCharacter` (bool) — true for Evelyn, Evan, and the Witch only
 
-8. No system may write to `CharacterDataSO` at runtime. It is a definition, not a
+8. No system may write to `CharacterData` at runtime. It is a definition, not a
    state container. Any attempt to modify it is a bug.
 
 ### Skill Tier System
@@ -94,7 +94,7 @@ a personality expressed through their numbers.
 2. Each tier **replaces** the previous — the player always uses the highest unlocked
    tier. There is no choosing between tiers.
 3. Tier upgrades are **qualitative changes** to how a skill works, not just stat bumps.
-   Each skill's specific tier changes are defined in its `SkillDataSO` (Skill Database).
+   Each skill's specific tier changes are defined in its `SkillData` (Skill Database).
    Character Data only stores the global thresholds (Level 8, Level 18).
 4. Tier upgrade categories (what can change between tiers):
 
@@ -108,7 +108,7 @@ a personality expressed through their numbers.
 | **Hybrid** | Single slow | AoE slow | AoE slow + DoT |
 
 5. Each skill uses exactly one upgrade category. The specific category and values per
-   skill are defined in `SkillDataSO`, not here.
+   skill are defined in `SkillData`, not here.
 
 ### Growth Rates
 
@@ -202,17 +202,17 @@ skill cycling, with enough HP to feel like a protagonist.
 
 ### States and Transitions
 
-`CharacterDataSO` is stateless — it has no runtime states or transitions. It is a
+`CharacterData` is stateless — it has no runtime states or transitions. It is a
 read-only data asset that never changes after the scene loads.
 
 The character's runtime states (Alive, Dead, Controlled, AI-Controlled) are managed
-by `PartyMemberState` (see ADR-0002), which reads base values from `CharacterDataSO`
+by `PartyMemberState` (see ADR-0002), which reads base values from `CharacterData`
 on initialization.
 
 **Initialization sequence (on scene load):**
-1. `PartyMemberState.Awake()` reads its assigned `CharacterDataSO` reference
-2. `CurrentHP` is set to `CharacterDataSO.MaxHP`
-3. `CurrentMP` is set to `CharacterDataSO.MaxMP`
+1. `PartyMemberState.Awake()` reads its assigned `CharacterData` reference
+2. `CurrentHP` is set to `CharacterData.MaxHP`
+3. `CurrentMP` is set to `CharacterData.MaxMP`
 4. `SkillCooldowns[]` is initialized to `0f` for all 4 slots
 5. Active skill tier is resolved:
    - Character level ≥ 18 → Tier 3 active on all 4 slots
@@ -223,19 +223,19 @@ on initialization.
 
 | System | Direction | What It Reads |
 |--------|-----------|---------------|
-| PartyMemberState | Reads CharacterDataSO | MaxHP, MaxMP on init; CharacterClass, IsMainCharacter |
-| Health & Damage System | Reads CharacterDataSO | MaxHP (to clamp current HP); DEF (damage reduction) |
-| Skill Execution System | Reads CharacterDataSO | SkillSlot0–3 references; active tier thresholds |
-| Character Progression System | Reads CharacterDataSO | GainPerLevel values per stat; triggers tier unlock at L8 and L18 |
-| Inventory & Equipment System | Reads CharacterDataSO | CharacterClass (to filter equippable items per character) |
-| Loot & Drop System | Reads CharacterDataSO | CharacterClass (drop pool filter); selects 2 random party members per drop event |
-| Party AI System | Reads CharacterDataSO | CharacterClass (selects correct AI behavior profile per role) |
-| Party Management System | Reads CharacterDataSO | DisplayName, PortraitSprite, RoleDescription (party selection UI) |
-| NPC System | Reads CharacterDataSO | DisplayName, PortraitSprite (dialogue portrait display) |
-| Cosmetics System | Reads CharacterDataSO | IsMainCharacter (only main characters have cosmetic slots) |
-| Combat HUD | Reads CharacterDataSO | DisplayName, PortraitSprite, MaxHP, MaxMP (HUD display) |
+| PartyMemberState | Reads CharacterData | MaxHP, MaxMP on init; CharacterClass, IsMainCharacter |
+| Health & Damage System | Reads CharacterData | MaxHP (to clamp current HP); DEF (damage reduction) |
+| Skill Execution System | Reads CharacterData | SkillSlot0–3 references; active tier thresholds |
+| Character Progression System | Reads CharacterData | GainPerLevel values per stat; triggers tier unlock at L8 and L18 |
+| Inventory & Equipment System | Reads CharacterData | CharacterClass (to filter equippable items per character) |
+| Loot & Drop System | Reads CharacterData | CharacterClass (drop pool filter); selects 2 random party members per drop event |
+| Party AI System | Reads CharacterData | CharacterClass (selects correct AI behavior profile per role) |
+| Party Management System | Reads CharacterData | DisplayName, PortraitSprite, RoleDescription (party selection UI) |
+| NPC System | Reads CharacterData | DisplayName, PortraitSprite (dialogue portrait display) |
+| Cosmetics System | Reads CharacterData | IsMainCharacter (only main characters have cosmetic slots) |
+| Combat HUD | Reads CharacterData | DisplayName, PortraitSprite, MaxHP, MaxMP (HUD display) |
 
-No system writes to CharacterDataSO at runtime. It is strictly a read source.
+No system writes to CharacterData at runtime. It is strictly a read source.
 
 ## Formulas
 
@@ -247,8 +247,8 @@ Stat(N) = BaseStat + (GainPerLevel × (N - 1))
 
 | Variable | Type | Range | Source | Description |
 |----------|------|-------|--------|-------------|
-| BaseStat | int or float | See base stats table | CharacterDataSO | Stat value at Level 1 |
-| GainPerLevel | int or float | See gains table | CharacterDataSO | Fixed flat gain applied each level |
+| BaseStat | int or float | See base stats table | CharacterData | Stat value at Level 1 |
+| GainPerLevel | int or float | See gains table | CharacterData | Fixed flat gain applied each level |
 | N | int | 1–30 | Character Progression System | Current character level |
 
 **Expected output ranges at level cap (L30):**
@@ -270,12 +270,12 @@ Stat(N) = BaseStat + (GainPerLevel × (N - 1))
 Stat(N) = BaseStat + ((GainPerLevel + MainCharBonus) × (N - 1))
 ```
 
-Only applied when `CharacterDataSO.IsMainCharacter = true`.
+Only applied when `CharacterData.IsMainCharacter = true`.
 `MainCharBonus` defaults to `0` for any stat not listed in the main character bonus table.
 
 | Variable | Type | Source | Description |
 |----------|------|--------|-------------|
-| MainCharBonus | int or float | CharacterDataSO | Per-stat flat bonus per level for main characters only |
+| MainCharBonus | int or float | CharacterData | Per-stat flat bonus per level for main characters only |
 
 ---
 
@@ -296,31 +296,31 @@ else activeTier = 1
 
 | Scenario | Expected Behavior | Rationale |
 |----------|------------------|-----------|
-| Two characters share the same `CharacterDataSO` | Not allowed — each character must have its own `.asset` file. Add a custom Editor validator to detect duplicate references. | Shared data would cause one character's stats to affect another |
+| Two characters share the same `CharacterData` | Not allowed — each character must have its own `.tres` file. Add a custom Editor validator to detect duplicate references. | Shared data would cause one character's stats to affect another |
 | Character level saved as > 30 (data corruption) | Clamp to 30 on load. Log a warning. | Level cap is 30; no valid path exceeds it |
 | Character level saved as < 1 (data corruption) | Clamp to 1 on load. Log a warning. | Level 1 is the minimum; negative levels are invalid |
-| `GainPerLevel` is 0 for MaxHP, ATK, DEF, or MaxMP | Data authoring error — flag in a custom Unity Editor validator with a warning. SPD and CRIT intentionally have 0 gain and are exempt from this check. | 0-gain on growth stats is unintended; SPD/CRIT are fixed by design |
+| `GainPerLevel` is 0 for MaxHP, ATK, DEF, or MaxMP | Data authoring error — flag in a custom Godot Editor validator with a warning. SPD and CRIT intentionally have 0 gain and are exempt from this check. | 0-gain on growth stats is unintended; SPD/CRIT are fixed by design |
 | `IsMainCharacter = true` on a generic party member | Bonus applies (technically valid), but designers must not set this flag outside Evelyn and Evan. Add an Editor warning if `IsMainCharacter = true` and `DisplayName` is not "Evelyn" or "Evan". | Prevents accidental protagonist bonuses on generic characters |
 | Party has 0 characters (empty roster) | Not possible — Evelyn is always in the party and cannot be removed. Enforced by Party Management System. | Evelyn's presence is a narrative requirement tied to the ending |
-| Skill slot references a null `SkillDataSO` | Log an error. Slot renders as greyed-out and unselectable in UI. Never crash. | Null skill slots are data authoring errors, not valid game states |
+| Skill slot references a null `SkillData` | Log an error. Slot renders as greyed-out and unselectable in UI. Never crash. | Null skill slots are data authoring errors, not valid game states |
 | Character level reaches 8 or 18 mid-combat | Tier upgrade is applied immediately. Active skill mid-cast completes at its old tier; next use applies the new tier. | Avoids mid-animation state corruption |
 
 ## Dependencies
 
 | System | Direction | Nature |
 |--------|-----------|--------|
-| CharacterDataSO | Depends on nothing | Foundation — zero upstream dependencies |
-| PartyMemberState | Depends on CharacterDataSO | Hard — cannot initialize without it |
-| Health & Damage System | Depends on CharacterDataSO | Hard — needs MaxHP and DEF |
-| Skill Execution System | Depends on CharacterDataSO | Hard — needs skill slot references and tier thresholds |
-| Character Progression System | Depends on CharacterDataSO | Hard — reads GainPerLevel to apply on level-up |
-| Inventory & Equipment System | Depends on CharacterDataSO | Hard — needs CharacterClass to filter equippable items |
-| Loot & Drop System | Depends on CharacterDataSO | Hard — needs CharacterClass for drop pool filtering |
-| Party AI System | Depends on CharacterDataSO | Hard — needs CharacterClass to select AI behavior profile |
-| Party Management System | Depends on CharacterDataSO | Hard — needs DisplayName, PortraitSprite, RoleDescription for party UI |
-| NPC System | Depends on CharacterDataSO | Soft — uses portrait/name; can fall back to defaults |
-| Cosmetics System | Depends on CharacterDataSO | Soft — reads IsMainCharacter flag; cosmetics are an optional feature |
-| Combat HUD | Depends on CharacterDataSO | Hard — needs MaxHP, MaxMP, and PortraitSprite for display |
+| CharacterData | Depends on nothing | Foundation — zero upstream dependencies |
+| PartyMemberState | Depends on CharacterData | Hard — cannot initialize without it |
+| Health & Damage System | Depends on CharacterData | Hard — needs MaxHP and DEF |
+| Skill Execution System | Depends on CharacterData | Hard — needs skill slot references and tier thresholds |
+| Character Progression System | Depends on CharacterData | Hard — reads GainPerLevel to apply on level-up |
+| Inventory & Equipment System | Depends on CharacterData | Hard — needs CharacterClass to filter equippable items |
+| Loot & Drop System | Depends on CharacterData | Hard — needs CharacterClass for drop pool filtering |
+| Party AI System | Depends on CharacterData | Hard — needs CharacterClass to select AI behavior profile |
+| Party Management System | Depends on CharacterData | Hard — needs DisplayName, PortraitSprite, RoleDescription for party UI |
+| NPC System | Depends on CharacterData | Soft — uses portrait/name; can fall back to defaults |
+| Cosmetics System | Depends on CharacterData | Soft — reads IsMainCharacter flag; cosmetics are an optional feature |
+| Combat HUD | Depends on CharacterData | Hard — needs MaxHP, MaxMP, and PortraitSprite for display |
 
 ## Tuning Knobs
 
@@ -362,25 +362,25 @@ else activeTier = 1
 
 ## Acceptance Criteria
 
-- [ ] Every playable character (Evelyn, Evan, Witch, all party members) has a unique `CharacterDataSO` asset file
+- [ ] Every playable character (Evelyn, Evan, Witch, all party members) has a unique `CharacterData` asset file
 - [ ] `Stat(N) = BaseStat + (GainPerLevel × (N-1))` produces correct values for all classes at L1, L8, L18, L30 — verified by unit test
 - [ ] Evelyn at L30 has MaxHP 655, ATK 239, DEF 47, MaxMP 323 — matches the example table exactly
 - [ ] Tier 2 activates on all 4 skill slots at exactly Level 8; Tier 3 activates at exactly Level 18 — verified by unit test
-- [ ] No system writes to `CharacterDataSO` at runtime — verified by code review
-- [ ] Null `SkillDataSO` reference in a skill slot logs an error and renders the slot as greyed-out without crashing
+- [ ] No system writes to `CharacterData` at runtime — verified by code review
+- [ ] Null `SkillData` reference in a skill slot logs an error and renders the slot as greyed-out without crashing
 - [ ] Level values outside 1–30 are clamped on save/load with a logged warning
-- [ ] Two characters sharing the same `CharacterDataSO` triggers an Editor validator warning
+- [ ] Two characters sharing the same `CharacterData` triggers an Editor validator warning
 - [ ] A character reaching Tier 2 or Tier 3 mid-combat completes the current skill cast at the old tier before upgrading
 - [ ] `PartyMemberState` initializes `CurrentHP = MaxHP` and `CurrentMP = MaxMP` on scene load for all party members
-- [ ] Performance: reading `CharacterDataSO` fields adds no measurable frame time (ScriptableObject field access is O(1))
-- [ ] Editor validator warns when two characters reference the same `CharacterDataSO` asset
+- [ ] Performance: reading `CharacterData` fields adds no measurable frame time (Resource field access is O(1))
+- [ ] Editor validator warns when two characters reference the same `CharacterData` asset
 - [ ] Editor validator warns when `GainPerLevel` is 0 for MaxHP, ATK, DEF, or MaxMP on a non-Witch character (SPD and CRIT exempt)
 
 ## Open Questions
 
 | Question | Owner | Resolution |
 |----------|-------|------------|
-| How many generic party members will there be per class? (e.g., 2 Archers, 1 Tanker?) | Game Designer | Resolve during party roster design — affects total number of CharacterDataSO assets to author |
-| Does the Witch need a full CharacterDataSO (growth rates, 4 skills) or a simplified prologue-only version? | Narrative Director | Resolve before Witch prologue chapter is authored — prologue is Month 1 MVP |
+| How many generic party members will there be per class? (e.g., 2 Archers, 1 Tanker?) | Game Designer | Resolve during party roster design — affects total number of CharacterData assets to author |
+| Does the Witch need a full CharacterData (growth rates, 4 skills) or a simplified prologue-only version? | Narrative Director | Resolve before Witch prologue chapter is authored — prologue is Month 1 MVP |
 | Should CharacterClass be extensible (new classes added post-launch) or fixed? | Technical Director | Resolve before CharacterClass enum is coded — adding enum values later is a recompile |
 | What XP amount is required per level? (Curve design — fast early, slower late?) | Systems Designer | Resolve in Character Progression System GDD |

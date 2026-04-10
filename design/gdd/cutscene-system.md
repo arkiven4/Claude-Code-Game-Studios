@@ -8,8 +8,8 @@
 ## Overview
 
 The Cutscene System sequences cinematic moments that bridge gameplay and narrative.
-Built on Unity's Timeline package (`UnityEngine.Timeline`), each cutscene is a
-`PlayableDirector`-driven Timeline asset that choreographs camera movements, character
+Built on AnimationPlayer / AnimationTree (`Godot Animation`), each cutscene is a
+`AnimationPlayer`-driven Timeline asset that choreographs camera movements, character
 animations, dialogue beats, audio cues, and visual effects into a single authored
 sequence. The Cutscene System manages the lifecycle: it blocks all input, takes over
 the camera, plays the Timeline, handles mid-cutscene dialogue transitions, and restores
@@ -38,12 +38,12 @@ punch rather than exposition dumps.
 
 ### Core Rules
 
-1. **Unity Timeline-Driven**: Each cutscene is a `.playable` Timeline asset authored
-   in Unity's Timeline window. A `PlayableDirector` component on a scene-level
-   `CutsceneController` GameObject plays the Timeline. The Cutscene System wraps the
+1. **AnimationPlayer**: Each cutscene is a `.playable` Timeline asset authored
+   in Unity's AnimationPlayer. A `AnimationPlayer` component on a scene-level
+   `CutsceneController` Node plays the Timeline. The Cutscene System wraps the
    director with lifecycle management, input blocking, and state restoration.
 
-2. **CutsceneDefinitionSO**: A ScriptableObject that defines a cutscene's metadata:
+2. **CutsceneDefinitionSO**: A Resource that defines a cutscene's metadata:
    ```
    CutsceneDefinitionSO fields:
    ┌─────────────────────────────────────────────────┐
@@ -69,7 +69,7 @@ punch rather than exposition dumps.
    3. Input System blocks all gameplay input (UI map active with Skip button)
    4. Camera System switches to Cinematic mode (camera control handed to Timeline)
    5. Audio System triggers narrative music, ducks other audio
-   6. `PlayableDirector.Play()` starts the Timeline
+   6. `AnimationPlayer.Play()` starts the Timeline
    7. Timeline plays: camera tracks, characters animate, audio plays, signals fire
    8. Timeline signals (custom `SignalEmitter`s) can trigger mid-cutscene events:
       - Dialogue nodes (hands off to Dialogue System mid-cutscene)
@@ -84,7 +84,7 @@ punch rather than exposition dumps.
 
 4. **Player Skip**: After `SkipAllowedAfter` seconds (default 2.0s), the player can
    press the Submit button to skip the cutscene. Skipping:
-   - Stops the `PlayableDirector` immediately
+   - Stops the `AnimationPlayer` immediately
    - Executes the `PostCutsceneAction` (same as if the cutscene completed naturally)
    - Sets the `ChapterFlag` (skipped cutscenes still count as "seen")
    - Marks the cutscene as "seen" for auto-skip
@@ -109,9 +109,9 @@ punch rather than exposition dumps.
    - `CameraSignal` → switches to a specific Cinemachine virtual camera
 
 7. **Mid-Cutscene Dialogue**: When a `DialogueSignal` fires:
-   - The `PlayableDirector` is paused (not stopped)
+   - The `AnimationPlayer` is paused (not stopped)
    - The Dialogue System starts the specified `DialogueGraphSO`
-   - When dialogue ends, the `PlayableDirector` resumes from the pause point
+   - When dialogue ends, the `AnimationPlayer` resumes from the pause point
    - This allows cutscenes with embedded conversations (character exchanges during
      cinematic moments)
 

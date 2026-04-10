@@ -124,7 +124,7 @@ Xenoblade's affinity chart system (always-on modifiers that change how you play)
      party members heal 5% of their MaxHP."
 
    **Implementation contract for `Special` passives**: Each character with a `Special`
-   passive implements the `ISpecialPassive` interface via a dedicated `MonoBehaviour`
+   passive implements the `ISpecialPassive` interface via a dedicated `Node`
    on their root GameObject:
    ```csharp
    public interface ISpecialPassive

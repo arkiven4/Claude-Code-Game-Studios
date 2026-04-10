@@ -8,7 +8,7 @@
 ## Overview
 
 The Main Menu and Pause Menu are the player's entry point and hub for all game-level
-controls. Built with Unity UI Toolkit, the Main Menu presents the game title, Continue,
+controls. Built with Godot UI, the Main Menu presents the game title, Continue,
 New Game, Settings, and Quit options on a stylized background (key art or animated
 scene). The Pause Menu overlays the current game with Resume, Settings, Save Game,
 Load Game, and Return to Main Menu options. Both menus use the same Settings sub-panel
@@ -273,7 +273,7 @@ settings), and Persona 5's consistent menu styling (every menu feels like the ga
 ## Dependencies
 
 - **Depends on**: Save / Load System, Input System, Audio System, Scene Management,
-  Chapter State, TextMeshPro, Unity UI Toolkit
+  Chapter State, TextMeshPro, Godot UI
 - **Depended on by**: Audio System (menu music), Input System (UI action map), Combat
   HUD (hidden behind pause menu)
 

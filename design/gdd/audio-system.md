@@ -9,7 +9,7 @@
 
 The Audio System manages all sound playback in My Vampire: background music, combat
 sound effects, UI sounds, ambient environmental audio, and voice/narration. Built on
-Unity's `AudioMixer` system with `AudioSource` pooling, it provides four mixer groups
+Godot's AudioBus system with AudioStreamPlayer3D pooling, it provides four bus groups
 (Music, SFX, UI, Ambience) with independent volume controls, crossfade transitions,
 and priority-based sound culling. Music tracks crossfade on scene changes and combat
 state transitions. Combat SFX are pooled and recycled to avoid allocation. The Audio
@@ -45,7 +45,7 @@ click is satisfying).
    - **UI** (default volume: 0.6) — Menu clicks, button presses, dialogue advance
    - **Ambience** (default volume: 0.5) — Environmental sounds, wind, birds, crowd noise
 
-   Each group has an `AudioMixerGroup` asset exposed to the Unity Audio Mixer window.
+   Each group has an `AudioMixerGroup` asset exposed to the Godot Audio Mixer window.
    Volume is controlled in dB via exposed parameters (`MusicVol`, `SFXVol`, `UIVol`,
    `AmbVol`).
 

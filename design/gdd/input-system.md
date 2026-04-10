@@ -7,8 +7,8 @@
 
 ## Overview
 
-The Input System is the bridge between player actions and game responses. Built on Unity's
-new Input System package (`com.unity.inputsystem`), it defines a single Input Action Asset
+The Input System is the bridge between player actions and game responses. Built on Godot's
+built-in Input Map and Action systems, it defines a single configuration
 with three action maps: **Exploration** (movement, interaction, camera orbit), **Combat**
 (skills, character switching, targeting), and **UI** (menus, navigation, confirmation).
 The player never configures keybinds for individual characters — one set of inputs
@@ -37,8 +37,8 @@ dodge / interact), and Hades' tight input buffering (feels responsive without be
 
 ### Core Rules
 
-1. **Unity Input System Package**: This system uses `UnityEngine.InputSystem` exclusively.
-   The legacy `UnityEngine.Input` class is forbidden per technical-preferences.md.
+1. **Godot Input Map**: This system uses Godot's built-in `InputMap` and `Input`
+   singleton exclusively.
    An `InputActionAsset` defines all game actions.
 
 2. **Three Action Maps**:
@@ -83,10 +83,10 @@ dodge / interact), and Hades' tight input buffering (feels responsive without be
    | `TabRight` | E / R1 | Button | Move to next tab |
 
 6. **Contextual Input Resolution**: The Input System does not dispatch raw key events.
-   Instead, a thin `InputRouter` MonoBehaviour reads the active action map and dispatches
+   Instead, a thin `InputRouter` Node reads the active action map and dispatches
    semantic events:
    ```csharp
-   public class InputRouter : MonoBehaviour
+   public class InputRouter : Node
    {
        public event Action<Vector2> OnMove;
        public event Action OnInteract;

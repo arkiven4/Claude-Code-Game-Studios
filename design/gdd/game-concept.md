@@ -284,7 +284,7 @@ Church-as-institution horror (Bloodborne) — corruption hiding behind sanctity.
 
 ### Party AI — Reinforcement Learning Architecture
 
-Party AI uses Unity ML-Agents. Each encounter type has a trained RL agent that
+Party AI uses Godot RL Agents. Each encounter type has a trained RL agent that
 learns to defeat the encounter optimally. An **expertise scalar (0.0–1.0)** controls
 how much noise and delay is applied to the agent's decisions:
 
@@ -335,7 +335,7 @@ fall back to behavior trees with animated expertise simulation.
 - **How do multiple endings branch?** What choices create different outcomes? Needs
   design pass before Chapter 1 writing begins. → Resolve with `/design-system` for
   the Narrative system.
-- **Is the RL approach feasible in Unity ML-Agents within 3 months?** → Resolve
+- **Is the RL approach feasible in Godot RL Agents within 3 months?** → Resolve
   with `/prototype party-ai` in Month 1.
 - **What is Evelyn's cosmetic scope?** How many outfits, and do they carry emotional
   weight (e.g., an outfit you can't bring yourself to remove after the ending)? →
@@ -397,7 +397,7 @@ fall back to behavior trees with animated expertise simulation.
 
 ## Next Steps
 
-- [ ] Run `/setup-engine unity` to configure Unity and populate version-aware reference docs
+- [ ] Run `/setup-engine godot` to configure Godot 4.6
 - [ ] Run `/design-review design/gdd/game-concept.md` to validate completeness
 - [ ] Run `/map-systems` to decompose concept into individual systems with dependencies and priorities
 - [ ] Create Architecture Decision Record for RL vs. behavior tree party AI (`/architecture-decision`)

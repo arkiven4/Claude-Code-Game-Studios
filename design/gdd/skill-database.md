@@ -8,7 +8,7 @@
 ## Overview
 
 The Skill Database is the master definition for all character skills in the game —
-damage, support, status effect, and utility abilities. Stored as four ScriptableObject
+damage, support, status effect, and utility abilities. Stored as four Resource
 types (`SkillDamageSO`, `SkillSupportSO`, `SkillStatusSO`, `SkillUtilitySO`), each
 skill's data card defines its MP cost, cooldown, targeting rules, effect parameters,
 and three tier definitions (Tier 1 at Level 1, Tier 2 at Level 8, Tier 3 at Level 18).
@@ -41,13 +41,13 @@ players anticipate unlock moments because they know what's coming and it feels e
 
 ### Core Rules
 
-1. **Four ScriptableObject types** exist, one per skill category:
+1. **Four Resource types** exist, one per skill category:
    - `SkillDamageSO` — skills that deal damage to enemies (direct, AoE, DoT)
    - `SkillSupportSO` — skills that heal, buff, or protect allies
    - `SkillStatusSO` — skills that apply status effects (slow, stun, poison, silence, taunt)
    - `SkillUtilitySO` — skills that provide utility (movement, shields, MP generation, resource manipulation)
 
-2. **Every skill ScriptableObject shares these common fields**:
+2. **Every skill Resource shares these common fields**:
 
    | Field | Type | Description |
    |-------|------|-------------|
@@ -101,12 +101,12 @@ players anticipate unlock moments because they know what's coming and it feels e
    | **Duration** | Duration increases | Tier 1: 3s → Tier 2: 5s → Tier 3: 8s |
    | **Hybrid** | Two categories change | Tier 1: single slow → Tier 2: AoE slow → Tier 3: AoE slow + DoT |
 
-6. **No system may write to skill ScriptableObjects at runtime**. Skills are read-only
+6. **No system may write to skill Resources at runtime**. Skills are read-only
    definitions. Runtime state (current cooldown, active buffs applied by the skill) is
    tracked in the Skill Execution System and Character State Manager.
 
 7. **Skill assignment to characters** is defined in `CharacterDataSO` — each character
-   references exactly 4 `SkillDataSO` assets (one per slot). The Skill Database does
+   references exactly 4 `SkillData` assets (one per slot). The Skill Database does
    not own which characters have which skills.
 
 8. **Skills cannot reference other skills**. Each skill is self-contained. Chain effects
@@ -115,7 +115,7 @@ players anticipate unlock moments because they know what's coming and it feels e
 
 ### States and Transitions
 
-`SkillDamageSO`, `SkillSupportSO`, `SkillStatusSO`, and `SkillUtilitySO` are **stateless** ScriptableObjects — they define skill templates and never change at runtime.
+`SkillDamageSO`, `SkillSupportSO`, `SkillStatusSO`, and `SkillUtilitySO` are **stateless** Resources — they define skill templates and never change at runtime.
 
 Runtime state for skill instances is tracked in `SkillRuntimeState`, a per-skill-per-character runtime container managed by the Skill Execution System:
 
@@ -129,7 +129,7 @@ Runtime state for skill instances is tracked in `SkillRuntimeState`, a per-skill
 
 | From State | Trigger | To State | Notes |
 |-----------|---------|----------|-------|
-| Cooldown = 0 | Player activates skill | Cooldown = Cooldown (from SkillDataSO) | Validates MPCost and ChargeCount; consumes MP; plays Animation + AudioCue |
+| Cooldown = 0 | Player activates skill | Cooldown = Cooldown (from SkillData) | Validates MPCost and ChargeCount; consumes MP; plays Animation + AudioCue |
 | Cooldown > 0 | Each frame update | Cooldown -= deltaTime | Cooldown ticks down in real-time; not paused during character switch |
 | ChargeCount < MaxCharges | Cooldown reaches 0 | ChargeCount++ | Only for skills with MaxCharges > 1 |
 | Skill applies buff/debuff | Skill execution | ActiveInstances.add(buff) | Buff has its own duration timer independent of skill cooldown |
@@ -143,19 +143,19 @@ Runtime state for skill instances is tracked in `SkillRuntimeState`, a per-skill
 | System | Direction | What It Reads |
 |--------|-----------|---------------|
 | Character Data | Depends on Skill Database | Reads SkillSlot0–3 references; reads active tier thresholds (Level 8, Level 18) |
-| Skill Execution System | Reads Skill ScriptableObjects + SkillRuntimeState | All skill fields (MPCost, Cooldown, TargetType, tier data); tracks cooldown and active instances |
-| Character Progression System | Reads SkillDataSO | Tier unlock levels (8, 18) to trigger tier upgrades on level-up |
-| Character Skill System | Reads Skill ScriptableObjects | Skill definitions for character-specific skill unlocks and progression |
+| Skill Execution System | Reads Skill Resources + SkillRuntimeState | All skill fields (MPCost, Cooldown, TargetType, tier data); tracks cooldown and active instances |
+| Character Progression System | Reads SkillData | Tier unlock levels (8, 18) to trigger tier upgrades on level-up |
+| Character Skill System | Reads Skill Resources | Skill definitions for character-specific skill unlocks and progression |
 | Combat HUD | Reads SkillRuntimeState (via Skill Execution) | Current cooldown per skill; active skill tier icon; charge count |
-| Health & Damage System | Reads SkillDataSO | Category (Physical/Magical/Holy/Dark) for resistance calculation; EffectValue for damage computation |
-| Status Effects System | Reads SkillDataSO | Status effect type and magnitude from SkillStatusSO |
-| Combat System | Reads SkillDataSO + SkillRuntimeState | Skill effect execution; ActiveInstances for buff/debuff tracking during combat |
-| Party AI System | Reads SkillDataSO | MPCost, Cooldown, TargetType (to make optimal skill usage decisions) |
-| Audio System | Reads SkillDataSO.AudioCue | Plays the skill's activation sound |
-| Animation System | Reads SkillDataSO.Animation | Plays the skill's animation clip |
+| Health & Damage System | Reads SkillData | Category (Physical/Magical/Holy/Dark) for resistance calculation; EffectValue for damage computation |
+| Status Effects System | Reads SkillData | Status effect type and magnitude from SkillStatusSO |
+| Combat System | Reads SkillData + SkillRuntimeState | Skill effect execution; ActiveInstances for buff/debuff tracking during combat |
+| Party AI System | Reads SkillData | MPCost, Cooldown, TargetType (to make optimal skill usage decisions) |
+| Audio System | Reads SkillData.AudioCue | Plays the skill's activation sound |
+| Animation System | Reads SkillData.Animation | Plays the skill's animation clip |
 | Save / Load System | Reads SkillRuntimeState | Serializes CurrentCooldown, ChargeCount, ActiveInstances per skill per character |
 
-**Interface ownership**: The Skill Database **owns** the skill definition schema. The Skill Execution System **owns** the runtime state (cooldowns, charges, active instances). No system writes to the base ScriptableObject.
+**Interface ownership**: The Skill Database **owns** the skill definition schema. The Skill Execution System **owns** the runtime state (cooldowns, charges, active instances). No system writes to the base Resource.
 
 ## Formulas
 
@@ -214,9 +214,9 @@ MPCost(Tier) = BaseMPCost + ((Tier - 1) × MPCostIncrement)
 
 | Variable | Type | Range | Source | Description |
 |----------|------|-------|--------|-------------|
-| BaseMPCost | int | 10–50 | SkillDataSO | MP cost at Tier 1 |
+| BaseMPCost | int | 10–50 | SkillData | MP cost at Tier 1 |
 | Tier | int | 1–3 | Character Progression System | Current active tier |
-| MPCostIncrement | int | 5–15 | SkillDataSO | MP cost increase per tier level |
+| MPCostIncrement | int | 5–15 | SkillData | MP cost increase per tier level |
 
 **Example** — Skill with BaseMPCost 20, MPCostIncrement 8:
 - Tier 1: 20 MP
@@ -233,7 +233,7 @@ EffectiveCooldown = BaseCooldown × (1 - CooldownReductionBonus)
 
 | Variable | Type | Range | Source | Description |
 |----------|------|-------|--------|-------------|
-| BaseCooldown | float (seconds) | 2.0–15.0 | SkillDataSO | Base cooldown of the skill |
+| BaseCooldown | float (seconds) | 2.0–15.0 | SkillData | Base cooldown of the skill |
 | CooldownReductionBonus | float | 0.0–0.40 (0%–40%) | Equipment bonuses + buffs | Percentage cooldown reduction (capped at 40%) |
 
 **Example** — Skill with 8s base cooldown, character has 25% cooldown reduction from equipment:
@@ -278,7 +278,7 @@ TotalBuff = 1 + (Buff1_EffectValue + Buff2_EffectValue + ...)
 
 | System | Direction | Nature | What Flows Between Them |
 |--------|-----------|--------|------------------------|
-| **Character Data** | Depends on Skill Database | Hard | References 4 SkillDataSO per character; reads tier unlock levels (8, 18) |
+| **Character Data** | Depends on Skill Database | Hard | References 4 SkillData per character; reads tier unlock levels (8, 18) |
 | **Skill Execution System** | Depends on Skill Database | Hard | Reads all skill fields; creates and manages SkillRuntimeState per skill per character |
 | **Character Progression System** | Depends on Skill Database | Soft | Reads tier unlock levels to trigger skill upgrades on level-up |
 | **Character Skill System** | Depends on Skill Database | Hard | Reads skill definitions for character-specific unlocks and progression tracking |
@@ -348,7 +348,7 @@ TotalBuff = 1 + (Buff1_EffectValue + Buff2_EffectValue + ...)
 
 ## Acceptance Criteria
 
-- [ ] All four ScriptableObject types (`SkillDamageSO`, `SkillSupportSO`, `SkillStatusSO`, `SkillUtilitySO`) can be created in the Unity Editor and saved as `.asset` files
+- [ ] All four Resource types (`SkillDamageSO`, `SkillSupportSO`, `SkillStatusSO`, `SkillUtilitySO`) can be created in the Godot Editor and saved as `.tres` files
 - [ ] Skill damage formula produces correct results: `((CasterATK × 0.5 + SkillBaseDamage) × EffectValue - TargetDEF) × CategoryResistance` — verified by unit test with known inputs
 - [ ] Skill heal formula produces correct results: `(CasterMaxMP × 0.1 + SkillBaseHeal) × EffectValue + (TargetMaxHP × TargetMaxHPBonus)` — verified by unit test
 - [ ] MP cost per tier formula produces correct results: `BaseMPCost + ((Tier - 1) × MPCostIncrement)` — verified by unit test
@@ -362,13 +362,13 @@ TotalBuff = 1 + (Buff1_EffectValue + Buff2_EffectValue + ...)
 - [ ] Multiple buffs of the same type on the same stat are additive, not multiplicative (verified by unit test)
 - [ ] Minimum skill damage is clamped to 1 — damage cannot be 0 or negative (verified by unit test)
 - [ ] SkillRuntimeState is correctly serialized and deserialized by Save/Load — cooldown, charges, and active instances persist across save/load cycles (verified by round-trip test)
-- [ ] Performance: reading skill ScriptableObject fields adds no measurable frame time (< 0.01ms per skill lookup); 4 skills × 4 party members = 16 lookups per frame at maximum
+- [ ] Performance: reading skill Resource fields adds no measurable frame time (< 0.01ms per skill lookup); 4 skills × 4 party members = 16 lookups per frame at maximum
 
 ## Open Questions
 
 | Question | Owner | Resolution Target |
 |----------|-------|-------------------|
-| How many unique skills will each character have? (4 per character is fixed — but how many total across the roster?) | Game Designer | Resolve before skill data authoring begins — affects total SkillDataSO asset count |
+| How many unique skills will each character have? (4 per character is fixed — but how many total across the roster?) | Game Designer | Resolve before skill data authoring begins — affects total SkillData asset count |
 | Should skills have elemental sub-types (Fire, Ice, Lightning, Wind) beyond the 4 damage categories? | Game Designer / Narrative Director | Resolve before Enemy AI resistance table is authored — affects CategoryResistance complexity |
 | What is the expected skill rotation length? (How many skills should a player use per encounter?) | Game Designer | Resolve during combat encounter design — validates cooldown and MP cost tuning |
 | Should the Witch (prologue-only) have a simplified skill set (2 skills) or the full 4? | Narrative Director / Game Designer | Resolve before Witch prologue is authored — affects MVP scope |

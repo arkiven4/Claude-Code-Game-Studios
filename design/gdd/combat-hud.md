@@ -206,7 +206,7 @@ counter, rank display), and Hollow Knight's minimal HUD (information without clu
 
 - **Depends on**: Character State Manager, Combat System, Skill Execution, Health &
   Damage, Hit Detection, Character Switching, Input System, Enemy AI, Audio System
-  (combo completion sound), Character Skill System (passive icons), Unity UI Toolkit,
+  (combo completion sound), Character Skill System (passive icons), Godot UI,
   TextMeshPro
 - **Depended on by**: Save / Load (HUD settings like damage number visibility)
 

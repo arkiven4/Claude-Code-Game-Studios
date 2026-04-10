@@ -7,7 +7,7 @@
 
 ## Overview
 
-The Status Effects System manages all persistent, time-bound modifiers applied to characters and enemies during combat and exploration — buffs that enhance stats, debuffs that weaken targets, damage-over-time effects that tick each interval, crowd-control effects that restrict action, and shields that absorb damage. Each status effect is defined as a ScriptableObject (`StatusEffectSO`) specifying its type, magnitude, duration, stacking rules, and visual/audio feedback. The system is called by the Skill Execution System (when skills apply effects), queried by the Health & Damage System (when calculating effective stats), and serialized by the Save / Load System (so active effects persist across saves). Status effects are the primary lever for combat strategy beyond raw stats — knowing when to buff an ally, debuff a boss, or cleanse a party-wide poison is the core skill expression of the party management loop.
+The Status Effects System manages all persistent, time-bound modifiers applied to characters and enemies during combat and exploration — buffs that enhance stats, debuffs that weaken targets, damage-over-time effects that tick each interval, crowd-control effects that restrict action, and shields that absorb damage. Each status effect is defined as a Resource (`StatusEffectSO`) specifying its type, magnitude, duration, stacking rules, and visual/audio feedback. The system is called by the Skill Execution System (when skills apply effects), queried by the Health & Damage System (when calculating effective stats), and serialized by the Save / Load System (so active effects persist across saves). Status effects are the primary lever for combat strategy beyond raw stats — knowing when to buff an ally, debuff a boss, or cleanse a party-wide poison is the core skill expression of the party management loop.
 
 ## Player Fantasy
 
@@ -19,7 +19,7 @@ Status Effects System serves the fantasy of **tactical depth through temporary a
 
 ### Core Rules
 
-1. **StatusEffectSO ScriptableObject**: Every status effect is defined as a `StatusEffectSO` asset with the following fields:
+1. **StatusEffectSO Resource**: Every status effect is defined as a `StatusEffectSO` asset with the following fields:
 
    | Field | Type | Description |
    |-------|------|-------------|
@@ -40,7 +40,7 @@ Status Effects System serves the fantasy of **tactical depth through temporary a
    | `Dispellable` | bool | Whether the effect can be removed by cleanse skills (default: true for buffs/debuffs, false for some boss-applied CC) |
    | `IsHostile` | bool | True for effects applied by enemies to players; false for player-applied effects |
    | `Description` | string | One-line tooltip text explaining the effect |
-   | `VFX` | GameObject | Visual effect prefab instantiated on the target when effect is applied |
+   | `VFX` | Node3D | Visual effect prefab instantiated on the target when effect is applied |
    | `AudioCue` | AudioClip | Sound played when effect is applied |
    | `RemoveAudioCue` | AudioClip | Sound played when effect expires or is dispelled |
 

@@ -7,7 +7,7 @@
 
 ## Overview
 
-The Scene Management System controls which Unity scene is loaded, how scenes transition,
+The Scene Management System controls which Godot scene is loaded, how scenes transition,
 and what state is restored after a scene change. It handles four transition types:
 standard scene load (with loading screen), chapter transition (with cutscene bookends),
 area portal transitions (walking through a door triggers a seamless scene swap), and
@@ -93,7 +93,7 @@ contextual loading screens (narrative text during load).
 6. **Scene Registry**: The system maintains a registry of all scenes in the game:
    ```csharp
    public struct SceneDefinition {
-       public string SceneName;       // Unity scene file name (without .unity)
+       public string SceneName;       // Godot scene file name (without .tscn)
        public int ChapterId;          // Which chapter this scene belongs to
        public SceneType Type;         // enum: Combat, Hub, Cutscene, Menu, Transition
        public bool IsStreaming;       // true for area portal scenes (can preload)
@@ -110,8 +110,8 @@ contextual loading screens (narrative text during load).
 8. **Loading Screen Tips**: The loading screen displays a narrative tip — a short quote
    or story fragment relevant to the scene being loaded. Tips are defined per scene:
    ```
-   "WitchPrologue.unity" → "The forest remembers what the village forgot."
-   "HauntedCrypt.unity" → "Not all tombs are meant to stay closed."
+   "WitchPrologue.tscn" → "The forest remembers what the village forgot."
+   "HauntedCrypt.tscn" → "Not all tombs are meant to stay closed."
    ```
 
 9. **Scene Unloading**: Before a scene is unloaded, the system:

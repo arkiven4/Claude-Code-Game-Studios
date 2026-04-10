@@ -42,7 +42,7 @@ and Dark Souls' death/restart clarity (you always know why you died).
 
 1. **Current HP Tracking**: Every character and enemy has `CurrentHP` (int, clamped 0 to
    MaxHP) and `CurrentMP` (int, clamped 0 to MaxMP). These are runtime state, not
-   ScriptableObject fields. They are initialized to MaxHP/MaxMP on encounter start or
+   Resource fields. They are initialized to MaxHP/MaxMP on encounter start or
    scene load.
 
 2. **Damage Formula** (from Skill Database, restated with full detail):

@@ -8,7 +8,7 @@
 ## Overview
 
 The Dialogue System is the primary narrative delivery mechanism for My Vampire. It presents
-text-based dialogue between characters using a data-driven ScriptableObject architecture
+text-based dialogue between characters using a data-driven Resource architecture
 (`DialogueNodeSO`) connected into directed dialogue graphs. Each dialogue node contains
 speaker identification, display text with TextMarkup formatting, optional voice clip
 references, and branching conditions. The system supports linear conversations, branching
@@ -37,7 +37,7 @@ advance quickly), and Visual Novel-style text pacing (typewriter effect with ins
 
 ### Core Rules
 
-1. **DialogueNodeSO ScriptableObject**: Each node in a dialogue graph is a
+1. **DialogueNodeSO Resource**: Each node in a dialogue graph is a
    `DialogueNodeSO` asset:
    ```
    DialogueNodeSO fields:
@@ -61,7 +61,7 @@ advance quickly), and Visual Novel-style text pacing (typewriter effect with ins
    └─────────────────────────────────────────────────┘
    ```
 
-2. **DialogueGraphSO**: A `DialogueGraphSO` ScriptableObject contains an array of
+2. **DialogueGraphSO**: A `DialogueGraphSO` Resource contains an array of
    `DialogueNodeSO` references and identifies the `StartNode`. Each conversation
    (NPC interaction, story beat, chapter intro) has its own graph asset. Graphs are
    created in the Unity editor by the narrative team and referenced by scene triggers.

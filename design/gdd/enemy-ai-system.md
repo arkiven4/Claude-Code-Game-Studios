@@ -7,7 +7,7 @@
 
 ## Overview
 
-The Enemy AI System controls all non-player combatant behavior — from basic grunts that attack the nearest target to multi-phase bosses with scripted abilities, enrage timers, and adaptive targeting. Each enemy is defined by an `EnemyDataSO` ScriptableObject specifying its stats, abilities, behavior profile, and phase transitions. At runtime, a behavior tree selects actions each frame based on the combat state, cooldown availability, and target positions. The system calls Skill Execution to use enemy skills, Hit Detection to acquire targets, and Health & Damage to resolve outcomes. Enemy AI is designed to feel threatening but readable — telegraphs give the player time to react, and enemy behavior follows consistent patterns that reward observation and adaptation.
+The Enemy AI System controls all non-player combatant behavior — from basic grunts that attack the nearest target to multi-phase bosses with scripted abilities, enrage timers, and adaptive targeting. Each enemy is defined by an `EnemyDataSO` Resource specifying its stats, abilities, behavior profile, and phase transitions. At runtime, a behavior tree selects actions each frame based on the combat state, cooldown availability, and target positions. The system calls Skill Execution to use enemy skills, Hit Detection to acquire targets, and Health & Damage to resolve outcomes. Enemy AI is designed to feel threatening but readable — telegraphs give the player time to react, and enemy behavior follows consistent patterns that reward observation and adaptation.
 
 ## Player Fantasy
 
@@ -19,7 +19,7 @@ Enemy AI System serves the fantasy of **smart opponents that you can outplay**. 
 
 ### Core Rules
 
-1. **EnemyDataSO ScriptableObject**: Every enemy type has one `EnemyDataSO` asset:
+1. **EnemyDataSO Resource**: Every enemy type has one `EnemyDataSO` asset:
 
    | Field | Type | Description |
    |-------|------|-------------|
@@ -37,7 +37,7 @@ Enemy AI System serves the fantasy of **smart opponents that you can outplay**. 
    | `Phases` | list of EnemyPhase | Multi-phase boss configurations (empty for non-boss enemies) |
    | `DeathThreshold` | float | HP% at which enemy dies (0.0 for standard, >0.0 for multi-phase bosses) |
    | `LootTable` | LootTableRef | What items this enemy drops on death |
-   | `ModelPrefab` | GameObject | 3D model used to render this enemy |
+   | `ModelPrefab` | Node3D | 3D model used to render this enemy |
    | `PortraitSprite` | Sprite | Used in combat target selection HUD |
 
 2. **EnemyBehaviorProfile**: Defines how an enemy makes decisions:
@@ -123,7 +123,7 @@ Enemy AI System serves the fantasy of **smart opponents that you can outplay**. 
 | `CurrentPhase` | int | Active phase index (0 = first phase) |
 | `SkillCooldowns[]` | dict | Per-skill remaining cooldown |
 | `CurrentAction` | enum | `Idle`, `Moving`, `Telegraphing`, `Attacking`, `Stunned`, `Dead` |
-| `TargetCharacter` | GameObject reference | Currently selected target |
+| `TargetCharacter` | Node3D reference | Currently selected target |
 | `TelegraphTimer` | float | Remaining telegraph duration |
 | `DecisionTimer` | float | Time until next decision cycle |
 | `IsEnraged` | bool | Whether the enemy is in enrage state |

@@ -213,20 +213,39 @@ def main():
     _ALL_POLICIES   = _PARTY_POLICIES + _ENEMY_POLICIES
 
     print("Training started. Ctrl+C to stop.")
+
+    # --- Win-rate proxy derived from team_policy reward ---
+    # custom_metrics is empty in this RLlib setup, so we map the team policy's
+    # per-episode reward to a [0, 1] win-rate proxy using fixed floor/ceiling:
+    #   loss scenario  ≈ -8  (on_defeat -5 + on_ally_died -1.5 × 2)
+    #   win scenario   ≈ +7  (on_victory +5 + on_enemy_killed +0.5 × 3 + survival)
+    # Rolling window smooths single-iter noise so freeze state doesn't flap.
+    LOSS_FLOOR = -6.0
+    WIN_CEIL   = 6.0
+    WR_WINDOW  = 5
+    wr_history: list[float] = []
+
     last_result = {}
     try:
         for iteration in range(500):
+            # Compute win-rate proxy from last iteration's team reward
+            prev_rewards = last_result.get("env_runners", {}).get("policy_reward_mean", {})
+            team_reward_prev = prev_rewards.get("team_policy")
+            if isinstance(team_reward_prev, (float, int)):
+                wr_instant = max(0.0, min(1.0, (team_reward_prev - LOSS_FLOOR) / (WIN_CEIL - LOSS_FLOOR)))
+                wr_history.append(wr_instant)
+                if len(wr_history) > WR_WINDOW:
+                    wr_history.pop(0)
+
             # Dynamic policy freezing to maintain ~50% winrate balance
-            if iteration > 20:  # Allow some initial data gathering
-                custom = last_result.get('custom_metrics', {})
-                # 'team' agent's 'victory' stat becomes 'team_victory_mean' in custom_metrics
-                win_rate = custom.get('team_victory_mean', 0.5) 
-                
-                if win_rate < 0.3:
+            if iteration > 20 and wr_history:  # Allow initial data gathering
+                win_rate = sum(wr_history) / len(wr_history)
+
+                if win_rate < 0.35:
                     # Party losing too much: freeze Enemy, let Party learn
                     to_train = _PARTY_POLICIES
                     status_msg = f" (FREEZE ENEMY | WR: {win_rate*100:.1f}%)"
-                elif win_rate > 0.7:
+                elif win_rate > 0.65:
                     # Party winning too much: freeze Party, let Enemy learn
                     to_train = _ENEMY_POLICIES
                     status_msg = f" (FREEZE PARTY | WR: {win_rate*100:.1f}%)"
@@ -234,8 +253,7 @@ def main():
                     # Balanced: train everyone
                     to_train = _ALL_POLICIES
                     status_msg = f" (BALANCED | WR: {win_rate*100:.1f}%)"
-                
-                # Update policies to train
+
                 algo.set_policies_to_train(to_train)
             else:
                 to_train = _ALL_POLICIES
@@ -246,13 +264,11 @@ def main():
             if iteration % 10 == 0:
                 reward = result.get('episode_reward_mean')
                 reward_str = f"{reward:.3f}" if isinstance(reward, (float, int)) else str(reward)
-                
-                # Extract victory metric from custom metrics (team policy)
-                custom = result.get('custom_metrics', {})
-                win_rate = custom.get('team_victory_mean', 0.0) * 100.0
+
+                wr_display = (sum(wr_history) / len(wr_history) * 100.0) if wr_history else 0.0
                 ep_len = result.get('episode_len_mean', 0.0)
 
-                print(f"[{iteration}] reward: {reward_str} | wins: {win_rate:.1f}% | len: {ep_len:.1f}{status_msg}")
+                print(f"[{iteration}] reward: {reward_str} | wr: {wr_display:.1f}% | len: {ep_len:.1f}{status_msg}")
             if iteration % 50 == 0:
                 save_path = algo.save(MODELS_DIR)
                 save_config(save_path)  # Save agent config with checkpoint

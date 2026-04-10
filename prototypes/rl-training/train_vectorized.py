@@ -242,25 +242,36 @@ def main():
     print(f"Early stopping: patience={PATIENCE} iters | min_reward_delta={MIN_REWARD_DELTA} "
           f"| entropy_stop={ENTROPY_STOP}")
     print("Dynamic training: freezing winning side to maintain ~50% balance.")
+
+    # --- Win-rate proxy derived from team_policy reward ---
+    # custom_metrics is always empty in this RLlib setup, so we map team_policy's
+    # per-episode reward to a [0, 1] win-rate proxy using fixed floor/ceiling:
+    #   loss scenario  ≈ -8  (on_defeat -5 + on_ally_died -1.5 × 2)
+    #   win scenario   ≈ +7  (on_victory +5 + on_enemy_killed +0.5 × 3 + survival)
+    # Rolling window smooths single-iter noise so freeze state doesn't flap.
+    LOSS_FLOOR = -6.0
+    WIN_CEIL   = 6.0
+    WR_WINDOW  = 5
+    wr_history: list[float] = []
+
     last_result = {}
     try:
         for iteration in range(500):
-            # Dynamic policy freezing to maintain ~50% winrate balance
-            # Average win rate across all arenas from custom metrics
-            custom = last_result.get('custom_metrics', {})
-            victory_keys = [k for k in custom.keys() if k.endswith("_team_victory_mean")]
-            
-            if victory_keys:
-                win_rate = sum(custom[k] for k in victory_keys) / len(victory_keys)
-            else:
-                # Fallback if custom_metrics is empty or not yet populated
-                win_rate = 0.5 
+            # Derive win-rate proxy from last iteration's team_policy reward
+            prev_rewards = last_result.get("env_runners", {}).get("policy_reward_mean", {})
+            team_reward_prev = prev_rewards.get("team_policy")
+            if isinstance(team_reward_prev, (float, int)) and team_reward_prev == team_reward_prev:
+                wr_instant = max(0.0, min(1.0, (team_reward_prev - LOSS_FLOOR) / (WIN_CEIL - LOSS_FLOOR)))
+                wr_history.append(wr_instant)
+                if len(wr_history) > WR_WINDOW:
+                    wr_history.pop(0)
 
-            if iteration > 10: # Small warmup
-                if win_rate < 0.3:
+            if iteration > 10 and wr_history:  # Small warmup
+                win_rate = sum(wr_history) / len(wr_history)
+                if win_rate < 0.35:
                     to_train = _PARTY_POLICIES
                     status_msg = f" (FREEZE ENEMY | WR: {win_rate*100:.1f}%)"
-                elif win_rate > 0.7:
+                elif win_rate > 0.65:
                     to_train = _ENEMY_POLICIES
                     status_msg = f" (FREEZE PARTY | WR: {win_rate*100:.1f}%)"
                 else:
@@ -270,10 +281,9 @@ def main():
                 to_train = _ALL_POLICIES
                 status_msg = " (INITIALIZING)"
 
-            # Update policies to train
-            algo.config._is_frozen = False
-            algo.config.policies_to_train = to_train
-            algo.config._is_frozen = True
+            # Proper RLlib API — previous code wrote to algo.config._is_frozen,
+            # which is not a recognised attribute and silently did nothing.
+            algo.set_policies_to_train(to_train)
 
             result = algo.train()
             last_result = result

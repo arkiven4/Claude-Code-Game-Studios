@@ -8,10 +8,10 @@
 ## Overview
 
 The Dialogue UI is the visual presentation layer for the Dialogue System. Built with
-Unity UI Toolkit, it renders the dialogue box (speaker name, character portrait with
+Godot UI, it renders the dialogue box (speaker name, character portrait with
 expressions, dialogue text), typewriter text animation, continue indicator, and choice
 panel (when branching is available). The UI is a pure view — it receives data from the
-Dialogue System and renders it. It handles TextMarkup processing through TextMeshPro,
+Dialogue System and renders it. It handles TextMarkup processing through RichTextLabel,
 typewriter text reveal animation, portrait swapping on speaker changes, choice button
 generation, and the hold-to-skip visual indicator. The dialogue box is anchored to the
 bottom of the screen (~30% screen height) and styled to match the game's gothic aesthetic
@@ -42,7 +42,7 @@ conventions (bottom-anchored box, portrait left, text right, choices below).
    │ [SPEAKER NAME — gold text, top-left]                    │
    │                                                          │
    │ ┌─────────┐                                              │
-   │ │Portrait │  [Dialogue text — TextMeshPro, white text   │
+   │ │Portrait │  [Dialogue text — RichTextLabel, white text   │
    │ │(64x64)  │   with markup support)]                     │
    │ │         │                                              │
    │ └─────────┘                                              │
@@ -50,9 +50,9 @@ conventions (bottom-anchored box, portrait left, text right, choices below).
    │                                              [Continue ▼]│
    └──────────────────────────────────────────────────────────┘
    ```
-   - Speaker name: Gold-colored TextMeshPro label, top-left, bold
+   - Speaker name: Gold-colored RichTextLabel label, top-left, bold
    - Portrait: 64x64 image, left-aligned, expression swaps on speaker change
-   - Text area: Fills remaining space, TextMeshPro with word wrap
+   - Text area: Fills remaining space, RichTextLabel with word wrap
    - Continue indicator: Pulsing "▼" or ">>" at bottom-right (shown when typewriter
      is complete or when text has no more to reveal)
 
@@ -198,7 +198,7 @@ conventions (bottom-anchored box, portrait left, text right, choices below).
 ## Dependencies
 
 - **Depends on**: Dialogue System (data source), Input System (Submit/Navigate), Audio
-  System (typewriter/advance sounds), TextMeshPro (text rendering), Unity UI Toolkit
+  System (typewriter/advance sounds), RichTextLabel (text rendering), Godot UI
   (layout and animation)
 - **Depended on by**: Dialogue System (the UI is its display layer), Cutscene System
   (hides/shows dialogue box mid-cutscene)
@@ -217,7 +217,7 @@ conventions (bottom-anchored box, portrait left, text right, choices below).
 
 - **Dialogue Box Style**: Dark panel (#1a1a2e background, #c9a84c gold border, 2px
   border width). Rounded corners (8px radius). Subtle drop shadow.
-- **Typography**: TextMeshPro with a serif font (matching the game's gothic tone).
+- **Typography**: RichTextLabel with a serif font (matching the game's gothic tone).
   Body text at 18px, speaker name at 16px bold gold.
 - **Portrait Atlas**: One texture per character containing all expression sprites
   (neutral, happy, serious, angry, sad, pained). Each sprite is 64x64.
@@ -233,7 +233,7 @@ conventions (bottom-anchored box, portrait left, text right, choices below).
 - **USS Styles**: `.uss` file for all visual styles (colors, borders, fonts, animations).
 - **Portrait Atlas Textures**: `.png` files per character, imported as Sprite sheets
   with named slices matching expression strings.
-- **Choice Button Prefab**: UI Toolkit template for choice buttons (reused per choice).
+- **Choice Button PackedScene**: UI Toolkit template for choice buttons (reused per choice).
 
 ## Acceptance Criteria
 
