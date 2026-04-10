@@ -42,6 +42,11 @@ var last_action: int = 0
 ## Heal target for SINGLE_ALLY skills: 0=self, 1=ally (lowest-HP)
 var pending_heal_target: int = 1
 
+## Dash request — set by action 19, consumed by rl_arena_manager each step.
+## MP is already consumed at request time, so the arena manager just needs to
+## honour the request and start the dash routine.
+var pending_dash_request: bool = false
+
 func _ready() -> void:
 	super._ready()
 	if not state:
@@ -199,8 +204,9 @@ func get_statistics() -> Dictionary:
 func get_action_space() -> Dictionary:
 	return {
 		# 0=wait, 1-4=skill slots, 5=move→enemy, 6=move away, 7=move→ally,
-		# 8=hold, 9=basic, 10=special, 11-18=8-way cardinal (N,NE,E,SE,S,SW,W,NW)
-		"action": {"size": 19, "action_type": "discrete"},
+		# 8=hold, 9=basic, 10=special, 11-18=8-way cardinal (N,NE,E,SE,S,SW,W,NW),
+		# 19=dash (MP-gated invincible burst)
+		"action": {"size": 20, "action_type": "discrete"},
 		# For SINGLE_ALLY skills: 0=heal self, 1=heal lowest-HP ally
 		"heal_target": {"size": 2, "action_type": "discrete"},
 	}
@@ -210,6 +216,7 @@ func set_action(action: Dictionary) -> void:
 	pending_heal_target = action.get("heal_target", 1)
 	last_action = act
 	pending_move_action = 0
+	pending_dash_request = false
 
 	if not state or not state.is_alive:
 		return
@@ -253,6 +260,22 @@ func set_action(action: Dictionary) -> void:
 				var hit := skill_execution.try_activate_attack(act == 10, _active_tier)
 				if hit:
 					reward += w_skill_hit * 0.5
+		19:
+			## Dash — MP-gated invincible burst. MP is consumed here so the
+			## arena manager can just honour pending_dash_request without
+			## double-checking resources.
+			if state.is_casting:
+				reward -= w_idle
+				return
+			if not state.try_consume_dodge_mp():
+				## No MP — wasted action attempt. Penalise like idle so the
+				## policy learns not to spam dash at 0 MP.
+				reward -= w_idle
+				return
+			pending_dash_request = true
+			## Small intent reward so dash gets explored during early training.
+			## Net outcome still driven by damage_received / kite delta shaping.
+			reward += w_skill_hit * 0.3
 		_:
 			# action=0 = "wait". Penalise idle only when NOT already casting —
 			# waiting while a cast is in-flight is the correct behavior, and
@@ -268,6 +291,7 @@ func reset() -> void:
 	pending_move_action = 0
 	last_action = 0
 	pending_heal_target = 1
+	pending_dash_request = false
 
 # --- Reward callbacks (called by rl_arena_manager) ---
 

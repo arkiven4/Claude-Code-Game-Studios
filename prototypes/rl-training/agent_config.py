@@ -49,8 +49,9 @@ def get_action_spaces():
     #   9      = basic attack
     #   10     = special attack
     #   11-18  = 8-way cardinal movement (N, NE, E, SE, S, SW, W, NW)
+    #   19     = dash (consumes MP, invincible for dash_duration)
     act_party = gym.spaces.Dict({
-        "action":      gym.spaces.Discrete(19),
+        "action":      gym.spaces.Discrete(20),
         "heal_target": gym.spaces.Discrete(2),   # 0=self, 1=lowest-HP ally
     })
 

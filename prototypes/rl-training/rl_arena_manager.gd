@@ -10,6 +10,10 @@ extends Node3D
 @export var move_speed: float = 4.0
 @export var arena_half_size: float = 30.0  ## Boundary penalty starts if |x| or |z| exceeds this (60x60 platform)
 
+## Dash params — matches player_movement_controller.gd for consistent feel
+@export var dash_multiplier: float = 3.0    ## velocity multiplier during dash
+@export var dash_duration: float = 0.35     ## seconds of dash + invincibility
+
 ## Stagnation penalty: steps of no damage before penalty fires (90 = ~1.5s at 60 FPS)
 ## Raised from 60 to give the kite retreat window (60 steps) breathing room to
 ## complete a hit -> retreat -> hit cycle before stagnation fires.
@@ -65,6 +69,14 @@ var _evan_prev_enemy_dist: float = 0.0
 var _evelyn_prev_enemy_dist: float = 0.0
 var _evan_kite_ready: bool = false
 var _evelyn_kite_ready: bool = false
+
+## Dash state — keyed by body instance id so movement routine can be generic.
+## { body_id: float timer_seconds } / { body_id: Vector3 dir }
+## Also tracks last non-dash move direction so a "dash with no input" defaults
+## to the agent's previous intent (matches player dodge semantics).
+var _dash_timers: Dictionary = {}
+var _dash_dirs: Dictionary = {}
+var _last_move_dirs: Dictionary = {}
 
 ## Long-term statistics
 var _total_episodes: int = 0
@@ -192,6 +204,63 @@ func _execute_agent_movement(body: CharacterBody3D, agent: RLPartyAgent, delta: 
 			body.move_and_slide()
 		return
 
+	var body_id: int = body.get_instance_id()
+
+	# --- Dash tick: if currently dashing, override movement with boosted velocity ---
+	var dash_timer: float = _dash_timers.get(body_id, 0.0)
+	if dash_timer > 0.0:
+		dash_timer -= delta
+		if dash_timer <= 0.0:
+			# Dash finished — clear invincibility and tracking.
+			_dash_timers.erase(body_id)
+			_dash_dirs.erase(body_id)
+			agent.state.set_invincible(false)
+			var sfx_end: Node = body.get_node_or_null("StatusEffectsSystem")
+			if sfx_end and sfx_end.has_method("remove_effect"):
+				sfx_end.remove_effect("invincibility")
+		else:
+			_dash_timers[body_id] = dash_timer
+			var dash_dir: Vector3 = _dash_dirs.get(body_id, Vector3.ZERO)
+			body.velocity.x = dash_dir.x * move_speed * dash_multiplier
+			body.velocity.z = dash_dir.z * move_speed * dash_multiplier
+			if not body.is_on_floor():
+				body.velocity += body.get_gravity() * delta
+			body.move_and_slide()
+			return  ## Skip normal movement while dashing
+
+	# --- Dash start: the agent requested a dash this step ---
+	if agent.pending_dash_request:
+		agent.pending_dash_request = false
+		## Dash direction = last non-dash movement intent, or retreat-from-nearest
+		## if the agent has been idle (avoids dashing into enemies by default).
+		var start_dir: Vector3 = _last_move_dirs.get(body_id, Vector3.ZERO)
+		if start_dir.length_squared() < 0.0001:
+			var enemies_for_dash: Array = agent._context.get("enemies", [])
+			var nearest: Vector3 = _nearest_enemy_pos(body.global_position, enemies_for_dash)
+			if nearest != Vector3.ZERO:
+				start_dir = (body.global_position - nearest)
+				start_dir.y = 0.0
+				if start_dir.length_squared() > 0.0001:
+					start_dir = start_dir.normalized()
+			else:
+				start_dir = -body.global_transform.basis.z  ## forward fallback
+				start_dir.y = 0.0
+				start_dir = start_dir.normalized()
+		_dash_timers[body_id] = dash_duration
+		_dash_dirs[body_id] = start_dir
+		agent.state.set_invincible(true)
+		var sfx_start: Node = body.get_node_or_null("StatusEffectsSystem")
+		if sfx_start and sfx_start.has_method("apply_effect"):
+			var inv_def: StatusEffect = load("res://assets/data/status_effects/invincibility.tres") as StatusEffect
+			if inv_def:
+				sfx_start.apply_effect(inv_def, "dodge", 1, dash_duration)
+		body.velocity.x = start_dir.x * move_speed * dash_multiplier
+		body.velocity.z = start_dir.z * move_speed * dash_multiplier
+		if not body.is_on_floor():
+			body.velocity += body.get_gravity() * delta
+		body.move_and_slide()
+		return
+
 	var move_dir: Vector3 = Vector3.ZERO
 	var enemies: Array = agent._context.get("enemies", [])
 
@@ -227,6 +296,10 @@ func _execute_agent_movement(body: CharacterBody3D, agent: RLPartyAgent, delta: 
 	move_dir.y = 0.0
 	if move_dir.length_squared() > 0.0001:
 		move_dir = move_dir.normalized()
+		## Remember this as the last-known intent so a future dash action can
+		## default to "dash in the direction I was just moving" (matches the
+		## player controller's dodge semantics).
+		_last_move_dirs[body_id] = move_dir
 
 	body.velocity.x = move_dir.x * move_speed
 	body.velocity.z = move_dir.z * move_speed
@@ -332,6 +405,15 @@ func _reset_episode() -> void:
 	_evan_prev_enemy_dist = 0.0; _evelyn_prev_enemy_dist = 0.0
 	_evan_kite_ready = false; _evelyn_kite_ready = false
 	_episode_damage_dealt = 0.0; _episode_damage_received = 0.0
+	_dash_timers.clear(); _dash_dirs.clear(); _last_move_dirs.clear()
+	## Clear any lingering invincibility from a dash that didn't finish before
+	## the episode ended.
+	for state in [_evan_state, _evelyn_state]:
+		if not state: continue
+		state.set_invincible(false)
+		var sfx: Node = state.get_parent().get_node_or_null("StatusEffectsSystem") if state.get_parent() else null
+		if sfx and sfx.has_method("remove_effect"):
+			sfx.remove_effect("invincibility")
 
 	if _evan_agent and _evan_agent.skill_execution:   _evan_agent.skill_execution.cancel_cast()
 	if _evelyn_agent and _evelyn_agent.skill_execution: _evelyn_agent.skill_execution.cancel_cast()
