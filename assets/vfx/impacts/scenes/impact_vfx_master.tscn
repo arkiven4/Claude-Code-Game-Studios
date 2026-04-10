@@ -1,0 +1,22 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/vfx/impacts/scenes/impact_flash.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://assets/vfx/impacts/scenes/impact_flare.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://assets/vfx/impacts/scenes/impact_shockwave.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://assets/vfx/impacts/scenes/impact_sparks.tscn" id="4"]
+[ext_resource type="Script" path="res://assets/vfx/impacts/scripts/impact_vfx_controller.gd" id="5"]
+
+[node name="ImpactVFX" type="Node3D"]
+script = ExtResource(5)
+
+[node name="Flash" parent="." instance=ExtResource(1)]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+
+[node name="Flare" parent="." instance=ExtResource(2)]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+
+[node name="Shockwave" parent="." instance=ExtResource(3)]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Sparks" parent="." instance=ExtResource(4)]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)

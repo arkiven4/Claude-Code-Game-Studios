@@ -1,0 +1,25 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="ShaderMaterial" path="res://assets/vfx/impacts/materials/flash_flare_material.tres" id="1_flash"]
+[ext_resource type="Curve" path="res://assets/vfx/impacts/flash_scale_curve.tres" id="2_scale_curve"]
+
+[sub_resource type="CurveTexture" id="CurveTexture_flash_scale"]
+curve = ExtResource("2_scale_curve")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_flash"]
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_flash_scale")
+
+[sub_resource type="QuadMesh" id="QuadMesh_flash"]
+size = Vector2(6, 6)
+
+[node name="ImpactFlash" type="Node3D"]
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+material_override = ExtResource("1_flash")
+amount = 1
+lifetime = 0.1
+one_shot = true
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_flash")
+draw_pass_1 = SubResource("QuadMesh_flash")

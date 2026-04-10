@@ -198,8 +198,9 @@ func get_statistics() -> Dictionary:
 
 func get_action_space() -> Dictionary:
 	return {
-		# 0=wait, 1-4=skill slots, 5=move→enemy, 6=move away, 7=move→ally, 8=hold, 9=basic, 10=special
-		"action": {"size": 11, "action_type": "discrete"},
+		# 0=wait, 1-4=skill slots, 5=move→enemy, 6=move away, 7=move→ally,
+		# 8=hold, 9=basic, 10=special, 11-18=8-way cardinal (N,NE,E,SE,S,SW,W,NW)
+		"action": {"size": 19, "action_type": "discrete"},
 		# For SINGLE_ALLY skills: 0=heal self, 1=heal lowest-HP ally
 		"heal_target": {"size": 2, "action_type": "discrete"},
 	}
@@ -231,7 +232,8 @@ func set_action(action: Dictionary) -> void:
 					hit = skill_execution.try_activate_skill(slot, _active_tier)
 				if hit:
 					reward += w_skill_hit * 0.5  ## Reduced intent reward
-		5, 6, 7:
+		5, 6, 7, 11, 12, 13, 14, 15, 16, 17, 18:
+			## 5-7: enemy/ally-relative movement; 11-18: 8-way cardinal movement.
 			if state.is_casting:
 				reward -= w_idle  ## Penalty for trying to move while casting
 				return
@@ -239,7 +241,7 @@ func set_action(action: Dictionary) -> void:
 		8:
 			## "Hold" = no-op move. Pay the same idle penalty as action 0 so the
 			## policy can't hide in action 8 as a free wait and never learn to
-			## actually pick direction actions 5/6/7.
+			## actually pick direction actions 5/6/7/11-18.
 			if not state.is_casting:
 				reward -= w_idle
 			pending_move_action = act

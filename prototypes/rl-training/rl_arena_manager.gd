@@ -212,6 +212,17 @@ func _execute_agent_movement(body: CharacterBody3D, agent: RLPartyAgent, delta: 
 				move_dir = (ally_body.global_position - body.global_position)
 		8:
 			move_dir = Vector3.ZERO
+		# 8-way cardinal movement in world-space XZ plane.
+		# 11=N (+Z), 13=E (+X), 15=S (-Z), 17=W (-X). Diagonals normalised
+		# to unit length so cardinal and diagonal moves travel the same speed.
+		11: move_dir = Vector3( 0.0, 0.0,  1.0)                   # N
+		12: move_dir = Vector3( 1.0, 0.0,  1.0).normalized()      # NE
+		13: move_dir = Vector3( 1.0, 0.0,  0.0)                   # E
+		14: move_dir = Vector3( 1.0, 0.0, -1.0).normalized()      # SE
+		15: move_dir = Vector3( 0.0, 0.0, -1.0)                   # S
+		16: move_dir = Vector3(-1.0, 0.0, -1.0).normalized()      # SW
+		17: move_dir = Vector3(-1.0, 0.0,  0.0)                   # W
+		18: move_dir = Vector3(-1.0, 0.0,  1.0).normalized()      # NW
 
 	move_dir.y = 0.0
 	if move_dir.length_squared() > 0.0001:
@@ -280,16 +291,20 @@ func _end_episode(victory: bool) -> void:
 	if victory:        _party_wins += 1
 	else:              _enemy_wins += 1
 
+	## Damage progress tracking runs unconditionally — the HUD reads from
+	## _recent_results to display "Avg: X%". Previously gated behind
+	## curriculum_enabled, which left the counter locked at 0% when the
+	## curriculum was disabled in the Inspector.
+	var progress: float = 0.0
+	if _total_enemy_max_hp > 0.0:
+		var damage_dealt: float = 0.0
+		for enemy in _enemies:
+			if is_instance_valid(enemy):
+				damage_dealt += enemy.max_hp - (enemy.current_hp if enemy.is_alive else 0)
+		progress = clampf(damage_dealt / _total_enemy_max_hp, 0.0, 1.0)
+	_recent_results.append(progress)
+	if _recent_results.size() > curriculum_eval_window: _recent_results.pop_front()
 	if curriculum_enabled:
-		var progress: float = 0.0
-		if _total_enemy_max_hp > 0.0:
-			var damage_dealt: float = 0.0
-			for enemy in _enemies:
-				if is_instance_valid(enemy):
-					damage_dealt += enemy.max_hp - (enemy.current_hp if enemy.is_alive else 0)
-			progress = clampf(damage_dealt / _total_enemy_max_hp, 0.0, 1.0)
-		_recent_results.append(progress)
-		if _recent_results.size() > curriculum_eval_window: _recent_results.pop_front()
 		_update_curriculum()
 
 	if _evan_agent: _evan_agent.done = true

@@ -1,0 +1,48 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="ShaderMaterial" path="res://assets/vfx/impacts/materials/spark_material.tres" id="1_sparks"]
+
+[sub_resource type="Curve" id="Curve_sparks_x"]
+_data = {
+"points": PackedVector2Array(0, 0.05, 0, 0, 1, 0, 0, 0)
+}
+
+[sub_resource type="Curve" id="Curve_sparks_y"]
+_data = {
+"points": PackedVector2Array(0, 5, 0, 0, 1, 0, 0, 0)
+}
+
+[sub_resource type="Curve" id="Curve_sparks_z"]
+_data = {
+"points": PackedVector2Array(0, 0.1, 0, 0, 1, 0, 0, 0)
+}
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_sparks_scale"]
+curve_x = SubResource("Curve_sparks_x")
+curve_y = SubResource("Curve_sparks_y")
+curve_z = SubResource("Curve_sparks_z")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_sparks"]
+direction = Vector3(0, 1, 0)
+spread = 180.0
+initial_velocity_min = 5.0
+initial_velocity_max = 25.0
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveXYZTexture_sparks_scale")
+collision_mode = 0
+particle_flag_align_y = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_sparks"]
+size = Vector2(0.1, 0.1)
+
+[node name="ImpactSparks" type="Node3D"]
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+material_override = ExtResource("1_sparks")
+amount = 20
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_sparks")
+draw_pass_1 = SubResource("QuadMesh_sparks")

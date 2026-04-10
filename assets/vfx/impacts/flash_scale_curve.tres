@@ -1,0 +1,8 @@
+[gd_resource type="Curve" format=3 uid="uid://vfx_flash_scale_curve"]
+
+[resource]
+_min_value = 0.0
+_max_value = 1.0
+_data = {
+"points": PackedVector2Array(0, 1, 0, 0, 1, 0, 0, 0)
+}

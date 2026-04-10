@@ -40,8 +40,17 @@ def get_observation_spaces():
 def get_action_spaces():
     """Return dict of action spaces for all agents."""
     # Party character actions
+    #   0      = wait
+    #   1-4    = skill slots 1-4
+    #   5      = move toward directive enemy
+    #   6      = move away from nearest enemy
+    #   7      = move toward lowest-HP ally
+    #   8      = hold (no-op, penalised like wait)
+    #   9      = basic attack
+    #   10     = special attack
+    #   11-18  = 8-way cardinal movement (N, NE, E, SE, S, SW, W, NW)
     act_party = gym.spaces.Dict({
-        "action":      gym.spaces.Discrete(11),  # 0=wait, 1-4=skills, 5-8=movement, 9=basic, 10=special
+        "action":      gym.spaces.Discrete(19),
         "heal_target": gym.spaces.Discrete(2),   # 0=self, 1=lowest-HP ally
     })
 

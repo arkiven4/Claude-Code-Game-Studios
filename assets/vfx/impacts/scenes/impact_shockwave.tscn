@@ -1,0 +1,38 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="ShaderMaterial" path="res://assets/vfx/impacts/materials/shockwave_ring_material.tres" id="1_shockwave"]
+
+[sub_resource type="Curve" id="Curve_shockwave_scale"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 1, 1, 0, 0)
+}
+
+[sub_resource type="CurveTexture" id="CurveTexture_shockwave_scale"]
+curve = SubResource("Curve_shockwave_scale")
+
+[sub_resource type="Curve" id="Curve_shockwave_alpha"]
+_data = {
+"points": PackedVector2Array(0, 1, 0, 0, 1, 0, 0, 0)
+}
+
+[sub_resource type="CurveTexture" id="CurveTexture_shockwave_alpha"]
+curve = SubResource("Curve_shockwave_alpha")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_shockwave"]
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_shockwave_scale")
+color = Color(1, 1, 1, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_shockwave"]
+size = Vector2(8, 8)
+
+[node name="ImpactShockwave" type="Node3D"]
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+material_override = ExtResource("1_shockwave")
+amount = 1
+lifetime = 0.4
+one_shot = true
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_shockwave")
+draw_pass_1 = SubResource("QuadMesh_shockwave")
