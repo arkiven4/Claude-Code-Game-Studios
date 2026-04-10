@@ -64,7 +64,7 @@ advance quickly), and Visual Novel-style text pacing (typewriter effect with ins
 2. **DialogueGraphSO**: A `DialogueGraphSO` Resource contains an array of
    `DialogueNodeSO` references and identifies the `StartNode`. Each conversation
    (NPC interaction, story beat, chapter intro) has its own graph asset. Graphs are
-   created in the Unity editor by the narrative team and referenced by scene triggers.
+   Graphs are created in the Godot editor by the narrative team and referenced by scene triggers.
 
 3. **Dialogue Text Markup**: Dialogue text supports inline formatting via a simple
    markup syntax processed by `TextMeshPro`:

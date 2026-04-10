@@ -93,7 +93,7 @@ Status Effects System serves the fantasy of **tactical depth through temporary a
    - A "Cleanse" skill removes ALL dispellable debuffs from a single ally
    - A "Dispel" skill removes ALL dispellable buffs from a single enemy
 
-8. **Immunity**: Some enemies and characters may be immune to certain effect categories. Immunity is defined in the target's data (enemy data or CharacterDataSO). Immune targets do not receive the effect — the skill applies but the status effect is immediately rejected with a "Immune" indicator.
+8. **Immunity**: Some enemies and characters may be immune to certain effect categories. Immunity is defined in the target's data (enemy data or CharacterData). Immune targets do not receive the effect — the skill applies but the status effect is immediately rejected with a "Immune" indicator.
 
 9. **Priority System**: When multiple effects conflict (e.g., a buff increasing ATK and a debuff reducing ATK on the same target), they are all applied independently. The effective stat is the net result of all active effects. There is no priority — all effects contribute to the final calculation.
 

@@ -39,7 +39,7 @@ punch rather than exposition dumps.
 ### Core Rules
 
 1. **AnimationPlayer**: Each cutscene is a `.playable` Timeline asset authored
-   in Unity's AnimationPlayer. A `AnimationPlayer` component on a scene-level
+   in Godot's AnimationPlayer. A `AnimationPlayer` component on a scene-level
    `CutsceneController` Node plays the Timeline. The Cutscene System wraps the
    director with lifecycle management, input blocking, and state restoration.
 
@@ -106,7 +106,7 @@ punch rather than exposition dumps.
    - `VFXSignal` → triggers a VFX at a specified position
    - `AudioSignal` → plays a one-shot sound at the specified mixer group
    - `TimeScaleSignal` → sets `Time.timeScale` (slow-mo, pause, etc.)
-   - `CameraSignal` → switches to a specific Cinemachine virtual camera
+   - `CameraSignal` → switches to a specific Phantom Camera
 
 7. **Mid-Cutscene Dialogue**: When a `DialogueSignal` fires:
    - The `AnimationPlayer` is paused (not stopped)

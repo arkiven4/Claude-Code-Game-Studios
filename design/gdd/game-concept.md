@@ -273,7 +273,7 @@ Church-as-institution horror (Bloodborne) — corruption hiding behind sanctity.
 
 | Consideration | Assessment |
 | ---- | ---- |
-| **Engine** | Unity — chosen for ML-Agents RL framework, strong asset store, team familiarity |
+| **Engine** | Godot — chosen for Godot RL Agents framework, strong open source community, and modern 3D features |
 | **Key Technical Challenges** | RL training environment for party AI; character switching state management; per-chapter narrative branching |
 | **Art Style** | 3D stylized — warm palette, readable character silhouettes |
 | **Art Pipeline Complexity** | Medium — multiple playable characters with cosmetic variants |

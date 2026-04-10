@@ -211,7 +211,7 @@ State transitions:
 
 ## Dependencies
 
-- **Depends on**: Unity Input System package (`com.unity.inputsystem`)
+- **Depends on**: Godot Input Map
 - **Depended on by**: Character State Manager, Combat System, Character Switching, Camera
   System, Cutscene System, Dialogue System, Main Menu, Save / Load (keybindings),
   Audio System (input sounds), Combat HUD (button prompts)

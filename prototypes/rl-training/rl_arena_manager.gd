@@ -468,9 +468,11 @@ func _check_party_spacing() -> void:
 		var nearest = _nearest_enemy_pos(evan_body.global_position, _enemies)
 		if nearest != Vector3.ZERO:
 			var dist = evan_body.global_position.distance_to(nearest); var hp_ratio = _evan_state.get_hp_ratio()
-			if hp_ratio > 0.5:
-				if dist < 3.0: _evan_agent.reward += 0.001
-			else:
+			## Removed the old high-HP melee-camp reward (+0.001 at dist < 3.0) —
+			## it was a steady-state trap that beat the kite delta reward per step
+			## and taught Evan to stand in melee instead of hit-and-run.
+			## Low-HP logic retained so Evan retreats when hurt.
+			if hp_ratio <= 0.5:
 				if dist < 4.5: _evan_agent.reward -= 0.003
 				elif dist > 7.0: _evan_agent.reward += 0.001
 
@@ -480,8 +482,11 @@ func _check_flawless_hits() -> void:
 	## Teaches: strike → back off → strike again, rather than face-tanking.
 	const FLAWLESS_WINDOW: int = 120         # full-avoidance bonus window (preserved)
 	const RETREAT_WINDOW: int = 60           # 1s window to open distance after a hit
-	const DIST_DELTA_REWARD: float = 0.008   # per meter opened (delta-based, not threshold)
-	const DIST_DELTA_PENALTY: float = 0.005  # per meter closed during retreat window
+	## Scaled up from 0.008 → 0.020 / 0.012 so per-step reward at walk speed
+	## (~0.067 m/step) exceeds competing per-step shaping rewards (~0.001/step)
+	## from party spacing checks. Previous values were being drowned out.
+	const DIST_DELTA_REWARD: float = 0.020   # per meter opened
+	const DIST_DELTA_PENALTY: float = 0.012  # per meter closed during retreat window
 	const SAFE_DIST_EVAN: float = 5.0        # tank can fight closer
 	const SAFE_DIST_EVELYN: float = 7.0      # mage needs more room
 

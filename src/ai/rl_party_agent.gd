@@ -231,10 +231,17 @@ func set_action(action: Dictionary) -> void:
 					hit = skill_execution.try_activate_skill(slot, _active_tier)
 				if hit:
 					reward += w_skill_hit * 0.5  ## Reduced intent reward
-		5, 6, 7, 8:
+		5, 6, 7:
 			if state.is_casting:
 				reward -= w_idle  ## Penalty for trying to move while casting
 				return
+			pending_move_action = act
+		8:
+			## "Hold" = no-op move. Pay the same idle penalty as action 0 so the
+			## policy can't hide in action 8 as a free wait and never learn to
+			## actually pick direction actions 5/6/7.
+			if not state.is_casting:
+				reward -= w_idle
 			pending_move_action = act
 		9, 10:
 			if state.is_casting:

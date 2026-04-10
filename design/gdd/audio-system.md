@@ -202,7 +202,7 @@ click is satisfying).
 
 ## Dependencies
 
-- **Depends on**: Unity AudioMixer system (built-in), Unity AudioSource pooling
+- **Depends on**: Godot AudioBus system (built-in), AudioStreamPlayer3D pooling
 - **Depended on by**: Combat System, Health & Damage, Skill Execution, Enemy AI, Camera,
   Cutscene System, Dialogue System, Input System, Scene Management, Main Menu, Save / Load,
   Combat HUD
