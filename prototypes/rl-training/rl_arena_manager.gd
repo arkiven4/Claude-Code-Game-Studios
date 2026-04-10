@@ -8,7 +8,7 @@ extends Node3D
 @export var enemy_container_path: NodePath
 
 @export var move_speed: float = 4.0
-@export var max_episode_steps: int = 18000
+@export var max_episode_steps: int = 54000 # 15 minutes @ 60 FPS
 @export var arena_half_size: float = 30.0  ## Boundary penalty starts if |x| or |z| exceeds this (60x60 platform)
 
 ## Stagnation penalty: steps of no damage before penalty fires (60 = ~1 second at 60 FPS)
@@ -18,9 +18,13 @@ extends Node3D
 ## Penalty per step for being outside the arena platform
 @export var w_boundary_penalty: float = 0.05
 
+@export_group("Timeout Settings")
+## Steps with no damage/heal before episode ends (3600 = 1 minute @ 60 FPS)
+@export var inactivity_timeout_steps: int = 3600
+
 @export_group("Curriculum Scheduler")
 ## Enable automatic episode length scaling based on rolling win rate
-@export var curriculum_enabled: bool = true
+@export var curriculum_enabled: bool = false
 ## Episodes required before the scheduler checks for the first stage advance
 @export var curriculum_min_episodes: int = 20
 ## Fallback rolling window size — overridden per-stage by "eval_window" in _CURRICULUM_STAGES
@@ -120,6 +124,8 @@ func _ready() -> void:
 	if curriculum_enabled:
 		max_episode_steps = _CURRICULUM_STAGES[0]["steps"]
 		_inactivity_timeout = _CURRICULUM_STAGES[0]["inactivity"]
+	else:
+		_inactivity_timeout = inactivity_timeout_steps
 
 	_find_enemies()
 	_update_all_contexts()
@@ -351,6 +357,7 @@ func _reset_episode() -> void:
 	_start_episode()
 
 func _update_curriculum() -> void:
+	if not curriculum_enabled: return
 	if _curriculum_stage >= _CURRICULUM_STAGES.size() - 1: return
 	var stage_def: Dictionary = _CURRICULUM_STAGES[_curriculum_stage]
 	var window: int = stage_def.get("eval_window", curriculum_eval_window)
