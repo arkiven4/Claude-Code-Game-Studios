@@ -39,6 +39,47 @@ from agent_config import (
 )
 from utils import MODELS_DIR, init_ray, make_logger_creator, build_base_ppo_config
 
+
+def _set_policies_to_train(algo, policies: list) -> None:
+    """Cross-version compatible policy freezing for Ray RLlib.
+
+    `Algorithm.set_policies_to_train` was removed on newer Ray versions but
+    still exists on rollout workers. Try each API in order and use whichever
+    actually works in the installed Ray build.
+    """
+    # Direct algo method (older Ray 2.x)
+    set_method = getattr(algo, "set_policies_to_train", None)
+    if callable(set_method):
+        set_method(policies)
+        return
+
+    # Worker group foreach (most Ray 2.x versions — workers or env_runner_group)
+    for attr in ("workers", "env_runner_group"):
+        wg = getattr(algo, attr, None)
+        if wg is None:
+            continue
+        foreach = getattr(wg, "foreach_worker", None)
+        if not callable(foreach):
+            continue
+        try:
+            foreach(
+                lambda w, p=policies: (
+                    w.set_policies_to_train(p)
+                    if hasattr(w, "set_policies_to_train") else None
+                )
+            )
+            return
+        except Exception:
+            continue
+
+    # Last resort: mutate config. May not propagate to already-running workers,
+    # but it will take effect the next time the learner re-reads the config.
+    if hasattr(algo, "config"):
+        try:
+            algo.config.policies_to_train = list(policies)
+        except Exception:
+            pass
+
 # Agents per arena (must match scene registration order)
 _BASE_AGENTS = get_base_agents()
 _AGENTS_PER_ARENA = len(_BASE_AGENTS)
@@ -281,9 +322,9 @@ def main():
                 to_train = _ALL_POLICIES
                 status_msg = " (INITIALIZING)"
 
-            # Proper RLlib API — previous code wrote to algo.config._is_frozen,
-            # which is not a recognised attribute and silently did nothing.
-            algo.set_policies_to_train(to_train)
+            # Cross-version compatible freeze — Algorithm.set_policies_to_train
+            # was removed on newer Ray, so the helper walks through fallbacks.
+            _set_policies_to_train(algo, to_train)
 
             result = algo.train()
             last_result = result

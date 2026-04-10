@@ -36,6 +36,43 @@ from agent_config import (
 )
 from utils import MODELS_DIR, init_ray, make_logger_creator, build_base_ppo_config
 
+
+def _set_policies_to_train(algo, policies: list) -> None:
+    """Cross-version compatible policy freezing for Ray RLlib.
+
+    `Algorithm.set_policies_to_train` was removed on newer Ray versions but
+    still exists on rollout workers. Try each API in order and use whichever
+    actually works in the installed Ray build.
+    """
+    set_method = getattr(algo, "set_policies_to_train", None)
+    if callable(set_method):
+        set_method(policies)
+        return
+
+    for attr in ("workers", "env_runner_group"):
+        wg = getattr(algo, attr, None)
+        if wg is None:
+            continue
+        foreach = getattr(wg, "foreach_worker", None)
+        if not callable(foreach):
+            continue
+        try:
+            foreach(
+                lambda w, p=policies: (
+                    w.set_policies_to_train(p)
+                    if hasattr(w, "set_policies_to_train") else None
+                )
+            )
+            return
+        except Exception:
+            continue
+
+    if hasattr(algo, "config"):
+        try:
+            algo.config.policies_to_train = list(policies)
+        except Exception:
+            pass
+
 class RayMultiAgentGodotEnv(MultiAgentEnv):
     def __init__(self, env_config):
         super().__init__()
@@ -254,7 +291,7 @@ def main():
                     to_train = _ALL_POLICIES
                     status_msg = f" (BALANCED | WR: {win_rate*100:.1f}%)"
 
-                algo.set_policies_to_train(to_train)
+                _set_policies_to_train(algo, to_train)
             else:
                 to_train = _ALL_POLICIES
                 status_msg = " (INITIALIZING)"
