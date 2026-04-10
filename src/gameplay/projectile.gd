@@ -76,11 +76,15 @@ func _process(delta: float) -> void:
 		
 	var movement := -global_transform.basis.z * speed * delta
 	global_position += movement
-	
-	# Look at movement direction if speed is not zero
+
+	# Look at movement direction if speed is not zero.
+	# Flatten to the XZ plane first — projectiles travel horizontally in this
+	# game, and a (near-)vertical forward vector would be colinear with UP and
+	# trigger a Basis.looking_at warning.
 	if speed > 0 and movement.length() > 0.001:
-		var target_pos := global_position + movement
-		look_at(target_pos, Vector3.UP)
+		var flat_dir := Vector3(movement.x, 0.0, movement.z)
+		if flat_dir.length_squared() > 0.0001:
+			look_at(global_position + flat_dir, Vector3.UP)
 func _on_area_entered(area: Area3D) -> void:
 	if area is HurtboxComponent:
 		var hurtbox := area as HurtboxComponent

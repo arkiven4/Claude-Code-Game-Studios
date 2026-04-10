@@ -36,6 +36,12 @@ albedo_color = Color(0.333333, 0.333333, 0.333333, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(60, 0.1, 60)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_WallNS"]
+size = Vector3(61, 3, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_WallEW"]
+size = Vector3(0.5, 3, 61)
+
 [node name="TestArena" type="Node3D" unique_id=1670239687]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1953160164]
@@ -56,6 +62,32 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1")
 [node name="Collision" type="CollisionShape3D" parent="Ground" unique_id=951188972]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
 shape = SubResource("BoxShape3D_1")
+
+[node name="Barriers" type="Node3D" parent="." unique_id=2233445566]
+
+[node name="WallNorth" type="StaticBody3D" parent="Barriers" unique_id=2233445567]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 30.25)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Barriers/WallNorth" unique_id=2233445568]
+shape = SubResource("BoxShape3D_WallNS")
+
+[node name="WallSouth" type="StaticBody3D" parent="Barriers" unique_id=2233445569]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -30.25)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Barriers/WallSouth" unique_id=2233445570]
+shape = SubResource("BoxShape3D_WallNS")
+
+[node name="WallEast" type="StaticBody3D" parent="Barriers" unique_id=2233445571]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.25, 1.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Barriers/WallEast" unique_id=2233445572]
+shape = SubResource("BoxShape3D_WallEW")
+
+[node name="WallWest" type="StaticBody3D" parent="Barriers" unique_id=2233445573]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.25, 1.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Barriers/WallWest" unique_id=2233445574]
+shape = SubResource("BoxShape3D_WallEW")
 
 [node name="CombatEncounterManager" type="Node" parent="." unique_id=1992922717]
 script = ExtResource("1_combat")
