@@ -361,7 +361,11 @@ func _update_curriculum() -> void:
 	var avg_progress: float = total / float(_recent_results.size())
 
 	if avg_progress >= stage_def["advance_at"]:
-		_curriculum_stage += 1
+		if _curriculum_stage == 2: # Finished Stage 3 (index 2), jumping to end
+			_curriculum_stage = _CURRICULUM_STAGES.size() - 1
+		else:
+			_curriculum_stage += 1
+		
 		var new_stage: Dictionary = _CURRICULUM_STAGES[_curriculum_stage]
 		max_episode_steps = new_stage["steps"]
 		_inactivity_timeout = new_stage["inactivity"]
@@ -465,10 +469,31 @@ func _check_party_spacing() -> void:
 
 func _check_flawless_hits() -> void:
 	const WINDOW: int = 120
-	if _evan_agent and _evan_last_hit_step > 0 and _episode_step == _evan_last_hit_step + WINDOW:
-		if not _evan_took_damage_since_hit: _evan_agent.reward += 0.05
-	if _evelyn_agent and _evelyn_last_hit_step > 0 and _episode_step == _evelyn_last_hit_step + WINDOW:
-		if not _evelyn_took_damage_since_hit: _evelyn_agent.reward += 0.05
+	const RETREAT_WINDOW: int = 60 # 1s reward for backing off after hit
+	const RETREAT_REWARD: float = 0.001
+	
+	if _evan_agent and _evan_last_hit_step > 0:
+		if _episode_step == _evan_last_hit_step + WINDOW:
+			if not _evan_took_damage_since_hit: _evan_agent.reward += 0.2
+		
+		# Active retreat bonus: rewarding moving away from enemies after hitting
+		if _episode_step < _evan_last_hit_step + RETREAT_WINDOW and not _evan_took_damage_since_hit:
+			var nearest_pos = _nearest_enemy_pos(evan_body.global_position, _enemies)
+			if nearest_pos != Vector3.ZERO:
+				var dist = evan_body.global_position.distance_to(nearest_pos)
+				# Only reward if moving away (this is slightly simplified, usually we'd check velocity dot to enemy)
+				# But for now, we'll just give a small per-step reward if they are > safe distance
+				if dist > 5.0: _evan_agent.reward += RETREAT_REWARD
+
+	if _evelyn_agent and _evelyn_last_hit_step > 0:
+		if _episode_step == _evelyn_last_hit_step + WINDOW:
+			if not _evelyn_took_damage_since_hit: _evelyn_agent.reward += 0.2
+			
+		if _episode_step < _evelyn_last_hit_step + RETREAT_WINDOW and not _evelyn_took_damage_since_hit:
+			var nearest_pos = _nearest_enemy_pos(evelyn_body.global_position, _enemies)
+			if nearest_pos != Vector3.ZERO:
+				var dist = evelyn_body.global_position.distance_to(nearest_pos)
+				if dist > 8.0: _evelyn_agent.reward += RETREAT_REWARD
 
 func _check_arena_boundaries() -> void:
 	for body in [evan_body, evelyn_body]:
