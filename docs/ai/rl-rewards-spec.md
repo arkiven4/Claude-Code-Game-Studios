@@ -38,7 +38,7 @@ Evaluated every step based on spatial relationships.
 | **Flawless Play** | `+0.05` | Reward for dealing damage and taking NONE for 120 steps after. |
 
 ## 4. Episode Statistics & Terminal Rewards
-Calculated at the end of an episode (Victory, Defeat, or Timeout).
+Calculated at the end of an episode (Victory or Defeat).
 
 | Event | Value | Calculation |
 | :--- | :--- | :--- |

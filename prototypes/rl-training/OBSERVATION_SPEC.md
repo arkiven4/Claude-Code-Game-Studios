@@ -121,7 +121,7 @@ Dead enemies are zero-padded.
 
 #### Combat State (3 dims)
 ```
-[26]    step_normalized       [0.0-1.0]  Current step / max_episode_steps
+[26]    step_normalized       [0.0-1.0]  Current step / 30000.0 (Fixed normalizer)
 [27]    alive_party_ratio     [0.0-1.0]  Alive party members / 2
 [28]    alive_enemies_ratio   [0.0-1.0]  Alive enemies / 4
 ```

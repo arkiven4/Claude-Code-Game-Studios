@@ -8,7 +8,6 @@ extends Node3D
 @export var enemy_container_path: NodePath
 
 @export var move_speed: float = 4.0
-@export var max_episode_steps: int = 54000 # 15 minutes @ 60 FPS
 @export var arena_half_size: float = 30.0  ## Boundary penalty starts if |x| or |z| exceeds this (60x60 platform)
 
 ## Stagnation penalty: steps of no damage before penalty fires (60 = ~1 second at 60 FPS)
@@ -17,10 +16,6 @@ extends Node3D
 @export var w_stagnation: float = 0.002
 ## Penalty per step for being outside the arena platform
 @export var w_boundary_penalty: float = 0.05
-
-@export_group("Timeout Settings")
-## Steps with no damage/heal before episode ends (3600 = 1 minute @ 60 FPS)
-@export var inactivity_timeout_steps: int = 3600
 
 @export_group("Curriculum Scheduler")
 ## Enable automatic episode length scaling based on rolling win rate
@@ -55,12 +50,6 @@ var _damage_dealt_this_step: bool = false
 var _enemy_steps_since_last_damage: int = 0
 var _enemy_damage_dealt_this_step: bool = false
 
-## Inactivity timeout — tracks steps with no activity (damage/heal) from either side.
-## Uses signal events to reset the timer.
-var _steps_since_any_damage: int = 0
-var _inactivity_timeout: int = 300  ## updated each stage advance from _CURRICULUM_STAGES
-var _activity_this_step: bool = false   ## any damage/heal from either side resets inactivity timer
-
 ## Hit and Dodge tracking
 var _evan_last_hit_step: int = -1000
 var _evelyn_last_hit_step: int = -1000
@@ -81,19 +70,19 @@ var _total_enemy_max_hp: float = 0.0    ## set at episode start; used to compute
 
 ## Stage definitions:
 const _CURRICULUM_STAGES: Array = [
-	{"steps":  1200, "inactivity":  1200, "advance_at": 0.10, "eval_window": 20,  "label": "Stage 1  (~2s/ep)"},
-	{"steps":  1800, "inactivity":  1800, "advance_at": 0.15, "eval_window": 20,  "label": "Stage 2  (~3s/ep)"},
-	{"steps":  2400, "inactivity":  2400, "advance_at": 0.20, "eval_window": 30,  "label": "Stage 3  (~4s/ep)"},
-	{"steps":  3000, "inactivity":  3000, "advance_at": 0.25, "eval_window": 30,  "label": "Stage 4  (~5s/ep)"},
-	{"steps":  3600, "inactivity":  3600, "advance_at": 0.30, "eval_window": 40,  "label": "Stage 5  (~6s/ep)"},
-	{"steps":  4800, "inactivity":  4800, "advance_at": 0.35, "eval_window": 40,  "label": "Stage 6  (~8s/ep)"},
-	{"steps":  6000, "inactivity":  1200, "advance_at": 0.40, "eval_window": 50,  "label": "Stage 7  (~10s/ep)"},
-	{"steps":  7200, "inactivity":  1200, "advance_at": 0.45, "eval_window": 50,  "label": "Stage 8  (~12s/ep)"},
-	{"steps":  9600, "inactivity":  1500, "advance_at": 0.50, "eval_window": 75,  "label": "Stage 9  (~16s/ep)"},
-	{"steps": 12000, "inactivity":  1500, "advance_at": 0.55, "eval_window": 75,  "label": "Stage 10 (~20s/ep)"},
-	{"steps": 18000, "inactivity":  1800, "advance_at": 0.62, "eval_window": 100, "label": "Stage 11 (~30s/ep)"},
-	{"steps": 24000, "inactivity":  1800, "advance_at": 0.68, "eval_window": 100, "label": "Stage 12 (~40s/ep)"},
-	{"steps": 28800, "inactivity":  2400, "advance_at":  1.1, "eval_window": 100, "label": "Stage 13 (~48s/ep)"},  ## final
+	{"advance_at": 0.10, "eval_window": 20,  "label": "Stage 1  (Early)"},
+	{"advance_at": 0.15, "eval_window": 20,  "label": "Stage 2"},
+	{"advance_at": 0.20, "eval_window": 30,  "label": "Stage 3"},
+	{"advance_at": 0.25, "eval_window": 30,  "label": "Stage 4"},
+	{"advance_at": 0.30, "eval_window": 40,  "label": "Stage 5"},
+	{"advance_at": 0.35, "eval_window": 40,  "label": "Stage 6"},
+	{"advance_at": 0.40, "eval_window": 50,  "label": "Stage 7"},
+	{"advance_at": 0.45, "eval_window": 50,  "label": "Stage 8"},
+	{"advance_at": 0.50, "eval_window": 75,  "label": "Stage 9"},
+	{"advance_at": 0.55, "eval_window": 75,  "label": "Stage 10"},
+	{"advance_at": 0.62, "eval_window": 100, "label": "Stage 11"},
+	{"advance_at": 0.68, "eval_window": 100, "label": "Stage 12"},
+	{"advance_at":  1.1, "eval_window": 100, "label": "Stage 13 (Final)"},
 ]
 
 func _ready() -> void:
@@ -114,18 +103,10 @@ func _ready() -> void:
 	if _evelyn_state: _evelyn_state.death.connect(_on_party_member_died)
 	if _evan_agent and _evan_agent.skill_execution:
 		_evan_agent.skill_execution.damage_dealt.connect(_on_party_agent_damage_dealt.bind(_evan_agent))
-		_evan_agent.skill_execution.heal_applied.connect(_on_activity)
 		_evan_agent.skill_execution.projectile_spawned.connect(_on_party_projectile_spawned)
 	if _evelyn_agent and _evelyn_agent.skill_execution:
 		_evelyn_agent.skill_execution.damage_dealt.connect(_on_party_agent_damage_dealt.bind(_evelyn_agent))
-		_evelyn_agent.skill_execution.heal_applied.connect(_on_activity)
 		_evelyn_agent.skill_execution.projectile_spawned.connect(_on_party_projectile_spawned)
-
-	if curriculum_enabled:
-		max_episode_steps = _CURRICULUM_STAGES[0]["steps"]
-		_inactivity_timeout = _CURRICULUM_STAGES[0]["inactivity"]
-	else:
-		_inactivity_timeout = inactivity_timeout_steps
 
 	_find_enemies()
 	_update_all_contexts()
@@ -161,14 +142,6 @@ func _physics_process(delta: float) -> void:
 	_check_arena_boundaries()
 	_check_victory_or_defeat()
 	_update_hud()
-
-	_tick_inactivity()
-	if _steps_since_any_damage >= _inactivity_timeout:
-		_end_episode(false, true)
-		return
-
-	if _episode_step >= max_episode_steps:
-		_end_episode(false, true)
 
 # --- Enemy Discovery ---
 
@@ -291,12 +264,12 @@ func _start_episode() -> void:
 		if is_instance_valid(enemy):
 			_total_enemy_max_hp += enemy.max_hp
 
-func _end_episode(victory: bool, timeout: bool = false) -> void:
+func _end_episode(victory: bool) -> void:
 	if not _episode_active: return
 	_episode_active = false
 	_total_episodes += 1
 	if victory:        _party_wins += 1
-	elif not timeout:  _enemy_wins += 1
+	else:              _enemy_wins += 1
 
 	if curriculum_enabled:
 		var progress: float = 0.0
@@ -323,8 +296,6 @@ func _end_episode(victory: bool, timeout: bool = false) -> void:
 	if victory:
 		if _team_agent: _team_agent.on_victory()
 		for hive in _hive_agents: if is_instance_valid(hive): hive.on_all_enemies_killed()
-	elif timeout:
-		if _team_agent: _team_agent.on_defeat()
 	else:
 		if _team_agent: _team_agent.on_defeat()
 		for hive in _hive_agents: if is_instance_valid(hive): hive.on_party_wiped()
@@ -332,7 +303,6 @@ func _end_episode(victory: bool, timeout: bool = false) -> void:
 func _reset_episode() -> void:
 	_steps_since_last_damage = 0; _damage_dealt_this_step = false
 	_enemy_steps_since_last_damage = 0; _enemy_damage_dealt_this_step = false
-	_steps_since_any_damage = 0; _activity_this_step = false
 	_evan_last_hit_step = -1000; _evelyn_last_hit_step = -1000
 	_evan_took_damage_since_hit = false; _evelyn_took_damage_since_hit = false
 	_episode_damage_dealt = 0.0; _episode_damage_received = 0.0
@@ -374,15 +344,13 @@ func _update_curriculum() -> void:
 			_curriculum_stage += 1
 		
 		var new_stage: Dictionary = _CURRICULUM_STAGES[_curriculum_stage]
-		max_episode_steps = new_stage["steps"]
-		_inactivity_timeout = new_stage["inactivity"]
 		_recent_results.clear()
 		print("[Curriculum] Advanced to %s" % new_stage["label"])
 
 func _update_all_contexts() -> void:
 	if _evan_agent:   _evan_agent.set_context({"enemies": _enemies, "allies": [_evelyn_state]})
 	if _evelyn_agent: _evelyn_agent.set_context({"enemies": _enemies, "allies": [_evan_state]})
-	if _team_agent:   _team_agent.set_context({"enemies": _enemies, "max_episode_steps": max_episode_steps})
+	if _team_agent:   _team_agent.set_context({"enemies": _enemies})
 	for i in range(_hive_agents.size()):
 		if is_instance_valid(_hive_agents[i]):
 			_hive_agents[i].set_context({"party": [_evan_state, _evelyn_state], "enemy_allies": _enemies})
@@ -524,19 +492,15 @@ func _check_victory_or_defeat() -> void:
 	if (not _evan_state or not _evan_state.is_alive) and (not _evelyn_state or not _evelyn_state.is_alive):
 		_end_episode(false)
 
-func _tick_inactivity() -> void:
-	if _activity_this_step: _steps_since_any_damage = 0; _activity_this_step = false
-	else: _steps_since_any_damage += 1
-
 # --- Handlers ---
 
 func _on_party_agent_damage_dealt(amount: int, _target: Node, agent: RLPartyAgent) -> void:
-	_damage_dealt_this_step = true; _episode_damage_dealt += amount; _on_activity()
+	_damage_dealt_this_step = true; _episode_damage_dealt += amount
 	if agent == _evan_agent: _evan_last_hit_step = _episode_step; _evan_took_damage_since_hit = false
 	elif agent == _evelyn_agent: _evelyn_last_hit_step = _episode_step; _evelyn_took_damage_since_hit = false
 
 func _on_enemy_damage_dealt(amount: int, target: Node) -> void:
-	_enemy_damage_dealt_this_step = true; _episode_damage_received += amount; _on_activity()
+	_enemy_damage_dealt_this_step = true; _episode_damage_received += amount
 	if target == _evan_state: _evan_took_damage_since_hit = true
 	elif target == _evelyn_state: _evelyn_took_damage_since_hit = true
 	if target == _evan_state and _evan_agent: _evan_agent.on_damage_received(amount)
@@ -545,9 +509,6 @@ func _on_enemy_damage_dealt(amount: int, target: Node) -> void:
 func _on_enemy_attack_missed(target: Node) -> void:
 	if target == _evan_state and _evan_agent: _evan_agent.reward += 0.01
 	elif target == _evelyn_state and _evelyn_agent: _evelyn_agent.reward += 0.01
-
-func _on_activity(_a=0, _b=null) -> void:
-	_activity_this_step = true
 
 func _on_enemy_projectile_spawned(projectile: Projectile) -> void:
 	if _evan_agent: projectile.missed.connect(_evan_agent._on_enemy_projectile_missed)
@@ -587,7 +548,7 @@ func get_stats() -> Dictionary:
 		"total_episodes": _total_episodes, "party_wins": _party_wins, "enemy_wins": _enemy_wins,
 		"efficiency": efficiency, "curriculum_stage": _curriculum_stage,
 		"curriculum_label": _CURRICULUM_STAGES[_curriculum_stage]["label"],
-		"avg_damage_progress": avg_progress, "episode_step": _episode_step, "max_episode_steps": max_episode_steps,
+		"avg_damage_progress": avg_progress, "episode_step": _episode_step,
 		"evan_reward": _evan_agent.reward if _evan_agent else 0.0,
 		"evelyn_reward": _evelyn_agent.reward if _evelyn_agent else 0.0,
 		"team_reward": _team_agent.reward if _team_agent else 0.0,

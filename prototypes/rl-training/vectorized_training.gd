@@ -220,7 +220,7 @@ func _refresh_stats() -> void:
 	_stat_labels["avg_damage"].text = "Dmg   : %s %.1f%%" \
 									  % [_bar(d["avg_damage_progress"], 10), d["avg_damage_progress"] * 100.0]
 	_stat_labels["efficiency"].text = "Eff   : %.2f" % d["efficiency"]
-	_stat_labels["step"].text       = "Step  : %d / %d" % [d["episode_step"], d["max_episode_steps"]]
+	_stat_labels["step"].text       = "Step  : %d" % d["episode_step"]
 	_stat_labels["evan_hp"].text    = "Evan  : %s %.0f%%" % [_bar(evan_pct   / 100.0, 10), evan_pct]
 	_stat_labels["evelyn_hp"].text  = "Evelyn: %s %.0f%%" % [_bar(evelyn_pct / 100.0, 10), evelyn_pct]
 	_stat_labels["enemies"].text    = "Enemies: %d / %d alive" % [d["enemies_alive"], d["enemies_total"]]
@@ -237,10 +237,9 @@ func _refresh_stats() -> void:
 			continue
 		var s: Dictionary = mgr.get_stats()
 		var marker: String = "★" if i == _best_arena_idx else " "
-		var ep_prog: float  = float(s["episode_step"]) / float(maxi(s["max_episode_steps"], 1)) * 100.0
-		lines.append("%s A%-2d  S%-2d  dmg:%.0f%%  ep:%d%%" \
+		lines.append("%s A%-2d  S%-2d  dmg:%.0f%%  step:%d" \
 					 % [marker, i, s["curriculum_stage"] + 1,
-						s["avg_damage_progress"] * 100.0, ep_prog])
+						s["avg_damage_progress"] * 100.0, s["episode_step"]])
 	_stat_labels["arenas_list"].text = "\n".join(lines)
 
 
