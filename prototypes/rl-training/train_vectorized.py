@@ -241,19 +241,42 @@ def main():
     print("Training started. Ctrl+C to stop.")
     print(f"Early stopping: patience={PATIENCE} iters | min_reward_delta={MIN_REWARD_DELTA} "
           f"| entropy_stop={ENTROPY_STOP}")
-    print(f"Alternating training: first {ENEMY_CATCHUP_ITERS} iters alternate party/enemy, then free-for-all.")
+    print("Dynamic training: freezing winning side to maintain ~50% balance.")
+    last_result = {}
     try:
         for iteration in range(500):
-            # Alternate which side trains to prevent party from staying permanently ahead.
-            if iteration < ENEMY_CATCHUP_ITERS:
-                to_train = _ENEMY_POLICIES if iteration % 2 == 0 else _PARTY_POLICIES
+            # Dynamic policy freezing to maintain ~50% winrate balance
+            # Average win rate across all arenas from custom metrics
+            custom = last_result.get('custom_metrics', {})
+            victory_keys = [k for k in custom.keys() if k.endswith("_team_victory_mean")]
+            
+            if victory_keys:
+                win_rate = sum(custom[k] for k in victory_keys) / len(victory_keys)
+            else:
+                # Fallback if custom_metrics is empty or not yet populated
+                win_rate = 0.5 
+
+            if iteration > 10: # Small warmup
+                if win_rate < 0.3:
+                    to_train = _PARTY_POLICIES
+                    status_msg = f" (FREEZE ENEMY | WR: {win_rate*100:.1f}%)"
+                elif win_rate > 0.7:
+                    to_train = _ENEMY_POLICIES
+                    status_msg = f" (FREEZE PARTY | WR: {win_rate*100:.1f}%)"
+                else:
+                    to_train = _ALL_POLICIES
+                    status_msg = f" (BALANCED | WR: {win_rate*100:.1f}%)"
             else:
                 to_train = _ALL_POLICIES
+                status_msg = " (INITIALIZING)"
+
+            # Update policies to train
             algo.config._is_frozen = False
             algo.config.policies_to_train = to_train
             algo.config._is_frozen = True
 
             result = algo.train()
+            last_result = result
 
             policy_rewards = result.get("env_runners", {}).get("policy_reward_mean", {})
             team_reward = policy_rewards.get("team_policy", float("nan"))
@@ -266,16 +289,16 @@ def main():
                 entropy = policy_info.get("learner_stats", {}).get("entropy", float("inf"))
                 if entropy < ENTROPY_WARN:
                     print(f"  [WARN] {policy_name} entropy={entropy:.3f} — "
-                          f"policy becoming deterministic (threshold={ENTROPY_WARN})")
+                          f"policy becoming deterministic (threshold={ENTROPY_WARN}){status_msg}")
                 if entropy < ENTROPY_STOP:
                     print(f"  [STOP] {policy_name} entropy={entropy:.3f} collapsed "
-                          f"below {ENTROPY_STOP} — stopping to prevent degenerate policy.")
+                          f"below {ENTROPY_STOP} — stopping to prevent degenerate policy.{status_msg}")
                     entropy_collapse = True
 
             if iteration % 10 == 0:
                 team_str = f"{team_reward:.2f}" if team_reward == team_reward else "n/a"
                 print(f"[{iteration}] team_reward: {team_str} | ep_len: {ep_len:.1f} "
-                      f"| no_improve: {no_improve_iters}/{PATIENCE} | arenas: {N_ARENAS}")
+                      f"| no_improve: {no_improve_iters}/{PATIENCE}{status_msg}")
 
             # --- Best checkpoint (skip NaN iterations — no completed episodes yet) ---
             if team_reward == team_reward and team_reward >= best_team_reward + MIN_REWARD_DELTA:

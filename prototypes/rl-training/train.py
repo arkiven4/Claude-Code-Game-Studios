@@ -208,21 +208,51 @@ def main():
 
     algo = config.build_algo(logger_creator=make_logger_creator("PPO_godot"))
 
+    _PARTY_POLICIES = ["evan_policy", "evelyn_policy", "team_policy"]
+    _ENEMY_POLICIES = ["enemy_hive_policy"]
+    _ALL_POLICIES   = _PARTY_POLICIES + _ENEMY_POLICIES
+
     print("Training started. Ctrl+C to stop.")
+    last_result = {}
     try:
         for iteration in range(500):
+            # Dynamic policy freezing to maintain ~50% winrate balance
+            if iteration > 20:  # Allow some initial data gathering
+                custom = last_result.get('custom_metrics', {})
+                # 'team' agent's 'victory' stat becomes 'team_victory_mean' in custom_metrics
+                win_rate = custom.get('team_victory_mean', 0.5) 
+                
+                if win_rate < 0.3:
+                    # Party losing too much: freeze Enemy, let Party learn
+                    to_train = _PARTY_POLICIES
+                    status_msg = f" (FREEZE ENEMY | WR: {win_rate*100:.1f}%)"
+                elif win_rate > 0.7:
+                    # Party winning too much: freeze Party, let Enemy learn
+                    to_train = _ENEMY_POLICIES
+                    status_msg = f" (FREEZE PARTY | WR: {win_rate*100:.1f}%)"
+                else:
+                    # Balanced: train everyone
+                    to_train = _ALL_POLICIES
+                    status_msg = f" (BALANCED | WR: {win_rate*100:.1f}%)"
+                
+                # Update policies to train
+                algo.set_policies_to_train(to_train)
+            else:
+                to_train = _ALL_POLICIES
+                status_msg = " (INITIALIZING)"
+
             result = algo.train()
+            last_result = result
             if iteration % 10 == 0:
                 reward = result.get('episode_reward_mean')
                 reward_str = f"{reward:.3f}" if isinstance(reward, (float, int)) else str(reward)
                 
                 # Extract victory metric from custom metrics (team policy)
-                # RLlib nested structure: result['custom_metrics']['team_victory_mean']
                 custom = result.get('custom_metrics', {})
                 win_rate = custom.get('team_victory_mean', 0.0) * 100.0
                 ep_len = result.get('episode_len_mean', 0.0)
 
-                print(f"[{iteration}] reward: {reward_str} | wins: {win_rate:.1f}% | len: {ep_len:.1f}")
+                print(f"[{iteration}] reward: {reward_str} | wins: {win_rate:.1f}% | len: {ep_len:.1f}{status_msg}")
             if iteration % 50 == 0:
                 save_path = algo.save(MODELS_DIR)
                 save_config(save_path)  # Save agent config with checkpoint
