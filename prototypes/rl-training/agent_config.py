@@ -165,11 +165,41 @@ def _deserialize_space_from_dict(d):
         raise ValueError(f"Unsupported space type: {d['type']}")
 
 
+def _extract_checkpoint_path(checkpoint_dir):
+    """Normalize whatever algo.save() returned into a filesystem path string.
+
+    Ray's Algorithm.save() return type changed across versions:
+      - Ray  < 2.10: returns str path directly.
+      - Ray >= 2.10: returns a TrainingResult / _TrainingResult with
+                     .checkpoint.path (Checkpoint object) or sometimes .path.
+    This helper handles all known shapes so callers don't have to care.
+    """
+    if isinstance(checkpoint_dir, (str, bytes, os.PathLike)):
+        return checkpoint_dir
+    # Newer Ray: _TrainingResult wraps a Checkpoint
+    checkpoint = getattr(checkpoint_dir, "checkpoint", None)
+    if checkpoint is not None:
+        path = getattr(checkpoint, "path", None)
+        if path is not None:
+            return path
+    # Some versions return a Checkpoint directly (has .path)
+    path = getattr(checkpoint_dir, "path", None)
+    if path is not None:
+        return path
+    # Last resort — will at least produce a debuggable error later
+    return str(checkpoint_dir)
+
+
 def save_config(checkpoint_dir):
     """
     Save agent configuration to checkpoint directory as agent_config.json.
     Called after training creates a checkpoint.
+
+    Accepts either a string path (older Ray) or a TrainingResult / Checkpoint
+    object (newer Ray). The return type of algo.save() is normalized here.
     """
+    checkpoint_dir = _extract_checkpoint_path(checkpoint_dir)
+
     config = {
         "agent_ids": sorted(list(get_agent_ids())),
         "observation_spaces": {

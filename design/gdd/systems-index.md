@@ -56,7 +56,7 @@ committing the Alpha schedule to it.
 | 26 | Narrative Choice System | Narrative | Alpha | Designed | design/gdd/narrative-choice-system.md | Dialogue, Chapter State |
 | 27 | Cutscene System | Narrative | MVP | Approved | design/gdd/cutscene-system.md | Dialogue, Camera, Audio, Chapter State |
 | 28 | Multiple Endings System | Narrative | Full Vision | Not Started | — | Narrative Choice, Chapter State |
-| 29 | NPC System (inferred) | World | Alpha | Not Started | — | Character Data, Dialogue |
+| 29 | NPC System (inferred) | World | Alpha | Designed | design/gdd/npc-system.md | Character Data, Dialogue |
 | 30 | Shop System | Economy | Alpha | Designed | design/gdd/shop-system.md | Inventory & Equipment, Item Database |
 | 31 | Village / Hub System (inferred) | World | Alpha | Not Started | — | Scene Management, NPC, Shop, Equipment Enhancement |
 | 32 | Equipment Enhancement System | Economy | Full Vision | Not Started | — | Inventory & Equipment, Item Database |

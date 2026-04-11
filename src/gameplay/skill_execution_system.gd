@@ -38,14 +38,26 @@ var _current_cast_tier: int = 1
 var _is_special_attack: bool = false
 var _cast_force_self: bool = false
 
+func _ready() -> void:
+	## Cancel any in-progress cast when the caster dies. Without this, the
+	## _cast_timer in _process keeps ticking on a dead caster and eventually
+	## fires _complete_casting() — damage/heal/VFX all come out of the corpse.
+	## Also leaves is_casting stuck at true across revive, softlocking the
+	## character on respawn.
+	if state and state.has_signal("death"):
+		state.death.connect(cancel_cast)
+
 func _process(delta: float) -> void:
 	if _current_targeting_mode == TargetingMode.FRIENDLY:
 		var current_hover := _get_crosshair_friendly_target()
 		if current_hover != _last_hover_target:
 			_last_hover_target = current_hover
 			hover_target_changed.emit(current_hover)
-	
-	if state and state.get("is_casting"):
+
+	## Guard: never tick the cast timer on a dead caster. The death signal
+	## above handles cancellation, but this is defense-in-depth in case a
+	## future code path leaves is_casting=true without firing death.
+	if state and state.get("is_alive") and state.get("is_casting"):
 		_cast_timer -= delta
 		if _cast_timer <= 0.0:
 			_complete_casting()
