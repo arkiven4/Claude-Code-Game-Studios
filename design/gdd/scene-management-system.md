@@ -172,7 +172,7 @@ IDLE → PORTAL_FADE_OUT (0.3s) → LOADING (async) → RESTORING → PORTAL_FAD
 
 | Formula | Expression | Notes |
 |---------|-----------|-------|
-| `LoadTime` | Unity async load time | Typically 0.5–2.0s depending on scene complexity |
+| `LoadTime` | Godot scene load time | Typically 0.5–2.0s depending on scene complexity |
 | `PortalTransitionTime` | `fadeOut + loadTime + fadeIn` | Typically 0.3 + 0.5 + 0.3 = 1.1s |
 | `MusicFadeOutDuration` | `0.5s` | Crossfade out duration |
 | `MusicFadeInDuration` | `0.5s` | Crossfade in duration |

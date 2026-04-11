@@ -262,7 +262,7 @@ click is satisfying).
   sounds? MVP scope suggests text-only, but the system should support voice clips if
   added later.
 - Should the music layering system use stem mixing (separate clips for drums, strings,
-  etc.) or a single compressed track with Unity's built-in layering? Stem mixing gives
+  etc.) or a single compressed track with Godot's built-in layering? Stem mixing gives
   more control but requires more asset management.
 - Should we support a "Now Playing" display in the settings so the player knows what
   track is currently playing?

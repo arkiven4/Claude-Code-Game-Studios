@@ -98,19 +98,19 @@ punch rather than exposition dumps.
    - The player doesn't see the cutscene again
    - This is opt-in per cutscene — important story moments should NOT auto-skip
 
-6. **Timeline Signal Integration**: Timelines can include `SignalEmitter` tracks that
-   fire `INotification` callbacks at specific timecodes. The `CutsceneController`
+6. **Animation Signal Integration**: AnimationPlayer tracks include `call_method()`
+   tracks that fire callbacks at specific timecodes. The `CutsceneController`
    subscribes to these and routes them:
-   - `DialogueSignal` → pauses Timeline, starts Dialogue System, resumes Timeline when
+   - `DialogueSignal` → pauses AnimationPlayer, starts Dialogue System, resumes when
      dialogue ends
    - `VFXSignal` → triggers a VFX at a specified position
-   - `AudioSignal` → plays a one-shot sound at the specified mixer group
-   - `TimeScaleSignal` → sets `Time.timeScale` (slow-mo, pause, etc.)
+   - `AudioSignal` → plays a one-shot sound at the specified mixer bus
+   - `TimeScaleSignal` → sets `Engine.time_scale` (slow-mo, pause, etc.)
    - `CameraSignal` → switches to a specific Phantom Camera
 
 7. **Mid-Cutscene Dialogue**: When a `DialogueSignal` fires:
    - The `AnimationPlayer` is paused (not stopped)
-   - The Dialogue System starts the specified `DialogueGraphSO`
+   - The Dialogue System starts the specified `DialogueGraph`
    - When dialogue ends, the `AnimationPlayer` resumes from the pause point
    - This allows cutscenes with embedded conversations (character exchanges during
      cinematic moments)
@@ -118,7 +118,7 @@ punch rather than exposition dumps.
 8. **Cutscene Triggers**: Cutscenes are started by:
    - **Chapter State**: `ChapterStateSystem` detects a flag and fires the cutscene
    - **Scene Load**: A scene's `CutsceneTrigger` fires on load (chapter opener)
-   - **Dialogue Event**: A `DialogueEvent` of type `StartCutscene` transitions to
+   - **Dialogue Event**: A `DialogueNode` of type `StartCutscene` transitions to
      a cutscene mid-conversation
    - **Encounter End**: A boss death triggers a post-fight cutscene
    - **Story Override**: Any script can call `CutsceneManager.Play()` directly
@@ -127,10 +127,10 @@ punch rather than exposition dumps.
    of characters, camera, or actions (except skip). Characters do not respond to
    combat input, movement input, or any gameplay input. Combat subsystems are frozen.
 
-10. **Cutscene Loading**: Cutscene Timeline assets are loaded via Addressables when
+10. **Cutscene Loading**: Cutscene AnimationPlayer resources are loaded on-demand when
     needed. The first play of a cutscene may have a brief loading hitch (0.5-1.0s).
     A fade-to-black pre-cutscene action covers this. Subsequent plays are instant
-    (Timeline is cached).
+    (resources are cached in memory).
 
 ### States and Transitions
 
@@ -142,16 +142,16 @@ punch rather than exposition dumps.
                                  │
                                  ▼
                         ┌──────────────────┐
-                        │  Timeline        │◄───────────────────┐
+                        │  Animation       │◄───────────────────┐
                         │  Playing         │                    │
                         └────────┬─────────┘                    │
                                  │                              │
                     ┌────────────┼────────────┐                 │
                     │            │            │                 │
                     ▼            ▼            ▼                 │
-             Timeline End   Player Skip   Dialogue Signal       │
+             Animation End   Player Skip   Dialogue Signal       │
                     │            │            │                 │
-                    │            │     Timeline Paused          │
+                    │            │     Animation Paused          │
                     │            │     Dialogue Plays           │
                     │            │     Dialogue Ends            │
                     │            │            │                 │
@@ -228,8 +228,8 @@ punch rather than exposition dumps.
 
 ## Dependencies
 
-- **Depends on**: Unity Timeline package, Unity Cinemachine, Dialogue System, Camera
-  System, Audio System, Input System, Chapter State System, Addressables (cutscene loading)
+- **Depends on**: Godot AnimationPlayer, Phantom Camera, Dialogue System, Camera
+  System, Audio System, Input System, Chapter State System
 - **Depended on by**: Chapter State System, Combat System (boss death cutscenes),
   Dialogue System (mid-cutscene transitions), Scene Management System, Save / Load
 
@@ -244,13 +244,13 @@ punch rather than exposition dumps.
 
 ## Visual/Audio Requirements
 
-- **Timeline Assets**: One per cutscene in the game. MVP needs: Witch prologue intro,
+- **Animation Assets**: One AnimationPlayer library per cutscene in the game. MVP needs: Witch prologue intro,
   Witch prologue ending (Witch's death), Chapter 1 intro, Chapter 1 ending, Chapter 2
   intro, Chapter 2 ending (the twist), and boss death cutscenes for each boss.
-- **Fade-to-Black**: Full-screen black overlay with alpha animation. Used for transitions
+- **Fade-to-Black**: Full-screen ColorRect overlay with alpha animation. Used for transitions
   into and out of cutscenes.
-- **Cinematic Cameras**: Each cutscene Timeline includes authored Cinemachine virtual
-  cameras with custom framing, FOV, and post-processing (vignette, color grading).
+- **Cinematic Cameras**: Each cutscene includes authored Phantom Camera
+  instances with custom framing, FOV, and post-processing (vignette, color grading).
 - **Narrative Music**: Dedicated music tracks for cutscenes, separate from exploration
   and combat music.
 

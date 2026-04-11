@@ -44,20 +44,20 @@ committing the Alpha schedule to it.
 | 14 | Skill Execution System | Gameplay | MVP | Approved | design/gdd/skill-execution-system.md | Skill Database, Health & Damage, Status Effects |
 | 15 | Enemy AI System | Gameplay | MVP | Approved | design/gdd/enemy-ai-system.md | Health & Damage, Hit Detection |
 | 16 | Inventory & Equipment System | Progression | MVP | Approved | design/gdd/inventory-equipment-system.md | Item Database, Character Data |
-| 17 | Character Progression System | Progression | Alpha | Not Started | — | Character Data, Health & Damage |
+| 17 | Character Progression System | Progression | Alpha | Designed | design/gdd/character-progression-system.md | Character Data, Health & Damage |
 | 18 | Character Skill System | Progression | MVP | Approved | design/gdd/character-skill-system.md | Skill Database, Skill Execution, Character Progression |
 | 19 | Loot & Drop System | Economy | MVP | Approved | design/gdd/loot-drop-system.md | Item Database, Item Rarity, Enemy AI |
 | 20 | Combat System | Gameplay | MVP | Approved | design/gdd/combat-system.md | Health & Damage, Hit Detection, Skill Execution, Enemy AI, Camera |
 | 21 | Character State Manager | Party | MVP | Approved | design/gdd/character-state-manager.md | Health & Damage, Status Effects, Skill Execution |
 | 22 | Character Switching System | Party | MVP | Approved | design/gdd/character-switching-system.md | Character State Manager, Combat |
 | 23 | Party AI System | Party | Alpha | ADR + Prototype | docs/architecture/adr-0001-party-ai-rl-vs-behavior-tree.md | Combat, Enemy AI, Character State Manager |
-| 24 | Party Management System | Party | Alpha | Not Started | — | Character Data, Character Switching |
+| 24 | Party Management System | Party | Alpha | Designed | design/gdd/party-management-system.md | Character Data, Character Switching |
 | 25 | Dialogue System | Narrative | MVP | Approved | design/gdd/dialogue-system.md | Audio, Chapter State |
-| 26 | Narrative Choice System | Narrative | Alpha | Not Started | — | Dialogue, Chapter State |
+| 26 | Narrative Choice System | Narrative | Alpha | Designed | design/gdd/narrative-choice-system.md | Dialogue, Chapter State |
 | 27 | Cutscene System | Narrative | MVP | Approved | design/gdd/cutscene-system.md | Dialogue, Camera, Audio, Chapter State |
 | 28 | Multiple Endings System | Narrative | Full Vision | Not Started | — | Narrative Choice, Chapter State |
 | 29 | NPC System (inferred) | World | Alpha | Not Started | — | Character Data, Dialogue |
-| 30 | Shop System | Economy | Alpha | Not Started | — | Inventory & Equipment, Item Database |
+| 30 | Shop System | Economy | Alpha | Designed | design/gdd/shop-system.md | Inventory & Equipment, Item Database |
 | 31 | Village / Hub System (inferred) | World | Alpha | Not Started | — | Scene Management, NPC, Shop, Equipment Enhancement |
 | 32 | Equipment Enhancement System | Economy | Full Vision | Not Started | — | Inventory & Equipment, Item Database |
 | 33 | Combat HUD (inferred) | UI | MVP | Approved | design/gdd/combat-hud.md | Combat, Health & Damage, Character Switching, Skill Execution, Character Skill |
@@ -235,11 +235,11 @@ doesn't depend on NPC System. NPCs call into the Dialogue System, not the revers
 | Metric | Count |
 |--------|-------|
 | Total systems identified | 37 (Settings System absorbed into Main Menu & Pause Menu) |
-| Design docs started | 25 |
+| Design docs started | 26 |
 | Design docs reviewed | 25 |
 | Design docs approved | 25 (all designed docs approved) |
 | MVP systems designed + approved | 21 / 21 ✓ |
-| Alpha systems designed | 0 / 9 |
+| Alpha systems designed | 4 / 9 |
 | Full Vision systems designed | 0 / 3 |
 | ADRs written | 6 (ADR-0001 through ADR-0006: Party AI, Character Switching, Health & Damage, Skill Execution, Status Effects, Loot & Inventory) |
 | Prototypes completed | 1 (party-ai — PROCEED verdict) |
@@ -273,4 +273,8 @@ doesn't depend on NPC System. NPCs call into the Dialogue System, not the revers
 - [x] Run `/gate-check pre-production` — identified 2 blockers (no sprint plan, no prototype README)
 - [x] Create `prototypes/party-ai/README.md` (prototype code standards require it) — done 2026-04-05
 - [x] Plan first sprint with `/sprint-plan new` — sprint-01, sprint-02, sprint-03 created
+- [x] Design system #17: **Character Progression** — Designed (pending review)
+- [x] Design system #24: **Party Management** — Designed (Alpha)
+- [x] Design system #30: **Shop System** — Designed (Alpha)
+- [x] Documentation cleanup: Fix Unity→Godot references in cutscene-system.md, combat-hud.md, dialogue-ui.md, main-menu-pause-menu.md, scene-management-system.md, audio-system.md
 - [ ] Re-run `/gate-check pre-production` after sprint plan is created → advance to Production

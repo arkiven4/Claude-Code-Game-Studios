@@ -103,9 +103,9 @@ settings), and Persona 5's consistent menu styling (every menu feels like the ga
 
    > **Design Note**: This document fully owns the Settings System. The planned "Settings
    > System" entry (#37 in the systems index) should be removed — it is absorbed here.
-   > The `GameSettingsSO` ScriptableObject is the persistence container for all settings.
+   > The `GameSettings` Resource is the persistence container for all settings.
    >
-   > **`GameSettingsSO` schema** (persisted via Save / Load System):
+   > **`GameSettings` schema** (persisted via Save / Load System):
    >
    > | Field | Type | Default | Effect |
    > |-------|------|---------|--------|
@@ -159,7 +159,7 @@ settings), and Persona 5's consistent menu styling (every menu feels like the ga
    - Settings are organized into tabs: Audio, Display, Controls, Accessibility
    - Changes are previewed immediately but not applied until "Apply" is pressed
    - "Cancel" reverts to the values when the panel was opened
-   - Settings persist via the Save / Load System (stored in a `GameSettingsSO`)
+   - Settings persist via the Save / Load System (stored in a `GameSettings` JSON file)
 
 5. **Key Bindings Sub-Panel**:
    - Lists all remappable actions with their current bindings
@@ -273,7 +273,7 @@ settings), and Persona 5's consistent menu styling (every menu feels like the ga
 ## Dependencies
 
 - **Depends on**: Save / Load System, Input System, Audio System, Scene Management,
-  Chapter State, TextMeshPro, Godot UI
+  Chapter State, Godot UI
 - **Depended on by**: Audio System (menu music), Input System (UI action map), Combat
   HUD (hidden behind pause menu)
 
@@ -302,9 +302,9 @@ settings), and Persona 5's consistent menu styling (every menu feels like the ga
 
 ## UI Requirements
 
-- **UI Toolkit UXML**: Separate `.uxml` files for Main Menu, Pause Menu, Settings Panel,
+- **Godot UI Scenes**: Separate `.tscn` files for Main Menu, Pause Menu, Settings Panel,
   Save/Load Panel, and Key Bindings Panel.
-- **USS Styles**: Shared `.uss` file for menu styles (colors, borders, fonts, animations).
+- **Theme Resources**: Shared `.tres` theme file for menu styles (colors, borders, fonts, animations).
 - **Responsive Layout**: Menus scale correctly at 720p, 1080p, 1440p, and 4K resolutions.
 - **Controller Support**: All menu elements navigable with gamepad. Focus indicator is
   visible and unambiguous.

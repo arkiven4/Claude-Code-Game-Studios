@@ -7,8 +7,9 @@
 
 ## Overview
 
-The Combat HUD is the player's real-time window into the combat state. Built with Unity
-UI Toolkit, it displays party member HP/MP bars, active skill cooldowns, the currently
+The Combat HUD is the player's real-time window into the combat state. Built with Godot
+Control nodes and theme resources, it displays party member HP/MP bars, active skill
+cooldowns, the currently
 controlled character indicator, enemy HP bars (world-space), skill combo windows,
 damage/heal numbers (world-space floating text), and contextual button prompts. The HUD
 is screen-space for player information and world-space for enemy information. It reads
@@ -41,7 +42,7 @@ counter, rank display), and Hollow Knight's minimal HUD (information without clu
    - Displays all 4 party members as stacked horizontal cards
    - Each card shows:
      - Character portrait thumbnail (32x32)
-     - Character name (TextMeshPro)
+     - Character name (Label)
      - HP bar (green → yellow → red gradient based on HP%)
      - MP bar (blue gradient)
      - Status effect icons (buffs on top row, debuffs on bottom row)
@@ -206,8 +207,7 @@ counter, rank display), and Hollow Knight's minimal HUD (information without clu
 
 - **Depends on**: Character State Manager, Combat System, Skill Execution, Health &
   Damage, Hit Detection, Character Switching, Input System, Enemy AI, Audio System
-  (combo completion sound), Character Skill System (passive icons), Godot UI,
-  TextMeshPro
+  (combo completion sound), Character Skill System (passive icons), Godot UI
 - **Depended on by**: Save / Load (HUD settings like damage number visibility)
 
 ## Tuning Knobs
@@ -227,7 +227,7 @@ counter, rank display), and Hollow Knight's minimal HUD (information without clu
 - **Party Cards**: Rounded rectangle panels with portrait, name, HP bar, MP bar, and
   status effect icons. Gold glow border for active character. Gray overlay for dead.
 - **Skill Buttons**: Square buttons with icon, cooldown radial overlay, and key label.
-- **Floating Text**: World-space TextMeshPro text with color per damage type, upward
+- **Floating Text**: World-space Label3D or Label nodes with color per damage type, upward
   animation, and fade-out.
 - **Boss HP Bar**: Screen-space bar at bottom-center, styled distinctively (ornate
   border, boss name centered above).
@@ -235,10 +235,10 @@ counter, rank display), and Hollow Knight's minimal HUD (information without clu
 
 ## UI Requirements
 
-- **UI Toolkit UXML Layout**: The Combat HUD is defined in a `.uxml` file with
+- **Godot UI Layout**: The Combat HUD is defined in Control nodes with
   responsive anchors. Party panel anchors top-left. Skill bar anchors bottom-center.
   Input method indicator anchors top-right.
-- **Damage Number USS Styles**: USS file defines font size, colors per damage type,
+- **Damage Number Theme Styles**: Theme resource file defines font size, colors per damage type,
   animation curves for floating text.
 - **HUD Settings**: Pause menu includes toggle for damage numbers visibility
   (show/hide) and damage number size (small/normal/large).

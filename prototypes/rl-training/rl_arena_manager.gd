@@ -23,6 +23,12 @@ extends Node3D
 ## Penalty per step for being outside the arena platform
 @export var w_boundary_penalty: float = 0.05
 
+## Hard cap on episode length (physics steps). Prevents infinite episodes from
+## kiting loops / corner camping that otherwise stall the RLlib sampler buffer.
+## 1800 steps = 30s @ 60 FPS — long enough to resolve a normal fight, short
+## enough that random early policies fail fast. Treated as a loss when hit.
+@export var max_episode_steps: int = 1800
+
 @export_group("Curriculum Scheduler")
 ## Enable automatic episode length scaling based on rolling win rate
 @export var curriculum_enabled: bool = false
@@ -140,6 +146,10 @@ func _physics_process(delta: float) -> void:
 		return
 
 	_episode_step += 1
+
+	if _episode_step >= max_episode_steps:
+		_end_episode(false)
+		return
 
 	if _team_agent:
 		if _evan_agent:   _evan_agent.set_directive(_team_agent.evan_target, _team_agent.evan_role)

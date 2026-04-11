@@ -62,8 +62,8 @@ conventions (bottom-anchored box, portrait left, text right, choices below).
    - Markup tags (`[emphasis]`, `[shake]`, etc.) are processed inline and do not
      count toward the character count
    - `[pause=N]` tags insert an N-second pause in the typewriter
-   - The animation runs on the UI thread via `VisualElement.schedule` (UI Toolkit
-     animation system), not `Update()`
+   - The animation runs via Godot Tween animations on the RichTextLabel's `visible_ratio`
+     property, not `_process()`
 
 3. **Hold-to-Skip**:
    - When the player holds the Submit button for 0.3s, the typewriter instantly
@@ -228,12 +228,12 @@ conventions (bottom-anchored box, portrait left, text right, choices below).
 
 ## UI Requirements
 
-- **UI Toolkit UXML**: `.uxml` file defining the dialogue box layout with proper
-  anchors, flex containers, and responsive sizing.
-- **USS Styles**: `.uss` file for all visual styles (colors, borders, fonts, animations).
+- **Godot UI Scene**: `.tscn` file defining the dialogue box layout with proper
+  anchors, VBoxContainer, and responsive sizing.
+- **Theme Resources**: `.tres` theme file for all visual styles (colors, borders, fonts, animations).
 - **Portrait Atlas Textures**: `.png` files per character, imported as Sprite sheets
   with named slices matching expression strings.
-- **Choice Button PackedScene**: UI Toolkit template for choice buttons (reused per choice).
+- **Choice Button Scene**: Reusable `.tscn` template for choice buttons (instantiated per choice).
 
 ## Acceptance Criteria
 
