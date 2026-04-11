@@ -217,7 +217,7 @@ def _policy_for(agent_id: str) -> str:
 
 
 def main():
-    N_ARENAS = 32  # Tune to your CPU/GPU. Each arena adds ~6 agents worth of throughput.
+    N_ARENAS = 16  # Tune to your CPU/GPU. Each arena adds ~6 agents worth of throughput.
 
     init_ray()
 
@@ -243,8 +243,10 @@ def main():
         )
         .training(
             lr=3e-4,
-            # 12000 steps per arena base; scales linearly so batch stays proportional.
-            train_batch_size=12000 * N_ARENAS,
+            # 6000 steps per arena base. Reduced from 12000 because real fights
+            # are 5–6 min (18k–21k steps); smaller batches are the only way to
+            # see multiple completed episodes per iteration and get usable GAE.
+            train_batch_size=6000 * N_ARENAS,
             num_epochs=10,
             entropy_coeff=0.02,   # Higher entropy for better early exploration
         )

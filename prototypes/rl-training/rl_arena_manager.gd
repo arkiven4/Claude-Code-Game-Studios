@@ -23,11 +23,13 @@ extends Node3D
 ## Penalty per step for being outside the arena platform
 @export var w_boundary_penalty: float = 0.05
 
-## Hard cap on episode length (physics steps). Prevents infinite episodes from
-## kiting loops / corner camping that otherwise stall the RLlib sampler buffer.
-## 1800 steps = 30s @ 60 FPS — long enough to resolve a normal fight, short
-## enough that random early policies fail fast. Treated as a loss when hit.
-@export var max_episode_steps: int = 1800
+## Safety-net cap on episode length (physics steps). NOT a pacing knob —
+## legitimate hit-and-run fights are expected to run 5–6 min (18k–21.6k steps).
+## 28800 steps = 8 min @ 60 FPS, ~33% above the longest real fight, so only
+## genuinely stuck episodes (corner camp, infinite kite, mutual disengage) hit
+## it. Treated as a loss to discourage stalling. Prevents the RLlib sampler
+## buffer from growing unbounded when a policy learns a non-terminating pattern.
+@export var max_episode_steps: int = 28800
 
 @export_group("Curriculum Scheduler")
 ## Enable automatic episode length scaling based on rolling win rate
