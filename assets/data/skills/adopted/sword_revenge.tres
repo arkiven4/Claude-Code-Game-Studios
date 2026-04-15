@@ -15,4 +15,4 @@ display_name = "Revenge"
 skill_id = "sword_revenge"
 description = "Reinforces Vengeance, dealing greater damage to the attacker and inflicting a debuff that decreases Accuracy."
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

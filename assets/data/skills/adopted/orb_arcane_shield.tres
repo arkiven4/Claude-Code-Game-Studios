@@ -19,4 +19,4 @@ description = "Sheathes allies in divine energy to decrease damage taken.
 [Effect]
 Damage Resistance +30%"
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

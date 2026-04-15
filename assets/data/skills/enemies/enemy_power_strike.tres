@@ -17,5 +17,5 @@ description = "Deals a heavy blow for strong damage."
 mp_cost = 2
 base_cooldown = 1.0
 target_type = 0
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]
 base_damage = 50

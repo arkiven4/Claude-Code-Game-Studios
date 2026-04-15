@@ -15,4 +15,4 @@ display_name = "Fortitude"
 skill_id = "sword_fortitude"
 description = "Increases the ability to avoid negative CC attacks."
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

@@ -7,23 +7,40 @@ extends Object
 
 ## Spawns a billboard impact/aura VFX at [position].
 ## If [texture] is null this is a no-op — callers don't need to guard.
-static func spawn_effect(tree: SceneTree, position: Vector3, texture: Texture2D) -> void:
+static func spawn_effect(tree: SceneTree, position: Vector3, texture: Texture2D, color: Color = Color.WHITE) -> void:
 	if not texture: return
+	
 	var vfx := MeshInstance3D.new()
+	vfx.name = "VFX_Effect_" + str(Time.get_ticks_msec())
 	var mesh := QuadMesh.new()
 	mesh.size = Vector2(1.5, 1.5)
 	vfx.mesh = mesh
+	
 	var mat := StandardMaterial3D.new()
 	mat.albedo_texture = texture
+	mat.albedo_color = color # Apply tint
 	mat.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
 	mat.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	vfx.material_override = mat
-	tree.root.add_child(vfx)
+	
+	# Fallback to root if current_scene is invalid
+	var parent: Node = tree.current_scene
+	if not is_instance_valid(parent):
+		parent = tree.root
+		
+	parent.add_child(vfx)
 	vfx.global_position = position
+	
+	print("[CombatVFX] Spawned billboard VFX at %s (parent: %s, texture: %s)" % [str(position), parent.name, texture.resource_path.get_file()])
+	
 	var tween := tree.create_tween()
+	tween.set_parallel(true)
 	tween.tween_property(vfx, "scale", Vector3(2.0, 2.0, 2.0), 0.4)
+	tween.tween_property(mat, "albedo_color:a", 0.0, 0.4)
+	tween.set_parallel(false)
 	tween.tween_callback(vfx.queue_free)
 
 ## Instantiates a real Projectile node and adds it to the scene tree.
@@ -70,7 +87,9 @@ static func spawn_projectile(
 	if skill.vfx_projectile and projectile.has_method("set_vfx"):
 		projectile.call("set_vfx", skill.vfx_projectile)
 
-	tree.root.add_child(projectile)
+	# Prefer current_scene over root to ensure same World3D/Environment
+	var parent: Node = tree.current_scene if tree.current_scene else tree.root
+	parent.add_child(projectile)
 	return projectile
 
 ## Spawns a visual-only projectile quad that travels from [from] to [to].
@@ -88,7 +107,10 @@ static func spawn_visual_projectile(tree: SceneTree, skill: SkillData, from: Vec
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 	vfx.material_override = mat
-	tree.root.add_child(vfx)
+	
+	# Prefer current_scene over root to ensure same World3D/Environment
+	var parent: Node = tree.current_scene if tree.current_scene else tree.root
+	parent.add_child(vfx)
 	vfx.global_position = from
 	var duration := maxf(from.distance_to(to) / maxf(skill.projectile_speed, 1.0), 0.05)
 	var tween := tree.create_tween()

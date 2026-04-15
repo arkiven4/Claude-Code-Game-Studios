@@ -14,4 +14,4 @@ display_name = "Majesty"
 skill_id = "sword_majesty"
 description = "Gains an unyielding spirit to overcome any adversity."
 mp_cost = 0
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

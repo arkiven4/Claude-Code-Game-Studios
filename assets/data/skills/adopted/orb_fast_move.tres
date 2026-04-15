@@ -22,4 +22,4 @@ Movement Speed +25%
 Attack Speed +25%
 Cast Speed +25%"
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

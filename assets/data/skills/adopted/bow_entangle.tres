@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://bow_entangle"]
 [ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
 [ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
-[ext_resource type="Texture2D" uid="uid://icon_upd" path="res://assets/art/ui/skill_icons/Bow_Active_Entangle.png.import" id="icon_res"]
+[ext_resource type="Texture2D" uid="uid://icon_upd" path="res://assets/art/ui/skill_icons/Bow_Active_Entangle.png" id="icon_res"]
 
 [sub_resource type="Resource" id="Tier1"]
 script = ExtResource("2_tier")
@@ -17,4 +17,4 @@ description = "Attacks the target with an arrow imbued with the spirit of trees.
 The hit target is bound by tree roots that prevent all movement.
 [Target: Single]"
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

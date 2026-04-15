@@ -15,4 +15,4 @@ display_name = "Reinforced Shadow Step"
 skill_id = "dagger_reinforced_shadow_step"
 description = "Imported Reinforced Shadow Step skill from Lineage 2M"
 icon = ExtResource("3_icon")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

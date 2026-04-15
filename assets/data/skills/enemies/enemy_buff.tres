@@ -19,4 +19,4 @@ Increases WIS and INT.
 [Effect]
 WIS, INT +3"
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

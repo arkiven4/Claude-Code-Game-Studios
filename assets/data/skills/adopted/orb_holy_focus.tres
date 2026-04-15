@@ -19,4 +19,4 @@ description = "Releases holy energy from the body to add Light Type Damage to al
 [Effect]
 Light Type Damage +5"
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

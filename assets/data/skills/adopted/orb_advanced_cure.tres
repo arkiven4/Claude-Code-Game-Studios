@@ -23,4 +23,4 @@ Using the skill cures Party Members within a certain range. Grants a bonus buff 
 Stun Resistance +5%
 Grants a buff which increases Stun/Hold/CC Resistance by 5% on a successful removal"
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

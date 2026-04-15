@@ -28,9 +28,6 @@ var default_projectile_scene := preload("res://assets/scenes/Projectile.tscn")
 
 # Casting animation state tracking
 var _is_currently_casting: bool = false
-var _cast_anim_phase_switched: bool = false
-var _cast_anim_timer: float = 0.0
-var _forced_cast_anim: bool = false # For instant-cast skills
 
 func _process(delta: float) -> void:
 		if not is_instance_valid(current_skill_execution_system):
@@ -38,54 +35,26 @@ func _process(delta: float) -> void:
 		if not current_skill_execution_system.state:
 				return
 
-		var is_casting: bool = current_skill_execution_system.state.get("is_casting")
-
-		# Handle real cast (cast_time > 0)
-		if is_casting and not _is_currently_casting:
-				_is_currently_casting = true
-				_cast_anim_phase_switched = false
-				_forced_cast_anim = false
-				print("[SkillSandbox] Casting started — playing general_Interact")
-				if caster_anim_state:
-						caster_anim_state.travel("general_Interact")
-
-		if is_casting and not _cast_anim_phase_switched:
-				var cast_timer: float = current_skill_execution_system._cast_timer
-				if cast_timer <= 0.5:
-						_cast_anim_phase_switched = true
-						print("[SkillSandbox] Cast timer < 0.5s — switching to general_Throw")
-						if caster_anim_state:
-								caster_anim_state.travel("general_Throw")
-
-		if not is_casting and _is_currently_casting and not _forced_cast_anim:
-				_is_currently_casting = false
-				_cast_anim_phase_switched = false
-				print("[SkillSandbox] Casting finished — resetting to Idle_A")
-				_reset_caster_animation()
-
-		# Handle forced cast animation for instant-cast skills
-		if _forced_cast_anim:
-				_cast_anim_timer -= delta
-				if _cast_anim_timer <= 0.5 and not _cast_anim_phase_switched:
-						_cast_anim_phase_switched = true
-						print("[SkillSandbox] Forced anim < 0.5s — switching to general_Throw")
-						if caster_anim_state:
-								caster_anim_state.travel("general_Throw")
-				if _cast_anim_timer <= 0.0:
-						_forced_cast_anim = false
-						_is_currently_casting = false
-						_cast_anim_phase_switched = false
-						print("[SkillSandbox] Forced anim done — resetting to Idle_A")
-						_reset_caster_animation()
+		# The sandbox only needs to track if a cast is currently active for UI/blocking
+		_is_currently_casting = current_skill_execution_system.state.get("is_casting")
 
 func _ready() -> void:
 		if not character_scene:
-				character_scene = load("res://assets/scenes/characters/Witch.tscn")
+				character_scene = load("res://assets/scenes/characters/Evelyn.tscn")
 		if characters.is_empty():
 				_load_all_characters()
 		_setup_ui()
+		
+		# Find Evelyn in the loaded characters and select her by default
+		var default_index := 0
+		for i in range(characters.size()):
+				if characters[i].display_name.to_lower().contains("evelyn"):
+						default_index = i
+						break
+						
 		if not characters.is_empty():
-				_spawn_character(0)
+				_spawn_character(default_index)
+				character_selector.selected = default_index
 		enemy_dummy.stats_updated.connect(_on_dummy_stats_updated)
 		if ally_dummy and ally_dummy.has_signal("stats_updated"):
 				ally_dummy.stats_updated.connect(_on_dummy_stats_updated)
@@ -105,9 +74,17 @@ func _load_all_characters() -> void:
 				var file_name = dir.get_next()
 				while file_name != "":
 						if not dir.current_is_dir() and file_name.ends_with(".tres"):
-								var char_data = load(path + file_name)
-								if char_data is CharacterData:
-										characters.append(char_data)
+								var full_path = path + file_name
+								if FileAccess.file_exists(full_path):
+										var char_data = load(full_path)
+										if char_data == null:
+												push_error("[SkillSandbox] FAILED to load: " + full_path)
+										elif char_data is CharacterData:
+												characters.append(char_data)
+										else:
+												push_warning("[SkillSandbox] File is not CharacterData: " + full_path)
+								else:
+										push_error("[SkillSandbox] File NOT FOUND (even though listed): " + full_path)
 						file_name = dir.get_next()
 				dir.list_dir_end()
 
@@ -118,7 +95,49 @@ func _setup_ui() -> void:
 		
 		character_selector.item_selected.connect(_on_character_selected)
 		%ExecuteButton.pressed.connect(_execute_selected_skill)
+		%BuffButton.pressed.connect(_receive_test_buff)
+		%StunButton.pressed.connect(_receive_test_stun)
+		%DamageButton.pressed.connect(_receive_test_damage)
 		%ResetButton.pressed.connect(_reset_sandbox)
+
+func _receive_test_damage() -> void:
+		if not is_instance_valid(current_character_node): return
+		if current_character_node.has_method("take_damage"):
+				current_character_node.take_damage({"damage": 100})
+				print("[SkillSandbox] Applied 100 test damage to caster")
+
+func _receive_test_buff() -> void:
+		if not is_instance_valid(caster_status_effects): return
+		
+		# Apply a generic ATK+ buff for testing
+		var effect := StatusEffect.new()
+		effect.effect_id = "test_atk_buff"
+		effect.display_name = "ATK Up (Test)"
+		effect.effect_category = StatusEffect.EffectCategory.STAT_MODIFIER
+		effect.stat_to_modify = StatusEffect.StatToModify.ATK
+		effect.modify_type = StatusEffect.ModifyType.PERCENTAGE
+		effect.effect_value = 0.5 # +50%
+		effect.is_hostile = false
+		effect.duration = 5.0
+		
+		# StatusEffectsSystem.apply_effect(definition, applied_by_id, tier)
+		caster_status_effects.apply_effect(effect, "sandbox", 1)
+		print("[SkillSandbox] Applied test ATK buff to caster")
+
+func _receive_test_stun() -> void:
+		if not is_instance_valid(caster_status_effects): return
+		
+		# Apply a generic stun for testing
+		var effect := StatusEffect.new()
+		effect.effect_id = "test_stun"
+		effect.display_name = "Stunned (Test)"
+		effect.effect_category = StatusEffect.EffectCategory.ACTION_DENIAL
+		effect.is_hostile = true
+		effect.duration = 2.0
+		
+		# StatusEffectsSystem.apply_effect(definition, applied_by_id, tier)
+		caster_status_effects.apply_effect(effect, "sandbox", 1)
+		print("[SkillSandbox] Applied test stun to caster")
 
 func _on_character_selected(index: int) -> void:
 		_spawn_character(index)
@@ -130,62 +149,50 @@ func _spawn_character(index: int) -> void:
 		current_character_node = spawn_point
 		current_character_node.visible = true
 
-		# Clear old references BEFORE freeing to avoid dangling references
-		current_party_member_state = null
-		current_skill_execution_system = null
-		caster_status_effects = null
+		# Use pre-existing systems on CasterDummy instead of recreating them
+		current_party_member_state = current_character_node.get_node_or_null("PartyMemberState")
+		current_skill_execution_system = current_character_node.get_node_or_null("SkillExecutionSystem")
+		caster_status_effects = current_character_node.get_node_or_null("StatusEffectsSystem")
 
-		# Remove old systems if they exist
-		if current_character_node.has_node("PartyMemberState"):
-				current_character_node.get_node("PartyMemberState").queue_free()
-		if current_character_node.has_node("SkillExecutionSystem"):
-				current_skill_execution_system = null # redundant but safe
-				current_character_node.get_node("SkillExecutionSystem").queue_free()
-		if current_character_node.has_node("StatusEffectsSystem"):
-				current_character_node.get_node("StatusEffectsSystem").queue_free()
-
-		# Call_deferred to ensure the freed nodes are fully gone before we create new ones
-		await get_tree().process_frame
-
-		# 1. Setup StatusEffectsSystem FIRST (PartyMemberState depends on it in _ready)
-		var sfx_node := Node.new()
-		sfx_node.name = "StatusEffectsSystem"
-		sfx_node.set_script(load("res://src/gameplay/status_effects_system.gd"))
-		current_character_node.add_child(sfx_node)
-		caster_status_effects = current_character_node.get_node("StatusEffectsSystem")
-
-		# 2. Setup PartyMemberState
-		var state_node := Node.new()
-		state_node.name = "PartyMemberState"
-		state_node.set_script(load("res://src/gameplay/party_member_state.gd"))
-		current_character_node.add_child(state_node)
-
-		current_party_member_state = current_character_node.get_node("PartyMemberState")
-		current_party_member_state.character_data = current_char_data
-		current_party_member_state.character_level = 30 # Max level for testing
-		current_party_member_state.reinitialize_stats()
+		if current_party_member_state:
+				current_party_member_state.character_data = current_char_data
+				current_party_member_state.character_level = 30 # Max level for testing
+				current_party_member_state.reinitialize_stats()
 
 		# Link StatusEffectsSystem to PartyMemberState (bidirectional)
-		if caster_status_effects:
+		if caster_status_effects and current_party_member_state:
 				caster_status_effects.parent_node = current_party_member_state
-
-		# 3. Setup SkillExecutionSystem
-		var system_node := Node.new()
-		system_node.name = "SkillExecutionSystem"
-		system_node.set_script(load("res://src/gameplay/skill_execution_system.gd"))
-		current_character_node.add_child(system_node)
-
-		current_skill_execution_system = current_character_node.get_node("SkillExecutionSystem")
+				# Re-link signals in case they were disconnected
+				if not caster_status_effects.effect_applied.is_connected(current_party_member_state._on_effect_applied):
+						caster_status_effects.effect_applied.connect(current_party_member_state._on_effect_applied)
+				if not caster_status_effects.effect_removed.is_connected(current_party_member_state._on_effect_removed):
+						caster_status_effects.effect_removed.connect(current_party_member_state._on_effect_removed)
 
 		# Explicitly link system to state if not already set
 		if is_instance_valid(current_skill_execution_system):
 				if not current_skill_execution_system.state:
 						current_skill_execution_system.state = current_party_member_state
+				if not current_skill_execution_system.status_effects:
+						current_skill_execution_system.status_effects = caster_status_effects
 				# Assign default projectile scene if missing
 				if not current_skill_execution_system.projectile_scene:
 						current_skill_execution_system.projectile_scene = default_projectile_scene
+				
+				# Unification: Link AnimationTree to the system so it handles visuals centrally
+				var anim_tree: AnimationTree = _find_animation_tree(current_character_node)
+				if anim_tree:
+						current_skill_execution_system.animation_tree = anim_tree
+						# Trigger re-ready to initialize _anim_state
+						current_skill_execution_system._ready()
 
 		_update_skill_list()
+
+func _find_animation_tree(node: Node) -> AnimationTree:
+		if node is AnimationTree: return node
+		for child in node.get_children():
+				var res := _find_animation_tree(child)
+				if res: return res
+		return null
 
 func _update_skill_list() -> void:
 		skill_selector.clear()
@@ -239,15 +246,6 @@ func _execute_selected_skill() -> void:
 				# force_self=false will fallback to lowest-HP ally (our dummy)
 				var success: bool = current_skill_execution_system.execute_skill_rl(slot_index, tier, false)
 				print("[SkillSandbox] execute_skill_rl(slot=%d, tier=%d) success: %s" % [slot_index, tier, success])
-
-				# If instant-cast (cast_time=0), play forced animation
-				if success and skill.cast_time <= 0.0 and not _is_currently_casting:
-						_forced_cast_anim = true
-						_cast_anim_timer = 1.0 # 1s animation lock
-						_cast_anim_phase_switched = false
-						print("[SkillSandbox] Instant skill — forcing 1s cast animation (Interact -> Throw at 0.5s)")
-						if caster_anim_state:
-								caster_anim_state.travel("general_Interact")
 		elif is_instance_valid(current_skill_execution_system) and current_skill_execution_system.has_method("try_activate_skill"):
 				var success: bool = current_skill_execution_system.try_activate_skill(slot_index, tier)
 				print("[SkillSandbox] try_activate_skill(slot=%d, tier=%d) success: %s" % [slot_index, tier, success])

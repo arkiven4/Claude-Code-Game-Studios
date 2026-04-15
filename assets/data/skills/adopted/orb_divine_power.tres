@@ -18,4 +18,4 @@ description = "Divine authority increases the effectiveness of HP recovery skill
 [Effect]
 Heal Boost +50%"
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

@@ -15,4 +15,4 @@ display_name = "Mighty Shock"
 skill_id = "sword_mighty_shock"
 description = "Chain Strike has a chance to inflict Mighty Shock Stun which cannot be removed by any attack. The caster deals greater damage to a target inflicted with Mighty Shock Stun. (Mighty Shock Stun can be inflicted on a target with the Pray effect, with a chance to remove the Pray effect upon inflicting Stun.)"
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

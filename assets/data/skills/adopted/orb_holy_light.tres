@@ -21,4 +21,4 @@ Reinforces Might of Heaven
 Increases Light Type Damage
 Temporarily increases Cast Speed by 10% and Skill Damage Boost by 20% on Skill use"
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

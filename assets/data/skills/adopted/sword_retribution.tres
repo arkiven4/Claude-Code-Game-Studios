@@ -15,4 +15,4 @@ display_name = "Retribution"
 skill_id = "sword_retribution"
 description = "Swings a shield, dealing AoE damage. Decreases enemies' Stun Resistance on AoE hit."
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

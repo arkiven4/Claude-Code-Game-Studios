@@ -18,4 +18,4 @@ The target is perceived as Undead, and its Light Type Resistance and Potion Reco
 The debuff has a maximum of 2 stacks.
 [Target: Single, Player Character]"
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

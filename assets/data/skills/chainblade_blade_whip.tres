@@ -14,5 +14,5 @@ description = "Wields the Chainblade to deal damage to the target."
 mp_cost = 2
 base_cooldown = 0.8
 target_type = 0
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]
 base_damage = 35

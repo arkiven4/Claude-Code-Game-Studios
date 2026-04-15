@@ -20,4 +20,4 @@ description = "Focuses mana energy to the body, enabling MP recovery even when c
 Ignore MP Recovery Penalty +30%
 Fixed MP Recovery +5"
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

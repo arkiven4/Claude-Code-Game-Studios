@@ -20,4 +20,4 @@ description = "Reinforces Chaos to summon consecutive Shilen's dark spears upon 
 Reinforces Chaos.
 First and second attacks have a chance to disable Hold, Teleport, and Escape."
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

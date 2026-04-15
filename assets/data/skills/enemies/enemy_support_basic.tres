@@ -14,6 +14,6 @@ description = "Projects a strong blast of energy to attack the target."
 mp_cost = 2
 base_cooldown = 1.2
 target_type = 0
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]
 base_damage = 30
 damage_category = 2

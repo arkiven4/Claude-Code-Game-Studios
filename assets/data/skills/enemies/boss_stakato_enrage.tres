@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://sword_vanguard"]
 [ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
 [ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
-[ext_resource type="Texture2D" uid="uid://icon_upd" path="res://assets/art/ui/skill_icons/Sword_Active_Vanguard.png.import" id="icon_res"]
+[ext_resource type="Texture2D" uid="uid://icon_upd" path="res://assets/art/ui/skill_icons/Sword_Active_Vanguard.png" id="icon_res"]
 [sub_resource type="Resource" id="Tier1"]
 script = ExtResource("2_tier")
 effect_value = 1.0
@@ -14,4 +14,4 @@ display_name = "Vanguard"
 skill_id = "sword_vanguard"
 description = "Increases tension in battle for faster movement."
 mp_cost = 40
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

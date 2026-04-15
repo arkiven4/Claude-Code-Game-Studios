@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://dagger_poisoning_bomb"]
 [ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
 [ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
-[ext_resource type="Texture2D" uid="uid://icon_upd" path="res://assets/art/ui/skill_icons/Dagger_Active_Poisoning_Bomb.png.import" id="icon_res"]
+[ext_resource type="Texture2D" uid="uid://icon_upd" path="res://assets/art/ui/skill_icons/Dagger_Active_Poisoning_Bomb.png" id="icon_res"]
 
 [sub_resource type="Resource" id="Tier1"]
 script = ExtResource("2_tier")
@@ -21,4 +21,4 @@ Also deals Poison damage.
 Chance to deal AoE damage on a Double hit.
 Temporarily Poisons the hit targets and decreases their Damage Resistance."
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

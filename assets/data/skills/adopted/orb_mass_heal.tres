@@ -19,4 +19,4 @@ description = "Reinforces Group Heal to heal a greater HP of allies in battle. [
 Reinforces Group Heal
 Heals up to 4 Clan Members and Union Members nearby"
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

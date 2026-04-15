@@ -16,4 +16,4 @@ description = "Heals the target by converting MP to HP.
 
 [Target: Single]"
 mp_cost = 10
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

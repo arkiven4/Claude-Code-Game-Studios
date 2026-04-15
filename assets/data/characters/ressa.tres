@@ -6,7 +6,6 @@
 [ext_resource type="Resource" uid="uid://char_ressa_skill2" path="res://assets/data/skills/sword_shield_stun.tres" id="4_skill2"]
 [ext_resource type="Resource" uid="uid://char_ressa_skill3" path="res://assets/data/skills/adopted/sword_iron_will.tres" id="5_skill3"]
 [ext_resource type="Resource" uid="uid://char_ressa_skill4" path="res://assets/data/skills/adopted/sword_holy_blade.tres" id="6_skill4"]
-[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="7_script"]
 
 [resource]
 script = ExtResource("1_char")
@@ -24,5 +23,5 @@ hp_per_level = 18
 atk_per_level = 3
 def_per_level = 2
 mp_per_level = 3
-skill_slots = Array[ExtResource("7_script")]([ExtResource("3_skill1"), ExtResource("4_skill2"), ExtResource("5_skill3"), ExtResource("6_skill4")])
+skill_slots = [ExtResource("3_skill1"), ExtResource("4_skill2"), ExtResource("5_skill3"), ExtResource("6_skill4")]
 basic_attack = ExtResource("2_basic")

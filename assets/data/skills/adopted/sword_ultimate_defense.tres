@@ -15,4 +15,4 @@ display_name = "Ultimate Defense"
 skill_id = "sword_ultimate_defense"
 description = "Raises a Shield and takes a position to endure enemy's attack."
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

@@ -18,4 +18,4 @@ description = "Increases tension in battle for faster movement."
 mp_cost = 40
 base_cooldown = 120.0
 target_type = 6
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

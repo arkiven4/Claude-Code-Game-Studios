@@ -6,6 +6,13 @@
 [ext_resource type="Script" uid="uid://c3cjekrr00ob3" path="res://src/gameplay/status_effects_system.gd" id="4_sfx"]
 [ext_resource type="Script" uid="uid://cwuunfo02hcyp" path="res://src/gameplay/status_effect_indicator.gd" id="5_indicator"]
 [ext_resource type="PackedScene" uid="uid://cwa8spn15hv8i" path="res://assets/art/characters/kaykit_skelly/characters/skeleton_mage.tscn" id="6_cjvji"]
+[ext_resource type="Script" uid="uid://bx68o5nwbeyvj" path="res://src/gameplay/caster_dummy.gd" id="7_caster"]
+[ext_resource type="Script" uid="uid://dgx1wwtlxgakg" path="res://src/gameplay/party_member_state.gd" id="8_state"]
+[ext_resource type="Script" uid="uid://cxcf2p53a3hr1" path="res://src/gameplay/character_state_manager.gd" id="9_manager"]
+[ext_resource type="Script" uid="uid://cxqstfanixytv" path="res://src/gameplay/equipment_manager.gd" id="10_equip"]
+[ext_resource type="PackedScene" uid="uid://dmbqfrfi1js22" path="res://assets/art/characters/kaykit_adventurers/characters/adven_mage.tscn" id="11_hjjmg"]
+[ext_resource type="Script" uid="uid://d2rx7b3fv7e0a" path="res://src/gameplay/skill_execution_system.gd" id="11_system"]
+[ext_resource type="PackedScene" uid="uid://bgfdfr1n2rhl" path="res://assets/scenes/characters/Evelyn.tscn" id="12_evelyn"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -24,6 +31,7 @@ glow_enabled = true
 
 [node name="SkillSandbox" type="Node3D" unique_id=1667770397]
 script = ExtResource("1_sandbox")
+character_scene = ExtResource("12_evelyn")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1606779061]
 environment = SubResource("Environment_1")
@@ -39,12 +47,10 @@ size = Vector3(40, 0.1, 40)
 
 [node name="CasterDummy" type="CharacterBody3D" parent="." unique_id=386930756]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 18)
+script = ExtResource("7_caster")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CasterDummy" unique_id=1238394494]
 shape = SubResource("CapsuleShape3D_1")
-
-[node name="Skeleton_Mage" parent="CasterDummy" unique_id=1181495901 instance=ExtResource("6_cjvji")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 
 [node name="HurtboxComponent" type="Area3D" parent="CasterDummy" unique_id=1064289658 node_paths=PackedStringArray("parent_node")]
 script = ExtResource("3_hurtbox")
@@ -59,6 +65,21 @@ script = ExtResource("4_sfx")
 [node name="StatusEffectIndicator" type="Node3D" parent="CasterDummy" unique_id=236467251]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 script = ExtResource("5_indicator")
+
+[node name="PartyMemberState" type="Node" parent="CasterDummy" unique_id=466215619]
+script = ExtResource("8_state")
+
+[node name="CharacterStateManager" type="Node" parent="CasterDummy" unique_id=554811722]
+script = ExtResource("9_manager")
+
+[node name="EquipmentManager" type="Node" parent="CasterDummy" unique_id=1358520868]
+script = ExtResource("10_equip")
+
+[node name="SkillExecutionSystem" type="Node" parent="CasterDummy" unique_id=2081829031]
+script = ExtResource("11_system")
+
+[node name="Adven_Mage" parent="CasterDummy" unique_id=334320020 instance=ExtResource("11_hjjmg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.0116372, 0)
 
 [node name="TrainingDummy" type="CharacterBody3D" parent="." unique_id=557357802]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1.05, 10)
@@ -182,6 +203,21 @@ value = 1.0
 unique_name_in_owner = true
 layout_mode = 2
 text = "EXECUTE SKILL"
+
+[node name="BuffButton" type="Button" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=1849298753]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RECEIVE BUFF (ATK+)"
+
+[node name="StunButton" type="Button" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=1849298754]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RECEIVE STUN (2s)"
+
+[node name="DamageButton" type="Button" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=1849298755]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RECEIVE DAMAGE (100)"
 
 [node name="HSeparator2" type="HSeparator" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=1764388379]
 layout_mode = 2

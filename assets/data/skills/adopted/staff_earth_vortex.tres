@@ -16,4 +16,4 @@ skill_id = "staff_earth_vortex"
 description = "Explodes the surface to deal Earth Type Damage to the target.
 [Target: Single]"
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

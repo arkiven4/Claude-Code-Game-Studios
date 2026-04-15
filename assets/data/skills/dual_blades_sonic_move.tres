@@ -14,4 +14,4 @@ description = "Explodes blade energy to greatly increase Speed."
 mp_cost = 40
 base_cooldown = 120.0
 target_type = 6
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

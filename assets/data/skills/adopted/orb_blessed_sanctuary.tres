@@ -24,4 +24,4 @@ Within the Sanctuary, the HP of allies does not decrease below 1%
 Recovers HP over time
 Caster's Triple Chance +20%"
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]

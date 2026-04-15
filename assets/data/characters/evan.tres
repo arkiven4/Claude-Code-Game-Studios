@@ -28,6 +28,6 @@ main_char_hp_bonus = 4
 main_char_atk_bonus = 2
 main_char_def_bonus = 1
 main_char_mp_bonus = 1
-skill_slots = Array[ExtResource("3_kdl4g")]([ExtResource("3_skill1"), ExtResource("4_skill2"), ExtResource("5_skill3"), ExtResource("6_skill4")])
+skill_slots = [ExtResource("3_skill1"), ExtResource("4_skill2"), ExtResource("5_skill3"), ExtResource("6_skill4")]
 basic_attack = ExtResource("2_basic")
 special_attack = ExtResource("2_parry")

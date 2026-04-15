@@ -18,8 +18,14 @@ signal hover_target_changed(target: Node)
 @export var status_effects: StatusEffectsSystem
 @export var projectile_scene: PackedScene
 @export var cast_indicator: SkillCastIndicator
+@export var animation_tree: AnimationTree
+@export var cast_throw_threshold: float = 1.3667
+@export var cast_throw_timer_threshold: float = 1.3667
 
-## Double-tap tracking
+var _anim_state: AnimationNodeStateMachinePlayback
+
+# Double-tap tracking
+
 const DOUBLE_TAP_THRESHOLD: float = 0.35
 var _last_skill_press_times: Array[float] = [0.0, 0.0, 0.0, 0.0]
 var _last_skill_slot: int = -1
@@ -49,6 +55,19 @@ func _clear_combo() -> void:
 	_combo_window_timer = 0.0
 
 func _ready() -> void:
+	if animation_tree:
+		_anim_state = animation_tree.get("parameters/StateMachine/playback")
+		
+		# Ensure Throw/Interact animations are not looping so state machine 
+		# transitions (AT_END) can fire naturally.
+		var anim_player_path := animation_tree.anim_player
+		if not anim_player_path.is_empty():
+			var anim_player: AnimationPlayer = animation_tree.get_node(anim_player_path)
+			if anim_player:
+				for anim_name in ["general/Throw", "general/Interact", "Throw", "Interact"]:
+					if anim_player.has_animation(anim_name):
+						anim_player.get_animation(anim_name).loop_mode = Animation.LOOP_NONE
+	
 	## Cancel any in-progress cast when the caster dies. Without this, the
 	## _cast_timer in _process keeps ticking on a dead caster and eventually
 	## fires _complete_casting() — damage/heal/VFX all come out of the corpse.
@@ -69,7 +88,15 @@ func _process(delta: float) -> void:
 	## future code path leaves is_casting=true without firing death.
 	if state and state.get("is_alive"):
 		if state.get("is_casting"):
+			var prev_timer := _cast_timer
 			_cast_timer -= delta
+			
+			# Animation transition: if total cast time > threshold, switch to Throw when timer < timer_threshold
+			if _current_cast_skill and _current_cast_skill.cast_time > cast_throw_threshold:
+				if prev_timer >= cast_throw_timer_threshold and _cast_timer < cast_throw_timer_threshold:
+					if _anim_state:
+						_anim_state.travel("general_Throw")
+			
 			if _cast_timer <= 0.0:
 				_complete_casting()
 		
@@ -156,9 +183,21 @@ func _start_casting(skill: SkillData, slot_index: int, tier: int, force_self: bo
 	if not skill:
 		push_error("[SkillSystem] _start_casting called with null skill!")
 		return false
-	print("[SkillSystem] _start_casting skill=%s cast_time=%.2f" % [skill.display_name, skill.cast_time])
-	if skill.cast_time > 0.0:
-		_cast_timer = skill.cast_time
+	
+	# Enforce minimum casting time of 0.5s for all skills to ensure animation plays
+	var effective_cast_time := maxf(skill.cast_time, 0.5)
+	
+	print("[SkillSystem] _start_casting skill=%s cast_time=%.2f (data=%.2f)" % [skill.display_name, effective_cast_time, skill.cast_time])
+
+	# Trigger casting animation
+	if _anim_state:
+		if skill.cast_time < cast_throw_threshold:
+			_anim_state.travel("general_Throw")
+		else:
+			_anim_state.travel("general_Interact")
+
+	if effective_cast_time > 0.0:
+		_cast_timer = effective_cast_time
 		_current_cast_skill = skill
 		_current_cast_slot = slot_index
 		_current_cast_tier = tier
@@ -167,6 +206,7 @@ func _start_casting(skill: SkillData, slot_index: int, tier: int, force_self: bo
 		state.set("is_casting", true)
 		return true
 	else:
+		# Fallback (should not be hit due to 0.5s floor above)
 		if slot_index == -1:
 			return _execute_attack_immediately(is_special, tier)
 		else:
@@ -183,6 +223,7 @@ func cancel_cast() -> void:
 func _complete_casting() -> void:
 	print("[SkillSystem] _complete_casting skill=%s" % (_current_cast_skill.display_name if _current_cast_skill else "NULL"))
 	state.set("is_casting", false)
+	
 	var skill := _current_cast_skill
 	var slot := _current_cast_slot
 	var tier := _current_cast_tier
@@ -200,6 +241,9 @@ func _execute_skill_immediately(slot_index: int, active_tier: int, force_self: b
 	var character_data: CharacterData = state.get("character_data")
 	var skill: SkillData = character_data.skill_slots[slot_index]
 	print("[SkillSystem] _execute_skill_immediately skill=%s" % (skill.display_name if skill else "NULL"))
+
+	# We no longer travel to general_Throw here, as it was already triggered
+	# by _start_casting (for short skills) or _process (for long skills).
 	
 	# If we were executing a combo, use that skill instead
 	if _combo_active_slot == slot_index and _combo_active_skill:
@@ -288,8 +332,9 @@ func try_activate_attack(is_special: bool, active_tier: int = 1) -> bool:
 func _execute_attack_immediately(is_special: bool, active_tier: int) -> bool:
 	var character_data: CharacterData = state.get("character_data")
 	var skill: SkillData = character_data.special_attack if is_special else character_data.basic_attack
-	
+
 	# If we were executing a combo, use that skill instead
+
 	if _combo_active_slot == -1 and not is_special and _combo_active_skill:
 		skill = _combo_active_skill
 		_clear_combo()

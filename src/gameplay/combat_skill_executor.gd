@@ -95,7 +95,7 @@ static func apply_utility(skill: SkillData, target: Node, caster_id: String = ""
 ## and fallback_color.a > 0.
 static func spawn_hit_vfx(tree: SceneTree, position: Vector3, texture: Texture2D, fallback_color: Color = Color.TRANSPARENT) -> void:
 	if texture:
-		CombatVFX.spawn_effect(tree, position, texture)
+		CombatVFX.spawn_effect(tree, position, texture, fallback_color)
 		return
 	if fallback_color.a <= 0.0: return
 	var vfx := MeshInstance3D.new()
@@ -110,7 +110,9 @@ static func spawn_hit_vfx(tree: SceneTree, position: Vector3, texture: Texture2D
 	mat.emission = fallback_color
 	mat.emission_energy_multiplier = 3.0
 	vfx.material_override = mat
-	tree.root.add_child(vfx)
+	# Prefer current_scene over root to ensure same World3D/Environment
+	var parent: Node = tree.current_scene if tree.current_scene else tree.root
+	parent.add_child(vfx)
 	vfx.global_position = position
 	var tween := tree.create_tween()
 	tween.set_parallel(true)

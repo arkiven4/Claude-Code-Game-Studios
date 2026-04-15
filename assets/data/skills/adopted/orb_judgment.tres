@@ -16,4 +16,4 @@ skill_id = "orb_judgment"
 description = "Discharges lightning of punishment to deal Light Type Damage to targets.
 [Target: Max 5 Playable Characters, excluding friendly targets]"
 icon = ExtResource("icon_res")
-tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+tiers = [SubResource("Tier1")]
