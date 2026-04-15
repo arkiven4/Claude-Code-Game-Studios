@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://steel_guard_tank"]
+
+[ext_resource type="Script" uid="uid://pjoxxkra8hlc" path="res://src/core/enemy_data.gd" id="1_enemy"]
+[ext_resource type="Script" uid="uid://cebmr5g6qwykx" path="res://src/core/enemy_skill_entry.gd" id="2_entry"]
+[ext_resource type="Resource" uid="uid://basic_sword_swing" path="res://assets/data/skills/basic_sword_swing.tres" id="3_basic"]
+[ext_resource type="Resource" uid="uid://tank_shield_bash" path="res://assets/data/skills/enemies/tank_shield_bash.tres" id="4_bash"]
+[ext_resource type="Resource" uid="uid://tank_iron_will" path="res://assets/data/skills/enemies/tank_iron_will.tres" id="5_iron"]
+
+[sub_resource type="Resource" id="Entry_Basic"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("3_basic")
+cooldown = 2.0
+weight = 3.0
+max_range = 3.0
+
+[sub_resource type="Resource" id="Entry_Bash"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("4_bash")
+cooldown = 8.0
+weight = 2.0
+max_range = 3.0
+
+[sub_resource type="Resource" id="Entry_IronWill"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("5_iron")
+cooldown = 15.0
+weight = 1.0
+max_range = 999.0
+condition = 3 # ENEMY_BELOW_HP_50
+
+[resource]
+script = ExtResource("1_enemy")
+enemy_id = "steel_guard"
+display_name = "Steel Guard"
+enemy_class = 1 # ELITE
+behavior_profile = 2 # DEFENSIVE
+base_max_hp = 4000
+base_atk = 20
+base_def = 30
+base_spd = 0.8
+physical_resistance = 0.8
+magical_resistance = 1.2
+skill_list = Array[ExtResource("2_entry")]([SubResource("Entry_Basic"), SubResource("Entry_Bash"), SubResource("Entry_IronWill")])

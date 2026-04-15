@@ -1,0 +1,90 @@
+[gd_scene load_steps=4 format=3 uid="uid://cl0anim5andb0x"]
+
+[ext_resource type="Script" path="res://prototypes/character_animation_sandbox/CharacterAnimationSandbox.gd" id="1_script"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+size = Vector3(50, 0.1, 50)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
+albedo_color = Color(0.180392, 0.180392, 0.180392, 1)
+
+[node name="CharacterAnimationSandbox" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 10, 0)
+shadow_enabled = true
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_floor")
+surface_material_override/0 = SubResource("StandardMaterial3D_floor")
+
+[node name="ModelContainer" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+
+[node name="CameraPivot" type="Node3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="UI" type="VBoxContainer" parent="CanvasLayer"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 320.0
+offset_bottom = 420.0
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="CanvasLayer/UI"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Character Sandbox"
+
+[node name="ModelLabel" type="Label" parent="CanvasLayer/UI"]
+layout_mode = 2
+text = "Model:"
+
+[node name="ModelSelector" type="OptionButton" parent="CanvasLayer/UI"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LibLabel" type="Label" parent="CanvasLayer/UI"]
+layout_mode = 2
+text = "Animation Library:"
+
+[node name="LibSelector" type="OptionButton" parent="CanvasLayer/UI"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AnimLabel" type="Label" parent="CanvasLayer/UI"]
+layout_mode = 2
+text = "Animation:"
+
+[node name="AnimSelector" type="OptionButton" parent="CanvasLayer/UI"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/UI"]
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="CanvasLayer/UI"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Status: Ready"
+autowrap_mode = 2
+
+[node name="ControlsLabel" type="Label" parent="CanvasLayer/UI"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "RMB: Orbit
+MMB: Pan
+Scroll: Zoom"

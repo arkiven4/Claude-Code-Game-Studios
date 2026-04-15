@@ -36,6 +36,9 @@ enum DamageCategory { PHYSICAL, MAGICAL, HOLY, DARK }
 ## All skills this enemy can select from during the decision cycle.
 @export var skill_list: Array[EnemySkillEntry] = []
 
+@export_group("Loot")
+@export var loot_table: LootTable
+
 @export_group("Death / Phase")
 ## HP threshold to trigger phase change or death. 0 for standard enemies.
 @export var death_threshold: float = 0.0

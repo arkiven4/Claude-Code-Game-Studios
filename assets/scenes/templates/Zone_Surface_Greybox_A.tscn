@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/world/surface_zone.gd" id="1_script"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_terrain"]
+albedo_color = Color(0.3, 0.55, 0.3, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_terrain"]
+size = Vector3(120.0, 0.2, 120.0)
+material = SubResource("Mat_terrain")
+
+[sub_resource type="BoxShape3D" id="Shape_terrain"]
+size = Vector3(120.0, 0.2, 120.0)
+
+[sub_resource type="BoxShape3D" id="Shape_boundary"]
+size = Vector3(120.0, 4.0, 120.0)
+
+[node name="Zone_Surface_Greybox_A" type="Node3D"]
+script = ExtResource("1_script")
+zone_name = "Greybox Zone A"
+biome = "forest"
+
+[node name="TerrainBody" type="StaticBody3D" parent="."]
+position = Vector3(0.0, -0.1, 0.0)
+
+[node name="Mesh" type="MeshInstance3D" parent="TerrainBody"]
+mesh = SubResource("Mesh_terrain")
+
+[node name="Collision" type="CollisionShape3D" parent="TerrainBody"]
+shape = SubResource("Shape_terrain")
+
+[node name="BoundaryArea" type="Area3D" parent="."]
+position = Vector3(0.0, 2.0, 0.0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoundaryArea"]
+shape = SubResource("Shape_boundary")
+
+[node name="EntranceMarker_0" type="Node3D" parent="."]
+position = Vector3(0.0, 0.5, -55.0)

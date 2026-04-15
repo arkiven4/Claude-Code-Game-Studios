@@ -13,11 +13,20 @@ extends Node
 @export var party_member_paths: Array[NodePath] = []
 @export var enemy_paths: Array[NodePath] = []
 @export var combat_hud: CombatHUD
+@export var combat_end_overlay: CombatEndOverlay
+@export var inventory_ui: InventoryUI
 
 var party_members: Array[PartyMemberState] = []
 var enemies: Array[EnemyAIController] = []
 var _last_highlighted: Node3D = null
 var _highlight_vfx: MeshInstance3D = null
+
+## Stats tracking for combat end screen
+var _combat_start_time: float = 0.0
+var _total_damage_dealt: float = 0.0
+var _total_damage_received: float = 0.0
+var _total_kills: int = 0
+var _total_switches: int = 0
 
 func _ready() -> void:
 	for path in party_member_paths:
@@ -34,9 +43,16 @@ func _ready() -> void:
 func _wire_signals() -> void:
 	# --- CombatEncounterManager → CombatHUD ---
 	if encounter_manager and combat_hud:
-		encounter_manager.combat_started.connect(combat_hud.show_hud)
-		encounter_manager.combat_ended.connect(combat_hud.hide_hud)
-		encounter_manager.game_over.connect(combat_hud.hide_hud)
+		encounter_manager.combat_started.connect(_on_combat_started)
+		encounter_manager.combat_ended.connect(_on_combat_ended)
+		encounter_manager.game_over.connect(_on_game_over)
+
+	# --- CombatEncounterManager → CombatEndOverlay ---
+	if encounter_manager and combat_end_overlay:
+		encounter_manager.combat_ended.connect(_on_victory_for_overlay)
+		encounter_manager.game_over.connect(_on_defeat_for_overlay)
+	if combat_end_overlay:
+		combat_end_overlay.restart_requested.connect(_on_restart_requested)
 
 	# --- CharacterSwitchController → CombatHUD ---
 	if switch_controller and combat_hud:
@@ -53,6 +69,10 @@ func _wire_signals() -> void:
 	if input_manager and camera_controller:
 		input_manager.camera_orbit.connect(camera_controller.on_camera_orbit)
 
+	# --- InputManager → InventoryUI ---
+	if input_manager and inventory_ui:
+		input_manager.inventory_pressed.connect(_on_inventory_pressed)
+
 	# --- InputManager → SkillExecutionSystem (active character) ---
 	if input_manager:
 		input_manager.skill_pressed.connect(_on_skill_pressed)
@@ -65,6 +85,19 @@ func _wire_signals() -> void:
 		_connect_active_member(party_members[0])
 		if party_members.size() > 1:
 			_connect_inactive_member(party_members[1])
+
+	# --- PartyMemberState damage → Floating numbers ---
+	for member in party_members:
+		if member:
+			# Seed initial HP so damage delta tracking works from first hit
+			_last_enemy_hp_for_floating[member.get_instance_id()] = member.current_hp
+			member.hp_changed.connect(_on_party_member_hp_changed.bind(member))
+
+	# --- EnemyAIController damage → Floating numbers ---
+	for enemy in enemies:
+		if enemy:
+			enemy.damage_taken.connect(_on_enemy_damage_taken.bind(enemy))
+			enemy.died.connect(_on_enemy_died_for_stats.bind(enemy))
 
 	# --- EnemyAIController.died → LootDropper ---
 	for enemy in enemies:
@@ -84,7 +117,27 @@ func _start_combat_deferred() -> void:
 func _on_enemy_died(enemy: EnemyAIController, dropper: LootDropper) -> void:
 	dropper.drop_loot(enemy.global_position)
 
+func _on_inventory_pressed() -> void:
+	print("[ArenaWiring] Inventory key pressed. inventory_ui: %s, switch_controller: %s" % [str(inventory_ui != null), str(switch_controller != null)])
+	if not inventory_ui or not switch_controller: return
+	
+	if inventory_ui.visible:
+		print("[ArenaWiring] Closing inventory")
+		inventory_ui.close()
+		get_tree().paused = false
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	else:
+		if switch_controller.current_character:
+			print("[ArenaWiring] Opening inventory for: ", switch_controller.current_character.name)
+			inventory_ui.open_for_character(switch_controller.current_character)
+			print("[ArenaWiring] inventory_ui.visible after open: ", inventory_ui.visible)
+			get_tree().paused = true
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		else:
+			print("[ArenaWiring] Cannot open inventory: No current_character")
+
 func _on_character_switched(previous: PartyMemberState, current: PartyMemberState) -> void:
+	_total_switches += 1
 	if not combat_hud: return
 
 	# 1. Handle the member that was active (previous) -> now inactive
@@ -249,3 +302,108 @@ func _get_mesh(node: Node3D) -> MeshInstance3D:
 			if child is MeshInstance3D:
 				return child
 	return mesh
+
+# =============================================================================
+# Combat End Overlay & Stats Tracking
+# =============================================================================
+
+func _on_combat_started() -> void:
+	combat_hud.show_hud()
+	_combat_start_time = Time.get_ticks_msec() / 1000.0
+	_total_damage_dealt = 0.0
+	_total_damage_received = 0.0
+	_total_kills = 0
+	_total_switches = 0
+
+func _on_combat_ended() -> void:
+	combat_hud.hide_hud()
+
+func _on_game_over() -> void:
+	combat_hud.hide_hud()
+
+func _on_victory_for_overlay() -> void:
+	if not combat_end_overlay: return
+	var elapsed: float = (Time.get_ticks_msec() / 1000.0) - _combat_start_time
+	combat_end_overlay.show_victory({
+		"time_seconds": elapsed,
+		"damage_dealt": _total_damage_dealt,
+		"damage_received": _total_damage_received,
+		"kills": _total_kills,
+		"switches": _total_switches,
+	})
+
+func _on_defeat_for_overlay() -> void:
+	if not combat_end_overlay: return
+	var elapsed: float = (Time.get_ticks_msec() / 1000.0) - _combat_start_time
+	combat_end_overlay.show_defeat({
+		"time_seconds": elapsed,
+		"damage_dealt": _total_damage_dealt,
+		"damage_received": _total_damage_received,
+		"kills": _total_kills,
+		"switches": _total_switches,
+	})
+
+func _on_restart_requested() -> void:
+	_reload_current_scene()
+
+func _reload_current_scene() -> void:
+	var current_scene := get_tree().current_scene
+	if current_scene:
+		var scene_path := current_scene.scene_file_path
+		if not scene_path.is_empty():
+			get_tree().reload_current_scene()
+		else:
+			# Fallback: remove and re-add the root
+			var root := get_tree().root
+			root.remove_child(current_scene)
+			current_scene.queue_free()
+			var new_scene: Node = load("res://assets/scenes/TestArena.tscn").instantiate()
+			root.add_child(new_scene)
+			get_tree().current_scene = new_scene
+
+# =============================================================================
+# Floating Damage Numbers
+# =============================================================================
+
+var _last_enemy_hp_for_floating: Dictionary = {}
+
+func _on_enemy_damage_taken(amount: int, enemy: EnemyAIController) -> void:
+	if not enemy or not is_instance_valid(enemy): return
+	_total_damage_dealt += amount
+	var world_pos := enemy.global_position + Vector3(0, 1.8, 0)
+	var is_crit: bool = randf() < 0.1  # ~10% chance for visual crit flair
+	
+	# Bounce towards active character
+	var attacker_pos := Vector3.ZERO
+	if switch_controller and is_instance_valid(switch_controller.current_character):
+		var body = switch_controller.current_character.get_parent() as Node3D
+		if body:
+			attacker_pos = body.global_position
+
+	FloatingDamageNumber.spawn(get_tree(), world_pos, amount, false, is_crit, attacker_pos)
+
+func _on_party_member_hp_changed(current: int, max_hp: int, member: PartyMemberState) -> void:
+	if not member or not is_instance_valid(member): return
+	var body := member.get_parent() as Node3D
+	if not body or not is_instance_valid(body): return
+	# Only show floating number when HP decreased (damage taken)
+	var prev_hp: int = _last_enemy_hp_for_floating.get(member.get_instance_id(), max_hp)
+	if current < prev_hp:
+		var dmg: int = prev_hp - current
+		_total_damage_received += dmg
+		var world_pos := body.global_position + Vector3(0, 1.8, 0)
+		
+		# Bounce "forward" from where the player is facing (generic attacker dir)
+		var attacker_pos = body.global_position + body.global_transform.basis.z * 2.0
+		FloatingDamageNumber.spawn(get_tree(), world_pos, dmg, false, false, attacker_pos)
+	# Update tracked HP for next delta comparison
+	_last_enemy_hp_for_floating[member.get_instance_id()] = current
+
+
+
+func _on_enemy_died_for_stats(enemy: EnemyAIController) -> void:
+	_total_kills += 1
+	# Death thump number
+	if enemy and is_instance_valid(enemy):
+		var world_pos := enemy.global_position + Vector3(0, 2.0, 0)
+		FloatingDamageNumber.spawn(get_tree(), world_pos, 0, false, true)  # "0!" as death marker

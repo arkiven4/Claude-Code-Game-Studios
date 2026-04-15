@@ -130,6 +130,10 @@ func _on_area_entered(area: Area3D) -> void:
 				_hit_targets.append(state_node)
 				hit.emit(state_node)
 				_target = null # Clear target so we don't emit missed signal
+				
+				# Impact Feel / Hitstop
+				Engine.time_scale = 0.05
+				get_tree().create_timer(0.04, true, false, true).timeout.connect(func(): Engine.time_scale = 1.0)
 			else:
 				pass
 				#print("[Projectile] Hit blocked by invincibility/dodge on: ", state_node.name)

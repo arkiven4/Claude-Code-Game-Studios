@@ -33,7 +33,7 @@ maintaining visual consistency.
 haunting music), Final Fantasy VII Remake's clean pause menu (fast access to save and
 settings), and Persona 5's consistent menu styling (every menu feels like the game).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
@@ -109,11 +109,11 @@ settings), and Persona 5's consistent menu styling (every menu feels like the ga
    >
    > | Field | Type | Default | Effect |
    > |-------|------|---------|--------|
-   > | `MasterVolume` | float | `0.8` | AudioMixer `MasterVol` |
-   > | `MusicVolume` | float | `0.8` | AudioMixer `MusicVol` |
-   > | `SFXVolume` | float | `1.0` | AudioMixer `SFXVol` |
-   > | `UIVolume` | float | `0.6` | AudioMixer `UIVol` |
-   > | `AmbienceVolume` | float | `0.5` | AudioMixer `AmbVol` |
+   > | `MasterVolume` | float | `0.8` | AudioServer `Master` bus volume |
+   > | `MusicVolume` | float | `0.8` | AudioServer `Music` bus volume |
+   > | `SFXVolume` | float | `1.0` | AudioServer `SFX` bus volume |
+   > | `UIVolume` | float | `0.6` | AudioServer `UI` bus volume |
+   > | `AmbienceVolume` | float | `0.5` | AudioServer `Ambience` bus volume |
    > | `MuteAll` | bool | `false` | Master mute toggle |
    > | `Fullscreen` | bool | `true` | `Screen.fullScreen` |
    > | `Resolution` | `Vector2Int` | `1920×1080` | `Screen.SetResolution` |

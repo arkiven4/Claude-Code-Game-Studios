@@ -1,6 +1,6 @@
 # Narrative Choice System
 
-> **Status**: Designed
+> **Status**: Approved
 > **Author**: Design session 2026-04-11 (interactive redesign)
 > **Last Updated**: 2026-04-11
 > **Implements Pillar**: Earn the Ending, Story First
@@ -15,7 +15,7 @@ Narrative Choice serves the fantasy of **this is your story, your burden**. When
 
 **Reference model**: The Witcher 3's choice-and-consequence web (small choices compound into unexpected outcomes), Mass Effect's relationship system (party loyalty shifts based on decisions, not just dialogue), and Undertale's hidden morality tracking (player doesn't see the meter but the world reacts).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 

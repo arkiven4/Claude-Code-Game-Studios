@@ -15,7 +15,7 @@ Skill Execution System serves the fantasy of **abilities that feel powerful and 
 
 **Reference model**: Final Fantasy VII Remake's skill activation (clear animation → effect → cooldown flow), Tales of Berseria's Arte system (responsive, readable, no ambiguity), and Genshin Impact's skill feedback (instant visual confirmation of skill effect).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
@@ -58,10 +58,10 @@ Skill Execution System serves the fantasy of **abilities that feel powerful and 
 
    **Phase 4: Effect Application** (instant)
    14. For each target, apply the skill's effect:
-       - **Damage skills** (SkillDamageSO): Calculate damage via Health & Damage System, apply to target
-       - **Heal skills** (SkillSupportSO): Calculate heal via Health & Damage System, apply to target
-       - **Status skills** (SkillStatusSO): Apply status effect(s) via Status Effects System
-       - **Utility skills** (SkillUtilitySO): Execute utility effect (shield, MP restore, movement, etc.)
+       - **Damage skills** (SkillDamage): Calculate damage via Health & Damage System, apply to target
+       - **Heal skills** (SkillSupport): Calculate heal via Health & Damage System, apply to target
+       - **Status skills** (SkillStatus): Apply status effect(s) via Status Effects System
+       - **Utility skills** (SkillUtility): Execute utility effect (shield, MP restore, movement, etc.)
    15. If the skill applies multiple effects (e.g., damage + DoT), apply them in order: damage first, then status effects
 
    **Phase 5: Post-Execution** (instant)
@@ -172,7 +172,7 @@ Skill Execution System serves the fantasy of **abilities that feel powerful and 
 
 | System | Direction | Details |
 |--------|-----------|---------|
-| **Skill Database** | Reads | Reads SkillDamageSO, SkillSupportSO, SkillStatusSO, SkillUtilitySO for all skill definitions |
+| **Skill Database** | Reads | Reads SkillDamage, SkillSupport, SkillStatus, SkillUtility for all skill definitions |
 | **Character Data** | Reads | Reads character's 4 skill slot references, current level (for tier resolution), base stats |
 | **Input System** | Called by | Player input triggers skill activation for active character |
 | **Health & Damage System** | Calls | Delegates damage and heal calculations; receives final damage/heal amounts |

@@ -1,6 +1,6 @@
 # Character Data
 
-> **Status**: Designed
+> **Status**: Approved
 > **Author**: Design session 2026-04-03
 > **Last Updated**: 2026-04-03
 > **Implements Pillar**: The Party Is the Game
@@ -29,7 +29,7 @@ would kill anyone else. This differentiation lives in Character Data's growth ra
 skill tiers. The player should feel, without reading a tooltip, that each companion has
 a personality expressed through their numbers.
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
@@ -194,7 +194,7 @@ Effective per-level gains for main characters:
 |-------|-------|-----|-----|-----|-------|------|
 | 1 | 220 | 65 | 18 | 1.2 | 120 | 6% |
 | 8 (Tier 2 unlocks) | 325 | 107 | 25 | 1.2 | 169 | 6% |
-| 18 (Tier 3 unlocks) | 490 | 167 | 35 | 1.2 | 239 | 6% |
+| 18 (Tier 3 unlocks) | 475 | 167 | 35 | 1.2 | 239 | 6% |
 | 30 (cap) | 655 | 239 | 47 | 1.2 | 323 | 6% |
 
 At cap: highest ATK in the party, second-highest MaxMP. Glass cannon who can keep
@@ -210,14 +210,19 @@ by `PartyMemberState` (see ADR-0002), which reads base values from `CharacterDat
 on initialization.
 
 **Initialization sequence (on scene load):**
-1. `PartyMemberState.Awake()` reads its assigned `CharacterData` reference
-2. `CurrentHP` is set to `CharacterData.MaxHP`
-3. `CurrentMP` is set to `CharacterData.MaxMP`
-4. `SkillCooldowns[]` is initialized to `0f` for all 4 slots
+1. `PartyMemberState._ready()` reads its assigned `CharacterData` reference
+2. `current_hp` is set to `CharacterData.max_hp`
+3. `current_mp` is set to `CharacterData.max_mp`
+4. `skill_cooldowns[]` is initialized to `0.0` for all 4 slots
 5. Active skill tier is resolved:
-   - Character level ≥ 18 → Tier 3 active on all 4 slots
-   - Character level ≥ 8 → Tier 2 active on all 4 slots
-   - Character level < 8 → Tier 1 active on all 4 slots
+   ```gdscript
+   if character_level >= 18:
+       active_tier = 3
+   elif character_level >= 8:
+       active_tier = 2
+   else:
+       active_tier = 1
+   ```
 
 ### Interactions with Other Systems
 
@@ -281,10 +286,13 @@ Only applied when `CharacterData.IsMainCharacter = true`.
 
 ### Active Skill Tier
 
-```
-if (characterLevel >= 18) activeTier = 3
-else if (characterLevel >= 8) activeTier = 2
-else activeTier = 1
+```gdscript
+if character_level >= 18:
+    active_tier = 3
+elif character_level >= 8:
+    active_tier = 2
+else:
+    active_tier = 1
 ```
 
 | Variable | Type | Range | Source |

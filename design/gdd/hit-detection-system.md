@@ -1,6 +1,6 @@
 # Hit Detection System
 
-> **Status**: Designed
+> **Status**: Approved
 > **Author**: Automated design session 2026-04-04
 > **Last Updated**: 2026-04-04
 > **Implements Pillar**: The Party Is the Game (combat feedback)
@@ -32,11 +32,11 @@ really is a cone, not a sphere). This creates combat that feels fair and respons
 combined with Monster Hunter's directional attacks (positioning matters), and Genshin
 Impact's elemental skill AoE shapes (cone, line, sphere all feel distinct).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
-1. **Three Attack Shapes** supported, selected per skill:
+1. **Four Attack Shapes** supported, selected per skill:
    - **Point** — single-target melee or instant hit. Uses a sphere overlap at the
      attack origin point with configurable radius. Returns the single closest target.
    - **Line** — raycast from origin in direction with length and width. Returns all
@@ -58,23 +58,22 @@ Impact's elemental skill AoE shapes (cone, line, sphere all feel distinct).
 3. **Hit Detection Flow**:
    1. Attacker initiates skill → Skill Execution calls `HitDetection.DetectTargets()`
    2. System reads skill's `AttackShape` (Point/Line/Cone/Sphere) and parameters
-   3. System performs the appropriate Godot Physics query:
-      - Point: `Physics.OverlapSphere(origin, radius, targetLayer)`
-      - Line: `Physics.RaycastAll()` with sphere cast for width
-      - Cone: Custom cone overlap (multiple raycasts or mesh overlap)
-      - Sphere: `Physics.OverlapSphere(origin, radius, targetLayer)`
+   3. System performs the appropriate Godot Physics query via `PhysicsDirectSpaceState3D`:
+      - Point: `space_state.intersect_sphere(origin, radius, [target_layer])`
+      - Line: `space_state.intersect_ray()` repeated with sphere-cast width offset
+      - Cone: Custom cone overlap (multiple angled raycasts covering cone volume)
+      - Sphere: `space_state.intersect_sphere(origin, radius, [target_layer])`
    4. System filters results: removes dead targets, removes attackers hitting themselves
    5. System returns `HitResult[]` to Skill Execution
    6. Skill Execution calls `HealthAndDamage.ApplyDamage()` for each hit target
 
 4. **HitResult Structure** returned per target:
-   ```csharp
-   public struct HitResult {
-       public Node Target;
-       public Vector3 HitPoint;
-       public Vector3 HitNormal;    // for impact direction
-       public float Distance;       // distance from attacker to target
-   }
+   ```gdscript
+   class HitResult:
+       var target: Node3D
+       var hit_point: Vector3
+       var hit_normal: Vector3    # for impact direction
+       var distance: float        # distance from attacker to target
    ```
    Critical hit determination is NOT done here — it is the sole responsibility of the
    Health & Damage System, which rolls against the attacker's CRIT stat after receiving
@@ -208,7 +207,7 @@ Hit Detection is physics-based, not formula-driven. Key parameters:
 | `ConeAngle` | float | `60°` | Wider = easier to hit groups, harder to dodge |
 | `HitStopDuration` | float | `0.05s` | Increase for more impact feel, decrease for faster feel |
 | `HitSparkPoolSize` | int | `20` | Number of pooled hit VFX objects |
-| `PhysicsLayerMask` | LayerMask | `PlayerHitbox \| EnemyHitbox` | Which layers are checked |
+| `PhysicsLayerMask` | int (bitmask) | `PlayerHitbox \| EnemyHitbox` | Which collision layers are checked |
 
 ## Visual/Audio Requirements
 

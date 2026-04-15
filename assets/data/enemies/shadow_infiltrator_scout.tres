@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://shadow_infiltrator_scout"]
+
+[ext_resource type="Script" uid="uid://pjoxxkra8hlc" path="res://src/core/enemy_data.gd" id="1_enemy"]
+[ext_resource type="Script" uid="uid://cebmr5g6qwykx" path="res://src/core/enemy_skill_entry.gd" id="2_entry"]
+[ext_resource type="Resource" uid="uid://scout_quick_strike" path="res://assets/data/skills/enemies/scout_quick_strike.tres" id="3_quick"]
+[ext_resource type="Resource" uid="uid://scout_poison_dagger" path="res://assets/data/skills/enemies/scout_poison_dagger.tres" id="4_poison"]
+
+[sub_resource type="Resource" id="Entry_Quick"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("3_quick")
+cooldown = 1.0
+weight = 3.0
+max_range = 2.0
+
+[sub_resource type="Resource" id="Entry_Poison"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("4_poison")
+cooldown = 10.0
+weight = 2.0
+max_range = 2.0
+
+[resource]
+script = ExtResource("1_enemy")
+enemy_id = "shadow_infiltrator"
+display_name = "Shadow Infiltrator"
+enemy_class = 0 # GRUNT
+behavior_profile = 0 # AGGRESSIVE
+base_max_hp = 1800
+base_atk = 30
+base_def = 5
+base_spd = 1.8
+physical_resistance = 1.2
+magical_resistance = 0.8
+skill_list = Array[ExtResource("2_entry")]([SubResource("Entry_Quick"), SubResource("Entry_Poison")])

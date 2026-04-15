@@ -1,0 +1,52 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://enemy_temple_mage_specter"]
+
+[ext_resource type="Script" uid="uid://cd1p7b1fjqu6o" path="res://src/core/enemy_data.gd" id="1_data"]
+[ext_resource type="Script" uid="uid://cl7itd7u0n75m" path="res://src/core/enemy_skill_entry.gd" id="2_entry"]
+[ext_resource type="Resource" uid="uid://skill_enemy_mage_basic" path="res://assets/data/skills/enemies/enemy_mage_basic.tres" id="3_skill1"]
+[ext_resource type="Resource" uid="uid://skill_enemy_flame_strike" path="res://assets/data/skills/enemies/enemy_flame_strike.tres" id="4_skill2"]
+[ext_resource type="Resource" uid="uid://skill_enemy_chaos_bolt" path="res://assets/data/skills/enemies/enemy_chaos_bolt.tres" id="5_skill3"]
+
+[sub_resource type="Resource" id="Resource_entry1"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("3_skill1")
+cooldown = 2.0
+weight = 1.0
+min_range = 0.0
+max_range = 15.0
+condition = 0
+
+[sub_resource type="Resource" id="Resource_entry2"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("4_skill2")
+cooldown = 7.0
+weight = 2.0
+min_range = 0.0
+max_range = 12.0
+condition = 0
+
+[sub_resource type="Resource" id="Resource_entry3"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("5_skill3")
+cooldown = 12.0
+weight = 1.5
+min_range = 0.0
+max_range = 10.0
+condition = 0
+
+[resource]
+script = ExtResource("1_data")
+enemy_id = "temple_mage_specter"
+display_name = "Temple Mage's Specter"
+enemy_class = 0
+behavior_profile = 1
+base_max_hp = 90
+base_atk = 25
+base_def = 4
+base_spd = 1.0
+physical_resistance = 0.5
+magical_resistance = 1.5
+holy_resistance = 1.5
+dark_resistance = 0.5
+status_immunities = Array[String]([])
+skill_list = Array[ExtResource("2_entry")]([SubResource("Resource_entry1"), SubResource("Resource_entry2"), SubResource("Resource_entry3")])
+model_path = "res://assets/art/ui/icons/placeholder_icon.png"

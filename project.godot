@@ -16,6 +16,10 @@ run/main_scene="uid://brhe3x8ei04ii"
 config/features=PackedStringArray("4.7", "Forward Plus")
 run/max_fps=60
 
+[autoload]
+
+ImpactVFXManager="*res://assets/vfx/impacts/scripts/impact_vfx_manager.gd"
+
 [configuration]
 
 config_version=5
@@ -136,5 +140,10 @@ look_left={
 look_right={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":16,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194321,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+inventory={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":16,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":73,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
 ]
 }

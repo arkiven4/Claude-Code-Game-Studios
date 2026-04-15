@@ -9,6 +9,9 @@ const MANUAL_SAVE_PATH: String = "user://manual_save.json"
 const AUTO_SAVE_PATH: String = "user://auto_save.json"
 const SAVE_VERSION: int = 1
 
+func _ready() -> void:
+	add_to_group("SaveManager")
+
 var _saveables: Array[Node] = []
 
 func register_saveable(node: Node) -> void:

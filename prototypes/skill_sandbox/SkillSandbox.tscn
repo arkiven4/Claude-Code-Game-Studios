@@ -1,0 +1,230 @@
+[gd_scene format=3 uid="uid://ccp1ixkuy6wtc"]
+
+[ext_resource type="Script" uid="uid://bl2w7etk8h1ee" path="res://src/gameplay/skill_sandbox.gd" id="1_sandbox"]
+[ext_resource type="Script" uid="uid://c3q21rd0a5na1" path="res://src/gameplay/training_dummy.gd" id="2_dummy"]
+[ext_resource type="Script" uid="uid://c5qb86qpl22em" path="res://src/gameplay/hurtbox_component.gd" id="3_hurtbox"]
+[ext_resource type="Script" uid="uid://c3cjekrr00ob3" path="res://src/gameplay/status_effects_system.gd" id="4_sfx"]
+[ext_resource type="Script" uid="uid://cwuunfo02hcyp" path="res://src/gameplay/status_effect_indicator.gd" id="5_indicator"]
+[ext_resource type="PackedScene" uid="uid://cwa8spn15hv8i" path="res://assets/art/characters/kaykit_skelly/characters/skeleton_mage.tscn" id="6_cjvji"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("ProceduralSkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
+
+[node name="SkillSandbox" type="Node3D" unique_id=1667770397]
+script = ExtResource("1_sandbox")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1606779061]
+environment = SubResource("Environment_1")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=42695283]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Floor" type="CSGBox3D" parent="." unique_id=465311746]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.17145)
+use_collision = true
+size = Vector3(40, 0.1, 40)
+
+[node name="CasterDummy" type="CharacterBody3D" parent="." unique_id=386930756]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 18)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CasterDummy" unique_id=1238394494]
+shape = SubResource("CapsuleShape3D_1")
+
+[node name="Skeleton_Mage" parent="CasterDummy" unique_id=1181495901 instance=ExtResource("6_cjvji")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="HurtboxComponent" type="Area3D" parent="CasterDummy" unique_id=1064289658 node_paths=PackedStringArray("parent_node")]
+script = ExtResource("3_hurtbox")
+parent_node = NodePath("..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CasterDummy/HurtboxComponent" unique_id=226089151]
+shape = SubResource("CapsuleShape3D_1")
+
+[node name="StatusEffectsSystem" type="Node" parent="CasterDummy" unique_id=1294785916]
+script = ExtResource("4_sfx")
+
+[node name="StatusEffectIndicator" type="Node3D" parent="CasterDummy" unique_id=236467251]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+script = ExtResource("5_indicator")
+
+[node name="TrainingDummy" type="CharacterBody3D" parent="." unique_id=557357802]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1.05, 10)
+script = ExtResource("2_dummy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrainingDummy" unique_id=138655982]
+shape = SubResource("CapsuleShape3D_1")
+
+[node name="HurtboxComponent" type="Area3D" parent="TrainingDummy" unique_id=2086000580 node_paths=PackedStringArray("parent_node")]
+script = ExtResource("3_hurtbox")
+parent_node = NodePath("..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrainingDummy/HurtboxComponent" unique_id=1925798847]
+shape = SubResource("CapsuleShape3D_1")
+
+[node name="StatusEffectsSystem" type="Node" parent="TrainingDummy" unique_id=1434233130]
+script = ExtResource("4_sfx")
+
+[node name="StatusEffectIndicator" type="Node3D" parent="TrainingDummy" unique_id=684564085]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+script = ExtResource("5_indicator")
+
+[node name="Skeleton_Mage" parent="TrainingDummy" unique_id=785913073 instance=ExtResource("6_cjvji")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="AlliesDummy" type="CharacterBody3D" parent="." unique_id=983411687]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1.05, 10)
+script = ExtResource("2_dummy")
+is_ally = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AlliesDummy" unique_id=2052704145]
+shape = SubResource("CapsuleShape3D_1")
+
+[node name="HurtboxComponent" type="Area3D" parent="AlliesDummy" unique_id=1590813657 node_paths=PackedStringArray("parent_node")]
+script = ExtResource("3_hurtbox")
+parent_node = NodePath("..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AlliesDummy/HurtboxComponent" unique_id=657043775]
+shape = SubResource("CapsuleShape3D_1")
+
+[node name="StatusEffectsSystem" type="Node" parent="AlliesDummy" unique_id=754454173]
+script = ExtResource("4_sfx")
+
+[node name="StatusEffectIndicator" type="Node3D" parent="AlliesDummy" unique_id=385778596]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+script = ExtResource("5_indicator")
+
+[node name="Skeleton_Mage" parent="AlliesDummy" unique_id=741043899 instance=ExtResource("6_cjvji")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=274015665]
+transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 5, 22)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=68403996]
+
+[node name="Control" type="Control" parent="CanvasLayer" unique_id=1342683320]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="CanvasLayer/Control" unique_id=1576064880]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 300.0
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/Panel" unique_id=1311132870]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=619721706]
+layout_mode = 2
+text = "Character Selection"
+horizontal_alignment = 1
+
+[node name="CharacterSelector" type="OptionButton" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=787342041]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=1488474381]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=148397177]
+layout_mode = 2
+text = "Skill Selection"
+horizontal_alignment = 1
+
+[node name="SkillSelector" type="ItemList" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=939821677]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=1102356924]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/Panel/VBoxContainer/HBoxContainer" unique_id=289323241]
+layout_mode = 2
+text = "Tier: "
+
+[node name="TierSelector" type="SpinBox" parent="CanvasLayer/Control/Panel/VBoxContainer/HBoxContainer" unique_id=469786485]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 3.0
+value = 1.0
+
+[node name="ExecuteButton" type="Button" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=1849298752]
+unique_name_in_owner = true
+layout_mode = 2
+text = "EXECUTE SKILL"
+
+[node name="HSeparator2" type="HSeparator" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=1764388379]
+layout_mode = 2
+
+[node name="ResetButton" type="Button" parent="CanvasLayer/Control/Panel/VBoxContainer" unique_id=557653716]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RESET STATS"
+
+[node name="StatsPanel" type="Panel" parent="CanvasLayer/Control" unique_id=461563271]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -250.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = 150.0
+grow_horizontal = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/StatsPanel" unique_id=1312312213]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TotalDamageLabel" type="Label" parent="CanvasLayer/Control/StatsPanel/VBoxContainer" unique_id=1106937731]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Total Damage: 0"
+
+[node name="LastDamageLabel" type="Label" parent="CanvasLayer/Control/StatsPanel/VBoxContainer" unique_id=1177964109]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Last Hit: 0"
+
+[node name="DPSLabel" type="Label" parent="CanvasLayer/Control/StatsPanel/VBoxContainer" unique_id=1481139959]
+unique_name_in_owner = true
+layout_mode = 2
+text = "DPS (5s): 0.0"

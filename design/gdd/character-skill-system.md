@@ -34,11 +34,11 @@ celebrating.
 League of Legends champion mastery (passive bonuses that reinforce identity), and
 Xenoblade's affinity chart system (always-on modifiers that change how you play).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
-1. **PassiveUnlocks Definition**: Each `CharacterDataSO` includes a list of passive
+1. **PassiveUnlocks Definition**: Each `CharacterData` includes a list of passive
    unlocks:
    ```
    PassiveUnlock:
@@ -124,21 +124,19 @@ Xenoblade's affinity chart system (always-on modifiers that change how you play)
      party members heal 5% of their MaxHP."
 
    **Implementation contract for `Special` passives**: Each character with a `Special`
-   passive implements the `ISpecialPassive` interface via a dedicated `Node`
-   on their root GameObject:
-   ```csharp
-   public interface ISpecialPassive
-   {
-       void OnSkillActivated(SkillContext context);
-       void OnDamageDealt(DamageContext context);
-       void OnHPThresholdCrossed(float hpPercent);
-       void OnKillingBlow(EnemyContext context);
-   }
+   passive has a dedicated child `Node` on their root Node3D that implements the
+   Special Passive Protocol:
+   ```gdscript
+   # Special Passive Protocol — implement these methods on the passive's Node:
+   # func on_skill_activated(context: Dictionary) -> void
+   # func on_damage_dealt(context: Dictionary) -> void
+   # func on_hp_threshold_crossed(hp_percent: float) -> void
+   # func on_killing_blow(context: Dictionary) -> void
    ```
    The Skill Execution System and Health & Damage System call the appropriate method
-   at each trigger point. Characters without a `Special` passive have no component
-   implementing this interface — callers use null-conditional access (`?.`). Concrete
-   classes: `EvelynBloodlinePassive`, `EvanMercyPassive`.
+   at each trigger point. Characters without a `Special` passive have no node — callers
+   check `if passive_node != null` before calling. Concrete scripts:
+   `evelyn_bloodline_passive.gd`, `evan_mercy_passive.gd`.
 
 ### States and Transitions
 
@@ -167,7 +165,7 @@ Transitions:
 
 | System | Interaction Type | Details |
 |--------|-----------------|---------|
-| **Character Data** | Reads | Reads PassiveUnlock list from CharacterDataSO |
+| **Character Data** | Reads | Reads PassiveUnlock list from CharacterData |
 | **Skill Execution** | Read by | Reads passives to modify MPCost, damage, cooldown, duration |
 | **Health & Damage** | Read by | Reads DefenseBonus, CritDamageBonus, HealingBonus passives |
 | **Combat System** | Read by | Reads ThreatBonus passives for threat calculation |
@@ -233,7 +231,7 @@ Transitions:
   to modify skill parameters), Character Progression (level-up triggers) — **Note:
   Character Progression System is Not Started (#17). Passive unlocks will not fire in
   gameplay until it is implemented. For isolated testing, force-set character level on
-  the `CharacterDataSO` directly to verify passive unlock behavior.**
+  the `CharacterData` directly to verify passive unlock behavior.**
 - **Depended on by**: Combat HUD (displays passive icons), Party AI (factors passives
   into skill scoring), Health & Damage (reads defense/crit/heal passives), Save / Load
   (passive state is derived from level)
@@ -274,7 +272,7 @@ Transitions:
 
 ## Acceptance Criteria
 
-- [ ] Each character's PassiveUnlock list is loaded from CharacterDataSO on scene load
+- [ ] Each character's PassiveUnlock list is loaded from CharacterData on scene load
 - [ ] Passives activate automatically when character level reaches UnlockLevel
 - [ ] MPReduction passives reduce skill MPCost correctly for the specified category
 - [ ] DamageBonus passives increase skill damage correctly for the specified category

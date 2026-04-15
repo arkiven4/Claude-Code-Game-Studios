@@ -1,0 +1,49 @@
+[gd_scene load_steps=8 format=3 uid="uid://o8hhcae1c2t5"]
+
+[ext_resource type="Script" path="res://src/gameplay/world/test_level.gd" id="1_testlvl"]
+[ext_resource type="Resource" path="res://assets/data/chapters/chapter_01_config.tres" id="2_config"]
+[ext_resource type="Script" path="res://src/gameplay/world/test_player.gd" id="3_player"]
+
+[sub_resource type="Environment" id="Env_001"]
+ambient_light_source = 1
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.8
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_player"]
+size = Vector3(0.8, 1.8, 0.8)
+
+[sub_resource type="StandardMaterial3D" id="Mat_player"]
+albedo_color = Color(0.2, 0.6, 1.0, 1)
+
+[node name="TestClobaGenerate" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_001")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-45.0, -30.0, 0.0)
+light_energy = 1.0
+
+[node name="Camera3D" type="Camera3D" parent="."]
+position = Vector3(0.0, 12.0, 12.0)
+rotation_degrees = Vector3(-45.0, 0.0, 0.0)
+
+[node name="TestLevel" type="Node3D" parent="."]
+script = ExtResource("1_testlvl")
+chapter_config = ExtResource("2_config")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+position = Vector3(0.0, 1.0, -4.5)
+groups = ["player"]
+script = ExtResource("3_player")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("CapsuleShape3D_player")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
+mesh = SubResource("BoxMesh_player")
+surface_material_override/0 = SubResource("Mat_player")

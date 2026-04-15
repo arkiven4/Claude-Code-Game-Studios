@@ -1,0 +1,20 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://bajnrvkl35mbw"]
+
+[ext_resource type="Shader" uid="uid://b1bx7hg0e1svh" path="res://assets/shaders/vfx/fireball_shader.gdshader" id="1_fireball_shader"]
+[ext_resource type="Texture2D" uid="uid://bq46385ovpxb" path="res://assets/vfx/projectiles/textures/T_VFX_Noi55.png" id="2_noise_tex"]
+
+[sub_resource type="Gradient" id="Gradient_mask"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture_mask"]
+gradient = SubResource("Gradient_mask")
+fill_from = Vector2(0.5, 1)
+fill_to = Vector2(0.5, 0)
+
+[resource]
+render_priority = 1
+shader = ExtResource("1_fireball_shader")
+shader_parameter/fire_color = Color(1, 0.5, 0.2, 1)
+shader_parameter/noise_tex = ExtResource("2_noise_tex")
+shader_parameter/mask_gradient_tex = SubResource("GradientTexture_mask")
+shader_parameter/speed = Vector2(0, 3)
+shader_parameter/emission_strength = 2.0

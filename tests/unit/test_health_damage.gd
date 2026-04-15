@@ -47,10 +47,10 @@ func test_crit_multiplier() -> void:
 func test_calculate_heal_basic() -> void:
 	# heal = (max_mp * 0.1 + base_heal) * effect_val + (max_hp * bonus_pct)
 	# = (100 * 0.1 + 30) * 1.0 + (200 * 0.0) = 40
-	var heal := HealthDamageSystem.calculate_heal(100, 30, 1.0, 200, 0.0, 100)
-	assert_eq(heal, 40, "Basic heal formula")
+	var result := HealthDamageSystem.calculate_heal(100, 30, 1.0, 200, 0.0, 100)
+	assert_eq(result["heal_amount"], 40, "Basic heal formula")
 
 func test_calculate_heal_capped_by_missing_hp() -> void:
 	# Only 10 HP missing — can't heal more than that
-	var heal := HealthDamageSystem.calculate_heal(100, 30, 1.0, 200, 0.0, 190)
-	assert_eq(heal, 10, "Heal capped at missing HP")
+	var result := HealthDamageSystem.calculate_heal(100, 30, 1.0, 200, 0.0, 190)
+	assert_eq(result["heal_amount"], 10, "Heal capped at missing HP")

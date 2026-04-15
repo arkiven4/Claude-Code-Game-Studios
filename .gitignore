@@ -58,5 +58,15 @@ __pycache__/
 
 *.glb
 *.jpg
+*.png
+*.res
 
+imported_assets/*
+*.import
 project.godot
+assets/art/characters/*
+assets/data/items/lineage2m/*
+assets/data/loot/lineage2m/*
+assets/data/monsters/lineage2m/*
+assets/data/skills/lineage2m/*
+assets/BinbunVFX_Vol2/*

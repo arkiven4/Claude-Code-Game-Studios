@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://lich_dark_pact"]
+
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" uid="uid://evelyn_shadow_mend_aura" path="res://assets/art/vfx/skills/evelyn_shadow_mend_aura.png" id="3_vfx"]
+
+[sub_resource type="Resource" id="Tier1"]
+script = ExtResource("2_tier")
+effect_value = 1.0
+tier_description = "Shield self with dark energy."
+
+[resource]
+script = ExtResource("1_skill")
+skill_type = 3
+display_name = "Dark Pact"
+skill_id = "lich_dark_pact"
+description = "Sacrifice a moment to gain a dark shield."
+mp_cost = 0
+base_cooldown = 12.0
+cast_time = 0.5
+target_type = 6
+area_radius = 0.0
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+shield_value = 300
+vfx_effect = ExtResource("3_vfx")

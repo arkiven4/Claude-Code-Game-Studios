@@ -15,7 +15,7 @@ Combat System serves the fantasy of **winning through smart decisions, not fast 
 
 **Reference model**: Final Fantasy XII's gambit system (positioning and automation matter), Fire Emblem's tactical positioning (where you stand matters), but played in real-time ARPG rather than turn-based grid combat.
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
@@ -37,11 +37,11 @@ Combat System serves the fantasy of **winning through smart decisions, not fast 
 4. **No Fleeing**: Once combat starts, the player cannot leave. Story encounters have locked boundaries (invisible walls or arena geometry). Optional fights, once triggered, must be completed. There is no "run past enemies" or "disengage" mechanic.
 
 5. **Skill Combo Windows**: When a character uses Skill A, a combo window opens for 1.5 seconds. If the player (or Party AI) uses Skill B within that window, the combo triggers a bonus effect:
-   - **Combo Definition**: Stored as pairs in a `CombatComboSO` Resource:
+   - **Combo Definition**: Stored as pairs in a `CombatCombo` Resource:
      | Field | Type | Description |
      |-------|------|-------------|
-     | `SkillA` | SkillDataSO reference | First skill in the combo |
-     | `SkillB` | SkillDataSO reference | Second skill in the combo |
+     | `SkillA` | SkillData reference | First skill in the combo |
+     | `SkillB` | SkillData reference | Second skill in the combo |
      | `BonusEffect` | enum | `ExtraDamage`, `ApplyStatus`, `ExtendDuration`, `HealBonus` |
      | `BonusValue` | float | Magnitude of the bonus (damage multiplier, status duration, heal amount) |
      | `ComboDescription` | string | Tooltip shown when combo is possible (e.g., "Fire → Dark: +50% burn damage") |
@@ -58,7 +58,7 @@ Combat System serves the fantasy of **winning through smart decisions, not fast 
      - Threat decays over time: `threat *= 0.95` each second
      - Enemies target the character with the highest threat value.
    - **AITargeting Mode** (for smart enemies like assassins): Enemies ignore threat and use their behavior profile targeting (Enemy AI System decides — lowest HP, lowest DEF, healer priority, etc.).
-   - **Boss Mode** (configured per boss in EnemyDataSO): Each boss specifies which threat mode it uses. A boss can use ThreatMeter for phase 1 and switch to AITargeting in phase 2, or alternate based on phase conditions.
+   - **Boss Mode** (configured per boss in EnemyData): Each boss specifies which threat mode it uses. A boss can use ThreatMeter for phase 1 and switch to AITargeting in phase 2, or alternate based on phase conditions.
    - **Tanker Identity**: Tankers naturally generate more threat through their skills (taunt, damage absorption, high DEF). They don't need a separate "threat generation" stat — their toolkit creates threat through gameplay.
 
 7. **Encounter Boundaries**: Each encounter has a defined arena:
@@ -184,7 +184,7 @@ The Combat System tracks the state of the entire encounter through a `CombatEnco
 | **Threat Decay** | `threat *= 0.95` per second | Applied each second to all characters' threat values |
 | **Taunt Threat Spike** | `threat += 500` | Instant addition lasting 8 seconds, then normal decay resumes |
 | **Combo Window Timer** | `remainingTime -= deltaTime` | Starts at 1.5s, ticks each frame. At 0, combo is lost. |
-| **Combo Bonus Damage** | `bonusDamage = baseDamage × BonusValue` | Where BonusValue is defined in CombatComboSO (e.g., 0.5 = +50%) |
+| **Combo Bonus Damage** | `bonusDamage = baseDamage × BonusValue` | Where BonusValue is defined in CombatCombo (e.g., 0.5 = +50%) |
 | **Encounter Duration** | `EncounterTimer = Σ deltaTime` (while in ACTIVE state) | Used for pacing warnings and analytics |
 | **Wave Recovery Window** | `5.0s` fixed | Cooldowns reset, no HP/MP restored |
 | **Victory Pause** | `3.0s` fixed | Music fades, camera pulls back, player reorients |
@@ -211,7 +211,7 @@ After 10 seconds of combat:
 Evelyn uses Fire (Skill A) → 1.2s later uses Dark Bolt (Skill B). Combo window is 1.5s.
 
 - Fire deals 200 base damage to Enemy X.
-- Combo check: `Fire → Dark Bolt` exists in CombatComboSO with BonusEffect = ExtraDamage, BonusValue = 0.5.
+- Combo check: `Fire → Dark Bolt` exists in CombatCombo with BonusEffect = ExtraDamage, BonusValue = 0.5.
 - Bonus damage: `200 × 0.5 = 100` bonus damage applied to Enemy X.
 - "COMBO! +100" text flashes on screen.
 - Total damage: 300 (200 from Fire + 100 from combo bonus).

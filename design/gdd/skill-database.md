@@ -1,6 +1,6 @@
 # Skill Database
 
-> **Status**: In Design
+> **Status**: Approved
 > **Author**: Design session 2026-04-04
 > **Last Updated**: 2026-04-04
 > **Implements Pillar**: The Party Is the Game
@@ -9,7 +9,7 @@
 
 The Skill Database is the master definition for all character skills in the game —
 damage, support, status effect, and utility abilities. Stored as four Resource
-types (`SkillDamageSO`, `SkillSupportSO`, `SkillStatusSO`, `SkillUtilitySO`), each
+types (`SkillDamage`, `SkillSupport`, `SkillStatus`, `SkillUtility`), each
 skill's data card defines its MP cost, cooldown, targeting rules, effect parameters,
 and three tier definitions (Tier 1 at Level 1, Tier 2 at Level 8, Tier 3 at Level 18).
 Players interact with the Skill Database indirectly: when they use a skill in combat,
@@ -37,15 +37,15 @@ play the same way, even if they share a class.
 **Reference model**: Final Fantasy X's Sphere Grid and Tales series' skill trees —
 players anticipate unlock moments because they know what's coming and it feels earned.
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
 1. **Four Resource types** exist, one per skill category:
-   - `SkillDamageSO` — skills that deal damage to enemies (direct, AoE, DoT)
-   - `SkillSupportSO` — skills that heal, buff, or protect allies
-   - `SkillStatusSO` — skills that apply status effects (slow, stun, poison, silence, taunt)
-   - `SkillUtilitySO` — skills that provide utility (movement, shields, MP generation, resource manipulation)
+   - `SkillDamage` — skills that deal damage to enemies (direct, AoE, DoT)
+   - `SkillSupport` — skills that heal, buff, or protect allies
+   - `SkillStatus` — skills that apply status effects (slow, stun, poison, silence, taunt)
+   - `SkillUtility` — skills that provide utility (movement, shields, MP generation, resource manipulation)
 
 2. **Every skill Resource shares these common fields**:
 
@@ -55,7 +55,7 @@ players anticipate unlock moments because they know what's coming and it feels e
    | `Description` | string | One-line description shown in tooltip |
    | `Icon` | Sprite | Skill icon displayed in Combat HUD skill bar |
    | `Animation` | AnimationClip | Animation played when skill is executed |
-   | `AudioCue` | AudioClip | Sound played on skill activation |
+   | `AudioCue` | AudioStream | Sound played on skill activation |
    | `Category` | enum | `Physical`, `Magical`, `Holy`, `Dark` — used for resistance calculations |
    | `MPCost` | int | MP consumed when skill is used (0 for skills that cost nothing) |
    | `Cooldown` | float (seconds) | Time before skill can be used again |
@@ -105,7 +105,7 @@ players anticipate unlock moments because they know what's coming and it feels e
    definitions. Runtime state (current cooldown, active buffs applied by the skill) is
    tracked in the Skill Execution System and Character State Manager.
 
-7. **Skill assignment to characters** is defined in `CharacterDataSO` — each character
+7. **Skill assignment to characters** is defined in `CharacterData` — each character
    references exactly 4 `SkillData` assets (one per slot). The Skill Database does
    not own which characters have which skills.
 
@@ -115,7 +115,7 @@ players anticipate unlock moments because they know what's coming and it feels e
 
 ### States and Transitions
 
-`SkillDamageSO`, `SkillSupportSO`, `SkillStatusSO`, and `SkillUtilitySO` are **stateless** Resources — they define skill templates and never change at runtime.
+`SkillDamage`, `SkillSupport`, `SkillStatus`, and `SkillUtility` are **stateless** Resources — they define skill templates and never change at runtime.
 
 Runtime state for skill instances is tracked in `SkillRuntimeState`, a per-skill-per-character runtime container managed by the Skill Execution System:
 
@@ -124,6 +124,7 @@ Runtime state for skill instances is tracked in `SkillRuntimeState`, a per-skill
 | `CurrentCooldown` | float (seconds) | 0 | Remaining cooldown time; decremented each frame |
 | `ActiveInstances[]` | list | empty | Active buffs/debuffs/DoTs applied by this skill (each with duration, target, effect value) |
 | `ChargeCount` | int | 1 | Number of available charges (for skills that can be used multiple times before cooldown); defaults to 1 |
+| `MaxCharges` | int | 1 | Maximum number of charges this skill can store. `0` means the skill uses cooldown instead of charges; `1` is default (standard cooldown skill). Only skills with `MaxCharges > 1` restore charges on cooldown completion. |
 
 **State Transitions (SkillRuntimeState):**
 
@@ -148,7 +149,7 @@ Runtime state for skill instances is tracked in `SkillRuntimeState`, a per-skill
 | Character Skill System | Reads Skill Resources | Skill definitions for character-specific skill unlocks and progression |
 | Combat HUD | Reads SkillRuntimeState (via Skill Execution) | Current cooldown per skill; active skill tier icon; charge count |
 | Health & Damage System | Reads SkillData | Category (Physical/Magical/Holy/Dark) for resistance calculation; EffectValue for damage computation |
-| Status Effects System | Reads SkillData | Status effect type and magnitude from SkillStatusSO |
+| Status Effects System | Reads SkillData | Status effect type and magnitude from SkillStatus |
 | Combat System | Reads SkillData + SkillRuntimeState | Skill effect execution; ActiveInstances for buff/debuff tracking during combat |
 | Party AI System | Reads SkillData | MPCost, Cooldown, TargetType (to make optimal skill usage decisions) |
 | Audio System | Reads SkillData.AudioCue | Plays the skill's activation sound |
@@ -162,24 +163,27 @@ Runtime state for skill instances is tracked in `SkillRuntimeState`, a per-skill
 ### Skill Damage Calculation
 
 ```
-SkillDamage = ((CasterATK × 0.5 + SkillBaseDamage) × EffectValue - TargetDEF) × CategoryResistance
+SkillDamage = max(1, floor(((CasterATK × 0.5 + SkillBaseDamage) × EffectValue × CategoryResistance) - TargetDEF))
 ```
+
+> **Formula order**: CategoryResistance is applied **before** DEF subtraction. This means resistances reduce the raw hit, then DEF absorbs from the result. This matches the canonical formula in health-damage-system.md.
 
 | Variable | Type | Range | Source | Description |
 |----------|------|-------|--------|-------------|
-| CasterATK | int | 25–239 | CharacterDataSO (with equipment bonuses) | Attacker's effective ATK |
-| SkillBaseDamage | int | 20–80 | SkillDamageSO | Base damage of the skill (before multiplier) |
-| EffectValue | float | 0.8–2.5 | SkillDamageSO tier config | Damage multiplier per tier |
-| TargetDEF | int | 15–142 | CharacterDataSO (with equipment bonuses) | Target's effective DEF |
+| CasterATK | int | 25–239 | CharacterData (with equipment bonuses) | Attacker's effective ATK |
+| SkillBaseDamage | int | 20–80 | SkillDamage | Base damage of the skill (before multiplier) |
+| EffectValue | float | 0.8–2.5 | SkillDamage tier config | Damage multiplier per tier |
+| TargetDEF | int | 15–142 | CharacterData (with equipment bonuses) | Target's effective DEF |
 | CategoryResistance | float | 0.5–1.5 | Enemy data (per-enemy resistance table) | Multiplier based on damage category (Physical/Magical/Holy/Dark) |
 
 **Minimum damage**: SkillDamage cannot go below 1. If the formula produces ≤ 0, damage is clamped to 1.
 
 **Example** — Evelyn (ATK 239) uses Tier 2 fire skill (BaseDamage 50, EffectValue 1.5) against an enemy with DEF 60 and Magical resistance 1.0:
-- SkillDamage = ((239 × 0.5 + 50) × 1.5 - 60) × 1.0
-- SkillDamage = ((119.5 + 50) × 1.5 - 60) × 1.0
-- SkillDamage = (169.5 × 1.5 - 60) × 1.0
-- SkillDamage = (254.25 - 60) × 1.0 = **194.25 → 194 damage**
+- SkillDamage = max(1, floor(((239 × 0.5 + 50) × 1.5 × 1.0) - 60))
+- = max(1, floor((119.5 + 50) × 1.5 - 60))
+- = max(1, floor(169.5 × 1.5 - 60))
+- = max(1, floor(254.25 - 60))
+- = max(1, floor(194.25)) = max(1, 194) = **194 damage**
 
 ---
 
@@ -191,13 +195,15 @@ SkillHeal = (CasterMaxMP × 0.1 + SkillBaseHeal) × EffectValue + (TargetMaxHP �
 
 | Variable | Type | Range | Source | Description |
 |----------|------|-------|--------|-------------|
-| CasterMaxMP | int | 60–323 | CharacterDataSO (with equipment bonuses) | Healer's effective MaxMP |
-| SkillBaseHeal | int | 30–100 | SkillSupportSO | Base heal amount of the skill |
-| EffectValue | float | 0.8–2.0 | SkillSupportSO tier config | Heal multiplier per tier |
-| TargetMaxHP | int | 220–1292 | CharacterDataSO | Target's effective MaxHP |
-| TargetMaxHPBonus | float | 0.0–0.3 | SkillSupportSO | Additional heal as % of target's MaxHP; 0 if not applicable |
+| CasterMaxMP | int | 60–323 | CharacterData (with equipment bonuses) | Healer's effective MaxMP |
+| SkillBaseHeal | int | 30–100 | SkillSupport | Base heal amount of the skill |
+| EffectValue | float | 0.8–2.0 | SkillSupport tier config | Heal multiplier per tier |
+| TargetMaxHP | int | 220–1292 | CharacterData | Target's effective MaxHP |
+| TargetMaxHPBonus | float | 0.0–0.3 | SkillSupport | Additional heal as % of target's MaxHP; 0 if not applicable |
 
 **Maximum healing**: SkillHeal cannot exceed the target's MaxHP. Overheal is discarded.
+
+> **Design note**: Heal skills scale on `CasterMaxMP` intentionally — equipping MP gear on healers increases heal output. Equipment designers should treat `MaxMP` as a healer's primary offensive stat. This is the intended interaction, not a bug.
 
 **Example** — Healer (MaxMP 200) uses Tier 2 heal (BaseHeal 60, EffectValue 1.3, TargetMaxHPBonus 0.1) on a Tanker (MaxHP 952):
 - SkillHeal = (200 × 0.1 + 60) × 1.3 + (952 × 0.1)
@@ -251,7 +257,7 @@ BuffedStat = BaseStat + EffectValue        (for flat buffs)
 | Variable | Type | Range | Source | Description |
 |----------|------|-------|--------|-------------|
 | BaseStat | int or float | Varies | Character or enemy stat | Stat being modified |
-| EffectValue | float | Varies | SkillSupportSO or SkillStatusSO tier config | Buff/debuff magnitude |
+| EffectValue | float | Varies | SkillSupport or SkillStatus tier config | Buff/debuff magnitude |
 | Buff Type | enum | — | Skill data | Determines whether formula is percentage or flat |
 
 Multiple buffs of the same type on the same stat are **additive**, not multiplicative:
@@ -284,7 +290,7 @@ TotalBuff = 1 + (Buff1_EffectValue + Buff2_EffectValue + ...)
 | **Character Skill System** | Depends on Skill Database | Hard | Reads skill definitions for character-specific unlocks and progression tracking |
 | **Combat HUD** | Reads Skill Database (via Skill Execution) | Soft | Reads skill icons, cooldown state, tier indicator, charge count for display |
 | **Health & Damage System** | Reads Skill Database | Soft | Reads damage category (Physical/Magical/Holy/Dark) and EffectValue for resistance calculation |
-| **Status Effects System** | Reads Skill Database | Soft | Reads status effect type and magnitude from SkillStatusSO |
+| **Status Effects System** | Reads Skill Database | Soft | Reads status effect type and magnitude from SkillStatus |
 | **Combat System** | Reads Skill Database | Soft | Reads skill effect parameters for execution during combat |
 | **Party AI System** | Reads Skill Database | Soft | Reads MPCost, Cooldown, TargetType for optimal skill selection |
 | **Audio System** | Reads Skill Database | Soft | Reads AudioCue for skill activation sound |
@@ -348,8 +354,8 @@ TotalBuff = 1 + (Buff1_EffectValue + Buff2_EffectValue + ...)
 
 ## Acceptance Criteria
 
-- [ ] All four Resource types (`SkillDamageSO`, `SkillSupportSO`, `SkillStatusSO`, `SkillUtilitySO`) can be created in the Godot Editor and saved as `.tres` files
-- [ ] Skill damage formula produces correct results: `((CasterATK × 0.5 + SkillBaseDamage) × EffectValue - TargetDEF) × CategoryResistance` — verified by unit test with known inputs
+- [ ] All four Resource types (`SkillDamage`, `SkillSupport`, `SkillStatus`, `SkillUtility`) can be created in the Godot Editor and saved as `.tres` files
+- [ ] Skill damage formula produces correct results: `max(1, floor(((CasterATK × 0.5 + SkillBaseDamage) × EffectValue × CategoryResistance) - TargetDEF))` — verified by unit test with known inputs
 - [ ] Skill heal formula produces correct results: `(CasterMaxMP × 0.1 + SkillBaseHeal) × EffectValue + (TargetMaxHP × TargetMaxHPBonus)` — verified by unit test
 - [ ] MP cost per tier formula produces correct results: `BaseMPCost + ((Tier - 1) × MPCostIncrement)` — verified by unit test
 - [ ] Cooldown reduction is capped at 40% — equipping items that would exceed 40% logs a warning and caps the bonus (verified by unit test)

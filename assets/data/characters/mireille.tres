@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="CharacterData" format=3 uid="uid://char_mireille"]
+
+[ext_resource type="Script" uid="uid://cd1p7b1fjqu6o" path="res://src/core/character_data.gd" id="1_char"]
+[ext_resource type="Resource" uid="uid://char_mireille_basic" path="res://assets/data/skills/orb_aura_bolt.tres" id="2_basic"]
+[ext_resource type="Resource" uid="uid://char_mireille_skill1" path="res://assets/data/skills/adopted/orb_fast_move.tres" id="3_skill1"]
+[ext_resource type="Resource" uid="uid://char_mireille_skill2" path="res://assets/data/skills/adopted/orb_bless_the_spirit.tres" id="4_skill2"]
+[ext_resource type="Resource" uid="uid://char_mireille_skill3" path="res://assets/data/skills/adopted/orb_enlightenment.tres" id="5_skill3"]
+[ext_resource type="Resource" uid="uid://char_mireille_skill4" path="res://assets/data/skills/adopted/orb_holy_light.tres" id="6_skill4"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="7_script"]
+
+[resource]
+script = ExtResource("1_char")
+character_class = 5
+display_name = "Mireille"
+role_description = "The party's support bard. Enhances allies and disrupts enemies with music."
+is_main_character = false
+base_max_hp = 270
+base_atk = 30
+base_def = 30
+base_spd = 1.2
+base_max_mp = 130
+base_crit = 0.05
+hp_per_level = 15
+atk_per_level = 2
+def_per_level = 2
+mp_per_level = 5
+skill_slots = Array[ExtResource("7_script")]([ExtResource("3_skill1"), ExtResource("4_skill2"), ExtResource("5_skill3"), ExtResource("6_skill4")])
+basic_attack = ExtResource("2_basic")

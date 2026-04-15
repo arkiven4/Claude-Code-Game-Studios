@@ -10,11 +10,12 @@ extends CanvasLayer
 @onready var inactive_hp_bar: ProgressBar = %InactiveHPBar
 @onready var switch_cooldown_label: Label = %SwitchCooldownLabel
 
-var _switch_cooldown: float = 0.0
-var _active_member: PartyMemberState
 var _skill_ui_slots: Array[Control] = []
+var _consumable_ui_slots: Array[Control] = []
 var _max_shield_encountered: int = 0
 var _crosshair: Control
+var _active_member: PartyMemberState
+var _switch_cooldown: float = 0.0
 
 func _ready() -> void:
 	_skill_ui_slots = [
@@ -23,7 +24,16 @@ func _ready() -> void:
 		$SkillBar/SkillSlot2,
 		$SkillBar/SkillSlot3,
 	]
+	# Find Consumable slots if they exist
+	if has_node("ConsumableBar"):
+		_consumable_ui_slots = [
+			$ConsumableBar/Item0,
+			$ConsumableBar/Item1,
+			$ConsumableBar/Item2,
+			$ConsumableBar/Item3,
+		]
 	_create_crosshair()
+
 	hide()
 
 func _create_crosshair() -> void:
@@ -109,6 +119,18 @@ func set_active_character(member: PartyMemberState) -> void:
 		var slot = _skill_ui_slots[i]
 		if slot and slot.has_method("set_skill"):
 			slot.set_skill(skill)
+	
+	_refresh_consumables()
+
+func _refresh_consumables() -> void:
+	if not _active_member or not _active_member.inventory: return
+	
+	var consumables = _active_member.inventory.get_consumables()
+	for i in range(_consumable_ui_slots.size()):
+		var slot = _consumable_ui_slots[i]
+		if slot and slot.has_method("set_item"):
+			var item = consumables[i] if i < consumables.size() else null
+			slot.set_item(item)
 
 ## Call to update the inactive member display (portrait and initial health).
 func set_inactive_character(member: PartyMemberState) -> void:

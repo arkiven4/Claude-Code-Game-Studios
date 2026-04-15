@@ -50,4 +50,13 @@ func _physics_process(_delta: float) -> void:
 				hurtbox.take_hit(_damage_data)
 				_hit_targets.append(hurtbox)
 				hit_landed.emit(hurtbox)
+				
+				# Hitstop / Impact Feel
+				_apply_hitstop(0.05) # 50ms freeze
 				#print("[HitboxComponent] Hit %s" % hurtbox.get_parent().name)
+
+func _apply_hitstop(duration: float) -> void:
+	Engine.time_scale = 0.05 # Near freeze
+	await get_tree().create_timer(duration, true, false, true).timeout # process_always=true, process_in_physics=true
+	Engine.time_scale = 1.0
+

@@ -1,0 +1,52 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://enemy_ol_mahum_shaman"]
+
+[ext_resource type="Script" uid="uid://cd1p7b1fjqu6o" path="res://src/core/enemy_data.gd" id="1_data"]
+[ext_resource type="Script" uid="uid://cl7itd7u0n75m" path="res://src/core/enemy_skill_entry.gd" id="2_entry"]
+[ext_resource type="Resource" uid="uid://skill_enemy_support_basic" path="res://assets/data/skills/enemies/enemy_support_basic.tres" id="3_skill1"]
+[ext_resource type="Resource" uid="uid://skill_enemy_heal" path="res://assets/data/skills/enemies/enemy_heal.tres" id="4_skill2"]
+[ext_resource type="Resource" uid="uid://skill_enemy_buff" path="res://assets/data/skills/enemies/enemy_buff.tres" id="5_skill3"]
+
+[sub_resource type="Resource" id="Resource_entry1"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("3_skill1")
+cooldown = 2.0
+weight = 1.0
+min_range = 0.0
+max_range = 15.0
+condition = 0
+
+[sub_resource type="Resource" id="Resource_entry2"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("4_skill2")
+cooldown = 8.0
+weight = 3.0
+min_range = 0.0
+max_range = 20.0
+condition = 4
+
+[sub_resource type="Resource" id="Resource_entry3"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("5_skill3")
+cooldown = 15.0
+weight = 2.0
+min_range = 0.0
+max_range = 20.0
+condition = 0
+
+[resource]
+script = ExtResource("1_data")
+enemy_id = "ol_mahum_shaman"
+display_name = "Ol Mahum Shaman"
+enemy_class = 0
+behavior_profile = 2
+base_max_hp = 130
+base_atk = 10
+base_def = 8
+base_spd = 1.0
+physical_resistance = 1.0
+magical_resistance = 1.2
+holy_resistance = 1.0
+dark_resistance = 1.0
+status_immunities = Array[String]([])
+skill_list = Array[ExtResource("2_entry")]([SubResource("Resource_entry1"), SubResource("Resource_entry2"), SubResource("Resource_entry3")])
+model_path = "res://assets/art/ui/icons/placeholder_icon.png"

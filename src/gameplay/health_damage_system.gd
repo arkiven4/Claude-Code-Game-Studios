@@ -58,10 +58,13 @@ static func calculate_heal(
 	target_max_hp: int,
 	bonus_percent: float,
 	target_current_hp: int
-) -> int:
+) -> Dictionary:
 	var heal_amount: float = (caster_max_mp * 0.1 + skill_base_heal) * effect_value + (target_max_hp * bonus_percent)
 	var max_healable: int = max(0, target_max_hp - target_current_hp)
-	return min(floor(heal_amount), max_healable)
+	var final_heal: int = int(min(floor(heal_amount), max_healable))
+	return {
+		"heal_amount": final_heal
+	}
 
 ## Calculates the damage dealt by a single DoT tick.
 ## Formula: floor(effect_value * category_resistance)

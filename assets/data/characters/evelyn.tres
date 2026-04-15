@@ -25,3 +25,4 @@ main_char_atk_bonus = 2
 main_char_mp_bonus = 2
 skill_slots = Array[ExtResource("3_ngpjl")]([ExtResource("3_skill1"), ExtResource("4_skill2"), ExtResource("5_skill3"), ExtResource("7_ngpjl")])
 basic_attack = ExtResource("2_basic")
+special_attack = ExtResource("3_skill1")

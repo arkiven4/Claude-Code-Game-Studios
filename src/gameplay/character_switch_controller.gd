@@ -7,6 +7,8 @@ extends Node
 signal character_switched(previous: PartyMemberState, current: PartyMemberState)
 
 @export var input_manager: InputManager
+@export var camera_controller: CameraController
+@export var combat_hud: CombatHUD
 @export var party_member_paths: Array[NodePath] = []
 @export var switch_window_duration: float = 0.3   # Animation delay before switch completes
 @export var switch_cooldown_duration: float = 1.0 # Total cooldown between switches (per design)
@@ -45,9 +47,17 @@ func _initialize_starting_character() -> void:
 	# Set starting character
 	current_character.set_player_controlled(true)
 	
+	if camera_controller:
+		camera_controller.follow_target = current_character.get_parent() as Node3D
+	
+	if combat_hud:
+		combat_hud.set_active_character(current_character)
+	
 	for i in range(party_members.size()):
 		if party_members[i] and party_members[i] != current_character:
 			party_members[i].set_player_controlled(false)
+			if combat_hud:
+				combat_hud.set_inactive_character(party_members[i])
 			# Agent logic will be added here later
 
 func _process(delta: float) -> void:
@@ -92,5 +102,13 @@ func _complete_switch(previous: PartyMemberState, target: PartyMemberState) -> v
 		
 	target.set_player_controlled(true)
 	current_character = target
+	
+	if camera_controller:
+		camera_controller.follow_target = target.get_parent() as Node3D
+		
+	if combat_hud:
+		combat_hud.set_active_character(target)
+		combat_hud.set_inactive_character(previous)
+		
 	character_switched.emit(previous, current_character)
 	print("[CharacterSwitch] Switched to %s" % current_character.name)

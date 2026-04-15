@@ -33,14 +33,14 @@ most. Gold drops feel like a bonus on top of the items — a small victory pile.
 assign) and World of Warcraft's need/greed rolling spirit (everyone gets a say, but
 someone decides).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
 1. **Loot Table Definition**: Each enemy and encounter has a loot table defined as a
-   Resource (`LootTableSO`):
+   Resource (`LootTable`):
    ```
-   LootTableSO fields:
+   LootTable fields:
    ┌─────────────────────────────────────────────────┐
    | LootTableId: string (unique identifier)          |
    | GuaranteedDrops: DropEntry[]                     |
@@ -153,7 +153,7 @@ someone decides).
    - Gold is tracked by the Inventory & Equipment System as a party-level resource
 
 7. **Boss Loot**:
-   - Boss enemies have their own `LootTableSO` marked with `BossLootTable = true`
+   - Boss enemies have their own `LootTable` marked with `BossLootTable = true`
    - Boss drops are guaranteed (not chance-based)
    - Boss drops include at least one Rare-or-higher item
    - Boss drops are always class-weighted (no wildcard) — they're intended rewards
@@ -229,6 +229,7 @@ someone decides).
 
 | Formula | Expression | Notes |
 |---------|-----------|-------|
+| `DropCount` | `BaseDrops + floor(rand_float() * BonusDropRange)` | `BaseDrops` = min guaranteed drops; `BonusDropRange` = extra possible drops (default 2); e.g., BaseDrops=1, Range=2 → 1–2 drops |
 | `DropRoll` | `Random(0.0, 1.0) ≤ DropChance` | Per chance-based drop entry |
 | `RarityChance(R)` | Rare/Epic/Legendary: `BaseChance(R) × RarityWeight`; Common/Uncommon: `BaseChance(R)`; all normalized to 100% | Rarity determination |
 | `GoldAmount` | `Random(GoldMin, GoldMax)` | Per enemy |

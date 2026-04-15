@@ -1,0 +1,25 @@
+[gd_resource type="Resource" load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/world/chapter_config.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://assets/scenes/templates/RoomStart_Greybox.tscn" id="2_start"]
+[ext_resource type="PackedScene" path="res://assets/scenes/templates/RoomBoss_Greybox.tscn" id="3_boss"]
+[ext_resource type="PackedScene" path="res://assets/scenes/templates/RoomJunction_Greybox.tscn" id="4_junction"]
+[ext_resource type="PackedScene" path="res://assets/scenes/templates/RoomCombat_Greybox_A.tscn" id="5_combat_a"]
+[ext_resource type="PackedScene" path="res://assets/scenes/templates/RoomCombat_Greybox_B.tscn" id="6_combat_b"]
+[ext_resource type="PackedScene" path="res://assets/scenes/templates/RoomCorridor_Greybox.tscn" id="7_corridor"]
+[ext_resource type="PackedScene" path="res://assets/scenes/templates/RoomRest_Greybox.tscn" id="8_rest"]
+
+[resource]
+script = ExtResource("1_script")
+chapter_id = 1
+chapter_name = "Chapter 1 - Greybox"
+biome_theme = "forest"
+branch_count = 2
+rooms_per_branch_min = 2
+rooms_per_branch_max = 3
+start_room = ExtResource("2_start")
+boss_room = ExtResource("3_boss")
+junction_room = ExtResource("4_junction")
+combat_rooms = [ExtResource("5_combat_a"), ExtResource("6_combat_b")]
+corridor_rooms = [ExtResource("7_corridor")]
+rest_rooms = [ExtResource("8_rest")]

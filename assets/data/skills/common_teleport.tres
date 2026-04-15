@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://common_teleport"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[sub_resource type="Resource" id="Tier1"]
+script = ExtResource("2_tier")
+tier_description = "Random Teleport."
+[resource]
+script = ExtResource("1_skill")
+skill_type = 3
+display_name = "Teleport"
+skill_id = "common_teleport"
+description = "Randomly teleports the user to a nearby location."
+mp_cost = 10
+base_cooldown = 5.0
+target_type = 6
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])

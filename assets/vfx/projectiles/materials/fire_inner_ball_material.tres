@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+
+[ext_resource type="Shader" path="res://assets/shaders/vfx/fire_inner_ball_shader.gdshader" id="1_inner_shader"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_inner_shader")
+shader_parameter/ball_color = Color(1, 0.2, 0.1, 1)
+shader_parameter/fresnel_power = 4.0

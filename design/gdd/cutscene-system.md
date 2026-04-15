@@ -34,7 +34,7 @@ a cutscene that earns its emotional weight. The system ensures that moment hits 
 angles tell the story), and NieR:Automata's willingness to use cutscenes for emotional
 punch rather than exposition dumps.
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
@@ -43,9 +43,9 @@ punch rather than exposition dumps.
    `CutsceneController` Node plays the Timeline. The Cutscene System wraps the
    director with lifecycle management, input blocking, and state restoration.
 
-2. **CutsceneDefinitionSO**: A Resource that defines a cutscene's metadata:
+2. **CutsceneDefinition**: A Resource that defines a cutscene's metadata:
    ```
-   CutsceneDefinitionSO fields:
+   CutsceneDefinition fields:
    ┌─────────────────────────────────────────────────┐
    | CutsceneId: string (unique identifier)           |
    | TimelineAsset: Timeline reference                |

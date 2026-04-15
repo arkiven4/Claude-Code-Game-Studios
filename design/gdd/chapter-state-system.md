@@ -1,6 +1,6 @@
 # Chapter State System
 
-> **Status**: Designed
+> **Status**: Approved
 > **Author**: Automated design session 2026-04-04
 > **Last Updated**: 2026-04-04
 > **Implements Pillar**: Story First (narrative persistence), Earn the Ending
@@ -32,7 +32,7 @@ and what's coming next.
 referenced later), Life is Strange's chapter-based narrative structure, and Witcher 3's
 consequential story flags (small decisions ripple through the entire game).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
@@ -94,16 +94,15 @@ consequential story flags (small decisions ripple through the entire game).
    irreversible, and the story always moves forward.
 
 8. **Chapter Save Data**: Serialized by the Save / Load System:
-   ```csharp
-   public struct ChapterSaveData {
-       public int CurrentChapterId;
-       public long CompletedChapterFlags;  // 64-bit bitmask of all chapters ever completed
-       public long CurrentChapterFlags;    // 64-bit bitmask of current chapter's story flags
-       public string[] VisitedLocations;
-       public int[] CompletedEncounters;
-       public int CompletedStoryBeats;
-       public int TotalRequiredStoryBeats;
-   }
+   ```gdscript
+   # ChapterSaveData — serialized as a Dictionary in the save file:
+   # current_chapter_id: int
+   # completed_chapter_flags: int   # 64-bit bitmask of all chapters ever completed
+   # current_chapter_flags: int     # 64-bit bitmask of current chapter's story flags
+   # visited_locations: Array[String]
+   # completed_encounters: Array[int]
+   # completed_story_beats: int
+   # total_required_story_beats: int
    ```
 
 ### States and Transitions

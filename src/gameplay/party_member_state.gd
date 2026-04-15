@@ -41,6 +41,9 @@ const MP_REGEN_INTERVAL: float = 1.0 # Regenerate MP every 1 second
 var active_effects: Array[ActiveEffect] = []
 var _status_effects_system: StatusEffectsSystem
 
+# Inventory
+var inventory: ItemInventory
+
 # Shield / Invincibility
 var shield_value: int = 0
 var is_invincible: bool = false
@@ -60,7 +63,25 @@ var revives_used_this_encounter: int = 0
 
 var _last_health_state: HealthState = HealthState.HEALTHY
 
+@export var save_key: String = ""
+
 func _ready() -> void:
+	reinitialize_stats()
+
+	inventory = ItemInventory.new()
+
+	## Find sibling StatusEffectsSystem and sync active_effects
+	_status_effects_system = get_parent().get_node_or_null("StatusEffectsSystem")
+	if _status_effects_system:
+		_status_effects_system.effect_applied.connect(_on_effect_applied)
+		_status_effects_system.effect_removed.connect(_on_effect_removed)
+
+	# Register with SaveManager if it exists in the scene tree
+	var save_manager := get_tree().get_first_node_in_group("SaveManager") as SaveManager
+	if save_manager:
+		save_manager.register_saveable(self)
+
+func reinitialize_stats() -> void:
 	if not character_data:
 		push_warning("[PartyMemberState] No character_data assigned to %s — stats will not initialize." % name)
 		return
@@ -82,12 +103,31 @@ func _ready() -> void:
 
 	is_alive = true
 	_last_health_state = HealthState.HEALTHY
+	hp_changed.emit(current_hp, max_hp)
+	mp_changed.emit(current_mp, max_mp)
+	_notify_health_state_changed()
 
-	## Find sibling StatusEffectsSystem and sync active_effects
-	_status_effects_system = get_parent().get_node_or_null("StatusEffectsSystem")
-	if _status_effects_system:
-		_status_effects_system.effect_applied.connect(_on_effect_applied)
-		_status_effects_system.effect_removed.connect(_on_effect_removed)
+func get_save_data() -> Dictionary:
+	return {
+		"current_hp": current_hp,
+		"current_mp": current_mp,
+		"character_level": character_level,
+		"is_alive": is_alive
+	}
+
+func load_save_data(data: Dictionary) -> void:
+	character_level = data.get("character_level", character_level)
+	# Re-init max stats in case level changed
+	max_hp = character_data.get_max_hp_at_level(character_level)
+	max_mp = character_data.get_max_mp_at_level(character_level)
+	
+	current_hp = data.get("current_hp", max_hp)
+	current_mp = data.get("current_mp", max_mp)
+	is_alive = data.get("is_alive", true)
+	
+	hp_changed.emit(current_hp, max_hp)
+	mp_changed.emit(current_mp, max_mp)
+	_notify_health_state_changed()
 
 func _process(delta: float) -> void:
 	if not is_alive: return
@@ -102,9 +142,12 @@ func _process(delta: float) -> void:
 		mp_regen_timer = 0.0
 
 	# Tick skill cooldowns
+	var cdr := _status_effects_system.get_cooldown_reduction() if _status_effects_system else 0.0
+	var cooldown_delta := delta * (1.0 + cdr)
+
 	for i in range(4):
 		if skill_cooldowns[i] > 0.0:
-			skill_cooldowns[i] -= delta
+			skill_cooldowns[i] -= cooldown_delta
 			if skill_cooldowns[i] <= 0.0:
 				skill_cooldowns[i] = 0.0
 				# Restore charges
@@ -123,7 +166,14 @@ func _process(delta: float) -> void:
 func take_damage(data: Dictionary) -> void:
 	if not is_alive: return
 	var amount: int = int(data.get("damage", 0))
+	var was_crit: bool = data.get("was_crit", false)
 	
+	if amount > 0:
+		if was_crit:
+			CombatFeedbackManager.apply_heavy_hit(get_tree(), get_parent())
+		else:
+			CombatFeedbackManager.apply_light_hit(get_tree(), get_parent())
+
 	if is_player_controlled and amount > 0:
 		var c_name: String = data.get("caster_name", "Unknown")
 		var s_name: String = data.get("skill_name", "Attack")
@@ -136,8 +186,22 @@ func take_damage(data: Dictionary) -> void:
 
 	if is_invincible or _has_effect_category(StatusEffect.EffectCategory.INVINCIBILITY):
 		amount = 0
+
+	# Damage Reflection
+	if amount > 0 and _status_effects_system:
+		var reflect_percent := _status_effects_system.get_reflect_percent()
+		if reflect_percent > 0:
+			var reflect_dmg := int(amount * reflect_percent)
+			var caster = data.get("caster_node")
+			if caster and caster.has_method("take_damage"):
+				caster.take_damage({
+					"damage": reflect_dmg,
+					"caster_node": self,
+					"caster_name": character_data.display_name if character_data else name,
+					"skill_name": "Reflect"
+				})
+
 	if amount <= 0: return
-	
 	# Shield
 	if shield_value > 0:
 		var absorbed: int = int(min(shield_value, amount))
@@ -199,8 +263,17 @@ func _print_death_recap() -> void:
 	print("===============================")
 	_notify_health_state_changed()
 
-func apply_heal(amount: int) -> void:
-	if not is_alive or amount <= 0: return
+func apply_heal(data: Variant) -> void:
+	if not is_alive: return
+	
+	var amount: int = 0
+	if data is Dictionary:
+		amount = data.get("heal_amount", 0)
+	else:
+		amount = int(data)
+		
+	if amount <= 0: return
+	
 	current_hp = min(current_hp + amount, max_hp)
 	hp_changed.emit(current_hp, max_hp)
 	_notify_health_state_changed()
@@ -234,28 +307,34 @@ func can_use_skill(slot: int) -> bool:
 	
 	return true
 
-## Checks if the character can use their basic/special attack.
-func can_attack(is_special: bool) -> bool:
+## Checks if the character can use their basic attack.
+func can_use_basic_attack() -> bool:
 	if not is_alive: return false
 	if is_casting: return false
 	if _has_action_denial_effect(): return false
-	
 	if not character_data: return false
-	if is_special:
-		return special_attack_cooldown <= 0.0 and character_data.special_attack != null
-	else:
-		return basic_attack_cooldown <= 0.0 and character_data.basic_attack != null
+	return basic_attack_cooldown <= 0.0 and character_data.basic_attack != null
+
+## Checks if the character can use their special attack.
+func can_use_special_attack() -> bool:
+	if not is_alive: return false
+	if is_casting: return false
+	if _has_action_denial_effect(): return false
+	if not character_data: return false
+	return special_attack_cooldown <= 0.0 and character_data.special_attack != null
 
 ## Consumes the cooldown for a basic/special attack.
-func consume_attack_cooldown(is_special: bool) -> void:
+func consume_attack_cooldown(is_special: bool, cooldown_override: float = -1.0) -> void:
 	if not character_data: return
 	var attack_skill := character_data.special_attack if is_special else character_data.basic_attack
 	if not attack_skill: return
 	
+	var cd := cooldown_override if cooldown_override >= 0.0 else attack_skill.base_cooldown
+	
 	if is_special:
-		special_attack_cooldown = attack_skill.base_cooldown
+		special_attack_cooldown = cd
 	else:
-		basic_attack_cooldown = attack_skill.base_cooldown
+		basic_attack_cooldown = cd
 
 ## Consumes MP for a dodge/dash. Returns true if successful.
 func try_consume_dodge_mp() -> bool:
@@ -428,7 +507,44 @@ func _on_effect_applied(effect: ActiveEffect) -> void:
 	active_effects.append(effect)
 
 func _on_effect_removed(effect: ActiveEffect) -> void:
-	for i in range(active_effects.size()):
-		if active_effects[i].definition.effect_id == effect.definition.effect_id:
-			active_effects.remove_at(i)
-			return
+		for i in range(active_effects.size()):
+				if active_effects[i].definition.effect_id == effect.definition.effect_id:
+						active_effects.remove_at(i)
+						return
+
+## Returns MaxMP at the given character level.
+func get_max_mp() -> int:
+		var mods := _status_effects_system.get_stat_modifier(StatusEffect.StatToModify.MAX_MP) if _status_effects_system else {"multiplier": 1.0, "flat": 0.0}
+		return int(max_mp * mods.multiplier + mods.flat)
+
+## Returns current ATK including modifiers.
+func get_atk() -> int:
+		var base := character_data.get_atk_at_level(character_level) if character_data else 10
+		var mods := _status_effects_system.get_stat_modifier(StatusEffect.StatToModify.ATK) if _status_effects_system else {"multiplier": 1.0, "flat": 0.0}
+		return int(base * mods.multiplier + mods.flat)
+
+## Returns current DEF including modifiers.
+func get_def() -> int:
+		var base := character_data.get_def_at_level(character_level) if character_data else 5
+		var mods := _status_effects_system.get_stat_modifier(StatusEffect.StatToModify.DEF) if _status_effects_system else {"multiplier": 1.0, "flat": 0.0}
+		return int(base * mods.multiplier + mods.flat)
+
+## Returns current SPD including modifiers.
+func get_spd() -> float:
+		var base := character_data.base_spd if character_data else 1.0
+		var mods := _status_effects_system.get_stat_modifier(StatusEffect.StatToModify.SPD) if _status_effects_system else {"multiplier": 1.0, "flat": 0.0}
+		return base * mods.multiplier + mods.flat
+
+## Returns current CRIT including modifiers.
+func get_crit() -> float:
+		var base := character_data.base_crit if character_data else 0.05
+		var mods := _status_effects_system.get_stat_modifier(StatusEffect.StatToModify.CRIT) if _status_effects_system else {"multiplier": 1.0, "flat": 0.0}
+		return clampf(base * mods.multiplier + mods.flat, 0.0, 1.0)
+
+func get_resistance(_category: int) -> float:
+	# TODO: Implement elemental resistances based on character_data or equipment
+	return 1.0
+
+func is_immune_to_effect(_effect_id: String) -> bool:
+	# TODO: Implement immunity check
+	return false

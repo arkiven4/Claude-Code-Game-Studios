@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://orb_advanced_cure"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" uid="uid://icon_upd" path="res://assets/art/ui/skill_icons/Orb_Skill_Advanced_Cure.png" id="icon_res"]
+
+[sub_resource type="Resource" id="Tier1"]
+script = ExtResource("2_tier")
+effect_value = 1.0
+tier_description = "Automatically generated from scraped Lineage 2M data"
+
+[resource]
+script = ExtResource("1_skill")
+skill_type = 2
+display_name = "Advanced Cure"
+skill_id = "orb_advanced_cure"
+description = "Reinforces Cure and upon using Cure, has a fixed chance to remove higher-rank debuffs inflicted on the target.
+Also increases Stun Resistance.
+Using the skill cures Party Members within a certain range. Grants a bonus buff upon successful Cure.
+[Target: Party Members]
+[Removes Legend- or lower-rank CC effect]
+
+[Effect]
+Stun Resistance +5%
+Grants a buff which increases Stun/Hold/CC Resistance by 5% on a successful removal"
+icon = ExtResource("icon_res")
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])

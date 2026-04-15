@@ -1,0 +1,72 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://enemy_stakato_queen"]
+
+[ext_resource type="Script" uid="uid://cd1p7b1fjqu6o" path="res://src/core/enemy_data.gd" id="1_data"]
+[ext_resource type="Script" uid="uid://cl7itd7u0n75m" path="res://src/core/enemy_skill_entry.gd" id="2_entry"]
+[ext_resource type="Resource" uid="uid://skill_boss_stakato_melee" path="res://assets/data/skills/enemies/boss_stakato_melee.tres" id="3_skill1"]
+[ext_resource type="Resource" uid="uid://skill_boss_stakato_aoe" path="res://assets/data/skills/enemies/boss_stakato_aoe.tres" id="4_skill2"]
+[ext_resource type="Resource" uid="uid://skill_boss_stakato_judgment" path="res://assets/data/skills/enemies/boss_stakato_judgment.tres" id="5_skill3"]
+[ext_resource type="Resource" uid="uid://skill_boss_stakato_enrage" path="res://assets/data/skills/enemies/boss_stakato_enrage.tres" id="6_skill4"]
+[ext_resource type="Resource" uid="uid://skill_boss_stakato_defense" path="res://assets/data/skills/enemies/boss_stakato_defense.tres" id="7_skill5"]
+
+[sub_resource type="Resource" id="Resource_entry1"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("3_skill1")
+cooldown = 2.0
+weight = 1.0
+min_range = 0.0
+max_range = 5.0
+condition = 0
+
+[sub_resource type="Resource" id="Resource_entry2"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("4_skill2")
+cooldown = 10.0
+weight = 3.0
+min_range = 0.0
+max_range = 10.0
+condition = 0
+
+[sub_resource type="Resource" id="Resource_entry3"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("5_skill3")
+cooldown = 15.0
+weight = 5.0
+min_range = 0.0
+max_range = 20.0
+condition = 1
+
+[sub_resource type="Resource" id="Resource_entry4"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("6_skill4")
+cooldown = 30.0
+weight = 10.0
+min_range = 0.0
+max_range = 0.0
+condition = 3
+
+[sub_resource type="Resource" id="Resource_entry5"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("7_skill5")
+cooldown = 20.0
+weight = 2.0
+min_range = 0.0
+max_range = 0.0
+condition = 4
+
+[resource]
+script = ExtResource("1_data")
+enemy_id = "stakato_queen"
+display_name = "Elite Ruins Stakato Queen"
+enemy_class = 3
+behavior_profile = 3
+base_max_hp = 2500
+base_atk = 45
+base_def = 35
+base_spd = 1.1
+physical_resistance = 1.2
+magical_resistance = 0.7
+holy_resistance = 0.7
+dark_resistance = 1.5
+status_immunities = Array[String](["Stun", "Slow"])
+skill_list = Array[ExtResource("2_entry")]([SubResource("Resource_entry1"), SubResource("Resource_entry2"), SubResource("Resource_entry3"), SubResource("Resource_entry4"), SubResource("Resource_entry5")])
+model_path = "res://assets/art/ui/icons/placeholder_icon.png"

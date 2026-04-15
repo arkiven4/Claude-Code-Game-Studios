@@ -76,8 +76,11 @@ func _complete_loading() -> void:
 	
 	# Restore state if needed
 	if not _pending_save_data.is_empty():
-		if save_manager:
-			save_manager.restore_state(_pending_save_data)
+		var sm := save_manager
+		if not sm:
+			sm = get_tree().get_first_node_in_group("SaveManager") as SaveManager
+		if sm:
+			sm.restore_state(_pending_save_data)
 		_pending_save_data = {}
 	
 	# Handle portal positioning

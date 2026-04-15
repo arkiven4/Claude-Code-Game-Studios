@@ -7,7 +7,7 @@
 
 ## Overview
 
-The Status Effects System manages all persistent, time-bound modifiers applied to characters and enemies during combat and exploration — buffs that enhance stats, debuffs that weaken targets, damage-over-time effects that tick each interval, crowd-control effects that restrict action, and shields that absorb damage. Each status effect is defined as a Resource (`StatusEffectSO`) specifying its type, magnitude, duration, stacking rules, and visual/audio feedback. The system is called by the Skill Execution System (when skills apply effects), queried by the Health & Damage System (when calculating effective stats), and serialized by the Save / Load System (so active effects persist across saves). Status effects are the primary lever for combat strategy beyond raw stats — knowing when to buff an ally, debuff a boss, or cleanse a party-wide poison is the core skill expression of the party management loop.
+The Status Effects System manages all persistent, time-bound modifiers applied to characters and enemies during combat and exploration — buffs that enhance stats, debuffs that weaken targets, damage-over-time effects that tick each interval, crowd-control effects that restrict action, and shields that absorb damage. Each status effect is defined as a Resource (`StatusEffect`) specifying its type, magnitude, duration, stacking rules, and visual/audio feedback. The system is called by the Skill Execution System (when skills apply effects), queried by the Health & Damage System (when calculating effective stats), and serialized by the Save / Load System (so active effects persist across saves). Status effects are the primary lever for combat strategy beyond raw stats — knowing when to buff an ally, debuff a boss, or cleanse a party-wide poison is the core skill expression of the party management loop.
 
 ## Player Fantasy
 
@@ -15,11 +15,11 @@ Status Effects System serves the fantasy of **tactical depth through temporary a
 
 **Reference model**: Final Fantasy X's buff/debuff system (clear icons, visible duration, meaningful stat changes), Path of Exile's buff stacking depth (complex interactions but readable at a glance), and Genshin Impact's elemental reaction buffs (temporary but impactful).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
-1. **StatusEffectSO Resource**: Every status effect is defined as a `StatusEffectSO` asset with the following fields:
+1. **StatusEffect Resource**: Every status effect is defined as a `StatusEffect` asset with the following fields:
 
    | Field | Type | Description |
    |-------|------|-------------|
@@ -41,8 +41,8 @@ Status Effects System serves the fantasy of **tactical depth through temporary a
    | `IsHostile` | bool | True for effects applied by enemies to players; false for player-applied effects |
    | `Description` | string | One-line tooltip text explaining the effect |
    | `VFX` | Node3D | Visual effect prefab instantiated on the target when effect is applied |
-   | `AudioCue` | AudioClip | Sound played when effect is applied |
-   | `RemoveAudioCue` | AudioClip | Sound played when effect expires or is dispelled |
+   | `AudioCue` | AudioStream | Sound played when effect is applied |
+   | `RemoveAudioCue` | AudioStream | Sound played when effect expires or is dispelled |
 
 2. **Effect Types and Behaviors**:
 
@@ -105,7 +105,7 @@ Status Effects System serves the fantasy of **tactical depth through temporary a
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `EffectId` | string | Reference to the StatusEffectSO definition |
+| `EffectId` | string | Reference to the StatusEffect definition |
 | `RemainingDuration` | float (seconds) | Time until effect expires |
 | `CurrentStacks` | int | Number of stacked instances (1 for NoStack) |
 | `TimeSinceLastTick` | float (seconds) | Time since last DoT tick (0 for non-DoT) |
@@ -145,7 +145,7 @@ Status Effects System serves the fantasy of **tactical depth through temporary a
 | System | Direction | Details |
 |--------|-----------|---------|
 | **Health & Damage System** | Called by / Calls | DoT ticks call `ApplyDamage()` on the Health & Damage System; shields are queried before HP damage is applied |
-| **Skill Database** | Reads | SkillStatusSO and SkillSupportSO reference StatusEffectSO entries for effects they apply |
+| **Skill Database** | Reads | SkillStatus and SkillSupport reference StatusEffect entries for effects they apply |
 | **Skill Execution System** | Calls this | Creates ActiveEffect instances when skills with status effects are cast |
 | **Character Data** | Reads | Reads target immunity flags and base stats for effective stat recalculation |
 | **Character State Manager** | Read by | Provides active effect list per character for HUD display and AI decision-making |
@@ -154,7 +154,7 @@ Status Effects System serves the fantasy of **tactical depth through temporary a
 | **Combat HUD** | Reads | Displays effect icons with duration timers on character bars |
 | **Save / Load System** | Serialized | ActiveEffects[] per character are saved and loaded (EffectId, RemainingDuration, CurrentStacks) |
 | **Enemy AI System** | Calls this | Enemy skills apply status effects to player characters |
-| **Audio System** | Reads | Plays AudioCue and RemoveAudioCue from StatusEffectSO |
+| **Audio System** | Reads | Plays AudioCue and RemoveAudioCue from StatusEffect |
 
 ## Formulas
 
@@ -216,7 +216,7 @@ EffectiveATK = 127.5 + 30 = 157 (rounded to 157)
 | System | Direction | Nature | What Flows Between Them |
 |--------|-----------|--------|------------------------|
 | **Health & Damage System** | Mutual | Hard | DoT ticks call ApplyDamage(); Health & Damage queries shield values before HP damage |
-| **Skill Database** | Reads | Hard | StatusEffectSO entries referenced by SkillStatusSO and SkillSupportSO |
+| **Skill Database** | Reads | Hard | StatusEffect entries referenced by SkillStatus and SkillSupport |
 | **Skill Execution System** | Calls this | Hard | Creates and manages ActiveEffect instances on skill cast |
 | **Character Data** | Reads | Hard | Reads base stats and immunity flags for effective stat calculation |
 | **Character State Manager** | Read by | Hard | Provides active effect list per character for state tracking |
@@ -225,7 +225,7 @@ EffectiveATK = 127.5 + 30 = 157 (rounded to 157)
 | **Combat HUD** | Reads | Soft | Displays effect icons, durations, and stack counts |
 | **Save / Load System** | Serialized | Hard | ActiveEffects[] per character serialized with remaining duration and stacks |
 | **Enemy AI System** | Calls this | Soft | Enemy skills apply status effects to player characters |
-| **Audio System** | Reads | Soft | Plays application and removal audio cues from StatusEffectSO |
+| **Audio System** | Reads | Soft | Plays application and removal audio cues from StatusEffect |
 
 **No upstream dependency conflicts.** The Status Effects System reads from Skill Database and Character Data, and is called by Skill Execution. All interactions are unidirectional except Health & Damage (mutual for DoT/shield calculation).
 

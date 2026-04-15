@@ -1,0 +1,37 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://lich_life_drain"]
+
+[ext_resource type="Script" uid="uid://dambpep7g2e0j" path="res://src/core/skill_effect_override.gd" id="1_ovr"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Resource" uid="uid://curse_effect" path="res://assets/data/status_effects/curse.tres" id="2_curse"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="3_tier"]
+[ext_resource type="Texture2D" uid="uid://evelyn_dark_bolt_projectile" path="res://assets/art/vfx/skills/evelyn_dark_bolt_projectile.png" id="4_vfx"]
+
+[sub_resource type="Resource" id="Ovr_Curse"]
+script = ExtResource("1_ovr")
+effect_ref = ExtResource("2_curse")
+duration = 8.0
+effect_value = 0.8
+
+[sub_resource type="Resource" id="Tier1"]
+script = ExtResource("3_tier")
+effect_value = 1.2
+tier_description = "A dark bolt that weakens the target."
+
+[resource]
+script = ExtResource("1_skill")
+skill_type = 0
+display_name = "Life Drain"
+skill_id = "lich_life_drain"
+description = "A bolt of necrotic energy that siphons vitality."
+mp_cost = 0
+base_cooldown = 4.0
+cast_time = 0.8
+target_type = 0
+max_cast_range = 10.0
+is_projectile = true
+projectile_speed = 12.0
+vfx_projectile = ExtResource("4_vfx")
+tiers = Array[ExtResource("3_tier")]([SubResource("Tier1")])
+base_damage = 30
+damage_category = 3 # DARK
+effect_overrides = Array[ExtResource("1_ovr")]([SubResource("Ovr_Curse")])

@@ -1,0 +1,303 @@
+[
+    {
+        "name": "Health Potion",
+        "type": "Potion",
+        "details": "Recovers HP, Can Auto Use",
+        "filename": "Consumable_Potion_Health_Potion.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142743-v4LCFUYOqcvG6YRsdFRD0-v4"
+    },
+    {
+        "name": "Greater Health Potion",
+        "type": "Potion",
+        "details": "Recovers HP, Cannot Auto Use",
+        "filename": "Consumable_Potion_Greater_Health_Potion.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142749-i3dFHMrNclKKVRbGXzWJ0-v4"
+    },
+    {
+        "name": "Quality Health Potion",
+        "type": "Potion",
+        "details": "Recovers HP, Cannot Auto Use",
+        "filename": "Consumable_Potion_Quality_Health_Potion.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142753-Y9RsihFcbwHAjBFfkDJ50-v4"
+    },
+    {
+        "name": "Mana Recovery Potion",
+        "type": "Potion",
+        "details": "Recovers MP over time",
+        "filename": "Consumable_Potion_Mana_Recovery_Potion.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142758-PepM5iYupj5A0gcxKmbR0-v4"
+    },
+    {
+        "name": "Mana Elixir",
+        "type": "Potion",
+        "details": "Recovers MP instantly",
+        "filename": "Consumable_Potion_Mana_Elixir.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142804-ZC1GdqnD44cW5ANrhYcs0-v4"
+    },
+    {
+        "name": "Acceleration Potion",
+        "type": "Potion",
+        "details": "Increases Speed (Acceleration Lv.1): Movement Speed +25%, Attack Speed +25%",
+        "filename": "Consumable_Potion_Acceleration_Potion.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142814-ViPfa8MutKDvzEqAmPoU0-v4"
+    },
+    {
+        "name": "Sayha's Breath",
+        "type": "Potion",
+        "details": "Increases Speed (Acceleration Lv.3): Movement Speed +10%, Attack Speed +10%",
+        "filename": "Consumable_Potion_Sayha_s_Breath.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142819-WBiPStQakQfPTCkkQgr00-v4"
+    },
+    {
+        "name": "Grilled Nalchi Skewers",
+        "type": "Food",
+        "details": "Ranged Damage +2, Ranged Accuracy +1, HP Recovery (Tick) +2, MP Recovery (Tick) +2, Damage Reduction +2",
+        "filename": "Consumable_Food_Grilled_Nalchi_Skewers.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142824-0UEB4Rajr6vwrxsJE1gE0-v4"
+    },
+    {
+        "name": "Mandragora Soup",
+        "type": "Food",
+        "details": "Magic Damage +2, Magic Accuracy +1, MP Recovery (Tick) +3, HP Recovery (Tick) +2, Damage Reduction +2",
+        "filename": "Consumable_Food_Mandragora_Soup.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142828-D4pTb6EY1GXPlDIOVQwl0-v4"
+    },
+    {
+        "name": "Gorgon Steak",
+        "type": "Food",
+        "details": "Melee Damage +2, Melee Accuracy +1, MP Recovery (Tick) +2, HP Recovery (Tick) +2, Damage Reduction +2",
+        "filename": "Consumable_Food_Gorgon_Steak.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142833-tV6zikjdDsWjSPc7acHV0-v4"
+    },
+    {
+        "name": "Scroll of Awakening",
+        "type": "Scroll",
+        "details": "STR +1, INT +1, DEX +1, CON +1, AGI +1, WIS +1, PvP Weapon Damage Resistance +10",
+        "filename": "Consumable_Scroll_Scroll_of_Awakening.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142837-PnvY1tnUDZqMMXHafJqu0-v4"
+    },
+    {
+        "name": "Scroll of Combat",
+        "type": "Scroll",
+        "details": "All Damage +3, Accuracy +3, PvP Weapon Damage Resistance +10",
+        "filename": "Consumable_Scroll_Scroll_of_Combat.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142841-E5LKDkz2FrjhShfK7IzM0-v4"
+    },
+    {
+        "name": "Scroll of Weight Lightening",
+        "type": "Scroll",
+        "details": "Weight Limit +400",
+        "filename": "Consumable_Scroll_Scroll_of_Weight_Lightening.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142854-yDv05TnbCZxZxYaLSMoO0-v4"
+    },
+    {
+        "name": "Scroll of Defense",
+        "type": "Scroll",
+        "details": "Defense +3, PvP Weapon Damage Resistance +10",
+        "filename": "Consumable_Scroll_Scroll_of_Defense.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142902-4eb6Qlaar4NMzn4bMaWz0-v4"
+    },
+    {
+        "name": "Scroll of Endurance",
+        "type": "Scroll",
+        "details": "Increases Flinch on Hit Resistance, Damage Reduction, and PvP Weapon Damage Resistance",
+        "filename": "Consumable_Scroll_Scroll_of_Endurance.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142908-RexE9IOUsbOcNA5AqGik0-v4"
+    },
+    {
+        "name": "Scroll of Penetration",
+        "type": "Scroll",
+        "details": "All Damage +3, Accuracy +3, Block Penetration +3",
+        "filename": "Consumable_Scroll_Scroll_of_Penetration.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142912-M76WRm0kNfb5yO4YbLO80-v4"
+    },
+    {
+        "name": "Growth Potion (10%)",
+        "type": "Potion",
+        "details": "Use to gain Bonus EXP. Cannot use another Growth Potion while the effect is active.",
+        "filename": "Consumable_Potion_Growth_Potion_10.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142918-3OnZdBOOACnkfBbwJcPW0-v4"
+    },
+    {
+        "name": "Growth Potion (15%)",
+        "type": "Potion",
+        "details": "Use to gain Bonus EXP. Cannot use another Growth Potion while the effect is active.",
+        "filename": "Consumable_Potion_Growth_Potion_15.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142922-kFZglGHlhkSOijAxQIxd0-v4"
+    },
+    {
+        "name": "Growth Potion (20%)",
+        "type": "Potion",
+        "details": "Use to gain Bonus EXP. Cannot use another Growth Potion while the effect is active.",
+        "filename": "Consumable_Potion_Growth_Potion_20.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142928-5hBLARmRBdSiYFtO0zPA0-v4"
+    },
+    {
+        "name": "Holy Water of Blessings",
+        "type": "Einhasad's Blessings",
+        "details": "Use to recharge 20 Einhasad's Blessings",
+        "filename": "Consumable_Einhasad_s_Blessings_Holy_Water_of_Blessings.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142933-5Pe82zUv9xhLIM9JwmXH0-v4"
+    },
+    {
+        "name": "Holy Grail of Blessings",
+        "type": "Einhasad's Blessings",
+        "details": "Use to recharge 50 Einhasad's Blessings",
+        "filename": "Consumable_Einhasad_s_Blessings_Holy_Grail_of_Blessings.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142940-ByScjB1vlO9ZWNHvB3fW0-v4"
+    },
+    {
+        "name": "Relic of Blessings",
+        "type": "Einhasad's Blessings",
+        "details": "Use to recharge 100 Einhasad's Blessings",
+        "filename": "Consumable_Einhasad_s_Blessings_Relic_of_Blessings.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142945-ZFGm51YJO10DjKyCETcI0-v4"
+    },
+    {
+        "name": "Weapon Enchant Scroll",
+        "type": "Gear Progression",
+        "details": "Using on a Weapon has a chance to increase its Enchant Stage by +1.",
+        "filename": "Consumable_Gear_Progression_Weapon_Enchant_Scroll.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142952-bXDmVzO4KPp2fk3b41rV0-v4"
+    },
+    {
+        "name": "Blessed Weapon Enchant Scroll",
+        "type": "Gear Progression",
+        "details": "Using on a Weapon has a chance to increase its Enchant Stage by +1 to +3.",
+        "filename": "Consumable_Gear_Progression_Blessed_Weapon_Enchant_Scroll.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117142957-mgvlbPcjpcWVuV5mwEFm0-v4"
+    },
+    {
+        "name": "Armor Enchant Scroll",
+        "type": "Gear Progression",
+        "details": "Using on Armor has a chance to increase its Enchant Stage by +1.",
+        "filename": "Consumable_Gear_Progression_Armor_Enchant_Scroll.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143009-FHQatvIBCMkrDp9htAAZ0-v4"
+    },
+    {
+        "name": "Blessed Armor Enchant Scroll",
+        "type": "Gear Progression",
+        "details": "Using it on Armor has a chance to increase its Enchant Stage by +1 to +3.",
+        "filename": "Consumable_Gear_Progression_Blessed_Armor_Enchant_Scroll.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143013-3ddRm4DkPhLaQNDZDsLJ0-v4"
+    },
+    {
+        "name": "Cursed Weapon Enchant Scroll",
+        "type": "Gear Progression",
+        "details": "Using it on a Weapon decreases its Enchant Stage by -1.",
+        "filename": "Consumable_Gear_Progression_Cursed_Weapon_Enchant_Scroll.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143019-RrFB3G7GVm6Bah3eljI50-v4"
+    },
+    {
+        "name": "Cursed Armor Enchant Scroll",
+        "type": "Gear Progression",
+        "details": "Using on Armor decreases its Enchant Stage by 1.",
+        "filename": "Consumable_Gear_Progression_Cursed_Armor_Enchant_Scroll.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143022-uNZeZEAVXwowEeGhGNRG0-v4"
+    },
+    {
+        "name": "Accessory Enchant Scroll",
+        "type": "Gear Progression",
+        "details": "Using on an Accessory has a chance to increase its Enchant Stage by +1.",
+        "filename": "Consumable_Gear_Progression_Accessory_Enchant_Scroll.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143026-tGw6TCOARe2ysQIW5SJQ0-v4"
+    },
+    {
+        "name": "Blessed Accessory Enchant Scroll",
+        "type": "Gear Progression",
+        "details": "Using on an Accessory has a chance to increase its Enchant Stage by +1 to +3.",
+        "filename": "Consumable_Gear_Progression_Blessed_Accessory_Enchant_Scroll.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143029-7AzaXIPXyzaQZNPLoBrv0-v4"
+    },
+    {
+        "name": "Cursed Accessory Enchant Scroll",
+        "type": "Gear Progression",
+        "details": "Using on an Accessory decreases its Enchant Stage by 1.",
+        "filename": "Consumable_Gear_Progression_Cursed_Accessory_Enchant_Scroll.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143158-lRn3x4hXp7nU4lY317u70-v4"
+    },
+    {
+        "name": "Life Stone",
+        "type": "Gear Progression",
+        "details": "Randomly applies options and values to Gear.",
+        "filename": "Consumable_Gear_Progression_Life_Stone.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143206-WSGARNKz8LzcIiP8fvly0-v4"
+    },
+    {
+        "name": "Blessed Life Stone",
+        "type": "Gear Progression",
+        "details": "Randomly applies options and values to Gear.",
+        "filename": "Consumable_Gear_Progression_Blessed_Life_Stone.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143209-SkuCakMIgpOsbCJTcTCL0-v4"
+    },
+    {
+        "name": "Spirit Stone",
+        "type": "Accessory Progression",
+        "details": "Randomly applies options and values to Accessories.",
+        "filename": "Consumable_Accessory_Progression_Spirit_Stone.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143215-iupRYqo3G3dCTQJmTGvg0-v4"
+    },
+    {
+        "name": "Blessed Spirit Stone",
+        "type": "Accessory Progression",
+        "details": "Randomly applies options and values to Accessories.",
+        "filename": "Consumable_Accessory_Progression_Blessed_Spirit_Stone.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143222-E1vDoa2DqrjIVBkGn5CB0-v4"
+    },
+    {
+        "name": "Cursed Spirit Stone",
+        "type": "Gear/Accessory Progression",
+        "details": "Using on Reforged Gear can delete its existing Reforge option.",
+        "filename": "Consumable_Gear_Accessory_Progression_Cursed_Spirit_Stone.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143228-KbU11E6VLtKvzvHMqAW50-v4"
+    },
+    {
+        "name": "Pure Elixir",
+        "type": "Stat Progression",
+        "details": "There is a chance to craft an Elixir with 35 Pure Elixirs.",
+        "filename": "Consumable_Stat_Progression_Pure_Elixir.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143236-bRNe0pYQxuFPe8QazyJn0-v4"
+    },
+    {
+        "name": "Elixir",
+        "type": "Stat Progression",
+        "details": "Use to gain 1 Stat Point.",
+        "filename": "Consumable_Stat_Progression_Elixir.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143240-qwHMIYALSxGUECnAxCfp0-v4"
+    },
+    {
+        "name": "Common Book of Exercises",
+        "type": "Expertise Progression",
+        "details": "Use to slightly increase the weapon's Expertise.",
+        "filename": "Consumable_Expertise_Progression_Common_Book_of_Exercises.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143247-vUg2yu3BVuooKthZYxUf0-v4"
+    },
+    {
+        "name": "Advanced Book of Exercises",
+        "type": "Expertise Progression",
+        "details": "Use to increase the weapon's Expertise.",
+        "filename": "Consumable_Expertise_Progression_Advanced_Book_of_Exercises.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143253-tdNzyaluNnteyX3eexsn0-v4"
+    },
+    {
+        "name": "Finest Book of Exercises",
+        "type": "Expertise Progression",
+        "details": "Use to greatly increase the weapon's Expertise.",
+        "filename": "Consumable_Expertise_Progression_Finest_Book_of_Exercises.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143259-H3IZxTqD4dBSq7HlOuUv0-v4"
+    },
+    {
+        "name": "Greater Salvage Solvent",
+        "type": "Aster Progression",
+        "details": "Used for salvaging Greater gear.",
+        "filename": "Consumable_Aster_Progression_Greater_Salvage_Solvent.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143317-YLWKUvQTp4ltknJQMcgJ0-v4"
+    },
+    {
+        "name": "Lesser Star Aether",
+        "type": "Aster Progression",
+        "details": "Use to gain Stardust.",
+        "filename": "Consumable_Aster_Progression_Lesser_Star_Aether.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117143313-viEFpUJvTuJEnk7khBnV0-v4"
+    }
+]

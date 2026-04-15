@@ -34,7 +34,7 @@ everything you need, nothing you don't.
 always visible, skill bar contextual), Devil May Cry's stylish combat feedback (combo
 counter, rank display), and Hollow Knight's minimal HUD (information without clutter).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
@@ -55,7 +55,7 @@ counter, rank display), and Hollow Knight's minimal HUD (information without clu
 2. **Skill Bar** (bottom-center of screen):
    - Displays 4 skill slots for the currently controlled character
    - Each skill button shows:
-     - Skill icon (from `SkillDataSO`)
+     - Skill icon (from `SkillData`)
      - Cooldown overlay (radial fill from full to empty)
      - Skill name (small text below button)
      - Key binding label (1, 2, 3, 4 / Square, Triangle, Circle, X)
@@ -114,7 +114,7 @@ counter, rank display), and Hollow Knight's minimal HUD (information without clu
 
 9. **Passive Icon Row** (below skill bar):
    - Displays unlocked passive icons for the currently active character in a horizontal row
-   - Icons sourced from `PassiveUnlock.Icon` on the character's `CharacterDataSO`
+   - Icons sourced from `PassiveUnlock.Icon` on the character's `CharacterData`
    - Only **unlocked** passives are shown (locked passives are hidden, not grayed out)
    - Hovering over a passive icon shows a tooltip with the passive description
    - When a passive unlocks mid-combat, the new icon appears with a 0.5s glow-in animation

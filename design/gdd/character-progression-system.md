@@ -1,6 +1,6 @@
 # Character Progression System
 
-> **Status**: Designed
+> **Status**: Approved
 > **Author**: Design session 2026-04-11 (user-directed)
 > **Last Updated**: 2026-04-11
 > **Implements Pillar**: Earn the Ending, The Party Is the Game
@@ -15,7 +15,7 @@ Character Progression serves the fantasy of **ownership and pride in your compan
 
 **Reference model**: Tales of Berseria's warm party growth — characters feel stronger because you've been through things together, not because you crunched numbers. The bonus stat points add a whisper of Final Fantasy X's Sphere Grid ownership without the complexity.
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
@@ -28,7 +28,7 @@ Character Progression serves the fantasy of **ownership and pride in your compan
    ```
    XPRequired(L) = floor(80 × 1.2^(L-1))
    ```
-   Where `L` is the target level. Total XP to reach Level 30 from Level 1: approximately **30,000 XP**.
+   Where `L` is the target level. Total XP to reach Level 30 from Level 1: approximately **78,818 XP** (exact cumulative total from the XP table below).
 
 3. **Level-Up Timing**: Level-ups are **deferred to the end of the encounter**. When a character's accumulated XP crosses a level threshold mid-combat, the level counter increments internally but stat changes, tier unlocks, and passive activations wait until the encounter ends. This avoids mid-combat state corruption.
 

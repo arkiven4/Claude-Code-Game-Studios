@@ -1,6 +1,6 @@
 # Shop System
 
-> **Status**: Designed
+> **Status**: Approved
 > **Author**: Design session 2026-04-11
 > **Last Updated**: 2026-04-11
 > **Implements Pillar**: Earn the Ending (meaningful resource choices)
@@ -15,7 +15,7 @@ The Shop System serves the fantasy of **strategic preparation**. Before heading 
 
 **Reference model**: Final Fantasy IX's Treno weapon shops (merchants with personality, stock that changes with story progression), and Dragon Quest's clean buy/sell interfaces with clear stat comparisons.
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
@@ -25,7 +25,7 @@ The Shop System serves the fantasy of **strategic preparation**. Before heading 
    - **Treasure Chests**: World exploration yields gold caches (e.g., 50-200 gold per chest).
    - **Chapter Rewards**: Chapter completion awards a lump sum (e.g., Ch1=500, Ch2=800, Ch3=1200, Ch4=2000).
 
-2. **Gold Persistence**: Gold is a **party-wide shared resource**, tracked in the `PartyInventory` as `TotalGold`. Gold is NOT character-specific. The save file stores a single `partyGold` value.
+2. **Gold Persistence**: Gold is a **party-wide shared resource**, tracked in the `InventoryManager` as `TotalGold`. Gold is NOT character-specific. The save file stores a single `partyGold` value.
 
 3. **Shop Definition**: Each merchant is defined by a `ShopInventory` Resource:
    ```
@@ -41,7 +41,7 @@ The Shop System serves the fantasy of **strategic preparation**. Before heading 
 
    ShopEntry fields:
    ┌─────────────────────────────────────────────────┐
-   | ItemRef: ItemEquipmentSO reference               |
+   | ItemRef: ItemEquipment reference               |
    | Price: int (gold cost)                           |
    | UnlockCondition: enum (Always, AfterChapter N,   |
    |                        StoryFlag, Reputation)    |
@@ -56,16 +56,16 @@ The Shop System serves the fantasy of **strategic preparation**. Before heading 
    1. Player selects an item from the shop grid
    2. Item detail panel opens showing: item name, icon, stats, price, and comparison to currently equipped item in that slot (for the active character)
    3. Player confirms purchase
-   4. If `TotalGold >= Price`, gold is deducted, item is added to `PartyInventory`
+   4. If `TotalGold >= Price`, gold is deducted, item is added to `InventoryManager`
    5. If `TotalGold < Price`, purchase is rejected with "Not enough gold" feedback
    6. If item has `StockLimit > 0`, the stock count decreases by 1
 
 6. **Sell Flow**:
    1. Player switches to "Sell" tab in the shop UI
-   2. Shows all items in `PartyInventory` (excluding key items and equipped items)
+   2. Shows all items in `InventoryManager` (excluding key items and equipped items)
    3. Sell price is always `floor(BuyPrice × 0.5)` — items sell for half their purchase price
    4. Player selects items to sell, confirms
-   5. Gold is added to `TotalGold`, items are removed from `PartyInventory`
+   5. Gold is added to `TotalGold`, items are removed from `InventoryManager`
    6. **Equipped items cannot be sold** — the player must unequip them first
 
 7. **Item Comparison on Purchase**: When the player hovers/selects a purchasable item, the shop UI shows:
@@ -178,10 +178,10 @@ The Shop System serves the fantasy of **strategic preparation**. Before heading 
 
 | System | Direction | Nature | Interface |
 |--------|-----------|--------|-----------|
-| Inventory & Equipment | Reads + Writes | Hard — reads inventory for sell mode, writes purchased items | `PartyInventory.GetItems()`, `PartyInventory.AddItem()`, `PartyInventory.RemoveItem()` |
-| Item Database | Reads | Hard — cannot price or display items without definitions | `ItemEquipmentSO` references |
+| Inventory & Equipment | Reads + Writes | Hard — reads inventory for sell mode, writes purchased items | `InventoryManager.GetItems()`, `InventoryManager.AddItem()`, `InventoryManager.RemoveItem()` |
+| Item Database | Reads | Hard — cannot price or display items without definitions | `ItemEquipment` references |
 | Character Data | Reads | Hard — reads equipped items for comparison | `CharacterData.GetEquippedItem(slot)` |
-| Loot & Drop / Party Inventory | Reads + Writes | Hard — reads/writes party gold balance | `PartyInventory.TotalGold` property |
+| Loot & Drop / Party Inventory | Reads + Writes | Hard — reads/writes party gold balance | `InventoryManager.TotalGold` property |
 | Dialogue System | Called by | Hard — shop opens from dialogue action node | `ShopOpen` dialogue action |
 | Chapter State System | Reads | Soft — reads chapter flags for inventory unlocks | `ChapterStateSystem.GetFlag()` |
 | Save / Load | Serialized | Hard — persists gold, stock levels, purchase counts | JSON fields: `partyGold`, `shopStockLevels`, `purchaseCounts` |

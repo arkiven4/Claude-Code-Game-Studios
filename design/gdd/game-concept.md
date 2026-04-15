@@ -83,17 +83,28 @@ her, the player understands her completely. The killing feels like mercy and los
 simultaneously.*
 
 ### Party Members
-Multiple characters per role, each with a unique skill set:
+Multiple characters across diverse roles, each with a unique skill set and backstory.
+Every role has at least one male and one female option. Characters within the same
+role are not interchangeable — skill set composition makes party building genuinely
+strategic.
 
-| Role | Purpose | Notes |
-| ---- | ---- | ---- |
-| **Support** | Buffs, crowd control | Each support character has a different buff philosophy |
-| **Healer** | Sustain, revival | Skill variance determines heal style (burst vs. regen) |
-| **Tanker** | Aggro, damage absorption | Different stances and counter mechanics |
-| **Archer** | Ranged DPS, positioning | Example: Archer A (skills A, B, C) vs. Archer B (skills B, D, F) |
+| Role | Character | Gender | Join Chapter | Notes |
+| ---- | ---- | ---- | ---- | ---- |
+| **Support** | Mireille | Female | Ch 5 | Bard-style buffers; morale and tempo control |
+| **Support** | Dorian | Male | Ch 8 | Debuff/crowd-control specialist; former Church tactician |
+| **Healer** | Silas | Male | Ch 3 | Field healer; radical equality; lost his daughter |
+| **Healer** | Ione | Female | Ch 6 | Nature healer; half-dryad; restorative AoE focus |
+| **Tanker** | Kaelen | Male | Ch 4 | Defected Church guard; shield-wall endurance |
+| **Tanker** | Brighid | Female | Ch 8 | Werebear; shapeshift aggro; primal damage absorption |
+| **Archer** | Lyna | Female | Ch 3 | Border Guard marksman; tactical area denial |
+| **Archer** | Corin | Male | Ch 9 | Crossbow trapsman; witch-hunt survivor; close-range specialist |
+| **Mage** | Vesper | Female | Ch 5 | Essence manipulator; Church experiment escapee; AoE burst |
+| **Mage** | Tariq | Male | Ch 8 | Self-taught hedge wizard; elemental utility; ritual magic |
+| **Swordsman** | Ressa | Female | Ch 7 | Kaelen's former subordinate; Church blade discipline |
+| **Swordsman** | Gale | Male | Ch 6 | Wandering duelist; speed-focused melee; comic relief |
 
-Characters within the same role are not interchangeable — skill set composition
-makes party building genuinely strategic.
+**Active party**: Evelyn + Evan + 2 chosen companions (swap freely at hubs and camps).
+Each role offers distinct tactical identity — no two characters play the same way.
 
 ---
 
@@ -192,17 +203,24 @@ narrative beat that answers one question and opens another.
 
 ## Story Structure
 
-| Chapter | POV | Narrative Purpose |
-| ---- | ---- | ---- |
-| **Prologue** | The Witch | Player bonds with the Witch; witnesses her loss; understands her grief |
-| **Chapter 1** | Evelyn & Evan | Establish the duo; first encounter with Church forces; party begins forming |
-| **Chapter 2** | Evelyn & Evan | World expands; party grows; Church's true nature revealed |
-| **Chapter 3** | Evelyn & Evan | Stakes escalate; Witch's shadow looms; bonds deepen |
-| **Chapter 4 (Final)** | Evelyn & Evan | Confrontation with the Witch; Evelyn's fate sealed; Evan survives alone |
+| Chapter | POV | Narrative Purpose | Playtime |
+| ---- | ---- | ---- | ---- |
+| **Evelyn Prologue** | Evelyn (Human → Cat → Captured) | Disrespects Cat Beast territory → cursed → captured by Church → vampire experiment succeeds → half-cat nature lets her control it | 15–20 min |
+| **Ch 1: The Hunter** | Evan | Evan hunts for the Church; Church appears righteous; dramatic irony — player knows more than Evan | 30–40 min |
+| **Ch 2: The Secret Guardian** | Evelyn & Evan | Evelyn's double life as village guardian; day/night cycle; blacksmith bond forms | 40–50 min |
+| **Ch 3: First Encounter** | Evelyn & Evan | Evelyn vs. Evan boss fight; Evelyn spares him; mercy plants doubt in Evan | 45–55 min |
+| **Ch 4: The Truth** | Evelyn & Evan | BIG REVEAL: Church creates magical creatures + origin of Evelyn's curse → alliance formed | 60–75 min |
+| **Ch 5: Bonds** | Party | Party joins; festival hub; side quests for memories; Church facility raid | 90–120 min |
+| **Ch 6: The Corruption Spreads** | Evelyn & Evan | Church retaliates; Witch's shadow appears; first hint of the coming storm | 60–75 min |
+| **Ch 7: The Fall of the Cross** | Evelyn & Evan | Church stronghold assault; Bishop boss; Church defeated; Witch records found | 90–110 min |
+| **Witch Prologue** | The Witch | Player IS the Witch's grief; Mage's execution; the vow; before final encounter | 35–45 min |
+| **Ch 8: The Witch's Shadow** | Party | Bonding + side quests; Witch campaign begins; first Witch encounter = retreat | 100–120 min |
+| **Ch 9: What We Fight For** | Evelyn & Evan | Sanctuary discovery; emotional peak; what's at stake becomes personal | 80–100 min |
+| **Ch 10: The Last Hunt** | Evelyn & Evan | Final prep; final village hub; the weight builds; last festival before the end | 90–110 min |
+| **Ch 11: Vanishing** | Evelyn & Evan | Witch boss fight; mercy kill; Evelyn vanishes when all magical creatures disappear | 120–140 min |
+| **Epilogue: The World After** | Evan | Walking simulator; no combat; Evan alone after all magical creatures vanish; credits on silence | 20–30 min |
 
-*The Witch's goal (remove all magical creatures) and the game's ending (all magical
-creatures including Evelyn vanish) are the same event. The player kills the Witch to
-stop her — and then it happens anyway.*
+**Total estimated playtime**: ~10–13 hours main path
 
 ---
 

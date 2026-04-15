@@ -7,7 +7,7 @@
 
 ## Overview
 
-The Enemy AI System controls all non-player combatant behavior — from basic grunts that attack the nearest target to multi-phase bosses with scripted abilities, enrage timers, and adaptive targeting. Each enemy is defined by an `EnemyDataSO` Resource specifying its stats, abilities, behavior profile, and phase transitions. At runtime, a behavior tree selects actions each frame based on the combat state, cooldown availability, and target positions. The system calls Skill Execution to use enemy skills, Hit Detection to acquire targets, and Health & Damage to resolve outcomes. Enemy AI is designed to feel threatening but readable — telegraphs give the player time to react, and enemy behavior follows consistent patterns that reward observation and adaptation.
+The Enemy AI System controls all non-player combatant behavior — from basic grunts that attack the nearest target to multi-phase bosses with scripted abilities, enrage timers, and adaptive targeting. Each enemy is defined by an `EnemyData` Resource specifying its stats, abilities, behavior profile, and phase transitions. At runtime, a behavior tree selects actions each frame based on the combat state, cooldown availability, and target positions. The system calls Skill Execution to use enemy skills, Hit Detection to acquire targets, and Health & Damage to resolve outcomes. Enemy AI is designed to feel threatening but readable — telegraphs give the player time to react, and enemy behavior follows consistent patterns that reward observation and adaptation.
 
 ## Player Fantasy
 
@@ -15,11 +15,11 @@ Enemy AI System serves the fantasy of **smart opponents that you can outplay**. 
 
 **Reference model**: Dark Souls' telegraphed boss attacks (clear wind-ups, punishable recoveries), Final Fantasy VII Remake's pressured/staggered system (enemies have exploitable weaknesses), and Hollow Knight's boss pattern memorization (repetition breeds mastery).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
-1. **EnemyDataSO Resource**: Every enemy type has one `EnemyDataSO` asset:
+1. **EnemyData Resource**: Every enemy type has one `EnemyData` asset:
 
    | Field | Type | Description |
    |-------|------|-------------|
@@ -53,7 +53,7 @@ Enemy AI System serves the fantasy of **smart opponents that you can outplay**. 
 
    | Field | Type | Description |
    |-------|------|-------------|
-   | `SkillRef` | SkillDataSO reference | The skill definition (reuses player skill types) |
+   | `SkillRef` | SkillData reference | The skill definition (reuses player skill types) |
    | `Cooldown` | float (seconds) | Time between uses |
    | `Weight` | float | Priority weight in skill selection (higher = more likely) |
    | `MinRange` | float | Minimum distance to target for this skill to be usable |
@@ -106,7 +106,7 @@ Enemy AI System serves the fantasy of **smart opponents that you can outplay**. 
    - Enemies do not collide with each other — they use simple separation steering to avoid stacking
 
 10. **Add Summoning**: Some bosses can summon additional enemies (adds) during combat:
-    - Summoned enemies have their own `EnemyDataSO` entries
+    - Summoned enemies have their own `EnemyData` entries
     - Adds are limited per encounter (max 4 active adds at once)
     - Adds use `Aggressive` behavior profile by default
     - When the boss dies, all remaining adds die instantly
@@ -203,7 +203,7 @@ Boss Inquisitor at 60% HP, player Tanker at 40% HP (below 50% threshold):
 | Enemy's only available skill is on cooldown | Enemy moves toward target (closing distance) or uses basic attack if available | Enemies always do something, never stand idle |
 | Boss phase transition triggered while player skill is mid-air | Boss becomes invincible; player skill hits but deals 0 damage; cooldown is consumed | Invincibility is absolute; player must time around phase transitions |
 | Summoned add spawns outside the combat arena | Clamp spawn position to arena bounds; if impossible, spawn at boss position | Prevents adds from spawning in unreachable locations |
-| Enemy tries to use a skill but the referenced SkillDataSO is null | Log error; skip this skill; select next highest-scoring skill | Data error must not crash or freeze |
+| Enemy tries to use a skill but the referenced SkillData is null | Log error; skip this skill; select next highest-scoring skill | Data error must not crash or freeze |
 | Two enemies target the same party member simultaneously | Both attacks resolve independently; party member takes damage from both | No artificial coordination limit between enemies |
 | Boss enrage triggers during a party-wide player skill | Enrage transition plays; boss becomes invincible for 2s; player skill hits remaining enemies normally | Enrage is a state change, not an interrupt |
 | Enemy movement blocked by environment obstacle | Enemy pathfinds around obstacle using simple steering; if truly blocked, enemy attacks from current position | Enemies should not get stuck |

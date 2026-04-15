@@ -1,0 +1,139 @@
+[gd_scene format=3 uid="uid://cafqgpb10v3h8"]
+
+[ext_resource type="Script" uid="uid://bn40notonv1a7" path="res://src/ui/combat_hud.gd" id="1_hud_script"]
+[ext_resource type="Script" uid="uid://bqdn787r7kbrl" path="res://src/ui/skill_slot_ui.gd" id="2_skill_slot"]
+
+[node name="CombatHUD" type="CanvasLayer" unique_id=830784193]
+script = ExtResource("1_hud_script")
+
+[node name="MainControl" type="Control" parent="." unique_id=391306688]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ActivePortrait" type="TextureRect" parent="MainControl" unique_id=1950080257]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 120.0
+offset_bottom = 120.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainControl" unique_id=2007347744]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 20.0
+offset_right = 430.0
+offset_bottom = 120.0
+theme_override_constants/separation = 5
+
+[node name="ActiveHPBar" type="ProgressBar" parent="MainControl/VBoxContainer" unique_id=448188933]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="ActiveShieldBar" type="ProgressBar" parent="MainControl/VBoxContainer" unique_id=842326445]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+step = 1.0
+value = 50.0
+show_percentage = false
+
+[node name="ActiveMPBar" type="ProgressBar" parent="MainControl/VBoxContainer" unique_id=1088558276]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="StatusEffectsRow" type="HBoxContainer" parent="MainControl/VBoxContainer" unique_id=223635011]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="InactivePortrait" type="TextureRect" parent="MainControl" unique_id=2011415023]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 0
+offset_left = 20.0
+offset_top = 130.0
+offset_right = 80.0
+offset_bottom = 190.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="InactiveHPBar" type="ProgressBar" parent="MainControl" unique_id=436200533]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 15)
+layout_mode = 0
+offset_left = 90.0
+offset_top = 130.0
+offset_right = 240.0
+offset_bottom = 145.0
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="SwitchCooldownLabel" type="Label" parent="MainControl" unique_id=351849649]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 20.0
+offset_top = 195.0
+offset_right = 80.0
+offset_bottom = 221.0
+horizontal_alignment = 1
+
+[node name="SkillBar" type="HBoxContainer" parent="MainControl" unique_id=835991815]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -140.0
+offset_top = -80.0
+offset_right = 140.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 10
+
+[node name="SkillSlot0" type="Control" parent="MainControl/SkillBar" unique_id=168635417]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+script = ExtResource("2_skill_slot")
+key_label_text = "1"
+
+[node name="SkillSlot1" type="Control" parent="MainControl/SkillBar" unique_id=370618439]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+script = ExtResource("2_skill_slot")
+slot_index = 1
+key_label_text = "2"
+
+[node name="SkillSlot2" type="Control" parent="MainControl/SkillBar" unique_id=254132171]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+script = ExtResource("2_skill_slot")
+slot_index = 2
+key_label_text = "3"
+
+[node name="SkillSlot3" type="Control" parent="MainControl/SkillBar" unique_id=321094890]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+script = ExtResource("2_skill_slot")
+slot_index = 3
+key_label_text = "4"

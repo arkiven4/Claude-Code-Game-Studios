@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="CharacterData" format=3 uid="uid://char_lyna"]
+
+[ext_resource type="Script" uid="uid://cd1p7b1fjqu6o" path="res://src/core/character_data.gd" id="1_char"]
+[ext_resource type="Resource" uid="uid://char_lyna_basic" path="res://assets/data/skills/bow_power_shot.tres" id="2_basic"]
+[ext_resource type="Resource" uid="uid://char_lyna_skill1" path="res://assets/data/skills/adopted/bow_double_shot.tres" id="3_skill1"]
+[ext_resource type="Resource" uid="uid://char_lyna_skill2" path="res://assets/data/skills/adopted/bow_lethal_shot.tres" id="4_skill2"]
+[ext_resource type="Resource" uid="uid://char_lyna_skill3" path="res://assets/data/skills/adopted/bow_entangle.tres" id="5_skill3"]
+[ext_resource type="Resource" uid="uid://char_lyna_skill4" path="res://assets/data/skills/adopted/bow_archer_s_soul.tres" id="6_skill4"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="7_script"]
+
+[resource]
+script = ExtResource("1_char")
+character_class = 6
+display_name = "Lyna"
+role_description = "The party's markswoman. High-precision ranged physical damage."
+is_main_character = false
+base_max_hp = 260
+base_atk = 58
+base_def = 22
+base_spd = 1.3
+base_max_mp = 80
+base_crit = 0.15
+hp_per_level = 15
+atk_per_level = 4
+def_per_level = 1
+mp_per_level = 3
+skill_slots = Array[ExtResource("7_script")]([ExtResource("3_skill1"), ExtResource("4_skill2"), ExtResource("5_skill3"), ExtResource("6_skill4")])
+basic_attack = ExtResource("2_basic")

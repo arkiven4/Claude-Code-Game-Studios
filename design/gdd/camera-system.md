@@ -1,6 +1,6 @@
 # Camera System
 
-> **Status**: Designed
+> **Status**: Approved
 > **Author**: Automated design session 2026-04-04
 > **Last Updated**: 2026-04-04
 > **Implements Pillar**: Action-First Combat, Cinematic Presentation

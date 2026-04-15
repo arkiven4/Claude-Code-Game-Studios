@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://sword_shield_stun"]
+
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+
+[sub_resource type="Resource" id="Tier1"]
+script = ExtResource("2_tier")
+effect_value = 1.0
+duration = 1.0
+tier_description = "Stuns enemy for 1s."
+
+[sub_resource type="Resource" id="Tier2"]
+script = ExtResource("2_tier")
+effect_value = 1.2
+duration = 2.0
+tier_description = "Stuns enemy for 2s."
+
+[sub_resource type="Resource" id="Tier3"]
+script = ExtResource("2_tier")
+effect_value = 1.5
+duration = 3.0
+tier_description = "Stuns enemy for 3s."
+
+[resource]
+script = ExtResource("1_skill")
+skill_type = 1
+display_name = "Shield Stun"
+skill_id = "sword_shield_stun"
+description = "Strikes with a Shield to Stun the enemy."
+mp_cost = 10
+base_cooldown = 6.0
+target_type = 0
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1"), SubResource("Tier2"), SubResource("Tier3")])

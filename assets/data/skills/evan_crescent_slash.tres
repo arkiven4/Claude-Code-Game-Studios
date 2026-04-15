@@ -1,10 +1,9 @@
 [gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://laka8qq7htvt"]
 
-[ext_resource type="Script" uid="uid://dambpep7g2e0j" path="res://src/core/skill_effect_override.gd" id="1_85uib"]
 [ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://dambpep7g2e0j" path="res://src/core/skill_effect_override.gd" id="2_85uib"]
 [ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
 [ext_resource type="Texture2D" uid="uid://u4x1udexcvsm" path="res://assets/art/ui/skill_icons/evan_crescent_slash_icon.png" id="icon"]
-[ext_resource type="Texture2D" uid="uid://nsqtfwt62m40" path="res://assets/art/vfx/skills/evan_crescent_slash_effect.png" id="vfx_eff"]
 
 [sub_resource type="Resource" id="Tier1_CrescentSlash"]
 script = ExtResource("2_tier")
@@ -31,4 +30,4 @@ target_type = 2
 area_radius = 3.0
 tiers = Array[ExtResource("2_tier")]([SubResource("Tier1_CrescentSlash"), SubResource("Tier2_CrescentSlash"), SubResource("Tier3_CrescentSlash")])
 base_damage = 60
-vfx_effect = ExtResource("vfx_eff")
+vfx_scale_multiplier = Vector3(2.5, 2.5, 2.5)

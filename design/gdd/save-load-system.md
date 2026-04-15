@@ -1,6 +1,6 @@
 # Save / Load System
 
-> **Status**: In Design
+> **Status**: Approved
 > **Author**: Design session 2026-04-04
 > **Last Updated**: 2026-04-04
 > **Implements Pillar**: Story First (narrative persistence)
@@ -37,13 +37,13 @@ they're afraid of losing progress. The save system says: "Keep playing. I've got
 auto-save is so reliable that players rarely think about manual saves, and loading
 returns them to the exact narrative moment with zero state corruption.
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
 1. **Two save files exist** on disk:
-   - `manual_save.bin` — the player's single manual save slot (overwritten each time they save)
-   - `auto_save.bin` — the auto-save file (overwritten automatically at designated triggers)
+   - `user://saves/manual_save.json` — the player's single manual save slot (overwritten each time they save)
+   - `user://saves/auto_save.json` — the auto-save file (overwritten automatically at designated triggers)
 
 2. **Save is only permitted outside of combat**. The system checks `CombatSystem.IsInCombat` before allowing a save. If in combat, save is blocked and a tooltip appears: "Cannot save during combat."
 
@@ -57,7 +57,7 @@ returns them to the exact narrative moment with zero state corruption.
 
 5. **Load** is triggered from the pause menu. The player selects "Load Game" — the system presents a choice between the manual save and auto-save. Selecting either immediately loads that file.
 
-6. **Serialized state** — every save file contains a `SaveData` binary structure with these sections:
+6. **Serialized state** — every save file contains a `SaveData` JSON object with these sections:
 
    | Section | Data Serialized | Source System |
    |---------|----------------|---------------|
@@ -75,14 +75,22 @@ returns them to the exact narrative moment with zero state corruption.
 
 8. **Save file integrity** — every save file includes a CRC32 checksum appended to the binary data. On load, the checksum is verified. If it doesn't match, the save is rejected with: "Save file is corrupted and cannot be loaded."
 
-9. **No system may serialize state independently**. All save/load operations must go through the Save / Load System's `ISaveable` interface:
-   ```csharp
-   public interface ISaveable {
-       string SaveKey { get; } // Unique identifier for this system's data in the save file
-       byte[] Serialize();     // Convert state to binary
-       void Deserialize(byte[] data); // Restore state from binary
-   }
+9. **No system may serialize state independently**. All save/load operations must go through
+   the Save / Load System using the Saveable Protocol (GDScript — implement these methods on
+   any node that saves state):
+   ```gdscript
+   # Saveable Protocol: implement these methods on any Node that participates in save/load
+   # var save_key: StringName  # Unique identifier for this system's data in the save file
+   # func serialize() -> Dictionary  # Return current state as a Dictionary
+   # func deserialize(data: Dictionary) -> void  # Restore state from a Dictionary
    ```
+   The Save / Load System discovers saveable nodes by scanning the `"saveable"` group.
+   Each node registers itself with `add_to_group("saveable")` in `_ready()`.
+
+   > **Godot serialization**: Use `JSON.stringify(data)` / `JSON.parse_string(text)` for
+   > human-readable saves, or `FileAccess.store_var(data, false)` / `FileAccess.get_var(false)`
+   > for binary. Avoid `ResourceSaver` for save data — it serializes scene paths which break
+   > on patches.
 
 10. **Save operations are synchronous writes** to disk. The game pauses during save (1-2 seconds max). A "Saving..." overlay is displayed.
 
@@ -108,7 +116,7 @@ The Save / Load System has four internal states:
        │ Player requests save
        ▼
 ┌─────────────┐
-│   SAVING    │ ◄── Collecting ISaveable data, serializing, writing to disk
+│   SAVING    │ ◄── Collecting Saveable data, serializing, writing to disk
 └──────┬──────┘
        │ Write complete + checksum verified
        ▼
@@ -148,19 +156,19 @@ The Save / Load System has four internal states:
 
 | System | Interaction Type | Details |
 |--------|-----------------|---------|
-| **Character Data** | Read on save, write on load | Save reads party member configs; load reconstructs `PartyMemberState` from CharacterDataSO references |
-| **Item Database** | Read on save, write on load | Save reads item definitions; load reconstructs `EquipmentInstance` from ItemEquipmentSO references |
-| **Skill Database** | Read on save, write on load | Save reads skill configs; load reconstructs `SkillRuntimeState` from SkillDataSO references |
-| **Inventory & Equipment** | `ISaveable` provider | Implements `ISaveable` to serialize inventory contents, equipped items, and gold |
-| **Character Progression** | `ISaveable` provider | Implements `ISaveable` to serialize character levels, XP, and stat growth state |
-| **Health & Damage** | `ISaveable` provider | Implements `ISaveable` to serialize current HP/MP per character (not the formula, just the values) |
-| **Status Effects** | `ISaveable` provider | Implements `ISaveable` to serialize active buffs/debuffs (type, duration, remaining turns) |
-| **Chapter State** | `ISaveable` provider | Implements `ISaveable` to serialize current chapter, story flags, visited locations |
+| **Character Data** | Read on save, write on load | Save reads party member configs; load reconstructs `PartyMemberState` from CharacterData references |
+| **Item Database** | Read on save, write on load | Save reads item definitions; load reconstructs `EquipmentInstance` from ItemEquipment references |
+| **Skill Database** | Read on save, write on load | Save reads skill configs; load reconstructs `SkillRuntimeState` from SkillData references |
+| **Inventory & Equipment** | Saveable Protocol provider | Implements serialize/deserialize for inventory contents, equipped items, and gold |
+| **Character Progression** | Saveable Protocol provider | Implements Saveable Protocol to serialize character levels, XP, and stat growth state |
+| **Health & Damage** | Saveable Protocol provider | Implements Saveable Protocol to serialize current HP/MP per character (not the formula, just the values) |
+| **Status Effects** | Saveable Protocol provider | Implements Saveable Protocol to serialize active buffs/debuffs (type, duration, remaining turns) |
+| **Chapter State** | Saveable Protocol provider | Implements Saveable Protocol to serialize current chapter, story flags, visited locations |
 | **Scene Management** | Coordinate with load | Scene Management destroys current scene and loads the target scene before state restoration begins |
 | **Combat System** | Blocking gate | Save System queries `IsInCombat` to block saves during encounters |
 | **Cutscene System** | Blocking gate | Save System queries `IsPlaying` to block saves during cutscenes |
 | **Narrative Choice** | Blocking gate | Save System queries `IsPresentingIrreversibleChoice` to block saves before critical choices |
-| **Settings System** | `ISaveable` provider | Implements `ISaveable` to serialize player preferences (audio, display, input) |
+| **Settings System** | Saveable Protocol provider | Implements Saveable Protocol to serialize player preferences (audio, display, input) |
 | **Dialogue System** | Read on load | After load, Dialogue System checks ChapterState to determine which dialogue branches are unlocked |
 
 ## Formulas
@@ -174,7 +182,7 @@ sizing and performance constraints:
 | `SaveDuration` | Time to write save to disk | `< 200ms` (synchronous, must not block frame) |
 | `LoadDuration` | Time from load trigger to gameplay resumption | `< 3 seconds` (scene load + state restoration) |
 | `MaxSaveFiles` | Number of save files on disk | `2` (1 manual + 1 auto-save) |
-| `SaveDirectory` | Platform-specific save path | `Application.persistentDataPath / "saves/"` |
+| `SaveDirectory` | Platform-specific save path | `user://saves/` (Godot resolves this to the OS user data dir via `OS.get_user_data_dir()`) |
 | `CRC32Check` | Integrity verification | `CRC32.Compute(data) == storedChecksum` |
 | `SaveVersionCheck` | Compatibility check | `readVersion == currentSaveVersion` |
 
@@ -224,7 +232,7 @@ sizing and performance constraints:
 ## Dependencies
 
 The Save / Load System is a **foundation root** — it has no upstream dependencies on
-other gameplay systems. It defines the `ISaveable` interface that all other systems
+other gameplay systems. It defines the Saveable Protocol that all other systems
 implement.
 
 **Depended on by** (directly or indirectly):

@@ -24,6 +24,7 @@ var _orbit_input: Vector2 = Vector2.ZERO   ## From keyboard/stick (rate, per sec
 var _mouse_delta: Vector2 = Vector2.ZERO   ## Accumulated mouse motion since last physics tick
 
 func _ready() -> void:
+	add_to_group("MainCamera")
 	if encounter_manager:
 		encounter_manager.combat_started.connect(_on_combat_started)
 		encounter_manager.combat_ended.connect(_on_combat_ended)
@@ -31,11 +32,20 @@ func _ready() -> void:
 		global_position = follow_target.global_position
 	if camera:
 		camera.make_current()
+	# Capture mouse on start for camera orbit — released via ESC
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		_mouse_delta += event.relative
+
+	## Toggle mouse capture with ESC — lets player click HUD / UI
+	if event is InputEventKey and event.pressed:
+		if event.keycode == KEY_ESCAPE:
+			if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			else:
+				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _physics_process(delta: float) -> void:
 	# Smooth follow
@@ -69,8 +79,28 @@ func on_camera_orbit(dir: Vector2) -> void:
 func set_mode(mode: CameraMode) -> void:
 	_mode = mode
 
+## Triggers a screen shake by offsetting the Camera3D node with noise.
+func shake(intensity: float, duration: float) -> void:
+	if not camera: return
+	
+	var shake_tween := create_tween()
+	var original_pos := camera.position
+	
+	# Faster frequency for combat impacts: 4 positions over the duration
+	var step := duration / 4.0
+	for i in range(4):
+		var offset := Vector3(randf_range(-intensity, intensity), randf_range(-intensity, intensity), 0)
+		shake_tween.tween_property(camera, "position", original_pos + offset, step)
+	
+	# Smooth return to center
+	shake_tween.tween_property(camera, "position", original_pos, step)
+
 func _on_combat_started() -> void:
 	set_mode(CameraMode.COMBAT)
+	# Re-capture mouse when combat starts
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _on_combat_ended() -> void:
 	set_mode(CameraMode.EXPLORATION)
+	# Release mouse when combat ends so player can interact with overlay
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE

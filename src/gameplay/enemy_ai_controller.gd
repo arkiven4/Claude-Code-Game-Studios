@@ -99,6 +99,7 @@ func _debug_combat(msg: String) -> void:
 # 4. Handle dynamic obstacles and path recalculation
 
 @onready var _hitbox: HitboxComponent = get_node_or_null("HitboxComponent")
+@onready var _nav_agent: NavigationAgent3D = get_node_or_null("NavigationAgent3D")
 
 ## Current shield value — exposed for WorldHPBar to read.
 var shield_value: int = 0
@@ -239,7 +240,7 @@ func _calculate_max_skill_range() -> float:
 func _on_hitbox_hit(hurtbox: HurtboxComponent) -> void:
 	if not _hitbox or not _hitbox._current_skill: return
 
-	var target_state := hurtbox.parent_node as PartyMemberState
+	var target_state: PartyMemberState = hurtbox.parent_node as PartyMemberState
 	if not target_state or not target_state.is_alive: return
 
 	# Damage is already delivered by hurtbox.take_hit() in HitboxComponent._physics_process.
@@ -331,7 +332,7 @@ func _physics_process(delta: float) -> void:
 ## Priority 2: When in range, attack
 ## Stops chasing if 30m from spawn point.
 func _update_combat_state() -> void:
-	var target_state := _get_target_state()
+	var target_state: PartyMemberState = _get_target_state()
 
 	# If no current target, try to find one in aggro range
 	if not target_state or not target_state.is_alive:
@@ -421,12 +422,22 @@ func _behavior_chase_target(_delta: float) -> void:
 		look_at(global_position + Vector3(dir_face.x, 0, dir_face.z), Vector3.UP)
 		return
 
-	var dir: Vector3 = (_current_target.global_position - global_position).normalized()
+	var dir: Vector3
+	if _nav_agent:
+		_nav_agent.target_position = _current_target.global_position
+		var next_path_pos := _nav_agent.get_next_path_position()
+		dir = (next_path_pos - global_position).normalized()
+	else:
+		dir = (_current_target.global_position - global_position).normalized()
+
 	var effective_speed: float = move_speed * _get_movement_multiplier()
 	var target_vel := dir * effective_speed
 	velocity.x = target_vel.x
 	velocity.z = target_vel.z
-	look_at(global_position + Vector3(dir.x, 0, dir.z), Vector3.UP)
+	
+	# Face movement direction if moving
+	if dir.length_squared() > 0.001:
+		look_at(global_position + Vector3(dir.x, 0, dir.z), Vector3.UP)
 
 func _behavior_attack_target() -> void:
 	# Stop movement when within stop_distance (0.5 buffer inside attack_range ensures hitbox connects)
@@ -458,6 +469,13 @@ func take_damage(data) -> void:
 	if _is_invincible or _has_effect_category(StatusEffect.EffectCategory.INVINCIBILITY): return
 
 	var amount: int = int(data.get("damage", 0)) if data is Dictionary else int(data)
+	var was_crit: bool = data.get("was_crit", false) if data is Dictionary else false
+
+	# Apply Juiciness
+	if was_crit:
+		CombatFeedbackManager.apply_heavy_hit(get_tree(), self)
+	else:
+		CombatFeedbackManager.apply_light_hit(get_tree(), self)
 	var final_amount: int = int(max(HealthDamageSystem.MINIMUM_DAMAGE, amount))
 
 	## Shield absorbs damage first
@@ -568,7 +586,7 @@ func _make_decision() -> void:
 		_debug_ai("[AI Decision] %s: SKIPPED — stunned/action denied" % name)
 		return
 
-	var target_state := _get_target_state()
+	var target_state: PartyMemberState = _get_target_state()
 	if not target_state or not target_state.is_alive:
 		return
 
@@ -620,7 +638,7 @@ func _select_target() -> Node3D:
 			EnemyData.EnemyBehaviorProfile.TACTICAL:
 				score = state.get_effective_def()
 			EnemyData.EnemyBehaviorProfile.DEFENSIVE:
-				score = 1.0 - hp_ratio # Targets highest threat (approx by low HP)
+				score = hp_ratio # Targets highest HP (peeling/protecting)
 				best_score = -INF # Invert for max
 
 		if enemy_data.behavior_profile == EnemyData.EnemyBehaviorProfile.DEFENSIVE:

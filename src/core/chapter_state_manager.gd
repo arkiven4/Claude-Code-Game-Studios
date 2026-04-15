@@ -18,6 +18,12 @@ var visited_locations: Array[String] = []
 var completed_encounters: Array[int] = []
 var completed_story_beats: Array[int] = []
 
+func _ready() -> void:
+	# Register with SaveManager if it exists in the scene tree
+	var save_manager := get_tree().get_first_node_in_group("SaveManager") as SaveManager
+	if save_manager:
+		save_manager.register_saveable(self)
+
 func set_chapter(chapter_id: int) -> void:
 	if current_chapter_id == chapter_id: return
 	current_chapter_id = chapter_id

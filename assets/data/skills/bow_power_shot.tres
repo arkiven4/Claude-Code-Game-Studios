@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://bow_power_shot"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[sub_resource type="Resource" id="Tier1"]
+script = ExtResource("2_tier")
+effect_value = 1.3
+tier_description = "Powerful arrow damage."
+[resource]
+script = ExtResource("1_skill")
+skill_type = 0
+display_name = "Power Shot"
+skill_id = "bow_power_shot"
+description = "Fires a powerful arrow at the target."
+mp_cost = 5
+base_cooldown = 0.5
+target_type = 0
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+base_damage = 40

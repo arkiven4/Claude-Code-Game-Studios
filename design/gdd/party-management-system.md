@@ -1,6 +1,6 @@
 # Party Management System
 
-> **Status**: Designed
+> **Status**: Approved
 > **Author**: Design session 2026-04-11 (interactive redesign)
 > **Last Updated**: 2026-04-11
 > **Implements Pillar**: The Party Is the Game
@@ -15,7 +15,7 @@ Party Management serves the fantasy of **caring for your companions**. Between c
 
 **Reference model**: Final Fantasy X's Sphere Grid (clear progression path), Tales of Berseria's party status screen (portrait-forward, story-oriented), and Fire Emblem's support conversations (character identity matters as much as numbers).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 

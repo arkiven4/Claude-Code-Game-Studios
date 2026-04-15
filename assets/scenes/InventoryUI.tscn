@@ -1,0 +1,104 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/ui/inventory_ui.gd" id="1_inv_script"]
+
+[node name="InventoryUI" type="CanvasLayer" node_paths=PackedStringArray("item_list", "character_selector", "transfer_target_selector", "transfer_button", "transfer_all_button", "equip_button", "unequip_button")]
+script = ExtResource("1_inv_script")
+item_list = NodePath("MainControl/Panel/VBox/ItemList")
+character_selector = NodePath("MainControl/Panel/VBox/Header/CharacterSelector")
+transfer_target_selector = NodePath("MainControl/Panel/VBox/Footer/TransferTargetSelector")
+transfer_button = NodePath("MainControl/Panel/VBox/Footer/TransferButton")
+transfer_all_button = NodePath("MainControl/Panel/VBox/Footer/TransferAllButton")
+equip_button = NodePath("MainControl/Panel/VBox/Footer/EquipButton")
+unequip_button = NodePath("MainControl/Panel/VBox/Footer/UnequipButton")
+visible = false
+
+[node name="MainControl" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BackgroundDim" type="ColorRect" parent="MainControl"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.588235)
+
+[node name="Panel" type="PanelContainer" parent="MainControl"]
+custom_minimum_size = Vector2(800, 500)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -250.0
+offset_right = 400.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="MainControl/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Header" type="HBoxContainer" parent="MainControl/Panel/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MainControl/Panel/VBox/Header"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "INVENTORY"
+
+[node name="VSeparator" type="VSeparator" parent="MainControl/Panel/VBox/Header"]
+layout_mode = 2
+
+[node name="CharacterSelector" type="OptionButton" parent="MainControl/Panel/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ItemList" type="ItemList" parent="MainControl/Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+select_mode = 1
+item_count = 0
+fixed_icon_size = Vector2i(48, 48)
+
+[node name="Footer" type="HBoxContainer" parent="MainControl/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="EquipButton" type="Button" parent="MainControl/Panel/VBox/Footer"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+text = "EQUIP"
+
+[node name="UnequipButton" type="Button" parent="MainControl/Panel/VBox/Footer"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+text = "UNEQUIP"
+
+[node name="Spacer" type="Control" parent="MainControl/Panel/VBox/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TransferTargetSelector" type="OptionButton" parent="MainControl/Panel/VBox/Footer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="TransferButton" type="Button" parent="MainControl/Panel/VBox/Footer"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+text = "TRANSFER"
+
+[node name="TransferAllButton" type="Button" parent="MainControl/Panel/VBox/Footer"]
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+text = "TRANSFER ALL"

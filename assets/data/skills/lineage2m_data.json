@@ -1,0 +1,2426 @@
+[
+    {
+        "page": "Bow",
+        "name": "Lethal Shot",
+        "type": "Skill",
+        "description": "Fires a deadly arrow to attack the target.\n[Target: Single]",
+        "filename": "Bow_Skill_Lethal_Shot.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117110513-tLkHh8AWZHedHzt4jN9F0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Power Shot",
+        "type": "Skill",
+        "description": "Fires a powerful arrow to damage the enemy.\n[Target: Single]",
+        "filename": "Bow_Skill_Power_Shot.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117110524-c8pdBKYTmp2MO0eQbln30-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Rapid Fire",
+        "type": "Skill",
+        "description": "Strengthens physical abilities to increase All Speed.\n(Acceleration Lv.2)\n[Target: Self]",
+        "filename": "Bow_Skill_Rapid_Fire.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117110550-aWiJImXLz7qaiizBTj7K0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Double Shot",
+        "type": "Skill",
+        "description": "Pulls the Bow string with force for a chance to inflict double damage.\n[Target: Self]\n\n[Effect Details]\nDouble Chance +10%",
+        "filename": "Bow_Skill_Double_Shot.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117110532-vUJxLNkLY0qlyP56epxh0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Acrobatics",
+        "type": "Skill",
+        "description": "Moves more rapidly to better avoid ranged attacks.\n[Target: Self]\n\n[Effect Details]\nRanged Evasion +2",
+        "filename": "Bow_Skill_Acrobatics.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117110557-Sj5VEpsODeuDvoAXC9w30-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Critical Chance",
+        "type": "Skill",
+        "description": "Effectively aims at lethal weaknesses.\nIncreases Ranged Critical Hit.\n[Target: Self]\n\n[Effect Details]\nRanged Critical Hit +5%",
+        "filename": "Bow_Skill_Critical_Chance.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117110602-aU0kWn4fdrwszEnRXa2A0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Long Shot",
+        "type": "Skill",
+        "description": "Strengthens muscles that pull the bow string in order to shoot further away.\n[Target: Self]",
+        "filename": "Bow_Skill_Long_Shot.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117110608-Qpmxyeolp3rfs3sZIyps0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Eagle Eye",
+        "type": "Skill",
+        "description": "Enhances eyesight to gain sharp vision.\nIncreases Accuracy against ranged targets.\n[Target: Self]\n\n[Effect Details]\nRanged Accuracy +3",
+        "filename": "Bow_Skill_Eagle_Eye.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117110614-mjRebOczAAtyOCt4MSIP0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Reinforced: Eagle Eye",
+        "type": "Skill",
+        "description": "Enhances eyesight to gain sharp vision.\nIncreases Accuracy and Ranged Damage against ranged targets.\n[Target: Self]\n\n[Effect Details]\nRanged Accuracy +3\nRanged Damage +3",
+        "filename": "Bow_Skill_Reinforced_Eagle_Eye.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211122125059-dd1LJFRpBtIAog9butzM0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Scouter Stance",
+        "type": "Skill",
+        "description": "Sacrifices some damage to increase Cast Speed and Movement Speed.\n[Target: Self]\n\n[Effect Details]\nCast Speed +5%\nMovement Speed +5%",
+        "filename": "Bow_Skill_Scouter_Stance.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117110914-gnBhjLYghSb0JcOkHKAF0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Reinforced: Scouter Stance",
+        "type": "Skill",
+        "description": "Sacrifices some damage to greatly increase Cast Speed and Movement Speed.\n[Target: Self]\n\n[Effect Details]\nCast Speed +10%\nMovement Speed +10%",
+        "filename": "Bow_Skill_Reinforced_Scouter_Stance.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117110917-ydUbgBYuH2kjtwQgCvee0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Sniper Stance",
+        "type": "Skill",
+        "description": "Greatly increases aim. Accuracy is boosted while Movement is slowed.\n[Target: Self]\n\n[Effect Details]\nAccuracy +5\nMovement Speed -30%",
+        "filename": "Bow_Skill_Sniper_Stance.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117110957-hw7JykzlxZEF9ZoqAiQs0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Reinforced: Sniper Stance",
+        "type": "Skill",
+        "description": "Greatly increases aim. Accuracy is boosted while Movement is slowed.\n[Target: Self]\n\n[Effect Details]\nAccuracy +10\nMovement Speed -30%",
+        "filename": "Bow_Skill_Reinforced_Sniper_Stance.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111019-mbZ8fLg96jYUmAngoPId0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Ultimate Evasion",
+        "type": "Skill",
+        "description": "Focuses the mind to improve the ability to avoid Magic Attacks.\n[Target: Self]\n\n[Effect Details]\nRanged Evasion +10\nMagic Evasion +10",
+        "filename": "Bow_Skill_Ultimate_Evasion.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111005-jhjusbDC9cczv3yKV7q20-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Reinforced: Ultimate Evasion",
+        "type": "Skill",
+        "description": "Focuses the mind to improve the ability to avoid Magic Attacks and Melee Attacks.\n[Target: Self]\n\n[Effect Details]\nRanged Evasion +10\nMagic Evasion +10\nMelee Evasion +10",
+        "filename": "Bow_Skill_Reinforced_Ultimate_Evasion.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111005-jhjusbDC9cczv3yKV7q20-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Archer's Soul",
+        "type": "Skill",
+        "description": "Temporarily embraces the soul of a great archer to increase MP recovery amount.\n\n[Effect Details]\nMP Recovery (Tick) +5",
+        "filename": "Bow_Skill_Archer_s_Soul.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111026-d3vN2VzR52ETtp20kCwT0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Advanced Acrobatics",
+        "type": "Skill",
+        "description": "Enhances physical abilities for faster and more agile movement.\n\n[Effect Details]\nDEX +3",
+        "filename": "Bow_Skill_Advanced_Acrobatics.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111037-5Z7LoeBSEtxf18wL9Lkf0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Reinforced: Advanced Acrobatics",
+        "type": "Skill",
+        "description": "Enhances physical abilities for faster and more agile movement.\n\n[Effect Details]\nDEX +3\nAGI +3",
+        "filename": "Bow_Skill_Reinforced_Advanced_Acrobatics.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111037-5Z7LoeBSEtxf18wL9Lkf0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Real Target",
+        "type": "Skill",
+        "description": "Temporarily decreases the target's Ranged Evasion and Weapon Damage Resistance.\n[Target: Single]\n\n[Effect Details]\nRanged Evasion -50\nWeapon Damage Resistance -20",
+        "filename": "Bow_Skill_Real_Target.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111047-WJiPSlWF2P6LrzxnWxGL0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Reinforced: Real Target",
+        "type": "Skill",
+        "description": "Temporarily decreases the target's Ranged Evasion and Weapon Damage Resistance.\nSlows the target's movement.\n[Target: Single]\n\n[Effect Details]\nRanged Evasion -50\nWeapon Damage Resistance -20",
+        "filename": "Bow_Skill_Reinforced_Real_Target.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111047-WJiPSlWF2P6LrzxnWxGL0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Death Sting",
+        "type": "Skill",
+        "description": "Focuses Energy of Death to the arrow and enhances Lethal Shot.\nAttacks with greater damage and has a low chance of inflicting Silence.\n[Target: Self]",
+        "filename": "Bow_Skill_Death_Sting.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111054-hoGOMzOuM90xFbVXNWKW0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Entangle",
+        "type": "Skill",
+        "description": "Attacks the target with an arrow imbued with the spirit of trees.\nThe hit target is bound by tree roots that prevent all movement.\n[Target: Single]",
+        "filename": "Bow_Skill_Entangle.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111100-1wQq1sDdPN10RU6RXUTW0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Reinforced: Entangle",
+        "type": "Skill",
+        "description": "Attacks the target with an arrow imbued with the spirit of trees.\nThe hit target is bound by tree roots that prevent all movement for a prolonged duration.\n[Target: Single]",
+        "filename": "Bow_Skill_Reinforced_Entangle.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111122-CZrrVnQmsbm27mi7dVbP0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Mana Seeker",
+        "type": "Skill",
+        "description": "Attacks a target with Skills and drains mana flowing out from their wound on hit. Recovers MP upon killing the target.\n[Target: Self]\n\n[Effect Details]\nDrains MP on a Skill hit.\nRecovers MP upon defeating enemies.",
+        "filename": "Bow_Skill_Mana_Seeker.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111129-XOVDPqSZl3m3ILY6fqO00-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Last Shot",
+        "type": "Skill",
+        "description": "Amplifies concentration and murderous intent against the threat of death.\nAccuracy and Damage increase as the HP gets lower.",
+        "filename": "Bow_Skill_Last_Shot.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111211-le7aO2Zhn6oM2nmSbkNC0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Elimination",
+        "type": "Skill",
+        "description": "Focuses destructive energy to the arrow to deal great damage and has a chance to break Arcane Shield type effects.\nUpon successfully breaking the Shield type effects, the caster deals Extra Damage to the target and temporarily disables new Arcane Shield type effects.\n(Can also remove Celestial Shield upon learning Eraser.)\n[Target: Single]",
+        "filename": "Bow_Skill_Elimination.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111240-Jzx9I0TtK9GccCDcXRTA0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Reinforced: Elimination",
+        "type": "Skill",
+        "description": "Focuses destructive energy to the arrow to deal great damage and has a high chance to break Arcane Shield type effects.\nDeals Extra Damage to the target upon successfully breaking the Shield type effects.\n(Can also remove Celestial Shield upon learning Eraser.)\n[Target: Single]",
+        "filename": "Bow_Skill_Reinforced_Elimination.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111240-Jzx9I0TtK9GccCDcXRTA0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Pinpoint Shot",
+        "type": "Skill",
+        "description": "Deals Extra Damage by firing an arrow at the target's weak point debuffed by True Target.\n[Target: Self]",
+        "filename": "Bow_Skill_Pinpoint_Shot.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111443-8kyhVdBu2XeCe10pFKLf0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Reinforced: Pinpoint Shot",
+        "type": "Skill",
+        "description": "Deals Extra Damage by firing an arrow at the target's weak point debuffed by True Target.\nHas a low chance of lowering the target's Ranged Damage Reduction.\n[Target: Self]",
+        "filename": "Bow_Skill_Reinforced_Pinpoint_Shot.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111443-8kyhVdBu2XeCe10pFKLf0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Absolute Piercing",
+        "type": "Skill",
+        "description": "Concentrates to sharpen the mind and significantly increases Accuracy to fire a reinforced Power Shot.\nHas a chance to decrease CC Resistance and Ranged Damage Reduction of the hit target.\n[Target: Single]\n[Cannot be removed by Cure]\n\n[Effect Details]\nReinforces Power Shot.\nChance to decrease the hit enemy's CC Resistance -40 and Ranged Damage Reduction -25 for 3 seconds.",
+        "filename": "Bow_Skill_Absolute_Piercing.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111453-qCQ7MMaaMHKTv0pEy2Qm0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Grand Bow Mastery",
+        "type": "Skill",
+        "description": "Bow proficiency greatly increases to unleash the full potential.\n[Target: Self]\n\n[Effect Details]\nIgnore MP Recovery Penalty +10%\nFixed MP Recovery +3\nCC Accuracy +10%",
+        "filename": "Bow_Skill_Grand_Bow_Mastery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111505-2f8m7J8BJgBOjMvPCRLR0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Impact Shot",
+        "type": "Skill",
+        "description": "Fires an impactful shot to deal damage, with a chance to Stun the target.\n[Target: Single]",
+        "filename": "Bow_Skill_Impact_Shot.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111519-Dm1GXZ7zPYhrH5rxNTlA0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Quick Draw",
+        "type": "Skill",
+        "description": "Dramatically enhances physical ability to more rapidly shoot Lethal Shot and increases Skill Damage Boost at the same time.\n[Target: Self]\n\n[Effect Details]\nRapidly fires Lethal Shot.\nSkill Damage Boost +10%",
+        "filename": "Bow_Skill_Quick_Draw.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111533-GpY4WO7m5dqCE0ZaekFu0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Multi-Shot",
+        "type": "Skill",
+        "description": "Shoots multiple arrows to hit multiple enemies.\nHas a chance to reduce the hit targets' Ranged Critical Hit Resistance.\n[Target: Max 4 units, excludes friendly targets]",
+        "filename": "Bow_Skill_Multi_Shot.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111547-vJ4Q9sLTZCeBFztPuZWJ0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Hyper Draw",
+        "type": "Skill",
+        "description": "Enhances physical abilities to the fullest and shoots a reinforced Lethal Shot.\nReinforced Lethal Shot has greatly increased damage and accuracy.\n[Target: Self]\n\n[Effect Details]\nRapidly fires reinforced Lethal Shot.",
+        "filename": "Bow_Skill_Hyper_Draw.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111552-qvTd6lG4WA6tJUthW6iq0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Royal Bow Mastery",
+        "type": "Skill",
+        "description": "Breaks through to the next level of Bow wielding through intense training.\n[Target: Self]\n\n[Effect Details]\nSkill Resistance +10\nRanged Damage +5\nIgnore Damage Reduction +5",
+        "filename": "Bow_Skill_Royal_Bow_Mastery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111557-qewgsYDgu6KzW9m3QicW0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Energy Shield",
+        "type": "Skill",
+        "description": "Casts a protective barrier in a critical moment to consume MP instead of HP upon receiving damage.\n[Target: Self]\n\n[Effect Details]\nStun Resistance +10% and casts a protective barrier that consumes MP instead of HP when HP hits 35% or below.\n(Protects against damage only.)",
+        "filename": "Bow_Skill_Energy_Shield.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111604-1FZBkAn4gptXwDObHjpJ0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Legendary Bow Mastery",
+        "type": "Skill",
+        "description": "Reaches the ultimate level of Bow wielding.\n[Target: Self]\n\n[Effect Details]\nStun Resistance +5%\nSkill Damage Boost +5%",
+        "filename": "Bow_Skill_Legendary_Bow_Mastery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111614-o3yfoD5mEpizUchXqixA0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Eraser",
+        "type": "Skill",
+        "description": "Reinforces Elimination to increase damage and deals AoE damage.\nHas a chance to remove Arcane Shield type effects, including Celestial Shield. Deals extra damage to the target and disables new Arcane Shield type effects. Also has a chance to Stun the target upon successfully breaking Shield type effects.\n[Target: Max 3 units, excludes friendly targets]\n\n[Effect Details]\nReinforces Elimination",
+        "filename": "Bow_Skill_Eraser.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111620-VTdtsItdV7qjuQlD2hXr0-v4"
+    },
+    {
+        "page": "Bow",
+        "name": "Authority",
+        "type": "Skill",
+        "description": "Temporarily exerts power of absolute authority.\n(Learning enabled on possession of a Mythic Class.)\n(Can be used only by a Mythic Class.)\n[Target: Self]\n\n[Effect Details]\nChance to deal AoE damage on Basic Attack or Skill hit (excludes friendly targets).\nStun Accuracy +10%\nCC Accuracy +10%",
+        "filename": "Bow_Skill_Authority.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117111624-MsQ9A4kJ0hHKS6mESchs0-v4"
+    },
+    {
+        "page": "Orb",
+        "name": "Aura Bolt",
+        "type": "Skill",
+        "description": "Projects a strong blast of energy to attack the target.\n[Target: Single]",
+        "filename": "Orb_Skill_Aura_Bolt.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fde4147-b8bf205f-cd6a-42c6-a8c6-a81340e0d3a3"
+    },
+    {
+        "page": "Orb",
+        "name": "Fast Move",
+        "type": "Skill",
+        "description": "Enhances athleticism and quickness to increase all Speed.\n(Acceleration Lv.2)\n[Target: Self]\n\n[Effect]\nMovement Speed +25%\nAttack Speed +25%\nCast Speed +25%",
+        "filename": "Orb_Skill_Fast_Move.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fdeea2e-ff92a142-ccf7-4908-9ed8-a1c949beb3fa"
+    },
+    {
+        "page": "Orb",
+        "name": "Wild Magic",
+        "type": "Skill",
+        "description": "Infuses a weapon with primal power.\nIncreases the target's weapon damage.\n[Target: Single]\n\n[Effect]\nWeapon Damage +2",
+        "filename": "Orb_Skill_Wild_Magic.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fdef2cd-36b6feeb-e04d-46aa-82b0-4e007d282e5c"
+    },
+    {
+        "page": "Orb",
+        "name": "Cure",
+        "type": "Skill",
+        "description": "Removes debuffs.\n[Target: Single]\n[Removes Epic- or lower-rank CC effect]",
+        "filename": "Orb_Skill_Cure.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fdefa3f-642f2467-3f24-4169-97cb-ca332b475eb4"
+    },
+    {
+        "page": "Orb",
+        "name": "Heal",
+        "type": "Skill",
+        "description": "Heals the target by converting MP to HP.\n\n[Target: Single]",
+        "filename": "Orb_Skill_Heal.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fdfb0de-d0e39c4f-149b-4301-a7a2-07138205320b"
+    },
+    {
+        "page": "Orb",
+        "name": "Might of Heaven",
+        "type": "Skill",
+        "description": "Emits holy energy to deal Light Type Damage on the target. [Target: Single]",
+        "filename": "Orb_Skill_Might_of_Heaven.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fdfba75-4406c1d6-60c9-4905-9f70-8a1c43d14b3c"
+    },
+    {
+        "page": "Orb",
+        "name": "Orb Mastery",
+        "type": "Skill",
+        "description": "Infuses the orb with divine power to increase its chance of dealing double damage.\n[Target: Single]\n\n[Effect]\nDouble Chance +10%",
+        "filename": "Orb_Skill_Orb_Mastery.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fdfc40a-4fc77da3-0d2a-4c44-90e9-29afe6194c72"
+    },
+    {
+        "page": "Orb",
+        "name": "Divine Power",
+        "type": "Skill",
+        "description": "Divine authority increases the effectiveness of HP recovery skills.\n\n[Effect]\nHeal Boost +50%",
+        "filename": "Orb_Skill_Divine_Power.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe00979-1509b504-6868-432a-abce-ddd363cf8142"
+    },
+    {
+        "page": "Orb",
+        "name": "Reinforced: Divine Power",
+        "type": "Skill",
+        "description": "Divine authority significantly increases the effectiveness of HP recovery skills.\n\n[Effect]\nHeal Boost +100%",
+        "filename": "Orb_Skill_Reinforced_Divine_Power.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe010d4-712b4c93-16c2-4d9e-af00-995d354b6192"
+    },
+    {
+        "page": "Orb",
+        "name": "Holy Focus",
+        "type": "Skill",
+        "description": "Releases holy energy from the body to add Light Type Damage to all attacks.\n[Target: Self]\n\n[Effect]\nLight Type Damage +5",
+        "filename": "Orb_Skill_Holy_Focus.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe01999-f0e739dd-f4f2-4760-a815-e3ac7fda72d1"
+    },
+    {
+        "page": "Orb",
+        "name": "Reinforced: Holy Focus",
+        "type": "Skill",
+        "description": "Releases holy energy from the body to add Light Type Damage to all attacks.\nWhile holy power is maintained, it more effective against evil enemies.\n[Target: Self]\n\n[Effect]\nLight Type Damage +5\nDamage to Chaotic targets +10\nMagic Critical Hit +3%",
+        "filename": "Orb_Skill_Reinforced_Holy_Focus.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe02114-ee813455-f3ac-4e66-9722-41478d94c372"
+    },
+    {
+        "page": "Orb",
+        "name": "Group Heal",
+        "type": "Skill",
+        "description": "Restores the HP of allies in battle.\n[Target: Party Members]",
+        "filename": "Orb_Skill_Group_Heal.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe24ef7-637031b0-2c9d-41bc-93f9-072a8641df45"
+    },
+    {
+        "page": "Orb",
+        "name": "Reinforced: Group Heal",
+        "type": "Skill",
+        "description": "Significantly restores the HP of allies in battle.\n[Target: Party Members]\n[Awakened: Increases Recovery Amount]",
+        "filename": "Orb_Skill_Reinforced_Group_Heal.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe253fc-b64b3df9-a544-40b2-b44e-ccf2612d6958"
+    },
+    {
+        "page": "Orb",
+        "name": "Aura Flash",
+        "type": "Skill",
+        "description": "Uses the power hidden within your weapon to attack the target.\n[Target: Single]",
+        "filename": "Orb_Skill_Aura_Flash.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe4232f-39f46b9f-2ea8-4d2e-b500-30c2830b6666"
+    },
+    {
+        "page": "Orb",
+        "name": "Reinforced: Aura Flash",
+        "type": "Skill",
+        "description": "Uses the power hidden within your weapon to attack the target.\nConsumes less MP.\n[Target: Single]",
+        "filename": "Orb_Skill_Reinforced_Aura_Flash.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe418a6-77d6fdf3-b37f-4280-9a49-79efe55c637a"
+    },
+    {
+        "page": "Orb",
+        "name": "Enlightenment",
+        "type": "Skill",
+        "description": "Receives blessings that increase Cast Speed.\n[Target: Self]\n\n[Effect]\nCast Speed +10%",
+        "filename": "Orb_Skill_Enlightenment.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe42cb4-fa1c370a-c08d-4653-9640-d67bcd31db36"
+    },
+    {
+        "page": "Orb",
+        "name": "Reinforced: Enlightenment",
+        "type": "Skill",
+        "description": "Receives enhanced blessings that increase magic Cast Speed and reduce Cooldown.\n[Target: Self]\n\n[Effect]\nCast Speed +10%\nCooldown Reduction +10%",
+        "filename": "Orb_Skill_Reinforced_Enlightenment.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe4f146-621897c5-7b3f-463d-a193-7f014bd163eb"
+    },
+    {
+        "page": "Orb",
+        "name": "Concentration",
+        "type": "Skill",
+        "description": "Focuses mana energy to the body, enabling MP recovery even when carrying a lot of weight.\n[Target: Self]\n\n[Effect]\nIgnore MP Recovery Penalty +30%\nFixed MP Recovery +5",
+        "filename": "Orb_Skill_Concentration.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe4f8fd-65e68bd8-74ea-401c-aa20-304e913729c4"
+    },
+    {
+        "page": "Orb",
+        "name": "Aura Blast",
+        "type": "Skill",
+        "description": "Reinforces Aura Bolt to deal damage to multiple enemies. [Target: Max 3 units, excludes friendly targets]\n\n[Effect]\nReinforces Aura Bolt",
+        "filename": "Orb_Skill_Aura_Blast.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe4ff00-279948e3-b1e4-4e4a-b1f5-e95310edc37f"
+    },
+    {
+        "page": "Orb",
+        "name": "Bless the Spirit",
+        "type": "Skill",
+        "description": "Connects the inner psyche with divine understanding to enable greater insight and discernment.\nIncreases WIS and INT.\n\n[Effect]\nWIS, INT +3",
+        "filename": "Orb_Skill_Bless_the_Spirit.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe676c8-1c40e20d-8bf3-47b0-bb90-65d9a124001a"
+    },
+    {
+        "page": "Orb",
+        "name": "Divine Spark",
+        "type": "Skill",
+        "description": "Aura Flash sparks a holy fire to deal massive amounts of damage on Skill use.\n[Target: Single]",
+        "filename": "Orb_Skill_Divine_Spark.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe67fc3-0c4a99ad-014e-4351-b1a3-84e2db0d8cd7"
+    },
+    {
+        "page": "Orb",
+        "name": "Improved Orb",
+        "type": "Skill",
+        "description": "Awakens the full power of the Orb in battle.\n[Target: Self]\n\n[Effect]\nAll hits temporarily deal the Weapon's Maximum Damage.",
+        "filename": "Orb_Skill_Improved_Orb.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe68969-e6fb70c9-68db-468c-a63e-8901251f50db"
+    },
+    {
+        "page": "Orb",
+        "name": "Arcane Shield",
+        "type": "Skill",
+        "description": "Sheathes allies in divine energy to decrease damage taken.\n[Target: Clan Members]\n\n[Effect]\nDamage Resistance +30%",
+        "filename": "Orb_Skill_Arcane_Shield.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe6927a-79ca0038-95d7-4bfd-b1d9-dabf7b555781"
+    },
+    {
+        "page": "Orb",
+        "name": "Judgment",
+        "type": "Skill",
+        "description": "Discharges lightning of punishment to deal Light Type Damage to targets.\n[Target: Max 5 Playable Characters, excluding friendly targets]",
+        "filename": "Orb_Skill_Judgment.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe831f8-1ac9f267-bfac-4819-a265-bec25015d625"
+    },
+    {
+        "page": "Orb",
+        "name": "Reinforced: Judgment",
+        "type": "Skill",
+        "description": "Conjures punishing lightning to deal Light Type Damage to targets.\nThe hit targets are electrocuted and slowed for 3-5 seconds.\n[Target: Max 5 Playable Characters, excluding friendly targets]",
+        "filename": "Orb_Skill_Reinforced_Judgment.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe83bb9-c5cac17a-5b84-4915-94fd-31168d2e4277"
+    },
+    {
+        "page": "Orb",
+        "name": "Divine Execution",
+        "type": "Skill",
+        "description": "Bestows holy power to execute evil entities.\n[Target: Self]\n\n[Effect]\nSkill Damage Boost +10%\nMagic Accuracy +5\nExtra Damage to undead and demons on an Attack hit\nExtra Light Type Damage to undead and demons on an Attack hit",
+        "filename": "Orb_Skill_Divine_Execution.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe843bc-3b3db264-e2d8-4660-8cd8-fadb4442710d"
+    },
+    {
+        "page": "Orb",
+        "name": "Last Heal",
+        "type": "Skill",
+        "description": "When HP falls to 40% or below, greatly recovers HP and removes any Silence effect with powerful magic power. Cannot recover HP when in the Undead state\n[Target: Self]",
+        "filename": "Orb_Skill_Last_Heal.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe852a6-afc79434-8355-4dc5-be61-c762536cb605"
+    },
+    {
+        "page": "Orb",
+        "name": "Holy Light",
+        "type": "Skill",
+        "description": "Reinforces Might of Heaven and deals powerful Light Type Damage to multiple targets.\n[Target: Max 5 units, excludes friendly targets]\n\n[Effect]\nReinforces Might of Heaven\nIncreases Light Type Damage\nTemporarily increases Cast Speed by 10% and Skill Damage Boost by 20% on Skill use",
+        "filename": "Orb_Skill_Holy_Light.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe8595e-0b36c36f-2d6f-40b8-aaa9-32b22b4f7022"
+    },
+    {
+        "page": "Orb",
+        "name": "Mass Heal",
+        "type": "Skill",
+        "description": "Reinforces Group Heal to heal a greater HP of allies in battle. [Target: Max of 8 Party Members, nearby Clan Members, and nearby Union Members]\n\n[Effect]\nReinforces Group Heal\nHeals up to 4 Clan Members and Union Members nearby",
+        "filename": "Orb_Skill_Mass_Heal.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe96199-75e3b52b-2279-4b25-8ac7-9ac9bf377294"
+    },
+    {
+        "page": "Orb",
+        "name": "Spirit Guard",
+        "type": "Skill",
+        "description": "Calls forth divine power for protection and endurance.\nDamage Reduction and Skill Resistance increases as HP decreases.",
+        "filename": "Orb_Skill_Spirit_Guard.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe96ced-229a22c3-11cc-4449-a521-97f789995261"
+    },
+    {
+        "page": "Orb",
+        "name": "Grand Orb Mastery",
+        "type": "Skill",
+        "description": "Orb proficiency greatly increases to unleash the full potential.\n[Target: Self]\n\n[Effect]\nWIS +5\nCC Resistance +10%",
+        "filename": "Orb_Skill_Grand_Orb_Mastery.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe977fe-e13d90e7-799f-42a6-abc8-92bafb8ce5e7"
+    },
+    {
+        "page": "Orb",
+        "name": "Pray",
+        "type": "Skill",
+        "description": "Prays to God and engraves a mark of invulnerable sanctuary on the body.\nWhile the mark of sanctuary is in effect, damage cannot be given or received.\nCan be cast ignoring most CC effects, excluding Petrify. Removes CC effects inflicted on self.\n\n[Target: Self]\n[Shares cooldown with Hide]",
+        "filename": "Orb_Skill_Pray.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe985b0-e38ccd0d-58f9-47f9-9601-0c2a89766525"
+    },
+    {
+        "page": "Orb",
+        "name": "Pain of Karma",
+        "type": "Skill",
+        "description": "Deals damage to multiple targets and deals damage over time to the targeted unit at a fixed chance.\n[Target: Max 5 units, excludes friendly targets]\n[Cannot penetrate Vampiric Shield]\n\n[Effect]\nDeals damage over time based on the target's max HP",
+        "filename": "Orb_Skill_Pain_of_Karma.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe994ed-24e8c57b-004f-4aa4-a152-bb8a4da77397"
+    },
+    {
+        "page": "Orb",
+        "name": "Reinforced: Pain of Karma",
+        "type": "Skill",
+        "description": "Deals damage to multiple targets and deals greater damage over time to the targeted unit at a fixed chance.\n[Target: Max 5 units, excludes friendly targets]\n[Cannot penetrate Vampiric Shield]\n\n[Effect]\nDeals higher damage over time based on the target's max HP",
+        "filename": "Orb_Skill_Reinforced_Pain_of_Karma.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe99940-c1e77b1a-04e1-4f5c-8e03-6da97fcf215f"
+    },
+    {
+        "page": "Orb",
+        "name": "Doom",
+        "type": "Skill",
+        "description": "Invoke Curse of Ruin on behalf of God.\nThe target is perceived as Undead, and its Light Type Resistance and Potion Recovery Rate decrease.\nThe debuff has a maximum of 2 stacks.\n[Target: Single, Player Character]",
+        "filename": "Orb_Skill_Doom.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe9a477-796e5f6a-758d-4910-a925-8890c2b1045d"
+    },
+    {
+        "page": "Orb",
+        "name": "Reinforced: Doom",
+        "type": "Skill",
+        "description": "Has a high chance to invoke Curse of Ruin on behalf of God.\nThe target is perceived as Undead, and its Light Type Resistance and Potion Recovery Rate decrease.\nThe debuff has a maximum of 2 stacks.\n[Target: Single, Player Character]",
+        "filename": "Orb_Skill_Reinforced_Doom.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe9abfd-8d20ce11-0d35-474c-8d2f-866d597fd2cf"
+    },
+    {
+        "page": "Orb",
+        "name": "Celestial Shield",
+        "type": "Skill",
+        "description": "Musters divine power to the fullest to maximize the Arcane Shield effect on self.\n[Target: Self]\n\n[Effect]\nAoE Damage Resistance +20%\nStun Resistance +5%\nHold Resistance +5%\n\n[Extra Effect]\nGrants Arcane Shield with increased AoE Damage Resistance to the Clan Members",
+        "filename": "Orb_Skill_Celestial_Shield.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe9b88f-8a6a7910-de98-445d-8575-3d5dc333efa2"
+    },
+    {
+        "page": "Orb",
+        "name": "Holy Guillotine",
+        "type": "Skill",
+        "description": "Using Aura Flash while possessing Divine Spark has a chance to unleash the weapon's explosive power to deal Typeless Damage.\n[Target: Max 5 units, excluding friendly targets]",
+        "filename": "Orb_Skill_Holy_Guillotine.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fe9c37f-f0ca2430-9455-4eef-aad8-c929ea0d36e9"
+    },
+    {
+        "page": "Orb",
+        "name": "Double Shield",
+        "type": "Skill",
+        "description": "Two sacred protective barriers shield the target for double protection.\n[Effect]\nDivides the possessing Shield's effects onto two Shields\nDamage Boost Down +10% per Shield\nOnly one Shield gets removed when inflicted with Shield Break effect. (Elimination can remove both Shields at once.)",
+        "filename": "Orb_Skill_Double_Shield.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fef4bb6-625e221b-cc47-40e4-a6a9-ffad7daaed25"
+    },
+    {
+        "page": "Orb",
+        "name": "Advanced Cure",
+        "type": "Skill",
+        "description": "Reinforces Cure and upon using Cure, has a fixed chance to remove higher-rank debuffs inflicted on the target.\nAlso increases Stun Resistance.\nUsing the skill cures Party Members within a certain range. Grants a bonus buff upon successful Cure.\n[Target: Party Members]\n[Removes Legend- or lower-rank CC effect]\n\n[Effect]\nStun Resistance +5%\nGrants a buff which increases Stun/Hold/CC Resistance by 5% on a successful removal",
+        "filename": "Orb_Skill_Advanced_Cure.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fef873f-02b06405-9975-4411-b725-d98908a29c2d"
+    },
+    {
+        "page": "Orb",
+        "name": "Full Heal",
+        "type": "Skill",
+        "description": "Can use the power of recovery and gathers holy energy to prepare usage of an enhanced power of recovery.\nAfter equipping the orb, the enhanced power of recovery can be used after a certain duration.\nAlso increases Movement Speed and Light Type Damage Boost of self.\n[Target: Party Members]\n\n[Effect]\nHP Recovery of Party Members within range\nMore HP Recovery of self\n\n[Passive Effects]\nIncreases Movement Speed\nIncreases Light Type Damage Boost\n\n[Extra Effect]\nCan use enhanced power of recovery after a certain duration after equipping orb.\nResets duration if orb is unequipped, you move worlds, or you reconnect.\n\n[Enhanced Power of Recovery Effects]\nIncreases HP Recovery of Party Members within range\nFull HP Recovery of self",
+        "filename": "Orb_Skill_Full_Heal.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fef966f-28eda0eb-cd19-4905-a1e7-674bd5872de2"
+    },
+    {
+        "page": "Orb",
+        "name": "Final Judgment",
+        "type": "Skill",
+        "description": "Reinforces Judgment, unleashing the final retribution. Deals reinforced Light Damage and inflicts a debuff.\n[Target: Max 8 units, excludes friendly targets]\n[Resistance Factor: CC]\n\n[Effect]\nIncreases Damage and targets\nInflicts a debuff which decreases Skill Defense and All Evasion",
+        "filename": "Orb_Skill_Final_Judgment.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fefa443-6c9a3a53-a789-4aaa-a464-6e782fe96e61"
+    },
+    {
+        "page": "Orb",
+        "name": "Royal Orb Mastery",
+        "type": "Skill",
+        "description": "Breaks through to the next level of Orb wielding through intense training.\n[Target: Self]\n\n[Effect]\nMagic Accuracy +5\nDouble Resistance +10%",
+        "filename": "Orb_Skill_Royal_Orb_Mastery.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fefaf41-419c9870-d4be-4943-ab9a-92cbf056f3da"
+    },
+    {
+        "page": "Orb",
+        "name": "Legendary Orb Mastery",
+        "type": "Skill",
+        "description": "Reaches the ultimate level of Orb wielding.\n[Target: Self]\n\n[Effect]\nStun Resistance +5%\nLight Type Damage Boost +10%",
+        "filename": "Orb_Skill_Legendary_Orb_Mastery.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2fefee95-c345e671-d952-4b0f-9d19-5c7eeb737ca0"
+    },
+    {
+        "page": "Orb",
+        "name": "Imperial Orb Mastery I",
+        "type": "Skill",
+        "description": "Reaches the pinnacle of Orb wielding for a certain duration. [Target: Self]\n\n[Effect]\nBonus EXP +5%\nAll Damage +5\nAccuracy +5\nDefense +5\nDamage Reduction +3",
+        "filename": "Orb_Skill_Imperial_Orb_Mastery_I.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2feffa06-ee1ddad0-3f84-4fe6-82bb-6266e5b4c745"
+    },
+    {
+        "page": "Orb",
+        "name": "Imperial Orb Mastery II",
+        "type": "Skill",
+        "description": "Releases power, allowing the Orb to surpass its limits for a certain duration.\n[Target: Self]\n\n[Effect]\nBonus EXP +5%\nBlessings Recharge Increase +10%\nDouble Chance +3%\nTriple Chance +3%\nBlock Penetration +5%",
+        "filename": "Orb_Skill_Imperial_Orb_Mastery_II.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2ff003ef-37c66e87-8c0e-4036-9671-fb249a9812a5"
+    },
+    {
+        "page": "Orb",
+        "name": "Sacredness",
+        "type": "Skill",
+        "description": "Prays with noble and virtuous beliefs to remove all debuffs on nearby Clan Members and Union Members, and casts a powerful protective barrier around them.\nCan be used against most CC effects, except for Freeze and Petrify.\n\n[Target: Max of 50 nearby Clan Members and Union Members]\n[Removes Legend or lower rank debuffs]\n\n[Effect]\nRemoves all debuffs\nCasts a powerful protective barrier on Clan Members\nIncreases Skill Damage Boost while the protective barrier is active",
+        "filename": "Orb_Skill_Sacredness.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2ff03526-d7e9eddd-e378-452f-a55f-ed2c2f46f1dc"
+    },
+    {
+        "page": "Orb",
+        "name": "Blessed Sanctuary",
+        "type": "Skill",
+        "description": "Creates a sacred area around the caster.\nWithin the area, the HP of allies does not decrease below 1% and HP recovers over time.\nIncreases caster's Triple Chance.\n[Target: Max 50 Allies]\n\n[Effect]\nCreates a Sanctuary that cannot be removed with Stun\nWithin the Sanctuary, the HP of allies does not decrease below 1%\nRecovers HP over time\nCaster's Triple Chance +20%",
+        "filename": "Orb_Skill_Blessed_Sanctuary.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2ff0404c-2d127175-b2e9-476e-ade2-3c39cfa0d707"
+    },
+    {
+        "page": "Orb",
+        "name": "Seraph",
+        "type": "Skill",
+        "description": "Transforms the caster into a divine entity.\n[Buff Target: Self]\n[Buff Duration: 10 sec.]\n[Doom Duration: 20 sec.]\n[Resistance Factor: Level]\n[\uae00\ub798\uc2dc\uc5b4 \ud06c\ub9ac\uc2a4\ud0c8, \ub77c\uc2a4\ud2b8 \uc2a4\ud0e0\ub4dc, \uc774\uadf8\ub178\uc5b4 \ub370\uc2a4, \ud53c\ub2c9\uc2a4\uc640 \ucfe8\ud0c0\uc784 \uacf5\uc720]\n[Cooldown reset or Remaining Cooldown Reduction not applicable]\n\n[Effect]\nImmune to Damage\nMythic- or lower-rank CC Immunity\nFixed chance to inflict Doom on an Attack Skill hit\nIgnores Gravity, allows Escape and Teleport (excluding Unbound Gravity)\nMovement Speed +15%\nCast Speed +15%\nAttack Speed +15%\n\n[Passive Effects]\nIncreases CC Duration Reduction",
+        "filename": "Orb_Skill_Seraph.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2ff04fdf-2a161992-6afc-49b9-8655-d48de4747431"
+    },
+    {
+        "page": "Orb",
+        "name": "Authority",
+        "type": "Skill",
+        "description": "Temporarily wields the power of absolute authority.\n(Requires a Mythic Class to learn)\n(Can only be used only by a Mythic Class or higher)\n[Target: Self]\n\n[Effect]\nHas a fixed chance to deal AoE damage when an Attack hits (excludes friendly targets)\nSkill Damage Boost +10%\nHeal Boost +10%\nLight Type Damage Boost +10%",
+        "filename": "Orb_Skill_Authority.png",
+        "icon_url": "https://fizz-download.playnccdn.com/download/v2/buckets/guidebook/files/18d2ff060a9-d4972579-7b24-4df3-aa0d-1437dbb4c4e9"
+    },
+    {
+        "page": "Sword",
+        "name": "Shield Stun",
+        "type": "Skill",
+        "description": "Strikes with a Shield to Stun the enemy.",
+        "filename": "Sword_Skill_Shield_Stun.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175150-iFcLdJ9Le2cda9CZWBsG0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Vanguard",
+        "type": "Skill",
+        "description": "Increases tension in battle for faster movement.",
+        "filename": "Sword_Skill_Vanguard.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175159-LPgOJOyVO5qbVteOKdce0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Power Strike",
+        "type": "Skill",
+        "description": "Deals a heavy blow for strong damage.",
+        "filename": "Sword_Skill_Power_Strike.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175204-0qPI4QBQ2PD1sqVJZgkg0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Magic Resistance",
+        "type": "Skill",
+        "description": "Temporarily raises power to resist enemy's skills.",
+        "filename": "Sword_Skill_Magic_Resistance.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175224-8diQsC6u3AQHLrw012yy0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "War Cry",
+        "type": "Skill",
+        "description": "Roars out in battle to increase Melee Damage and Melee Accuracy.",
+        "filename": "Sword_Skill_War_Cry.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175231-uk6ixo4yaA24amxFqX9q0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Majesty",
+        "type": "Skill",
+        "description": "Gains an unyielding spirit to overcome any adversity.",
+        "filename": "Sword_Skill_Majesty.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175237-PCLAoxyKgsAmFRovDc6S0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Holy Blade",
+        "type": "Skill",
+        "description": "Holy power is bestowed upon the sword.",
+        "filename": "Sword_Skill_Holy_Blade.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175252-1fpuctkiFSjrOTgthFv60-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Ultimate Defense",
+        "type": "Skill",
+        "description": "Raises a Shield and takes a position to endure enemy's attack.",
+        "filename": "Sword_Skill_Ultimate_Defense.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175257-ENMndEPbasLvKu26LPtn0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Reinforced: Ultimate Defense",
+        "type": "Skill",
+        "description": "Raises a Shield and takes a position to endure enemy's attack.",
+        "filename": "Sword_Skill_Reinforced_Ultimate_Defense.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175302-dQ5m6pqxvVOzXHzWRFUo0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Defense Aura",
+        "type": "Skill",
+        "description": "Defense abilities are enhanced.",
+        "filename": "Sword_Skill_Defense_Aura.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175309-Xa7KBrRTKvXHh1RB45L40-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Reinforced: Defense Aura",
+        "type": "Skill",
+        "description": "Defense abilities are significantly enhanced.",
+        "filename": "Sword_Skill_Reinforced_Defense_Aura.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175309-Xa7KBrRTKvXHh1RB45L40-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Deflect Arrow",
+        "type": "Skill",
+        "description": "Prepares for incoming ranged attacks.",
+        "filename": "Sword_Skill_Deflect_Arrow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175340-Xztl9IspwAxby3hGvNk80-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Reinforced: Deflect Arrow",
+        "type": "Skill",
+        "description": "Evasion abilities are enhanced against Ranged Attacks.",
+        "filename": "Sword_Skill_Reinforced_Deflect_Arrow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175343-g3qchg5TtiKEeUtrpNsl0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Attack Aura",
+        "type": "Skill",
+        "description": "Brings up aggressive energy.",
+        "filename": "Sword_Skill_Attack_Aura.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175318-RSA87nRuDk5TtI2jI1rk0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Reinforced: Attack Aura",
+        "type": "Skill",
+        "description": "Brings up aggressive energy.",
+        "filename": "Sword_Skill_Reinforced_Attack_Aura.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175318-RSA87nRuDk5TtI2jI1rk0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Fortitude",
+        "type": "Skill",
+        "description": "Increases the ability to avoid negative CC attacks.",
+        "filename": "Sword_Skill_Fortitude.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175353-t7NYQFixodztpV8WYKEm0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Life Expansion",
+        "type": "Skill",
+        "description": "Gains toughness from experience on the battlefield.",
+        "filename": "Sword_Skill_Life_Expansion.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175357-kkOobNL4URdb4PZLyLlR0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Reinforced: Life Expansion",
+        "type": "Skill",
+        "description": "Gains toughness from experience on the battlefield.",
+        "filename": "Sword_Skill_Reinforced_Life_Expansion.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175357-kkOobNL4URdb4PZLyLlR0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Hate",
+        "type": "Skill",
+        "description": "Provokes a mid-ranged enemy to attack the caster, and temporarily reduces their Accuracy and All Damage.",
+        "filename": "Sword_Skill_Hate.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175406-PvkpqcjoFQ7kcQ0VOhMO0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Reinforced: Hate",
+        "type": "Skill",
+        "description": "Provokes a mid-ranged enemy to attack the caster, and temporarily reduces their Accuracy and All Damage.",
+        "filename": "Sword_Skill_Reinforced_Hate.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175406-PvkpqcjoFQ7kcQ0VOhMO0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Double Shock",
+        "type": "Skill",
+        "description": "Has a chance to cast a reinforced Shield Stun to knock out enemies longer.",
+        "filename": "Sword_Skill_Double_Shock.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175416-lM7sGwayl1t6T3xuZmqp0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Iron Will",
+        "type": "Skill",
+        "description": "Increases resistance against Stun and Hold with an iron will and increases Stun Accuracy.",
+        "filename": "Sword_Skill_Iron_Will.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175426-xbcTXDtKvyYcPu8DAkNy0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Touch of Life",
+        "type": "Skill",
+        "description": "Increases potion recovery efficiency with the blessing of revitalization.",
+        "filename": "Sword_Skill_Touch_of_Life.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175431-IjWrpkdwXQj41RbGbTPB0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Reinforced: Touch of Life",
+        "type": "Skill",
+        "description": "Increases potion recovery efficiency with the blessing of revitalization.",
+        "filename": "Sword_Skill_Reinforced_Touch_of_Life.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175431-IjWrpkdwXQj41RbGbTPB0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Master of Combat",
+        "type": "Skill",
+        "description": "Becomes a master of combat to enhance battle abilities.",
+        "filename": "Sword_Skill_Master_of_Combat.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175447-eSZcjEoYxLrcFeE31ocv0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Vengeance",
+        "type": "Skill",
+        "description": "Intensifies the inner power to increase immunity to All Damage and has a chance to deal damage to the attacker.",
+        "filename": "Sword_Skill_Vengeance.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175454-TbNVBWgQI2vkvCXAb15m0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Reinforced: Vengeance",
+        "type": "Skill",
+        "description": "Intensifies the inner power to greatly increase immunity to All Damage and has a high chance to deal damage to the attacker.",
+        "filename": "Sword_Skill_Reinforced_Vengeance.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175454-TbNVBWgQI2vkvCXAb15m0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Brutal Attack",
+        "type": "Skill",
+        "description": "Increases Accuracy against stunned targets.",
+        "filename": "Sword_Skill_Brutal_Attack.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175504-AqTZYoQryGAReSiObCM90-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Chain Strike",
+        "type": "Skill",
+        "description": "Throws a chain which binds and pulls the target to the caster.",
+        "filename": "Sword_Skill_Chain_Strike.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175511-FbwnD3MLAF1yC9dq6IuI0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Reinforced: Chain Strike",
+        "type": "Skill",
+        "description": "Throws a chain which binds and pulls the target with a high chance to the caster.",
+        "filename": "Sword_Skill_Reinforced_Chain_Strike.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175511-FbwnD3MLAF1yC9dq6IuI0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Grand Sword Mastery",
+        "type": "Skill",
+        "description": "Sword proficiency greatly increases to unleash the full potential.",
+        "filename": "Sword_Skill_Grand_Sword_Mastery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175522-w0BFCW7mTP7slQZtXdne0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Holy Strike",
+        "type": "Skill",
+        "description": "Reinforces Holy Blade and has a chance to deal Extra Light Type AoE Damage on a Basic Attack hit.",
+        "filename": "Sword_Skill_Holy_Strike.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175529-Q7d2y2KSBIlwhxC4gGLW0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Strike Force",
+        "type": "Skill",
+        "description": "Reinforces Power Strike and deals AoE damage to the target's surrounding, and has a chance to inflict a debuff that decreases target's Damage Reduction.",
+        "filename": "Sword_Skill_Strike_Force.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175544-9DBiORej92Ejduaa7HsP0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Retribution",
+        "type": "Skill",
+        "description": "Swings a shield, dealing AoE damage. Decreases enemies' Stun Resistance on AoE hit.",
+        "filename": "Sword_Skill_Retribution.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175549-6hhinQuXHNBTnbrpGUM70-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "True Impact",
+        "type": "Skill",
+        "description": "Using Shield Stun has a chance to inflict a strong Stun effect that cannot be removed by Cure. Weapon Damage Boost and Skill Damage Boost also increase. (This can however be removed by the Pray skill.)",
+        "filename": "Sword_Skill_True_Impact.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175602-CddPhkTTqhRJ8teY9Ahf0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Royal Sword Mastery",
+        "type": "Skill",
+        "description": "Breaks through to the next level of Sword wielding through intense training.",
+        "filename": "Sword_Skill_Royal_Sword_Mastery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175608-PNdbIYbzK2t5BPTG9Dv40-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Revenge",
+        "type": "Skill",
+        "description": "Reinforces Vengeance, dealing greater damage to the attacker and inflicting a debuff that decreases Accuracy.",
+        "filename": "Sword_Skill_Revenge.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175618-nDVhKFwuyIkNdzQI7Wqu0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Legendary Sword Mastery",
+        "type": "Skill",
+        "description": "Reaches the ultimate level of Sword wielding.",
+        "filename": "Sword_Skill_Legendary_Sword_Mastery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175624-QzDPysBbQOxLwgkxd3iu0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Mighty Shock",
+        "type": "Skill",
+        "description": "Chain Strike has a chance to inflict Mighty Shock Stun which cannot be removed by any attack. The caster deals greater damage to a target inflicted with Mighty Shock Stun. (Mighty Shock Stun can be inflicted on a target with the Pray effect, with a chance to remove the Pray effect upon inflicting Stun.)",
+        "filename": "Sword_Skill_Mighty_Shock.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175636-nWRsec7GS1qj7O0vMpBV0-v4"
+    },
+    {
+        "page": "Sword",
+        "name": "Authority",
+        "type": "Skill",
+        "description": "Temporarily exerts power of absolute authority.",
+        "filename": "Sword_Skill_Authority.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116175646-bCQlmwJMfowdZFjuYwuj0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Flame Strike",
+        "type": "Skill",
+        "description": "Shoots an exploding fireball to deal Fire Type Damage to the target and surrounding enemies.\n[Target: Max 5 units]",
+        "filename": "Staff_Skill_Flame_Strike.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130006-4JsVeuA7jB87z1M7ZWmQ0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Magician's Movement",
+        "type": "Skill",
+        "description": "Casts wind magic around the body to increase All Speed.\n(Acceleration Lv.2)\n[Target: Self]",
+        "filename": "Staff_Skill_Magician_s_Movement.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130017-UgabQuhHEKO0t54Hxbqx0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Wind Strike",
+        "type": "Skill",
+        "description": "Casts wind magic to deal Wind Type Damage to the target.\n[Target: Single]",
+        "filename": "Staff_Skill_Wind_Strike.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130032-rREucBUhUFxkde9dXUky0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Body to Mind",
+        "type": "Skill",
+        "description": "Converts physical energy into mental energy for MP recovery.\n[Target: Self]",
+        "filename": "Staff_Skill_Body_to_Mind.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130042-vJpzqEQmCmbBLl4uex470-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Tempest",
+        "type": "Skill",
+        "description": "Fires a weak but fast magic projectile to attack the enemy.\n[Target: Single]",
+        "filename": "Staff_Skill_Tempest.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130059-Nbs9flP0dDGIS1Zystu70-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Mystic Shield",
+        "type": "Skill",
+        "description": "Focuses magic energy around the body to increase Skill Resistance.\n[Target: Self]\n\n[Effect Details]\nSkill Resistance +25",
+        "filename": "Staff_Skill_Mystic_Shield.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130104-evaWx6n5TUfwLiIe7drN0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Boost Mana",
+        "type": "Skill",
+        "description": "Amplifies internal mana to increase Max MP.\n[Target: Self]\n\n[Effect Details]\nMax MP +10%",
+        "filename": "Staff_Skill_Boost_Mana.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130114-2DEPzl6wuvm1LGdFy2qc0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Earth Vortex",
+        "type": "Skill",
+        "description": "Explodes the surface to deal Earth Type Damage to the target.\n[Target: Single]",
+        "filename": "Staff_Skill_Earth_Vortex.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130131-K613HaNEcpTQEJsWe84A0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Reinforced: Earth Vortex",
+        "type": "Skill",
+        "description": "Explodes the surface to deal Earth Type Damage to the target.\nHas a chance to immobilize the target for 3-4 seconds.\n[Target: Single]",
+        "filename": "Staff_Skill_Reinforced_Earth_Vortex.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130131-K613HaNEcpTQEJsWe84A0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Darkness",
+        "type": "Skill",
+        "description": "Temporarily blocks the enemy's vision, decreasing the inflicted enemy's accuracy\n[Target: Single PC]\n\n[Effect Details]\nAccuracy -5",
+        "filename": "Staff_Skill_Darkness.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130141-OGp30x9BfPvkMADSZnwv0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Reinforced: Darkness",
+        "type": "Skill",
+        "description": "Temporarily blocks the enemy's vision, decreasing the inflicted enemy's accuracy\n\n[Effect Details]\nAccuracy -10",
+        "filename": "Staff_Skill_Reinforced_Darkness.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130141-OGp30x9BfPvkMADSZnwv0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Critical Magic",
+        "type": "Skill",
+        "description": "Amplifies the magical power of the Staff to increase Critical Hit of magic attacks.\n[Target: Self]\n\n[Effect Details]\nMagic Critical Hit +10%",
+        "filename": "Staff_Skill_Critical_Magic.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130152-yfs9X5t3OWNASsFeMEUK0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Reinforced: Critical Magic",
+        "type": "Skill",
+        "description": "Amplifies the magical power of the staff to increase Critical Hit and Magic Damage of magic attacks.\n[Target: Self]\n\n[Effect Details]\nMagic Critical Hit +10%\nMagic Damage +5",
+        "filename": "Staff_Skill_Reinforced_Critical_Magic.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130152-yfs9X5t3OWNASsFeMEUK0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Empowering Echo",
+        "type": "Skill",
+        "description": "Focuses nature energy on the weapon to increase Magic Damage.\n[Target: Self]\n\n[Effect Details]\nMagic Damage Boost +10%",
+        "filename": "Staff_Skill_Empowering_Echo.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130204-OHye9I98QCsGZqI9MOB50-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Reinforced: Empowering Echo",
+        "type": "Skill",
+        "description": "Focuses nature energy on the weapon.\nIncreases Magic Damage and Cast Speed.\n[Target: Self]\n\n[Effect Details]\nMagic Damage Boost +10%\nCast Speed +25%",
+        "filename": "Staff_Skill_Reinforced_Empowering_Echo.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130204-OHye9I98QCsGZqI9MOB50-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Battle Heal",
+        "type": "Skill",
+        "description": "Recovers HP during battle.\n[Target: Self]",
+        "filename": "Staff_Skill_Battle_Heal.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130215-sVw6UcH4JcGrHZ7Sd5cn0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Mana Regeneration",
+        "type": "Skill",
+        "description": "Absorbs magic energy from the atmosphere to increase MP Recovery efficiency.\n[Target: Self]\n\n[Effect Details]\nFixed MP Recovery +10",
+        "filename": "Staff_Skill_Mana_Regeneration.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130221-n0oX6wXd0w1I5xHvUXDe0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Clear Mind",
+        "type": "Skill",
+        "description": "With a clear mind gained from meditation, magic consumes less MP.\n\n[Effect Details]\nMP Consumption Reduction +5%",
+        "filename": "Staff_Skill_Clear_Mind.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130229-kbNsN8xdCGrIfzfwnCU50-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Reinforced: Clear Mind",
+        "type": "Skill",
+        "description": "With a clear mind gained from meditation, magic consumes less MP.\nIncreases usable Max MP.\n\n[Effect Details]\nMP Consumption Reduction +5%\nMax MP +100",
+        "filename": "Staff_Skill_Reinforced_Clear_Mind.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130229-kbNsN8xdCGrIfzfwnCU50-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Concentration Spell",
+        "type": "Skill",
+        "description": "Focuses on the essence of magic to draw out its raw effects.\nEnables CC effects to work better against opponents.\n\n[Effect Details]\nCC Accuracy +10%\nAll Type Boost +10%",
+        "filename": "Staff_Skill_Concentration_Spell.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130238-hea1Fa0j53r8UYljmoFU0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Blizzard Storm",
+        "type": "Skill",
+        "description": "Creates an icy storm to inflict Water Type Damage to surrounding targets, and enemies' Hide status will be removed.\n\n[Target: Max 5 units, excludes the caster and nearby party or clan members]",
+        "filename": "Staff_Skill_Blizzard_Storm.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130248-6I6db0AjO1SVt9H7Epvy0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Cancellation",
+        "type": "Skill",
+        "description": "Focuses magic to remove the target's Buff effects.\nSuccessful removal of Buff effects has a chance to Silence the target and boost the caster\u2019s Movement Speed, Flinch Resistance, and Extra Evasion.\nHowever, Arcane Shield cannot be removed.\n[Target: Single]",
+        "filename": "Staff_Skill_Cancellation.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130312-dvX3ZCi2mPBADBUBb5UT0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Restore Casting",
+        "type": "Skill",
+        "description": "Rewinds time using forbidden magic.\nReduces skill cooldown completely.\nTemporarily increases skill power.\n(Cannot decrease cooldown for Gravity.)\n[Target: Self]\n\n[Effect Details]\nSkill Damage Boost +10%",
+        "filename": "Staff_Skill_Restore_Casting.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130318-gqZXci87FW0DSv1gjWGF0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Reinforced: Restore Casting",
+        "type": "Skill",
+        "description": "Rewinds time using forbidden magic.\nReduces skill cooldown completely.\nTemporarily increases skill power.\nConsumes less MP.\n(Cannot decrease cooldown for Gravity.)\n[Target: Self]\n\n[Effect Details]\nSkill Damage Boost +10%",
+        "filename": "Staff_Skill_Reinforced_Restore_Casting.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130318-gqZXci87FW0DSv1gjWGF0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Arcane Power",
+        "type": "Skill",
+        "description": "Gains a secret method to amplify magical power to unleash faster and more destructive spells.\n\n[Effect Details]\nCast Speed +10%\nSkill Damage +10%",
+        "filename": "Staff_Skill_Arcane_Power.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130328-ErzOb1w8rCNRInLvmr3H0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Confuse",
+        "type": "Skill",
+        "description": "Breaks down the target's mind, with a chance to confuse them.\nConfused target cannot check their HP and MP, receives damage over time, suffers reduced Stun Accuracy, and has a high chance to become inflicted with Hold.\n[Target: Single]",
+        "filename": "Staff_Skill_Confuse.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130334-RbXG46mRxe1s3tqt7NhE0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Reinforced: Confuse",
+        "type": "Skill",
+        "description": "Breaks down the target's mind, with a higher chance to confuse them.\nConfused target cannot check their HP and MP, receives damage over time, suffers reduced Stun Accuracy, and has a high chance to become inflicted with Hold.\n[Target: Single]",
+        "filename": "Staff_Skill_Reinforced_Confuse.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130334-RbXG46mRxe1s3tqt7NhE0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Meteor",
+        "type": "Skill",
+        "description": "Summons a meteor to deal Fire Type Damage to the target and nearby enemies.\n[Target: Max 8 units]",
+        "filename": "Staff_Skill_Meteor.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130347-Q70g9Vcl1QnRPkfcorhW0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Gravity",
+        "type": "Skill",
+        "description": "Reinforces the gravity of the caster's surrounding area.\nOpponents within the area cannot Escape or Teleport and their movement is slowed. The opponents' Hide effects will be removed.\nThe caster will also be affected by Gravity, cannot Teleport, and their movement is slowed.\n(Gravity can be canceled by Stun.)\n[Target: Max 50 Playable Characters, excludes the caster, Party Members and Clan Members]",
+        "filename": "Staff_Skill_Gravity.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130354-nkYUpIMoPa8cd5jOIQO30-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Reinforced: Gravity",
+        "type": "Skill",
+        "description": "Reinforces the gravity of the caster's surrounding area.\nOpponents within the area cannot Escape or Teleport and their movement is slowed. The opponents' Hide effects will be removed.\nThe caster will also be affected by Gravity and cannot Teleport.\n\n(Gravity can be canceled by Stun.)\n[Target: Max 50 Playable Characters, excludes the caster, Party Members and Clan Members]",
+        "filename": "Staff_Skill_Reinforced_Gravity.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130354-nkYUpIMoPa8cd5jOIQO30-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Chaos",
+        "type": "Skill",
+        "description": "Summons Shilen's dark spear upon the target, dealing enormous Dark Type Damage.\n[Target: Single]",
+        "filename": "Staff_Skill_Chaos.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130404-tWcRVIrw9mz4IoHh4zEB0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Reinforced: Chaos",
+        "type": "Skill",
+        "description": "Consumes less MP to summon Shilen's dark spear upon the target, dealing enormous Dark Type Damage.\n[Target: Single]",
+        "filename": "Staff_Skill_Reinforced_Chaos.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130411-IbGrv82fm2WaghbuFenl0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Grand Staff Mastery",
+        "type": "Skill",
+        "description": "Staff proficiency greatly increases to unleash the full potential.\n[Target: Self]\n\n[Effect Details]\nIncreases attack range.\nCC Accuracy +10%\nMagic Accuracy +5",
+        "filename": "Staff_Skill_Grand_Staff_Mastery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130419-7JeQuKle3a8udWttRkOe0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Frozen Crystal",
+        "type": "Skill",
+        "description": "Freezes the target. The Frozen target is unable to take any action and will break free after taking a certain amount of damage.\n[Target: Single PC]",
+        "filename": "Staff_Skill_Frozen_Crystal.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130425-yL1j71HlOEKERNP8UR130-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Devil's Way",
+        "type": "Skill",
+        "description": "Reinforces Tempest to deal greater damage and additionally decrease the hit target's Skill Damage Resistance.\n[Target: Self]\n\n[Effect Details]\nReinforces Tempest\nChance to decrease the hit enemy's Skill Damage Resistance -25 for 3 seconds",
+        "filename": "Staff_Skill_Devil_s_Way.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130430-oO9zZ2dJmpUy03kcfHQr0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Gust Strike",
+        "type": "Skill",
+        "description": "Reinforces Wind Strike, summoning a powerful gust to deal AoE Wind Type Damage. Recovers MP based on the number of damaged targets.\n[Target: Max 5 units, excludes friendly targets]\n\n[Effect Details]\nReinforces Wind Strike\nMP Recovery per damaged target.",
+        "filename": "Staff_Skill_Gust_Strike.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130446-6rLDyFN6KnavFzwnU8zJ0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Stigma",
+        "type": "Skill",
+        "description": "Reinforces Cancellation to have a higher chance of success, and stigmatizes the target on a successful Skill hit.\nStigma removes the Arcane Shield effect on the target and prevents any new Arcane Shield effect for a certain duration. Decreases elemental resistance.\n[Target: Single]\n[Target: Excludes friendly targets]\n\n[Effect Details]\nReinforces Cancellation\nUpon successful Cancellation, removes the Arcane Shield effect and prevents any new Arcane Shield effect.\nCannot remove Celestial Shield\nWater Type Resistance -30\nFire Type Resistance -30\nWind Type Resistance -30\nEarth Type Resistance -30\nDark Type Resistance -30",
+        "filename": "Staff_Skill_Stigma.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130454-7CdLi9bWxiGNgue67w0w0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Royal Staff Mastery",
+        "type": "Skill",
+        "description": "Breaks through to the next level of Spear wielding through intense training.\n[Target: Self]\n\n[Effect Details]\nDouble Chance +5%\nExtra PvP Damage +5",
+        "filename": "Staff_Skill_Royal_Staff_Mastery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130500-iDghoF9ihLZGhJXMmgGo0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Glacier Storm",
+        "type": "Skill",
+        "description": "Reinforces Snow Storm for a chance to inflict Slow on the target and create an ice barrier around the caster with a certain amount of HP.\n[Target: Max 5 units, excludes nearby friendly targets]\n\n[Effect Details]\nReinforces Snow Storm.\nChance to inflict targets with Slow on hit.\nTemporarily creates a Max HP-based ice barrier around caster.\nStun Resistance +5% and Silence Resistance increases while the ice barrier is active.",
+        "filename": "Staff_Skill_Glacier_Storm.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130519-DZjdYSZU6YWBtyUYWPsp0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Legendary Staff Mastery",
+        "type": "Skill",
+        "description": "Reaches the ultimate level of Spear wielding.\n[Target: Self]\n\n[Effect Details]\nStun Resistance +5%\nAll Type Boost +5%",
+        "filename": "Staff_Skill_Legendary_Staff_Mastery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130525-S72QungfVJnb3s01TLb60-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Abyss",
+        "type": "Skill",
+        "description": "Reinforces Chaos to summon consecutive Shilen's dark spears upon the target, dealing tremendous Dark Type Damage. The first and second attacks have a chance to inflict Hold and disable Teleport and Escape.\n[Target: Single]\n\n[Effect Details]\nReinforces Chaos.\nFirst and second attacks have a chance to disable Hold, Teleport, and Escape.",
+        "filename": "Staff_Skill_Abyss.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130539-P0Y7PXy7N2mHaQdsUNdm0-v4"
+    },
+    {
+        "page": "Staff",
+        "name": "Authority",
+        "type": "Skill",
+        "description": "Temporarily exerts power of absolute authority.\n(Learning enabled on possession of a Mythic Class.)\n(Can be used only by a Mythic Class.)\n[Target: Self]\n\n[Effect Details]\nChance to deal AoE damage on Basic Attack or Skill hit (excludes friendly targets).\nAll Type Damage Boost +10%\nCC Accuracy +10%",
+        "filename": "Staff_Skill_Authority.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117130548-1mJqWcs9kgoH8IhNVZKp0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Mortal Blow",
+        "type": "Skill",
+        "description": "Aims a powerful attack at the opponent's weak points to deal damage.\nHas a chance to inflict Poison for 5 seconds on hit.\n[Target: Single]",
+        "filename": "Dagger_Skill_Mortal_Blow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117104934-U3tuYzQQmaHfX2bbhZg50-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Quick Step",
+        "type": "Skill",
+        "description": "Strengthens physical abilities to increase All Speed.\n(Acceleration Lv.2)\n[Target: Self]",
+        "filename": "Dagger_Skill_Quick_Step.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117104944-SHw0WRO1tcBjWvbXjy3a0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Elemental Resist",
+        "type": "Skill",
+        "description": "Increases elemental resistance.\n[Target: Self]\n\n[Effect Details]\nSkill Resistance +10\nWater Type Resistance +10%\nFire Type Resistance +10%\nWind Type Resistance +10%\nEarth Type Resistance +10%",
+        "filename": "Dagger_Skill_Elemental_Resist.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117104949-wPwpXwYt7BfQtWDw9piY0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Power Focus",
+        "type": "Skill",
+        "description": "Focuses power to increase All Damage.\n[Target: Self]\n\n[Effect Details]\nAll Damage +1",
+        "filename": "Dagger_Skill_Power_Focus.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117104955-0TQge2i0Ua8hJCozquDo0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Mortal Strike",
+        "type": "Skill",
+        "description": "Unearths a part of your soul to enhance melee combat abilities.\n[Target: Self]\n\n[Effect Details]\nMelee Accuracy +3",
+        "filename": "Dagger_Skill_Mortal_Strike.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105006-3qjGYxO6dcSnllodx3jK0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Boost Evasion",
+        "type": "Skill",
+        "description": "Enhances reaction speed against incoming attacks for better Defense.\n[Target: Self]\n\n[Effect Details]\nDefense +2",
+        "filename": "Dagger_Skill_Boost_Evasion.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105014-HpnqXfsAz941RaHTOtLt0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Chance Focus",
+        "type": "Skill",
+        "description": "Targets the opponent's weakness to increase chance of inflicting Double Damage.\n[Target: Self]\n\n[Effect Details]\nDouble Chance +10%",
+        "filename": "Dagger_Skill_Chance_Focus.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105026-DX5JKrB4qTHUpARB5vZk0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Deadly Blow",
+        "type": "Skill",
+        "description": "Attacks the target's weak points to inflict huge damage.\nHas a chance to deal destructive damage.\n[Target: Single]",
+        "filename": "Dagger_Skill_Deadly_Blow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105032-5CSUjqzYbaCfrfvLqplz0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Reinforced: Deadly Blow",
+        "type": "Skill",
+        "description": "Attacks the target's weak points to inflict huge damage.\nHas a chance to deal destructive damage.\nDeals Extra Damage when attacking enemies inflicted with Poison or Venom.\n[Target: Single]",
+        "filename": "Dagger_Skill_Reinforced_Deadly_Blow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105032-5CSUjqzYbaCfrfvLqplz0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Death Focus",
+        "type": "Skill",
+        "description": "Temporarily raises the weapon's maximum damage.\n[Target: Self]\n\n[Effect Details]\nWeapon Damage +5",
+        "filename": "Dagger_Skill_Death_Focus.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105043-p0pOoko1HrZS1SP2Ye8E0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Reinforced: Death Focus",
+        "type": "Skill",
+        "description": "Temporarily raises the weapon's maximum damage.\nThe weapon's minimum damage also increases.\n[Target: Self]\n\n[Effect Details]\nWeapon Damage +5\nWeapon Minimum Damage +5",
+        "filename": "Dagger_Skill_Reinforced_Death_Focus.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105043-p0pOoko1HrZS1SP2Ye8E0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Wind Walk",
+        "type": "Skill",
+        "description": "Focuses the spirit of the wind around the body to greatly increase Movement Speed.\n[Target: Self]",
+        "filename": "Dagger_Skill_Wind_Walk.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105053-NTuPIacbPOJ0sYo3o7LM0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Reinforced: Wind Walk",
+        "type": "Skill",
+        "description": "Focuses the spirit of the wind around the body to greatly increase Movement Speed.\nAt the same time, removes all Hold effects.\nIncreases Hold Resistance for the duration.\n[Target: Self]\n\n[Effect Details]\nHold Resistance +20%",
+        "filename": "Dagger_Skill_Reinforced_Wind_Walk.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105053-NTuPIacbPOJ0sYo3o7LM0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Shadow Cape",
+        "type": "Skill",
+        "description": "Wears a Shadow Cloak that grants a chance to ignore Magic Damage.\n[Target: Self]\n\n[Effect Details]\nMagic Immunity Chance +30",
+        "filename": "Dagger_Skill_Shadow_Cape.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105103-NFHVb28m8YNI47cpQNyN0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Reinforced: Shadow Cape",
+        "type": "Skill",
+        "description": "Wears a reinforced Shadow Cloak that grants a chance to ignore Magic Damage.\nIgnore\nIncreases resistance to enemy skills.\n[Target: Self]\n\n[Effect Details]\nMagic Immunity Chance +30\nSkill Resistance +20",
+        "filename": "Dagger_Skill_Reinforced_Shadow_Cape.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105103-NFHVb28m8YNI47cpQNyN0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Fake Magic",
+        "type": "Skill",
+        "description": "Detects hostile magic to decrease the chance of getting hit by critical magic attacks.\n\n[Effect Details]\nMagic Critical Hit Resistance +20%",
+        "filename": "Dagger_Skill_Fake_Magic.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105116-tmUCE5UHBczCIuF8bHAq0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Focus Accuracy",
+        "type": "Skill",
+        "description": "Learns how to precisely hit the intended point to increase Accuracy of attacks.\n\n[Effect Details]\nMelee Accuracy +3",
+        "filename": "Dagger_Skill_Focus_Accuracy.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105124-obAWk2DD7Pu5owUjBCk40-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Reinforced: Focus Accuracy",
+        "type": "Skill",
+        "description": "Learns how to precisely hit the intended point to increase Accuracy of attacks.\n\n[Effect Details]\nMelee Accuracy +5",
+        "filename": "Dagger_Skill_Reinforced_Focus_Accuracy.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105124-obAWk2DD7Pu5owUjBCk40-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Hide",
+        "type": "Skill",
+        "description": "Hides in the shadows.\nUpon coming out of the Stealth state, temporarily increases Damage Boost.\n\n[Target: Self]\n[Shares cooldown with Pray]",
+        "filename": "Dagger_Skill_Hide.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105132-5TZ4jfZEiE7HGVwDE9Nd0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Reinforced: Hide",
+        "type": "Skill",
+        "description": "Hides in the shadows.\nHide no longer consumes HP, and recovers HP for a period of time upon entering Hide state.\nUpon coming out of the Stealth state, temporarily increases Damage Boost.\n\n[Target: Self]\n[Shares cooldown with Pray]",
+        "filename": "Dagger_Skill_Reinforced_Hide.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105132-5TZ4jfZEiE7HGVwDE9Nd0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Vision of Assassin",
+        "type": "Skill",
+        "description": "Keen assassin eyes mark a nearby opponent with HP below a certain point.\nAttacking the marked enemy deals greater damage.\nBetter withstands attacks by the marked enemy.\n[Target: Single PC]",
+        "filename": "Dagger_Skill_Vision_of_Assassin.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105151-1JczrwSltlfKcMb3zFuV0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Venom",
+        "type": "Skill",
+        "description": "Applies venom to the dagger.\nVenom deals damage over time for 10-15 seconds and decreases the target's Potion Recovery Rate and Stun Accuracy.\n[Target: Self]",
+        "filename": "Dagger_Skill_Venom.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105320-d9O5bZmYKoohq5UUkHhf0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Reinforced: Venom",
+        "type": "Skill",
+        "description": "Applies venom to the dagger.\nVenom deals damage over time for 10-15 seconds and decreases the target's Potion Recovery Rate and Stun Accuracy. Has a chance to additionally Silence the enemy for 5 seconds.\n[Target: Self]",
+        "filename": "Dagger_Skill_Reinforced_Venom.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105320-d9O5bZmYKoohq5UUkHhf0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Critical Wound",
+        "type": "Skill",
+        "description": "Enhances the ability to detect the enemy's weakness for more accurate and devastating damage.\n\n[Effect Details]\nCritical Hit +10%\nExtra Damage on Critical Hit +10",
+        "filename": "Dagger_Skill_Critical_Wound.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105331-O6fXeU7eatjA2flaKYAR0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Marionette",
+        "type": "Skill",
+        "description": "Binds the target's legs with shadow blade energy, disrupting Movement and Teleport.\n[Target: Single]\n[Cannot be removed by Cure]",
+        "filename": "Dagger_Skill_Marionette.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105338-Ix12Ot3MHmOoGSztkkuX0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Reinforced: Marionette",
+        "type": "Skill",
+        "description": "Higher chance to bind the target's legs with shadow blade energy, disrupting Movement and Teleport.\n[Target: Single]\n[Cannot be removed by Cure]",
+        "filename": "Dagger_Skill_Reinforced_Marionette.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105338-Ix12Ot3MHmOoGSztkkuX0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Reset Movement",
+        "type": "Skill",
+        "description": "Regains composure after defeating an opposing Player Character. Takes a stance for the next move.\n(Does not affect the Hide skill.)\n[Target: Enemy Player Character]\n\n[Effect Details]\nResets skill cooldown upon defeating an opposing Player Character.\nIncreases Cooldown Reduction",
+        "filename": "Dagger_Skill_Reset_Movement.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105348-APIOxQGTuN7azDkEFY5B0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Shadow Blade",
+        "type": "Skill",
+        "description": "Has a chance to create 1 shadow clone on a Basic Attack hit.\nThe clone's attack deals damage based on the current Attack Damage.\n[Target: Single]",
+        "filename": "Dagger_Skill_Shadow_Blade.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105413-fikNc8TrLsvldGolFPvb0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Shadow Blade",
+        "type": "Skill",
+        "description": "Has a chance to create 2 shadow clones on a Basic Attack hit.\nThe clone's attack deals damage based on the current Attack Damage.\n[Target: Single]\n\n[Reinforced Phantom Blade effect]\nCreates 2 shadow clones to attack.",
+        "filename": "Dagger_Skill_Shadow_Blade.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105413-fikNc8TrLsvldGolFPvb0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Shadow Step",
+        "type": "Skill",
+        "description": "Hides in the enemy's shadow and moves behind the target.\nDeals damage to the target on hit, with a chance to Stun the target.\n[Target: Single]",
+        "filename": "Dagger_Skill_Shadow_Step.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105425-98dtMYnTemts9ln4JLvZ0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Reinforced: Shadow Step",
+        "type": "Skill",
+        "description": "Hides in the enemy's shadow and moves behind the target.\nDeals damage to the target on hit, with a higher chance to Stun the target.\n[Target: Single]",
+        "filename": "Dagger_Skill_Reinforced_Shadow_Step.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105425-98dtMYnTemts9ln4JLvZ0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Phantom Blade",
+        "type": "Skill",
+        "description": "Reinforces Shadow Blade.\n\n[Effect Details]\nCreates 1 extra Shadow Clone.",
+        "filename": "Dagger_Skill_Phantom_Blade.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105434-95H92tuwbWLOYG3daedm0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Grand Dagger Mastery",
+        "type": "Skill",
+        "description": "Dagger proficiency greatly increases to unleash the full potential.\n[Target: Self]\n\n[Effect Details]\nAGI +5\nDouble Chance +5%",
+        "filename": "Dagger_Skill_Grand_Dagger_Mastery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105441-ptO9iwNnG8VFhxlSStkk0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Poison Terror",
+        "type": "Skill",
+        "description": "Threatens an enemy in Poison or Venom status for a chance to deal extra damage on a Basic Attack hit.\n[Target: Single]\n\n[Effect Details]\nChance to deal Extra Damage on a Basic Attack hit.\nAdditional Extra Damage to target inflicted with Poison or Venom.",
+        "filename": "Dagger_Skill_Poison_Terror.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105450-tKiR5qih82508gqzQLj10-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Poisoning Bomb",
+        "type": "Skill",
+        "description": "Has a chance to spray deadly poison on Double hit, dealing AoE damage and decreasing Damage Resistance.\nAlso deals Poison damage.\n[Target: Max 3 units, excludes friendly targets]\n\n[Effect Details]\nChance to deal AoE damage on a Double hit.\nTemporarily Poisons the hit targets and decreases their Damage Resistance.",
+        "filename": "Dagger_Skill_Poisoning_Bomb.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105456-0Ght02x8c0PbRyYzp40P0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Poison Explosion",
+        "type": "Skill",
+        "description": "Reinforces Poison Terror to deal greater damage and trigger a chain reaction that greatly decreases Potion Recovery Rate for a certain duration.\n[Target: Self]\n[Cannot be removed by Cure]\n\n[Effect Details]\nAdditional Poison Terror damage.\nDecreases Potion Recovery Rate by 50% for 10-15 seconds for the target inflicted with Poison or Venom.",
+        "filename": "Dagger_Skill_Poison_Explosion.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105509-wrLkJ6gPWNkw5w2XCtrm0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Royal Dagger Mastery",
+        "type": "Skill",
+        "description": "Breaks through to the next level of Dagger wielding through intense training.\n[Target: Self]\n\n[Effect Details]\nWeapon Damage Boost +10%\nCC Accuracy +10%",
+        "filename": "Dagger_Skill_Royal_Dagger_Mastery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105520-SQUwUc1WosyfuDFlf8me0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Death Mark",
+        "type": "Skill",
+        "description": "Reinforces Assassin\u2019s Vision and marks a nearby target with more HP.\n[Target: Single PC]\n\n[Effect Details]\nReinforces Assassin\u2019s Vision\n(Marks a target with higher HP than Assassin\u2019s Vision.)",
+        "filename": "Dagger_Skill_Death_Mark.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105527-lDGuS5XIsTsZfLVZnbjL0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Legendary Dagger Mastery",
+        "type": "Skill",
+        "description": "Reaches the ultimate level of Dagger wielding.\n[Target: Self]\n\n[Effect Details]\nStun Resistance +5%\nIgnore Damage Resistance +5%",
+        "filename": "Dagger_Skill_Legendary_Dagger_Mastery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105532-kx8gDqggk7u2BMPjyPrP0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Betrayal",
+        "type": "Skill",
+        "description": "Reinforces Marionette, dealing damage and capturing the target to render them more vulnerable.\n(All effects, excluding Extra Damage, are applied to enemies even with Pray effect, with a chance to remove the Pray effect.)\n[Target: Single]\n[Duration: 5-10 sec]\n[Cannot be removed by Cure or Pray]\n[Penetrates Pray]\n\n[Effect Details]\nReinforces Marionette.\nStun Accuracy -20%\nStun Resistance -20%\nHide disabled",
+        "filename": "Dagger_Skill_Betrayal.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105550-wReS24ThMdrRxe96Y6Gu0-v4"
+    },
+    {
+        "page": "Dagger",
+        "name": "Authority",
+        "type": "Skill",
+        "description": "Temporarily exerts power of absolute authority.\n(Learning enabled on possession of a Mythic Class.)\n(Can be used only by a Mythic Class.)\n[Target: Self]\n\n[Effect Details]\nChance to deal AoE damage on Basic Attack or Skill hit (excludes friendly targets).\nStun Accuracy +10%\nCC Accuracy +10%",
+        "filename": "Dagger_Skill_Authority.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117105555-bbsiSSltSfbnD9JkrwHY0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Relax I",
+        "type": "Skill",
+        "description": "Instills inner peace to increase HP Recovery Rate.\n\n[Effect Details]\nHP Recovery (Tick) +5",
+        "filename": "Common_Skill_Relax_I.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171258-aprLEBu3xQxANnMczP780-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Weight",
+        "type": "Skill",
+        "description": "Allows more items to be carried.\n\n[Effect Details]\nWeight Limit +200",
+        "filename": "Common_Skill_Increase_Weight.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171304-6OsxF6Ur2QXNxuuiSA320-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Teleport",
+        "type": "Skill",
+        "description": "Random Teleport Skill.\n(Replaces Teleport Scrolls)",
+        "filename": "Common_Skill_Teleport.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171308-Pbt4EheeF9soeKTLYNLs0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Armor Mastery",
+        "type": "Skill",
+        "description": "Enhances armor proficiency to increase Defense.\n\n[Effect Details]\nDefense +1",
+        "filename": "Common_Skill_Armor_Mastery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171321-OqS9AYHOymAZmiL9VSri0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Blade Control I",
+        "type": "Skill",
+        "description": "Enhances the proficiency of melee attacks to increase Accuracy.\n\n[Effect Details]\nMelee Accuracy +1",
+        "filename": "Common_Skill_Blade_Control_I.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171326-tdan2SJRQzUXeLCN63uU0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Arrow Control I",
+        "type": "Skill",
+        "description": "Enhances the proficiency of ranged attacks to increase Accuracy.\n\n[Effect Details]\nRanged Accuracy +1",
+        "filename": "Common_Skill_Arrow_Control_I.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171331-C0Lmcx0h25Gjro6DcXzV0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Magic Control I",
+        "type": "Skill",
+        "description": "Enhances the proficiency of magic attacks to increase Accuracy.\n\n[Effect Details]\nMagic Accuracy +1",
+        "filename": "Common_Skill_Magic_Control_I.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171338-2cBiS4tWQDIuoN0YudWK0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Improve Blade",
+        "type": "Skill",
+        "description": "Increases the damage of melee attacks.\n\n[Effect Details]\nMelee Damage +1",
+        "filename": "Common_Skill_Improve_Blade.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171346-spvFWoa2Os67pdAgloke0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Improve Arrow",
+        "type": "Skill",
+        "description": "Increases the damage of ranged attacks.\n\n[Effect Details]\nRanged Damage +1",
+        "filename": "Common_Skill_Improve_Arrow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171402-1jxEKL1Y3cW1gKvaOyw30-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Improve Magic",
+        "type": "Skill",
+        "description": "Increases the damage of magic attacks.\n\n[Effect Details]\nMagic Damage +1",
+        "filename": "Common_Skill_Improve_Magic.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171406-f2e8hGeWzEXg4ZDdzMgq0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Skill Resist",
+        "type": "Skill",
+        "description": "Increases resistance against enemy Skill attacks.\n\n[Effect Details]\nSkill Resistance +10\nWater Type Resistance +10%\nFire Type Resistance +10%\nWind Type Resistance +10%\nEarth Type Resistance +10%\nLight Type Resistance +20%",
+        "filename": "Common_Skill_Skill_Resist.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171532-3Jal40o5bA1BkgxNlwMg0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Health",
+        "type": "Skill",
+        "description": "Increases maximum HP.\n\n[Effect Details]\nMax HP +150",
+        "filename": "Common_Skill_Increase_Health.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171542-TNUCuFk9iYAGLcfPHjhk0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Mana",
+        "type": "Skill",
+        "description": "Increases maximum MP.\n\n[Effect Details]\nMax MP +50",
+        "filename": "Common_Skill_Increase_Mana.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171552-VN9ST7TGcrkZh4a2akRF0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Critical Resist",
+        "type": "Skill",
+        "description": "Increases resistance to Critical Hits.\n\n[Effect Details]\nCritical Hit Resistance +5%",
+        "filename": "Common_Skill_Critical_Resist.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171657-B0OSwWEFWFFZs8hcUcT10-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Defense",
+        "type": "Skill",
+        "description": "Increases Defense.\n\n[Effect Details]\nDefense +2",
+        "filename": "Common_Skill_Increase_Defense.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171734-uYS17CN8sw2rM2Cu36ax0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Sharp Eye",
+        "type": "Skill",
+        "description": "Increases Accuracy.\n\n[Effect Details]\nAccuracy +1",
+        "filename": "Common_Skill_Sharp_Eye.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171743-wFPCWJFzRuhvVfXKvDjf0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Attack",
+        "type": "Skill",
+        "description": "Increases all damage.\n\n[Effect Details]\nAll Damage +1",
+        "filename": "Common_Skill_Increase_Attack.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171754-Yb4U5iF0no61KY4b9u3B0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Blade Control II",
+        "type": "Skill",
+        "description": "Enhances the proficiency of melee attacks to increase Accuracy.\n\n[Effect Details]\nMelee Accuracy +1",
+        "filename": "Common_Skill_Blade_Control_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171822-nXUKRttGFYgrzfkn9ls00-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Arrow Control II",
+        "type": "Skill",
+        "description": "Enhances the proficiency of ranged attacks to increase Accuracy.\n\n[Effect Details]\nRanged Accuracy +1",
+        "filename": "Common_Skill_Arrow_Control_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171831-BE6AVnJx0fvGnygqUwKJ0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Magic Control II",
+        "type": "Skill",
+        "description": "Enhances the proficiency of magic attacks to increase Accuracy.\n\n[Effect Details]\nMagic Accuracy +1",
+        "filename": "Common_Skill_Magic_Control_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171839-h87ZpyxYZTLLpqGAltfM0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Weapon Block I",
+        "type": "Skill",
+        "description": "Increases Weapon Block Rate.\n\n[Effect Details]\nBlock Rate +1%",
+        "filename": "Common_Skill_Weapon_Block_I.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171854-CwBGMpD5TZEs1oouEobC0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Relax II",
+        "type": "Skill",
+        "description": "Instills inner peace to increase HP Recovery Rate.\n\n[Effect Details]\nHP Recovery (Tick) +10",
+        "filename": "Common_Skill_Relax_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171903-XZwMDCCJfXeuPn0a9mq40-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Critical",
+        "type": "Skill",
+        "description": "Increases the chance to land a Critical Hit.\n\n[Effect Details]\nCritical Hit +5%",
+        "filename": "Common_Skill_Increase_Critical.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171910-5Tg9QRxLs9KsWp5unS9w0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Accuracy",
+        "type": "Skill",
+        "description": "Enhances weapon skills for increased Accuracy.\n\n[Effect Details]\nAccuracy +3",
+        "filename": "Common_Skill_Accuracy.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171930-OAivrUUggCpnPMSID9EL0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Evasion Mastery",
+        "type": "Skill",
+        "description": "Enhances the caster's focus and movement to improve Evasion against enemy attacks.\n\n[Effect Details]\nMelee Evasion +3\nRanged Evasion +3\nMagic Evasion +3",
+        "filename": "Common_Skill_Evasion_Mastery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171934-ONDBmAz6dj9wOjTwACDv0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Weapon Mastery",
+        "type": "Skill",
+        "description": "Hones weapon skills for increased damage.\n\n[Effect Details]\nWeapon Damage +4",
+        "filename": "Common_Skill_Weapon_Mastery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116171953-s2iVUAKW7mlpdHKauWpK0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Double",
+        "type": "Skill",
+        "description": "Increases the chance to land a Double Attack.\n\n[Effect Details]\nDouble Chance +2%",
+        "filename": "Common_Skill_Increase_Double.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172008-jbqqwbFJVlYOur8Rp0Le0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Double Resist",
+        "type": "Skill",
+        "description": "Increases Double Resistance.\n\n[Effect Details]\nDouble Resistance +2%",
+        "filename": "Common_Skill_Double_Resist.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172013-iCEIcB3fHap7dbf2tCfv0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Pierce Reduction",
+        "type": "Skill",
+        "description": "Increases Ignore Damage Reduction.\n\n[Effect Details]\nIgnore Damage Reduction +2",
+        "filename": "Common_Skill_Pierce_Reduction.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172038-PnHsKXkFSD6svwBDkZPl0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Defensive Skill Power",
+        "type": "Skill",
+        "description": "Increases Skill Damage Resistance.\n\n[Effect Details]\nSkill Damage Resistance +5%",
+        "filename": "Common_Skill_Defensive_Skill_Power.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172059-GFIGnAPXeTaZAqVQF1R70-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Flinch Resistance",
+        "type": "Skill",
+        "description": "Increases Flinch Resistance.\n\n[Effect Details]\nFlinch Resistance +5%",
+        "filename": "Common_Skill_Flinch_Resistance.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172202-wjEu7qTgPN8s4Wap3Vaj0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Chaos Hunter",
+        "type": "Skill",
+        "description": "Generates the power to face chaos.\nIncreases damage against enemies with high Evil Reputation.\n\n[Effect Details]\nExtra Damage (to Chaotic) +5",
+        "filename": "Common_Skill_Chaos_Hunter.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172218-OKaz77tXyXnJ54Ymyr3g0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Extra Healing",
+        "type": "Skill",
+        "description": "Increases Heal Boost.\n\n[Effect Details]\nHeal Boost +3%",
+        "filename": "Common_Skill_Extra_Healing.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172226-Qo92BPVoj2iXXC2aXHr20-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Blade Control III",
+        "type": "Skill",
+        "description": "Enhances the proficiency of melee attacks to increase Accuracy.\n\n[Effect Details]\nMelee Accuracy +2",
+        "filename": "Common_Skill_Blade_Control_III.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172243-gYuOaNqP6gWixIyIf4FM0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Arrow Control III",
+        "type": "Skill",
+        "description": "Enhances the proficiency of ranged attacks to increase Accuracy.\n\n[Effect Details]\nRanged Accuracy +2",
+        "filename": "Common_Skill_Arrow_Control_III.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172249-3ScSBnWntItg3aYQ5Sfx0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Magic Control III",
+        "type": "Skill",
+        "description": "Enhances the proficiency of magic attacks to increase Accuracy.\n\n[Effect Details]\nMagic Accuracy +2",
+        "filename": "Common_Skill_Magic_Control_III.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172300-bcXKcz6oLixBf12BhwFh0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Weapon Block II",
+        "type": "Skill",
+        "description": "Increases Weapon Block Rate.\n\n[Effect Details]\nBlock Rate +3%",
+        "filename": "Common_Skill_Weapon_Block_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172316-9u63xxuPyiJOx1komWnN0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Relax III",
+        "type": "Skill",
+        "description": "Instills inner peace to increase HP Recovery Rate.\n\n[Effect Details]\nHP Recovery (Tick) +15",
+        "filename": "Common_Skill_Relax_III.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172322-F1SLp8trKfp7dK4T9sx80-v4"
+    },
+    {
+        "page": "Common",
+        "name": "High Potion I",
+        "type": "Skill",
+        "description": "Increases Potion Recovery Rate.\n\n[Effect Details]\nPotion Recovery Rate +3%",
+        "filename": "Common_Skill_High_Potion_I.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172329-Q1kC9Lu7afQuKNmRcXTe0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Slay Recovery I",
+        "type": "Skill",
+        "description": "Recovers HP by draining life when an opponent is defeated.\n\n[Effect Details]\nHP recovery after defeating opponents +10",
+        "filename": "Common_Skill_Slay_Recovery_I.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172340-EomQBDtuSnKW8eRCSYif0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Thrust I",
+        "type": "Skill",
+        "description": "Sharpens focus to increase the chance to Ignore Damage Resistance.\n\n[Effect Details]\nIgnore Damage Resistance +2%",
+        "filename": "Common_Skill_Thrust_I.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172344-rr9YQviSpvO07wHUiiHf0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Skill Block I",
+        "type": "Skill",
+        "description": "Has a chance to reduce Skill Damage.\n\n[Effect Details]\nIncreases Skill Block chance",
+        "filename": "Common_Skill_Skill_Block_I.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172431-rLs8vinWypoDfsxJHgqc0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Damage Block I",
+        "type": "Skill",
+        "description": "Chance to reduce Damage.\n\n[Effect Details]\nIncreases the chance to Damage Block",
+        "filename": "Common_Skill_Damage_Block_I.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172436-wtVEGLCEcphAvtZiHQlc0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Improve Blade II",
+        "type": "Skill",
+        "description": "Increases the damage of melee attacks.\n\n[Effect Details]\nMelee Damage +2",
+        "filename": "Common_Skill_Improve_Blade_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172456-ENzL1Bx6fxnZbwCgiAPC0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Improve Arrow II",
+        "type": "Skill",
+        "description": "Increases the damage of ranged attacks.\n\n[Effect Details]\nRanged Damage +2",
+        "filename": "Common_Skill_Improve_Arrow_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172510-78pkzxF3z44jtiSoKsQk0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Improve Magic II",
+        "type": "Skill",
+        "description": "Increases the damage of magic attacks.\n\n[Effect Details]\nMagic Damage +2",
+        "filename": "Common_Skill_Improve_Magic_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172520-zNpJMH3ogQk7pVN7Ptag0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Absolute Accuracy I",
+        "type": "Skill",
+        "description": "Increases Absolute Accuracy to thwart enemy Evasion.\n\n[Effect Details]\nAbsolute Accuracy +1%",
+        "filename": "Common_Skill_Absolute_Accuracy_I.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172525-EhnkmvjsrQUFBEKzbuWc0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Stun Barrier I",
+        "type": "Skill",
+        "description": "While stunned, Stun Resistance increases against consecutive Stuns.\n\n[Effect Details]\nStun Resistance +2% temporarily while stunned",
+        "filename": "Common_Skill_Stun_Barrier_I.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172535-XdGoV2vLnhISoXBX9t1H0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Strength",
+        "type": "Skill",
+        "description": "Increases STR.\n\n[Effect Details]\nSTR +3",
+        "filename": "Common_Skill_Increase_Strength.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172638-kkZRRQst0EImIMPGHvBg0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Dexterity",
+        "type": "Skill",
+        "description": "Increases DEX.\n\n[Effect Details]\nDEX +3",
+        "filename": "Common_Skill_Increase_Dexterity.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172646-PFflM3wWpvI7WEa6ysnG0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Intelligence",
+        "type": "Skill",
+        "description": "Increases INT.\n\n[Effect Details]\nINT +3",
+        "filename": "Common_Skill_Increase_Intelligence.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172656-Rb59ye1YVNPVsn2FA8Di0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Agility",
+        "type": "Skill",
+        "description": "Increases AGI.\n\n[Effect Details]\nAGI +3",
+        "filename": "Common_Skill_Increase_Agility.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172726-etUiJ6qO2ZL4fC9t4Oss0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Wisdom",
+        "type": "Skill",
+        "description": "Increases WIS.\n\n[Effect Details]\nWIS +3",
+        "filename": "Common_Skill_Increase_Wisdom.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172735-B319uTHR6YvQlJ5lMHDm0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Constitution",
+        "type": "Skill",
+        "description": "Increases CON.\n\n[Effect Details]\nCON +3",
+        "filename": "Common_Skill_Increase_Constitution.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172909-QiOWMIamFYpPf6sJouRy0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Salvation",
+        "type": "Skill",
+        "description": "Upon death, resurrects with full HP.",
+        "filename": "Common_Skill_Salvation.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116172948-s7049ZX4ckgGJPvFmBHJ0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Stun Resist",
+        "type": "Skill",
+        "description": "Increases Stun Resistance.\n\n[Effect Details]\nStun Resistance +5%",
+        "filename": "Common_Skill_Stun_Resist.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173005-JH0a2cAbTcicSNDJN2f70-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Hold Resist",
+        "type": "Skill",
+        "description": "Increases resistance to movement disruption.\n\n[Effect Details]\nHold Resistance +5%",
+        "filename": "Common_Skill_Hold_Resist.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173013-V50GzHgx5fg13BSYjjkE0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Stun",
+        "type": "Skill",
+        "description": "Increases Stun Accuracy.\n\n[Effect Details]\nStun Accuracy +5%",
+        "filename": "Common_Skill_Increase_Stun.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173022-ZdJuCCqOZEhYhCYozUv40-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Skill Power",
+        "type": "Skill",
+        "description": "Increases Skill Damage Boost.\n\n[Effect Details]\nSkill Damage Boost +3%",
+        "filename": "Common_Skill_Increase_Skill_Power.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173048-A9QSUg4Jx5muwdQ8zqPa0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Reduction",
+        "type": "Skill",
+        "description": "Increases Damage Reduction and PvP Damage Reduction.\n\n[Effect Details]\nDamage Reduction +2\nPvP Damage Reduction +1",
+        "filename": "Common_Skill_Increase_Reduction.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173056-Y3tI92yl1hrQKFpRA1dV0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "High Accuracy",
+        "type": "Skill",
+        "description": "Significantly increases Accuracy and PvP Accuracy.\n\n[Effect Details]\nAccuracy +3\nPvP Accuracy +2",
+        "filename": "Common_Skill_High_Accuracy.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173122-pWW1iuhzbZPXjtUv8xCW0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "High Potion II",
+        "type": "Skill",
+        "description": "Increases Potion Recovery Rate.\n\n[Effect Details]\nPotion Recovery Rate +5%",
+        "filename": "Common_Skill_High_Potion_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173129-pOLYucX2vh2aBQFpGdKv0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Royal Weapon Mastery",
+        "type": "Skill",
+        "description": "Significantly increases Weapon Damage Boost.\n\n[Effect Details]\nWeapon Damage Boost +3%",
+        "filename": "Common_Skill_Royal_Weapon_Mastery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173143-BnjqwxLLvuWr2LTjiApm0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Weapon Block III",
+        "type": "Skill",
+        "description": "Increases Weapon Block Rate.\n\n[Effect Details]\nBlock Rate +5%",
+        "filename": "Common_Skill_Weapon_Block_III.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173204-Q56iXwQxVoPwaIIOw9MG0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Slay Recovery II",
+        "type": "Skill",
+        "description": "Recovers HP by draining life when an opponent is defeated.\n\n[Effect Details]\nHP recovery after defeating opponents +20",
+        "filename": "Common_Skill_Slay_Recovery_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173221-1CXSODykMtksHjHpi14N0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Thrust II",
+        "type": "Skill",
+        "description": "Sharpens focus to increase the chance to Ignore Damage Resistance.\n\n[Effect Details]\nIgnore Damage Resistance +3%",
+        "filename": "Common_Skill_Thrust_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173225-0qv5nRB9wTfFQpeSpqH30-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Relapse Resist I",
+        "type": "Skill",
+        "description": "Decreases the rate and duration of consecutively inflicted Stun, Silence, and Hold CC effects.\n\n[Effect Details]\nIncreases CC Stack Resistance chance",
+        "filename": "Common_Skill_Relapse_Resist_I.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173230-wnJIrG9qICkyw8d3e3Lp0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Double II",
+        "type": "Skill",
+        "description": "Increases the chance to land a Double Attack.\n\n[Effect Details]\nDouble Chance +3%",
+        "filename": "Common_Skill_Increase_Double_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173420-5CybrzDnEyAETxul7haJ0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Double Resist II",
+        "type": "Skill",
+        "description": "Increases Double Resistance.\n\n[Effect Details]\nDouble Resistance +3%",
+        "filename": "Common_Skill_Double_Resist_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173426-EJi3pDGaxRyVZbKhfm860-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Evasion I",
+        "type": "Skill",
+        "description": "Enhances agile movement to increase Evasion.\n\n[Effect Details]\nAbsolute Evasion +1%",
+        "filename": "Common_Skill_Evasion_I.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173433-lLiNzW5dfXRs1ChjhCSa0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Skill Block II",
+        "type": "Skill",
+        "description": "Has a chance to reduce more Skill damage.\n\n[Effect Details]\nIncreases Skill Block chance",
+        "filename": "Common_Skill_Skill_Block_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173439-9NA25oiTyvpDNbADpPHD0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Damage Block II",
+        "type": "Skill",
+        "description": "Has a chance to reduce more Damage.\n\n[Effect Details]\nIncreases the chance to Damage Block",
+        "filename": "Common_Skill_Damage_Block_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173445-xbxJ8hvpNvYbgOBJv8h80-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Absolute Accuracy III",
+        "type": "Skill",
+        "description": "Increases Absolute Accuracy to thwart enemy Evasion.\n\n[Effect Details]\nAbsolute Accuracy +2%",
+        "filename": "Common_Skill_Absolute_Accuracy_III.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173456-T38jGkx3Vcwwa4qGATsY0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Stun Barrier II",
+        "type": "Skill",
+        "description": "While stunned, Stun Resistance increases against consecutive Stuns.\n\n[Effect Details]\nStun Resistance +3% and Damage Reduction +5 while stunned",
+        "filename": "Common_Skill_Stun_Barrier_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173511-LXPf4HwyJ54A8aKsusUL0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Eternal Life",
+        "type": "Skill",
+        "description": "Increases Potion Recovery Amount.\n\n[Effect Details]\nPotion Recovery Amount +10",
+        "filename": "Common_Skill_Eternal_Life.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173515-bujvlpx1ZyTyeRSMFtiU0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Invincible Champion",
+        "type": "Skill",
+        "description": "Increases PvP Damage Reduction.\n\n[Effect Details]\nPvP Damage Reduction +5",
+        "filename": "Common_Skill_Invincible_Champion.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173523-W7B098O84yLWJIIWDZxt0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Punishment",
+        "type": "Skill",
+        "description": "Increases Extra PvP Damage.\n\n[Effect Details]\nExtra PvP Damage +5",
+        "filename": "Common_Skill_Punishment.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173549-TmCzhBB3hnWQy8FQMp4A0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Attack Speed",
+        "type": "Skill",
+        "description": "Increases Attack Speed.\n\n[Effect Details]\nAttack Speed +5%",
+        "filename": "Common_Skill_Increase_Attack_Speed.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173556-aiJBuRGuF29UAuRy3vpm0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Quick Spell",
+        "type": "Skill",
+        "description": "Increases Cast Speed.\n\n[Effect Details]\nCast Speed +5%",
+        "filename": "Common_Skill_Quick_Spell.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173602-juchlC6yTEweS4HznynI0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "High Potion III",
+        "type": "Skill",
+        "description": "Increases Potion Recovery Rate.\n\n[Effect Details]\nPotion Recovery Rate +10%",
+        "filename": "Common_Skill_High_Potion_III.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173610-SLCNxBP6iBVZXYBo0T0L0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Thrust III",
+        "type": "Skill",
+        "description": "Sharpens focus to increase the chance to Ignore Damage Resistance.\n\n[Effect Details]\nIgnore Damage Resistance +5%",
+        "filename": "Common_Skill_Thrust_III.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173615-IT1tTu5EGFEzTixTvm5y0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Immunity",
+        "type": "Skill",
+        "description": "Taps into inner fortitude, increasing immunity to all damage types.\n\n[Effect Details]\nIncreases Immunity",
+        "filename": "Common_Skill_Immunity.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173621-bJd9pESaiUxtuSVTuADp0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Relapse Resist II",
+        "type": "Skill",
+        "description": "Further decreases the rate and duration of consecutively inflicted Stun, Silence, and Hold CC effects.\n\n[Effect Details]\nIncreases CC Stack Resistance chance",
+        "filename": "Common_Skill_Relapse_Resist_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173626-Lvs3kvj4RHLe8mEbZmDI0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Winning Mentality",
+        "type": "Skill",
+        "description": "Increases resistance to all damage.\n\n[Effect Details]\nDamage Resistance +5%",
+        "filename": "Common_Skill_Winning_Mentality.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173640-kzlT1AsgEC7N32OKMPQZ0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Evasion II",
+        "type": "Skill",
+        "description": "Significantly enhances agile movement to increase Evasion.\n\n[Effect Details]\nAbsolute Evasion +2%",
+        "filename": "Common_Skill_Evasion_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173648-AWmF87VJOqVIcERzOA2q0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Increase Stun II",
+        "type": "Skill",
+        "description": "Increases Stun Accuracy.\n\n[Effect Details]\nStun Accuracy +5%\nExtra Accuracy (to Stunned) +5",
+        "filename": "Common_Skill_Increase_Stun_II.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173658-OTYNTWZZ0ZidFMv8O45L0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Absolute Accuracy III",
+        "type": "Skill",
+        "description": "Increases Absolute Accuracy to thwart enemy Evasion.\n\n[Effect Details]\nAbsolute Accuracy +3%",
+        "filename": "Common_Skill_Absolute_Accuracy_III.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173703-Alzjo9fGZhuN0X6FBbUv0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Absolute Accuracy IV",
+        "type": "Skill",
+        "description": "Increases Absolute Accuracy to thwart enemy Evasion.\n\n[Effect Details]\nAbsolute Accuracy +4%",
+        "filename": "Common_Skill_Absolute_Accuracy_IV.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173703-Alzjo9fGZhuN0X6FBbUv0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Slow Aura",
+        "type": "Skill",
+        "description": "Hinders the target's ability to attack the caster.\n\n[Effect Details]\nHigh chance to temporarily decrease the attacker's Attack Speed and Cast Speed by 10%",
+        "filename": "Common_Skill_Slow_Aura.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173721-GRcrdpSDE2f0irYchBUY0-v4"
+    },
+    {
+        "page": "Common",
+        "name": "Stun Counter",
+        "type": "Skill",
+        "description": "Increases Stun Accuracy upon successfully blocking an opponent's Stun.\n\n[Effect Details]\nStun Accuracy +10% upon successful Stun block",
+        "filename": "Common_Skill_Stun_Counter.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211116173742-ROxQjtpDpfRdmyGuHpid0-v4"
+    }
+]

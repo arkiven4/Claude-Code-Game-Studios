@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://bow_archer_s_soul"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" uid="uid://icon_upd" path="res://assets/art/ui/skill_icons/Bow_Passive_Archer_s_Soul.png.import" id="icon_res"]
+
+[sub_resource type="Resource" id="Tier1"]
+script = ExtResource("2_tier")
+effect_value = 1.0
+tier_description = "Automatically generated from scraped Lineage 2M data"
+
+[resource]
+script = ExtResource("1_skill")
+skill_type = 0
+display_name = "Archer's Soul"
+skill_id = "bow_archer_s_soul"
+description = "Temporarily embraces the soul of a great archer to increase MP recovery amount.
+
+[Effect Details]
+MP Recovery (Tick) +5"
+icon = ExtResource("icon_res")
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])

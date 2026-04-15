@@ -7,17 +7,17 @@
 
 ## Overview
 
-The Character State Manager is the runtime state container for every party member in My Vampire. Implemented as a `PartyMemberState` Node that lives permanently on each character's GameObject, it owns and continuously ticks the four mutable values that define a character's combat state: current HP, current MP, skill cooldowns, and active status effects. It initializes from `CharacterData` on scene load, exposes read-only state to all other systems (Combat HUD, Party AI, Enemy AI), and accepts writes only from the systems authorized to change each value — Health & Damage writes HP/MP, Skill Execution writes cooldowns, Status Effects writes active effects, Character Switch Controller writes control authority. No state is ever frozen or copied on a character switch — the system ticks for all 4 party members simultaneously, whether player-controlled or AI-controlled.
+The Character State Manager is the runtime state container for every party member in My Vampire. Implemented as a `PartyMemberState` Node that lives permanently on each character's root Node3D, it owns and continuously ticks the four mutable values that define a character's combat state: current HP, current MP, skill cooldowns, and active status effects. It initializes from `CharacterData` on scene load, exposes read-only state to all other systems (Combat HUD, Party AI, Enemy AI), and accepts writes only from the systems authorized to change each value — Health & Damage writes HP/MP, Skill Execution writes cooldowns, Status Effects writes active effects, Character Switch Controller writes control authority. No state is ever frozen or copied on a character switch — the system ticks for all 4 party members simultaneously, whether player-controlled or AI-controlled.
 
 ## Player Fantasy
 
 The Character State Manager serves the fantasy of **a party that keeps fighting for you**. When the player switches from Evelyn to Evan mid-combat, Evelyn doesn't freeze — her DoT ticks, her cooldowns count down, her AI keeps acting. When the player switches back, Evelyn is exactly as they left her: same HP, same buffs, same position. The system is invisible but its absence would be immediately felt. Players trust their party because the party's state is always honest, always current, and never surprising.
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
-1. **One `PartyMemberState` per character**: Every party member has exactly one `PartyMemberState` Node on their root GameObject. It is never duplicated, pooled, or shared.
+1. **One `PartyMemberState` per character**: Every party member has exactly one `PartyMemberState` Node on their root Node3D. It is never duplicated, pooled, or shared.
 
 2. **State fields** (all runtime-mutable; read-only to external systems except authorized writers):
 
@@ -27,7 +27,7 @@ The Character State Manager serves the fantasy of **a party that keeps fighting 
    | `CurrentMP` | int | `CharacterData.MaxMP` | Skill Execution System | Current mana points, clamped 0–MaxMP |
    | `SkillCooldowns` | `float[4]` | `0f` each | Skill Execution System | Remaining cooldown in seconds per skill slot |
    | `SkillCharges` | `int[4]` | `MaxCharges` each | Skill Execution System | Remaining charges per skill slot |
-   | `ActiveEffects` | `List<ActiveEffect>` | empty | Status Effects System | All active buffs, debuffs, DoTs, shields |
+   | `ActiveEffects` | `Array[ActiveEffect]` | empty | Status Effects System | All active buffs, debuffs, DoTs, shields |
    | `ShieldValue` | int | `0` | Status Effects System | Current shield absorption remaining |
    | `IsPlayerControlled` | bool | false (true for Evelyn at start) | CharacterSwitchController only | Whether this character accepts player input |
    | `IsAlive` | bool | true | Health & Damage System | False when CurrentHP == 0 |
@@ -35,21 +35,21 @@ The Character State Manager serves the fantasy of **a party that keeps fighting 
    | `IsInvincible` | bool | false | Skill Execution / Character Switching | No damage taken while true |
    | `ControlState` | enum | `AIControlled` | CharacterSwitchController | `PlayerControlled`, `AIControlled`, `SwitchingIn`, `SwitchingOut` |
 
-3. **Initialization** (on `Awake()`, before any other system runs):
-   1. Read assigned `CharacterData` reference (set in Inspector)
+3. **Initialization** (in `_ready()`, before any other system runs):
+   1. Read assigned `CharacterData` reference (`@export var character_data: CharacterData`)
    2. `CurrentHP = CharacterData.MaxHP`
    3. `CurrentMP = CharacterData.MaxMP`
-   4. `SkillCooldowns[0..3] = 0f`
-   5. `SkillCharges[i] = SkillDataSO[i].MaxCharges` for each slot
-   6. `ActiveEffects = new List<ActiveEffect>()`
+   4. `SkillCooldowns[0..3] = 0.0`
+   5. `SkillCharges[i] = SkillData[i].MaxCharges` for each slot
+   6. `ActiveEffects = []`  # typed Array[ActiveEffect]
    7. `ShieldValue = 0`
    8. `IsAlive = true`
    9. `RevivesUsedThisEncounter = 0`
-   10. `ControlState = AIControlled` (CharacterSwitchController sets one character to `PlayerControlled` after all `Awake()` calls complete)
+   10. `ControlState = AIControlled` (CharacterSwitchController sets one character to `PlayerControlled` after all `_ready()` calls complete)
    11. Resolve active skill tier: level ≥ 18 → Tier 3; level ≥ 8 → Tier 2; else Tier 1
 
-4. **Per-frame tick** (`Update()`, runs for ALL party members regardless of control state):
-   - Decrement each `SkillCooldowns[i]` by `Time.deltaTime`, clamped to `≥ 0`
+4. **Per-frame tick** (`_process(delta)`, runs for ALL party members regardless of control state):
+   - Decrement each `SkillCooldowns[i]` by `delta`, clamped to `≥ 0`
    - If `SkillCooldowns[i]` reaches 0 and `SkillCharges[i] < MaxCharges`: restore all charges
    - Decrement `RemainingDuration` on each `ActiveEffect`; remove expired effects
    - Tick DoT effects via Status Effects System at their interval
@@ -71,7 +71,7 @@ The Character State Manager serves the fantasy of **a party that keeps fighting 
    | `CanUseSkill(int slot)` | `bool` | Skill Execution, Party AI |
    | `IsSkillAvailable(int slot)` | `bool` | HUD display |
 
-6. **Write authority**: Only authorized systems may write state. Unauthorized writes are a bug — enforce with `private set` on all mutable properties. Authorized writes go through explicit public methods:
+6. **Write authority**: Only authorized systems may write state. Unauthorized writes are a bug — enforce with underscore-prefixed private variables (`_current_hp`) and expose only explicit public methods:
 
    | Method | Authorized Caller | What It Does |
    |--------|-------------------|--------------|
@@ -171,7 +171,7 @@ Alive ──(CurrentHP reaches 0)──▶ Dead ──(OnRevived(), RevivesUsed 
 | **MaxHP change — gain** | `CurrentHP += delta` | HP scales up with MaxHP increase |
 | **MaxHP change — loss** | `CurrentHP = min(CurrentHP, newMaxHP)` | HP clamped down with MaxHP decrease |
 | **Revive HP** | `MaxHP × 0.25` | From Health & Damage GDD |
-| **Cooldown tick** | `SkillCooldowns[i] = max(0, SkillCooldowns[i] - deltaTime)` | Each frame, all slots, all characters |
+| **Cooldown tick** | `SkillCooldowns[i] = max(0, SkillCooldowns[i] - delta)` | Each frame, all slots, all characters |
 | **Skill available** | `SkillCooldowns[i] == 0 && SkillCharges[i] > 0 && CurrentMP >= MPCost[i]` | Full availability check |
 
 ## Edge Cases
@@ -263,7 +263,7 @@ This system is primarily infrastructure — most tuning lives in the systems tha
 - [ ] `ResetForEncounter()` sets all cooldowns to 0, charges to MaxCharges, preserves `RevivesUsedThisEncounter` (wave reset) OR resets it to 0 (encounter complete reset) — verified by unit test
 - [ ] Save/Load: serialized `PartyMemberState` restores exact HP, MP, cooldowns, charges, active effects, and RevivesUsed on reload — verified by integration test
 - [ ] Performance: 4 characters ticking simultaneously (cooldowns + effects) costs < 0.2ms per frame — verified by profiler
-- [ ] No unauthorized writes to any state field (private setters enforced, public only via defined methods) — verified by code review
+- [ ] No unauthorized writes to any state field (private underscore-prefixed vars, public only via defined methods) — verified by code review
 
 ## Open Questions
 

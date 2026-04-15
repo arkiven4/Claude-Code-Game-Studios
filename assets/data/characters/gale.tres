@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="CharacterData" format=3 uid="uid://char_gale"]
+
+[ext_resource type="Script" uid="uid://cd1p7b1fjqu6o" path="res://src/core/character_data.gd" id="1_char"]
+[ext_resource type="Resource" uid="uid://char_gale_basic" path="res://assets/data/skills/sword_basic_3.tres" id="2_basic"]
+[ext_resource type="Resource" uid="uid://char_gale_skill1" path="res://assets/data/skills/adopted/sword_brutal_attack.tres" id="3_skill1"]
+[ext_resource type="Resource" uid="uid://char_gale_skill2" path="res://assets/data/skills/adopted/sword_double_shock.tres" id="4_skill2"]
+[ext_resource type="Resource" uid="uid://char_gale_skill3" path="res://assets/data/skills/adopted/sword_mighty_shock.tres" id="5_skill3"]
+[ext_resource type="Resource" uid="uid://char_gale_skill4" path="res://assets/data/skills/sword_vanguard.tres" id="6_skill4"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="7_script"]
+
+[resource]
+script = ExtResource("1_char")
+character_class = 0
+display_name = "Gale"
+role_description = "The party's speed-focused duelist. Overwhelms enemies with rapid flurries."
+is_main_character = false
+base_max_hp = 320
+base_atk = 45
+base_def = 35
+base_spd = 1.4
+base_max_mp = 80
+base_crit = 0.08
+hp_per_level = 18
+atk_per_level = 3
+def_per_level = 2
+mp_per_level = 3
+skill_slots = Array[ExtResource("7_script")]([ExtResource("3_skill1"), ExtResource("4_skill2"), ExtResource("5_skill3"), ExtResource("6_skill4")])
+basic_attack = ExtResource("2_basic")

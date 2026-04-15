@@ -34,38 +34,37 @@ for emotional impact), Final Fantasy VII Remake's layered combat music (combat a
 drums, exploration strips to strings), and Persona 5's crisp UI sounds (every menu
 click is satisfying).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
-1. **Four Audio Mixer Groups**: All audio routes through a master `GameAudioMixer` with
-   four child groups:
+1. **Four Audio Buses**: All audio routes through Godot's `AudioServer` with four buses:
    - **Music** (default volume: 0.8) — Background music, boss themes, chapter themes
    - **SFX** (default volume: 1.0) — Combat hits, skill activations, deaths, physics
    - **UI** (default volume: 0.6) — Menu clicks, button presses, dialogue advance
    - **Ambience** (default volume: 0.5) — Environmental sounds, wind, birds, crowd noise
 
-   Each group has an `AudioMixerGroup` asset exposed to the Godot Audio Mixer window.
-   Volume is controlled in dB via exposed parameters (`MusicVol`, `SFXVol`, `UIVol`,
-   `AmbVol`).
+   Each bus is configured in the Godot Audio panel. Volume is set via
+   `AudioServer.set_bus_volume_db(bus_name, linear_to_db(value))`.
+   Bus names: `"Music"`, `"SFX"`, `"UI"`, `"Ambience"`.
 
 2. **Master Volume**: A master `MasterVol` exposed parameter controls the overall output.
    All individual volumes are multipliers applied on top of master volume. If the player
    sets Music to 50%, the Music group's dB is set to `20 * log10(0.5) ≈ -6 dB`.
 
-3. **AudioSource Pooling**: `AudioSource` objects are pooled, not created at runtime.
-   The `AudioPoolManager` maintains a pool of 32 `AudioSource` components:
-   - 4 for Music (one per concurrent music track; typically only 1 active)
-   - 20 for SFX (combat is the heaviest user: 4 skills × 4 characters + enemy hits)
-   - 4 for UI (UI sounds are short; 4 concurrent is ample)
-   - 4 for Ambience (one per active area layer)
+3. **AudioStreamPlayer Pooling**: `AudioStreamPlayer` nodes are pooled, not created at runtime.
+   The `AudioPoolManager` maintains a pool of 32 nodes:
+   - 4 for Music (`AudioStreamPlayer` — global, non-spatial)
+   - 20 for SFX (`AudioStreamPlayer3D` — positional, routed to SFX bus)
+   - 4 for UI (`AudioStreamPlayer` — global, routed to UI bus)
+   - 4 for Ambience (`AudioStreamPlayer` — global, routed to Ambience bus)
 
-   When a sound plays, the pool returns an idle `AudioSource`. If none are idle, it
+   When a sound plays, the pool returns an idle player. If none are idle, it
    steals the oldest playing sound (lowest priority first). Pool size is configurable.
 
 4. **Music Playback Rules**:
    - Only ONE music track plays at a time (with crossfade exceptions)
-   - Music tracks are `AudioClip` assets referenced by scene or encounter state
+   - Music tracks are `AudioStream` assets referenced by scene or encounter state
    - On scene change or combat state change, the current track crossfades to the new
      track over 2.0s (tunable)
    - Music tracks have a `MusicPriority` enum to resolve conflicts:
@@ -81,11 +80,11 @@ click is satisfying).
      explicitly told to (music state is not remembered)
 
 5. **SFX Playback Rules**:
-   - SFX are one-shot: play once, release the `AudioSource` back to the pool
+   - SFX are one-shot: play once, release the `AudioStreamPlayer` back to the pool
    - SFX can overlap: multiple SFX play simultaneously without interrupting each other
-   - SFX have 3D spatial blend for positional sounds (hits, enemy vocalizations):
-     - `SpatialBlend = 1.0` (fully 3D) for positional sounds (combat hits near the camera)
-     - `SpatialBlend = 0.0` (fully 2D) for global sounds (UI clicks, menu sounds)
+   - SFX use the correct player type for spatial vs global sounds:
+     - **Positional sounds** (combat hits, enemy vocalizations): use `AudioStreamPlayer3D` with `max_distance` tuned per sound
+     - **Global sounds** (UI clicks, menu sounds): use `AudioStreamPlayer` (no spatial attenuation)
    - SFX pitch variation: ±5% random pitch on each playback to prevent machine-gun
      repetition on frequently played sounds (normal attacks, footsteps)
 
@@ -95,7 +94,7 @@ click is satisfying).
    - **Intensity Layer**: Added when 3+ enemies are alive — adds percussion
    - **Crisis Layer**: Added when any party member enters Critical state (<10% HP) — adds
      strings and urgency
-   - Layers are mixed in real-time by adjusting the volume of additional `AudioSource`s
+   - Layers are mixed in real-time by adjusting the volume of additional `AudioStreamPlayer`s
      playing the layer stems. All layers are part of the same music asset (stems are
      separate clips synced to the same tempo).
 
@@ -105,8 +104,8 @@ click is satisfying).
      Duck lasts for the duration of the dialogue.
    - **Boss enters**: Ambience ducks to -18 dB for 3s (boss entrance is the focus).
    - **Party member dies**: All audio ducks to -6 dB for 1s (death moment is emphasized).
-   - Ducking is implemented via `AudioMixer` snapshots with smooth transitions (0.3s in,
-     0.5s out).
+   - Ducking is implemented via `AudioServer.set_bus_volume_db()` with a `Tween` for smooth
+     transitions (0.3s fade in, 0.5s fade out).
 
 8. **Scene Transition Crossfade**: When the Scene Management System changes scenes:
    - Current scene's music fades out over 1.0s
@@ -123,7 +122,7 @@ click is satisfying).
 
 ```
 ┌──────────────────────────────────────────────────────┐
-│                   AudioMixer (Master)                 │
+│                   AudioServer (Master Bus)             │
 │                                                       │
 │  ┌──────────┐ ┌──────────┐ ┌────────┐ ┌──────────┐  │
 │  │  Music   │ │   SFX    │ │   UI   │ │ Ambience │  │
@@ -161,7 +160,7 @@ click is satisfying).
 
 | Formula | Expression | Notes |
 |---------|-----------|-------|
-| `VolumeToDB` | `20 × log10(volumeLinear)` | Conversion for AudioMixer exposed parameters |
+| `VolumeToDB` | `20 × log10(volumeLinear)` | Conversion for AudioBus volume parameters |
 | `CrossfadeDuration` | `2.0s` | Default music crossfade time |
 | `CrossfadeOverlap` | `0.5s` | Old track fades out while new track fades in |
 | `DialogueDuckMusic` | `-12 dB` | Music volume during dialogue |
@@ -174,7 +173,7 @@ click is satisfying).
 
 ## Edge Cases
 
-1. **Two combat SFX request the same pooled AudioSource**: The newer sound steals from
+1. **Two combat SFX request the same pooled AudioStreamPlayer**: The newer sound steals from
    the oldest playing sound with the lowest priority. The player may miss a hit sound
    in very heavy combat, but this is preferable to audio clipping or allocation.
 
@@ -198,11 +197,11 @@ click is satisfying).
 
 7. **SFX plays for a dead enemy**: The death event triggers the death SFX once. Subsequent
    SFX requests for that enemy (e.g., hit sounds) are ignored because the enemy's
-   `AudioSource` reference is nulled on death.
+   `AudioStreamPlayer` reference is nulled on death.
 
 ## Dependencies
 
-- **Depends on**: Godot AudioBus system (built-in), AudioStreamPlayer3D pooling
+- **Depends on**: Godot AudioServer (built-in), AudioStreamPlayer / AudioStreamPlayer3D pooling
 - **Depended on by**: Combat System, Health & Damage, Skill Execution, Enemy AI, Camera,
   Cutscene System, Dialogue System, Input System, Scene Management, Main Menu, Save / Load,
   Combat HUD
@@ -224,8 +223,8 @@ click is satisfying).
 
 ## Visual/Audio Requirements
 
-- **Audio Mixer Asset**: A `GameAudioMixer` asset in `Assets/Audio/Mixers/` with all
-  four groups, exposed parameters, and snapshots for ducking states
+- **Audio Buses**: Configured in the Godot Audio panel under Project Settings. Four buses:
+  `Music`, `SFX`, `UI`, `Ambience` — all routed to the Master bus. Assets live in `assets/audio/`.
 - **Music Tracks**: One per chapter/area + one combat track + one boss track (MVP:
   Witch prologue music, Chapter 1 music, Chapter 2 music, Combat music, Boss music,
   Main menu music, Ending music)
@@ -249,7 +248,7 @@ click is satisfying).
 - [ ] SFX play from the pool without allocation during combat (zero GC alloc per SFX)
 - [ ] Dialogue ducks music and ambience to specified dB levels
 - [ ] Party member death ducks all audio for 1s
-- [ ] Volume sliders in settings adjust AudioMixer exposed parameters in real-time
+- [ ] Volume sliders in settings adjust AudioBus volume parameters in real-time
 - [ ] Audio state (volumes, music position) saves and loads correctly
 - [ ] SFX pitch variation is audible on repeated plays (not robotic)
 - [ ] 3D spatial sounds position correctly (closer = louder, pans with camera)

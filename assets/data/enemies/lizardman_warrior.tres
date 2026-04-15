@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://enemy_lizardman_warrior"]
+
+[ext_resource type="Script" uid="uid://cd1p7b1fjqu6o" path="res://src/core/enemy_data.gd" id="1_data"]
+[ext_resource type="Script" uid="uid://cl7itd7u0n75m" path="res://src/core/enemy_skill_entry.gd" id="2_entry"]
+[ext_resource type="Resource" uid="uid://skill_enemy_melee_basic" path="res://assets/data/skills/enemies/enemy_melee_basic.tres" id="3_skill1"]
+[ext_resource type="Resource" uid="uid://skill_enemy_power_strike" path="res://assets/data/skills/enemies/enemy_power_strike.tres" id="4_skill2"]
+
+[sub_resource type="Resource" id="Resource_entry1"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("3_skill1")
+cooldown = 1.5
+weight = 1.0
+min_range = 0.0
+max_range = 3.0
+condition = 0
+
+[sub_resource type="Resource" id="Resource_entry2"]
+script = ExtResource("2_entry")
+skill_ref = ExtResource("4_skill2")
+cooldown = 6.0
+weight = 2.0
+min_range = 0.0
+max_range = 3.0
+condition = 0
+
+[resource]
+script = ExtResource("1_data")
+enemy_id = "lizardman_warrior"
+display_name = "Langk Lizardman Warrior"
+enemy_class = 0
+behavior_profile = 0
+base_max_hp = 150
+base_atk = 15
+base_def = 10
+base_spd = 1.1
+physical_resistance = 1.0
+magical_resistance = 0.8
+holy_resistance = 1.2
+dark_resistance = 1.0
+status_immunities = Array[String]([])
+skill_list = Array[ExtResource("2_entry")]([SubResource("Resource_entry1"), SubResource("Resource_entry2")])
+model_path = "res://assets/art/ui/icons/placeholder_icon.png"

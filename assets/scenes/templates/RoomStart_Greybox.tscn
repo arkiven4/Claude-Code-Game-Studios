@@ -1,0 +1,48 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/world/room_chunk.gd" id="1_script"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_floor"]
+albedo_color = Color(0.3, 0.45, 0.55, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_floor"]
+size = Vector3(16.0, 0.2, 12.0)
+material = SubResource("Mat_floor")
+
+[sub_resource type="BoxShape3D" id="Shape_floor"]
+size = Vector3(16.0, 0.2, 12.0)
+
+[sub_resource type="BoxShape3D" id="Shape_exit"]
+size = Vector3(1.5, 2.0, 0.5)
+
+[node name="RoomStart_Greybox" type="Node3D"]
+script = ExtResource("1_script")
+room_type = 0
+
+[node name="Floor" type="StaticBody3D" parent="."]
+position = Vector3(0.0, -0.1, 0.0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("Mesh_floor")
+
+[node name="Collision" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("Shape_floor")
+
+[node name="EntranceMarker" type="Node3D" parent="."]
+position = Vector3(0.0, 0.5, -5.0)
+
+[node name="Exit_0" type="Node3D" parent="."]
+position = Vector3(-5.0, 0.5, 4.0)
+
+[node name="Area3D" type="Area3D" parent="Exit_0"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Exit_0/Area3D"]
+shape = SubResource("Shape_exit")
+
+[node name="Exit_1" type="Node3D" parent="."]
+position = Vector3(5.0, 0.5, 4.0)
+
+[node name="Area3D" type="Area3D" parent="Exit_1"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Exit_1/Area3D"]
+shape = SubResource("Shape_exit")

@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="CharacterData" format=3 uid="uid://char_vesper"]
+
+[ext_resource type="Script" uid="uid://cd1p7b1fjqu6o" path="res://src/core/character_data.gd" id="1_char"]
+[ext_resource type="Resource" uid="uid://char_vesper_basic" path="res://assets/data/skills/basic_minibolt.tres" id="2_basic"]
+[ext_resource type="Resource" uid="uid://char_vesper_skill1" path="res://assets/data/skills/adopted/staff_abyss.tres" id="3_skill1"]
+[ext_resource type="Resource" uid="uid://char_vesper_skill2" path="res://assets/data/skills/adopted/staff_darkness.tres" id="4_skill2"]
+[ext_resource type="Resource" uid="uid://char_vesper_skill3" path="res://assets/data/skills/adopted/staff_chaos.tres" id="5_skill3"]
+[ext_resource type="Resource" uid="uid://char_vesper_skill4" path="res://assets/data/skills/adopted/staff_blizzard_storm.tres" id="6_skill4"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="7_script"]
+
+[resource]
+script = ExtResource("1_char")
+character_class = 1
+display_name = "Vesper"
+role_description = "The party's essence mage. Manipulates raw magical energy to devastating effect."
+is_main_character = false
+base_max_hp = 220
+base_atk = 65
+base_def = 18
+base_spd = 1.2
+base_max_mp = 120
+base_crit = 0.06
+hp_per_level = 12
+atk_per_level = 5
+def_per_level = 1
+mp_per_level = 5
+skill_slots = Array[ExtResource("7_script")]([ExtResource("3_skill1"), ExtResource("4_skill2"), ExtResource("5_skill3"), ExtResource("6_skill4")])
+basic_attack = ExtResource("2_basic")

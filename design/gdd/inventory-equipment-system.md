@@ -34,7 +34,7 @@ good and carry it for chapters.
 not a disposable commodity) and Fire Emblem's clean inventory list (categorized, no
 spatial management).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
@@ -51,7 +51,7 @@ spatial management).
    - **Equipment items**: Quantity is always 1. Each unique equipment piece is its own
      stack entry with an `EquipmentInstance` tracking its equipped state, enhancement
      level, and durability.
-   - **Consumable items**: Stack up to 99. Identical consumables (same `ItemConsumableSO`)
+   - **Consumable items**: Stack up to 99. Identical consumables (same `ItemConsumable`)
      merge into one stack.
    - **Key items**: Quantity is always 1. Cannot be dropped, sold, or consumed.
    - **Material items**: Stack up to 99. Identical materials merge.
@@ -116,7 +116,7 @@ spatial management).
    | Field | Type | Default | Description |
    |-------|------|---------|-------------|
    | `IsEquipped` | bool | false | True when equipped on a character |
-   | `EquippedOn` | CharacterDataSO ref | null | Which character this is equipped on |
+   | `EquippedOn` | CharacterData ref | null | Which character this is equipped on |
    | `EnhancementLevel` | int | 0 | Current enhancement level (0–10) |
    | `Durability` | int | 100 | Current durability (0 = broken) |
 

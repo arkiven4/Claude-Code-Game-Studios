@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://dual_blades_sonic_move"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[sub_resource type="Resource" id="Tier1"]
+script = ExtResource("2_tier")
+duration = 320.0
+tier_description = "Acceleration Lv.2"
+[resource]
+script = ExtResource("1_skill")
+skill_type = 3
+display_name = "Sonic Move"
+skill_id = "dual_blades_sonic_move"
+description = "Explodes blade energy to greatly increase Speed."
+mp_cost = 40
+base_cooldown = 120.0
+target_type = 6
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])

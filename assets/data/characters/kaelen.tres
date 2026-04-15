@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="CharacterData" format=3 uid="uid://char_kaelen"]
+
+[ext_resource type="Script" uid="uid://cd1p7b1fjqu6o" path="res://src/core/character_data.gd" id="1_char"]
+[ext_resource type="Resource" uid="uid://char_kaelen_basic" path="res://assets/data/skills/sword_basic_1.tres" id="2_basic"]
+[ext_resource type="Resource" uid="uid://char_kaelen_skill1" path="res://assets/data/skills/adopted/sword_iron_will.tres" id="3_skill1"]
+[ext_resource type="Resource" uid="uid://char_kaelen_skill2" path="res://assets/data/skills/adopted/sword_ultimate_defense.tres" id="4_skill2"]
+[ext_resource type="Resource" uid="uid://char_kaelen_skill3" path="res://assets/data/skills/adopted/sword_majesty.tres" id="5_skill3"]
+[ext_resource type="Resource" uid="uid://char_kaelen_skill4" path="res://assets/data/skills/adopted/sword_retribution.tres" id="6_skill4"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="7_script"]
+
+[resource]
+script = ExtResource("1_char")
+character_class = 4
+display_name = "Kaelen"
+role_description = "The party's immovable anchor. A defensive tanker who holds the line."
+is_main_character = false
+base_max_hp = 480
+base_atk = 35
+base_def = 55
+base_spd = 0.9
+base_max_mp = 60
+base_crit = 0.03
+hp_per_level = 28
+atk_per_level = 2
+def_per_level = 3
+mp_per_level = 2
+skill_slots = Array[ExtResource("7_script")]([ExtResource("3_skill1"), ExtResource("4_skill2"), ExtResource("5_skill3"), ExtResource("6_skill4")])
+basic_attack = ExtResource("2_basic")

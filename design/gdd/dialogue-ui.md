@@ -32,7 +32,7 @@ book.
 personality), Final Fantasy XVI's clean portrait + text layout, and Visual Novel
 conventions (bottom-anchored box, portrait left, text right, choices below).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
@@ -83,9 +83,9 @@ conventions (bottom-anchored box, portrait left, text right, choices below).
    - Maximum 4 choices per node (enforced by the Dialogue System at authoring time)
 
 5. **Portrait Management**:
-   - Each `CharacterDataSO` references a portrait atlas (a single texture containing
+   - Each `CharacterData` references a portrait atlas (a single texture containing
      all expression states for that character)
-   - The `expression` string on a `DialogueNodeSO` maps to a sprite rect in the atlas
+   - The `expression` string on a `DialogueNode` maps to a sprite rect in the atlas
    - When the speaker changes, the portrait sprite is swapped with a 0.2s crossfade
    - If the expression string does not match any sprite in the atlas, the `neutral`
      expression is used as fallback

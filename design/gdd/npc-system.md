@@ -1,6 +1,6 @@
 # NPC System
 
-> **Status**: Designed
+> **Status**: Approved
 > **Author**: Design session 2026-04-11 (interactive redesign)
 > **Last Updated**: 2026-04-11
 > **Implements Pillar**: Story First, The Party Is the Game
@@ -15,7 +15,7 @@ NPCs serve the fantasy of **a world that exists beyond you**. When you return to
 
 **Reference model**: Stardew Valley's villagers (each with a schedule, a personality, and something to offer), Dragon Age's camp companions (characters you revisit between missions), and Final Fantasy XIV's resident NPCs in housing areas (world presence that makes settlements feel alive).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 

@@ -42,12 +42,15 @@ static func apply_skill_effects(skill: SkillData, caster_id: String, target: Nod
 	if skill.effect_overrides.is_empty(): return
 	var sfx: StatusEffectsSystem = null
 	if target.has_method("get_status_effects_system"):
-		sfx = target.get_status_effects_system()
-	if not sfx:
+		var temp_sfx = target.get_status_effects_system()
+		if is_instance_valid(temp_sfx):
+			sfx = temp_sfx
+	if not is_instance_valid(sfx):
 		sfx = target.get_node_or_null("StatusEffectsSystem") as StatusEffectsSystem
-	if not sfx and target.get_parent():
+	if not is_instance_valid(sfx) and target.get_parent():
 		sfx = target.get_parent().get_node_or_null("StatusEffectsSystem") as StatusEffectsSystem
-	if not sfx: return
+	
+	if not is_instance_valid(sfx): return
 	## Resolve tier duration (e.g. shadow_veil scales duration per tier).
 	var tier_data := resolve_tier(skill, tier)
 	var tier_config: SkillTierConfig = tier_data.get("tier_config") as SkillTierConfig

@@ -33,13 +33,13 @@ invisible when it works and frustrating when it doesn't. This system makes sure 
 = talk / pick up / open door), Dark Souls' consistent face-button layout (light / heavy /
 dodge / interact), and Hades' tight input buffering (feels responsive without being twitch).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
 1. **Godot Input Map**: This system uses Godot's built-in `InputMap` and `Input`
-   singleton exclusively.
-   An `InputActionAsset` defines all game actions.
+   singleton exclusively. All game actions are defined in Project Settings → Input Map.
+   No external asset file is required — Godot manages action definitions natively.
 
 2. **Three Action Maps**:
    - **Exploration** — active when the player is not in combat and no UI modal is open.
@@ -85,15 +85,14 @@ dodge / interact), and Hades' tight input buffering (feels responsive without be
 6. **Contextual Input Resolution**: The Input System does not dispatch raw key events.
    Instead, a thin `InputRouter` Node reads the active action map and dispatches
    semantic events:
-   ```csharp
-   public class InputRouter : Node
-   {
-       public event Action<Vector2> OnMove;
-       public event Action OnInteract;
-       public event Action<int> OnSkillPressed;    // skill slot 1-4
-       public event Action<int> OnSwitchToIndex;   // slot 0–3
-       public event Action OnPause;
-   }
+   ```gdscript
+   class_name InputRouter extends Node
+
+   signal move_input_changed(direction: Vector2)
+   signal interact_pressed()
+   signal skill_pressed(slot_index: int)    # skill slot 1–4
+   signal switch_to_index(slot_index: int)  # slot 0–3
+   signal pause_pressed()
    ```
    Consumers subscribe to semantic events, not raw keys. This allows input remapping at
    the action level without changing any gameplay code.
@@ -130,7 +129,7 @@ dodge / interact), and Hades' tight input buffering (feels responsive without be
     - Character is dead (Combat inputs ignored; switch to alive character still works)
     - Game Over screen (all inputs blocked except UI Submit/Cancel)
 
-11. **Controller Support**: All actions have both keyboard and gamepad bindings. The
+12. **Controller Support**: All actions have both keyboard and gamepad bindings. The
     system auto-detects the last-used input device and displays the correct button
     prompts in the HUD (keyboard keys vs. controller face buttons).
 

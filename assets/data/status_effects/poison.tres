@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3 uid="uid://poison_effect"]
+
+[ext_resource type="Script" uid="uid://pj67a8r8paxh" path="res://src/core/status_effect.gd" id="1_fx"]
+
+[resource]
+script = ExtResource("1_fx")
+effect_id = "poison"
+display_name = "Poisoned"
+description = "Takes damage over time."
+effect_type = 1 # DEBUFF
+effect_category = 1 # DAMAGE_OVER_TIME
+stat_to_modify = 0
+modify_type = 0
+duration = 10.0
+tick_interval = 1.0
+damage_category = 1 # MAGICAL
+stacking_rule = 1 # ADDITIVE_STACK
+max_stacks = 5
+is_hostile = true

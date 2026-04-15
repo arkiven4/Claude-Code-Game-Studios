@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://tank_iron_will"]
+
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" uid="uid://evan_parry_stance_aura" path="res://assets/art/vfx/skills/evan_parry_stance_aura.png" id="3_vfx"]
+
+[sub_resource type="Resource" id="Tier1"]
+script = ExtResource("2_tier")
+effect_value = 1.0
+tier_description = "Harden resolve, gaining a temporary shield."
+
+[resource]
+script = ExtResource("1_skill")
+skill_type = 3
+display_name = "Iron Will"
+skill_id = "tank_iron_will"
+description = "Strengthen defenses with a massive shield."
+mp_cost = 0
+base_cooldown = 12.0
+cast_time = 0.4
+target_type = 6
+area_radius = 0.0
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+shield_value = 500
+vfx_effect = ExtResource("3_vfx")

@@ -28,5 +28,4 @@ mesh = SubResource("SphereMesh_1")
 surface_material_override/0 = SubResource("StandardMaterial3D_1")
 
 [node name="VFXSprite" type="Sprite3D" parent="." unique_id=1320261014]
-visible = false
 billboard = 1

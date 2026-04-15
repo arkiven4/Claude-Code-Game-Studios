@@ -1,6 +1,6 @@
 # Health & Damage System
 
-> **Status**: In Design
+> **Status**: Approved
 > **Author**: Design session 2026-04-04
 > **Last Updated**: 2026-04-04
 > **Implements Pillar**: Story First (earned difficulty), The Party Is the Game
@@ -36,7 +36,7 @@ ATK first, then hit them with a Dark skill, I'll one-shot this boss").
 math), combined with Genshin Impact's damage number feedback (big numbers feel good),
 and Dark Souls' death/restart clarity (you always know why you died).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
@@ -48,9 +48,9 @@ and Dark Souls' death/restart clarity (you always know why you died).
 2. **Damage Formula** (from Skill Database, restated with full detail):
    ```
    RawDamage = (CasterATK × 0.5 + SkillBaseDamage) × EffectValue
-   AfterDefense = RawDamage - TargetDEF
-   AfterCategory = AfterDefense × CategoryResistance
-   FinalDamage = max(1, floor(AfterCategory))   // minimum 1 damage always
+   AfterCrit = RawDamage × CritMult          # CritMult = 1.5 on crit, 1.0 otherwise
+   AfterCategory = AfterCrit × CategoryResistance
+   FinalDamage = max(1, floor(AfterCategory - TargetDEF))   # minimum 1 damage always
    ```
 
 3. **Critical Hit Calculation**: When a skill deals damage, the game rolls a random float
@@ -173,7 +173,7 @@ This system *is* the formula system. All formulas are consolidated here:
 
 | Formula | Expression | Notes |
 |---------|-----------|-------|
-| **Damage** | `max(1, floor(((ATK × 0.5 + BaseDmg) × EffectVal × CritMult - DEF) × CatResist))` | CritMult = 1.5 on crit, 1.0 otherwise |
+| **Damage** | `max(1, floor(((ATK × 0.5 + BaseDmg) × EffectVal × CritMult × CatResist) - DEF))` | CritMult = 1.5 on crit, 1.0 otherwise |
 | **Heal** | `min((MaxMP × 0.1 + BaseHeal) × EffectVal + TargetMaxHP × Bonus%, TargetMaxHP - CurrentHP)` | Cannot overheal |
 | **DoT Tick** | `BaseDoT × EffectValue` | No crit, no DEF subtraction |
 | **Crit Roll** | `Random(0.0, 1.0) ≤ CRIT` | CRIT is 0.0–1.0 probability |
@@ -212,10 +212,11 @@ This system *is* the formula system. All formulas are consolidated here:
    takes damage, the damage is recorded as 0 but the hit still plays (no damage number, a
    "Miss" or "Immune" indicator).
 
-8. **Enemy with 2.0x resistance to all damage types**: This enemy would take
-   `floor(RawDamage × 2.0 - DEF)`. If ATK and BaseDamage are low enough, this could result
-   in the 1-damage floor. The player must increase ATK (buffs, equipment) or find a way
-   to reduce the enemy's resistance (debuff skill).
+8. **Enemy with 2.0x CategoryResistance (critical weakness)**: A 2.0x multiplier means
+   the enemy takes double damage — it is a weakness, not a resistance. This is intended
+   for exploiting elemental matchups (e.g., Dark attacks on a Holy-weak boss). The player
+   should be rewarded with visibly large damage numbers. No special cap is needed; the
+   formula handles it naturally.
 
 9. **Negative damage from absurd DEF**: If TargetDEF > RawDamage, the result is clamped to
    1 by the minimum damage rule. DEF can never reduce damage below 1.

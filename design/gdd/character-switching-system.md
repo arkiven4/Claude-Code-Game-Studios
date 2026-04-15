@@ -10,7 +10,7 @@
 
 The Character Switching System enables the player to transfer input authority between
 any alive party member in real-time during combat and exploration. Implemented as a
-`CharacterSwitchController` Node located via `FindFirstObjectByType`, the
+`CharacterSwitchController` Node registered as an autoload singleton, the
 system manages a 0.3-second switch window during which the outgoing character transitions
 to AI control and the incoming character is visually highlighted before accepting player
 input. The system is built on the ADR-0002 Distributed State architecture: each party
@@ -36,7 +36,7 @@ consequences, and decides again.
 strategic, visual feedback) and Xenoblade Chronicles' driver swap (character stays
 in the fight when you leave, cooldowns persist).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
@@ -61,13 +61,13 @@ in the fight when you leave, cooldowns persist).
    Frame 0:  previous.SetPlayerControlled(false)     ← input revoked
    Frame 0:  previous.IPartyAgent.OnAIResumeControl() ← AI takes over
    Frame 0:  _switchCooldownRemaining = 0.3s
-   Frame 0:  StartCoroutine(CompleteSwitch(previous, target))
+   Frame 0:  _complete_switch_async(previous, target)  # await-based coroutine
 
    Frame N:  (0.3s later)
    Frame N:  target.SetPlayerControlled(true)         ← input granted
    Frame N:  target.IPartyAgent.OnPlayerTakeControl() ← AI yields
    Frame N:  _currentCharacter = target
-   Frame N:  OnCharacterSwitched.Invoke(previous, target)
+   Frame N:  character_switched.emit(previous, target)  # Godot signal
    ```
 
 5. **Switch Window (0.3s)**: The 0.3-second window serves three purposes:
@@ -96,7 +96,7 @@ in the fight when you leave, cooldowns persist).
    looks up the party member at the given array index and calls `SwitchTo()`. This is the
    primary API for keybind input (press "1" for party slot 0, "2" for slot 1, etc.).
 
-9. **OnCharacterSwitched Event**: After the switch window completes, the `OnCharacterSwitched`
+9. **character_switched Event**: After the switch window completes, the `character_switched`
    event fires with `(previousCharacter, newCharacter)`. Subscribers include:
    - **Camera System**: Pans the camera to the new character
    - **Combat HUD**: Updates the active character indicator
@@ -104,7 +104,7 @@ in the fight when you leave, cooldowns persist).
    - **Audio System**: Plays the character switch sound cue
 
 10. **No State Transfer**: This is the cardinal rule. HP, cooldowns, buffs, position,
-    animation state — all remain on the original character's GameObject. The switch
+    animation state — all remain on the original character's Node3D. The switch
     controller is a traffic cop, not a state manager.
 
 ### States and Transitions
@@ -140,10 +140,10 @@ in the fight when you leave, cooldowns persist).
 | **Character State Manager** | Reads/Writes | Calls `SetPlayerControlled()`, reads `IsAlive` for guard |
 | **Input System** | Calls | Calls `InputRouter.FlushBuffer()` on switch (prevents ghost input) |
 | **Combat System** | Read by | Reads `CurrentCharacter` and `IsInCombat` (switching may be blocked in certain encounters) |
-| **Camera System** | Read by | Camera pans to new character on `OnCharacterSwitched` |
+| **Camera System** | Read by | Camera pans to new character on `character_switched` |
 | **Party AI System** | Calls | `OnAIResumeControl()` and `OnPlayerTakeControl()` on `IPartyAgent` |
 | **Combat HUD** | Read by | Updates active character highlight, button prompts |
-| **Audio System** | Calls | Triggers switch sound cue on `OnCharacterSwitched` |
+| **Audio System** | Calls | Triggers switch sound cue on `character_switched` |
 | **Save / Load** | Read by | Saves/restores which character was player-controlled |
 | **Health & Damage** | Read by | Reads `IsPlayerControlled` for input-specific effects |
 | **Skill Execution** | Read by | Reads `IsPlayerControlled` to determine if skill was player or AI initiated |
@@ -161,8 +161,9 @@ in the fight when you leave, cooldowns persist).
 
 1. **Target dies during switch window**: If the target character is killed during the
    0.3s window, the `CompleteSwitch` coroutine checks `target.IsAlive` after the wait
-   and aborts if the target is dead. The previous character remains without player
-   control — the player must select a new target. `_switchCooldownRemaining` is not
+   and aborts if the target is dead (checked via `target.is_alive`). The previous character
+   remains without player control — the player must select a new target.
+   `_switch_cooldown_remaining` is not
    refunded (the attempt still costs the cooldown).
 
 2. **Rapid switch attempts (every 0.1s)**: The 0.3s cooldown prevents this. Each
@@ -177,7 +178,7 @@ in the fight when you leave, cooldowns persist).
    member. If that member is already active, switch is a no-op (guarded by "target is
    already current" check).
 
-5. **Party wipe (all dead)**: The `Start()` method fails to find an alive member and
+5. **Party wipe (all dead)**: The `_ready()` method fails to find an alive member and
    logs an error. The Game Over state is handled by the Health & Damage System, which
    triggers before switching becomes relevant.
 
@@ -190,10 +191,10 @@ in the fight when you leave, cooldowns persist).
    load and doesn't change dynamically. If the party composition changes, the Chapter
    State System loads a new scene with a new array. No runtime array modifications.
 
-8. **IPartyAgent component missing on a party member**: The switch still works — the
-   `?.` null-conditional operator on the `GetComponent<IPartyAgent>()` call means the
-   callback is simply skipped. A warning is logged. The character switches but has no
-   AI behavior when not player-controlled.
+8. **IPartyAgent node missing on a party member**: The switch still works — the
+   null check on the `find_child("PartyAgent")` call means the callback is simply
+   skipped. A warning is logged. The character switches but has no AI behavior when
+   not player-controlled.
 
 ## Dependencies
 
@@ -237,7 +238,7 @@ in the fight when you leave, cooldowns persist).
 - [ ] Rapid switching (every 0.1s) is prevented by cooldown — no state corruption
 - [ ] Switch during skill animation: old character's animation completes or transitions
   cleanly; new character starts from idle or current AI pose
-- [ ] `OnCharacterSwitched` event fires with correct previous and new character
+- [ ] `character_switched` event fires with correct previous and new character
 - [ ] All four party members' state continues ticking during and after switch
 - [ ] No HP, cooldown, or effect data is copied or moved during switch
 - [ ] Switch highlight FX plays for 0.3s and completes before input is accepted

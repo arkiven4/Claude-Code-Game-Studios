@@ -22,6 +22,10 @@ enum DamageCategory { PHYSICAL, MAGICAL, HOLY, DARK }
 @export var base_cooldown: float = 5.0
 @export var max_charges: int = 1
 @export var cast_time: float = 0.0
+## If set, this skill can chain into another skill within a time window.
+@export var combo_next_skill: SkillData
+## Time window (seconds) to activate the combo skill after this one finishes.
+@export var combo_window: float = 1.0
 
 @export_group("Targeting")
 @export var target_type: TargetType = TargetType.SINGLE_ENEMY
@@ -47,10 +51,16 @@ enum DamageCategory { PHYSICAL, MAGICAL, HOLY, DARK }
 @export var is_projectile: bool = false
 ## Travel speed of the spawned projectile in units/sec. Only used when is_projectile is true.
 @export var projectile_speed: float = 15.0
+## Optional: Custom projectile scene (.tscn) to use instead of the global default.
+@export var custom_projectile_scene: PackedScene
 ## Sprite3D billboard texture shown on the flying projectile. Falls back to generic glow if unset.
 @export var vfx_projectile: Texture2D
 ## Billboard texture shown at impact/cast position for non-projectile skills (slash, aura, burst, etc).
 @export var vfx_effect: Texture2D
+## Optional: Euler rotation offset (degrees) for the VFX billboard.
+@export var vfx_orientation_offset: Vector3 = Vector3.ZERO
+## Optional: Scale multiplier for the VFX billboard.
+@export var vfx_scale_multiplier: Vector3 = Vector3.ONE
 
 @export_group("Status Fields")
 ## Each entry pairs a StatusEffect with skill-specific duration, magnitude, and tick rate.

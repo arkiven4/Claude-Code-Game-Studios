@@ -10,6 +10,7 @@ signal move_direction(dir: Vector2)
 signal interact_pressed
 signal camera_orbit(dir: Vector2)
 signal pause_pressed
+signal inventory_pressed
 
 # Combat Signals
 signal skill_pressed(index: int)
@@ -58,6 +59,8 @@ func _handle_exploration_input(event: InputEvent) -> void:
 		interact_pressed.emit()
 	elif event.is_action_pressed("pause"):
 		pause_pressed.emit()
+	elif event.is_action_pressed("inventory"):
+		inventory_pressed.emit()
 
 func _handle_combat_input(event: InputEvent) -> void:
 	if event.is_action_pressed("skill_1"):
@@ -80,6 +83,8 @@ func _handle_combat_input(event: InputEvent) -> void:
 		switch_prev_pressed.emit()
 	elif event.is_action_pressed("target_lock"):
 		target_lock_pressed.emit()
+	elif event.is_action_pressed("inventory"):
+		inventory_pressed.emit()
 
 func _handle_ui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_accept"):

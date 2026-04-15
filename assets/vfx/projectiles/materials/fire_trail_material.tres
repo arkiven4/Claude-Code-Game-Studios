@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3]
+
+[ext_resource type="Shader" path="res://assets/shaders/vfx/fire_trail_shader.gdshader" id="1_trail_shader"]
+[ext_resource type="Texture2D" path="res://assets/vfx/projectiles/textures/T_VFX_basic1.PNG" id="2_trail_tex"]
+
+[resource]
+render_priority = -1
+shader = ExtResource("1_trail_shader")
+shader_parameter/trail_tex = ExtResource("2_trail_tex")
+shader_parameter/speed = Vector2(2, 0)
+shader_parameter/scale = Vector2(1, 0.2)

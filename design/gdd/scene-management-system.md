@@ -1,6 +1,6 @@
 # Scene Management System
 
-> **Status**: Designed
+> **Status**: Approved
 > **Author**: Automated design session 2026-04-04
 > **Last Updated**: 2026-04-04
 > **Implements Pillar**: Story First (seamless narrative flow)
@@ -31,7 +31,7 @@ state. The system is invisible — the player only notices it when it breaks.
 feels natural), God of War's single-shot camera (no visible loading), and Final Fantasy's
 contextual loading screens (narrative text during load).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
@@ -51,15 +51,16 @@ contextual loading screens (narrative text during load).
      Total transition time: 2–3s.
 
 2. **Scene Loading Flow** (standard load):
-   1. `SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single)` is called with
-      `allowSceneActivation = false` (holds on loading screen until state is ready)
+   1. `ResourceLoader.load_threaded_request(scene_path)` is called to begin async load
    2. System displays loading screen overlay (black background, loading text, narrative tip)
-   3. Async load runs in the background; `asyncOperation.progress` drives a loading bar
-   4. When `asyncOperation.isDone` is true, the system waits one frame for all objects
-      to initialize
-   5. System calls `ISceneLoadable.OnSceneLoaded()` on all registered managers
-   6. System hides the loading screen with a fade-out (0.3s)
-   7. Scene is active and player-controlled
+   3. Async load runs in the background; `ResourceLoader.load_threaded_get_status()` polls
+      progress each frame and drives a loading bar
+   4. When status is `THREAD_LOAD_LOADED`, the packed scene is retrieved with
+      `ResourceLoader.load_threaded_get(scene_path)`
+   5. System calls `get_tree().change_scene_to_packed(packed_scene)` to activate the scene
+   6. System emits `scene_loaded` signal; registered managers respond via signal connections
+   7. System hides the loading screen with a fade-out (0.3s); scene is active and
+      player-controlled
 
 3. **Area Portal Flow**:
    1. Player enters a `PortalTrigger` collider
@@ -79,7 +80,7 @@ contextual loading screens (narrative text during load).
       - Chest open/closed state
       - Door open/closed state
       - Enemy alive/dead state
-   4. System notifies all `ISaveable` systems that scene state is restored
+   4. System notifies all systems using the Saveable Protocol that scene state is restored
 
 5. **Music Crossfade on Scene Change**:
    1. Before scene unload, Audio System begins fading out current music track (0.5s)
@@ -91,14 +92,13 @@ contextual loading screens (narrative text during load).
       a full stop → new track (no harmonic relationship)
 
 6. **Scene Registry**: The system maintains a registry of all scenes in the game:
-   ```csharp
-   public struct SceneDefinition {
-       public string SceneName;       // Godot scene file name (without .tscn)
-       public int ChapterId;          // Which chapter this scene belongs to
-       public SceneType Type;         // enum: Combat, Hub, Cutscene, Menu, Transition
-       public bool IsStreaming;       // true for area portal scenes (can preload)
-       public Vector3 DefaultSpawnPoint; // Where the player spawns in this scene
-   }
+   ```gdscript
+   # SceneDefinition stored as a Resource (.tres) or Dictionary in the registry
+   # scene_name: String       # Godot scene file path (e.g., "res://assets/scenes/WitchPrologue.tscn")
+   # chapter_id: int          # Which chapter this scene belongs to
+   # type: SceneType          # enum: Combat, Hub, Cutscene, Menu, Transition
+   # is_streaming: bool       # true for area portal scenes (can preload)
+   # default_spawn_point: Vector3  # Where the player spawns in this scene
    ```
 
 7. **Preloading**: For Area Portal transitions, the system can preload the target scene
@@ -115,10 +115,12 @@ contextual loading screens (narrative text during load).
    ```
 
 9. **Scene Unloading**: Before a scene is unloaded, the system:
-   1. Calls `ISaveable.Serialize()` on all registered systems (if a save is in progress)
-   2. Calls `ISceneUnloadable.OnSceneUnloading()` on registered managers
-   3. Destroys all scene objects that are not marked `DontDestroyOnLoad`
-   4. Notifies the Audio System to stop scene-specific audio sources
+   1. Emits `scene_unloading` signal; all registered systems serialize via the Saveable
+      Protocol (`serialize()`) if a save is in progress
+   2. Emits `scene_will_unload` signal so managers can clean up
+   3. `get_tree().change_scene_to_packed()` frees the current scene tree (all non-autoload
+      nodes are freed automatically; autoloads persist)
+   4. Notifies the Audio System via signal to stop scene-specific audio streams
 
 10. **Error Handling**:
     - If a scene fails to load (missing file, corrupt scene), the system displays an
@@ -138,7 +140,7 @@ contextual loading screens (narrative text during load).
 │  LOADING     │ ◄── Loading screen displayed, async load running
 │  (standard)  │
 └──────┬───────┘
-       │ asyncOperation.isDone == true
+       │ ResourceLoader status == THREAD_LOAD_LOADED
        ▼
 ┌──────────────┐
 │  RESTORING   │ ◄── State restoration, OnSceneLoaded callbacks

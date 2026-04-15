@@ -9,7 +9,7 @@
 
 The Dialogue System is the primary narrative delivery mechanism for My Vampire. It presents
 text-based dialogue between characters using a data-driven Resource architecture
-(`DialogueNodeSO`) connected into directed dialogue graphs. Each dialogue node contains
+(`DialogueNode`) connected into directed dialogue graphs. Each dialogue node contains
 speaker identification, display text with TextMarkup formatting, optional voice clip
 references, and branching conditions. The system supports linear conversations, branching
 choices (where designed), character portraits with expression states, typewriter text
@@ -33,20 +33,20 @@ or builds the world — ideally all three.
 expressions, clean text layout), Fire Emblem's skip-to-end convenience (hold button to
 advance quickly), and Visual Novel-style text pacing (typewriter effect with instant-skip).
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
-1. **DialogueNodeSO Resource**: Each node in a dialogue graph is a
-   `DialogueNodeSO` asset:
+1. **DialogueNode Resource**: Each node in a dialogue graph is a
+   `DialogueNode` asset:
    ```
-   DialogueNodeSO fields:
+   DialogueNode fields:
    ┌─────────────────────────────────────────────────┐
-   | Speaker: CharacterDataSO reference               |
+   | Speaker: CharacterData reference               |
    | Expression: string (matches portrait state)      |
    | Text: string (TextMarkup formatted)             |
-   | VoiceClip: AudioClip reference (optional)        |
-   | NextNode: DialogueNodeSO reference (linear)      |
+   | VoiceClip: AudioStream reference (optional)        |
+   | NextNode: DialogueNode reference (linear)      |
    | Choices: Choice[] (optional branching)           |
    | AutoAdvanceSeconds: float (0 = no auto-advance)  |
    | Condition: DialogueCondition (optional gate)     |
@@ -56,13 +56,13 @@ advance quickly), and Visual Novel-style text pacing (typewriter effect with ins
    Choice sub-object:
    ┌─────────────────────────────────────────────────┐
    | DisplayText: string                              |
-   | TargetNode: DialogueNodeSO reference             |
+   | TargetNode: DialogueNode reference             |
    | Condition: DialogueCondition (optional)          |
    └─────────────────────────────────────────────────┘
    ```
 
-2. **DialogueGraphSO**: A `DialogueGraphSO` Resource contains an array of
-   `DialogueNodeSO` references and identifies the `StartNode`. Each conversation
+2. **DialogueGraph**: A `DialogueGraph` Resource contains an array of
+   `DialogueNode` references and identifies the `StartNode`. Each conversation
    (NPC interaction, story beat, chapter intro) has its own graph asset. Graphs are
    Graphs are created in the Godot editor by the narrative team and referenced by scene triggers.
 
@@ -124,7 +124,7 @@ advance quickly), and Visual Novel-style text pacing (typewriter effect with ins
 
 8. **Dialogue Triggering**: Dialogue can be started by:
    - **NPC Interaction**: Player presses Interact near an NPC with a `DialogueTrigger`
-     component referencing a `DialogueGraphSO`
+     component referencing a `DialogueGraph`
    - **Scene Event**: A scene's `DialogueTrigger` fires on scene load (chapter intro dialogue)
    - **Chapter State**: The `ChapterStateSystem` detects a flag change and fires dialogue
    - **Combat End**: An encounter completion triggers post-combat banter (optional)
@@ -186,7 +186,7 @@ advance quickly), and Visual Novel-style text pacing (typewriter effect with ins
 | **Dialogue UI** | Driven by | All visual display is delegated to Dialogue UI |
 | **Combat System** | Read by | If dialogue starts during combat, combat is paused |
 | **Scene Management** | Called by | Scene triggers fire dialogue on load |
-| **NPC System** | Called by | NPCs reference DialogueGraphSO for their conversations |
+| **NPC System** | Called by | NPCs reference DialogueGraph for their conversations |
 
 ## Formulas
 
@@ -252,14 +252,14 @@ advance quickly), and Visual Novel-style text pacing (typewriter effect with ins
 
 ## Visual/Audio Requirements
 
-- **Character Portraits**: Each `CharacterDataSO` has portrait sprites for at least these
+- **Character Portraits**: Each `CharacterData` has portrait sprites for at least these
   expressions: `neutral`, `happy`, `serious`, `angry`, `sad`, `pained`. MVP needs Evelyn,
   Evan, and Witch portraits at minimum.
 - **Dialogue Box**: Semi-transparent panel at the bottom of the screen with speaker name,
   expression portrait, and text area. Styled to match the game's gothic aesthetic.
 - **Choice Display**: Choice buttons appear stacked vertically below the dialogue text.
   Available choices are highlighted; unavailable choices are grayed out with a lock icon.
-- **Voice Clips**: Optional `AudioClip` per node. If present, plays when the node displays.
+- **Voice Clips**: Optional `AudioStream` per node. If present, plays when the node displays.
   MVP may not have voice acting — the system supports it for future content.
 
 ## UI Requirements

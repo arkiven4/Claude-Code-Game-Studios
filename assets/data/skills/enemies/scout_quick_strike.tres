@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://scout_quick_strike"]
+
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://res/src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://res/src/core/skill_tier_config.gd" id="2_tier"]
+[ext_resource type="Texture2D" uid="uid://basic_sword_swing_impact" path="res://assets/art/vfx/skills/basic_sword_swing_impact.png" id="3_vfx"]
+
+[sub_resource type="Resource" id="Tier1"]
+script = ExtResource("2_tier")
+effect_value = 0.8
+tier_description = "A rapid strike with a dagger."
+
+[resource]
+script = ExtResource("1_skill")
+skill_type = 0
+display_name = "Quick Strike"
+skill_id = "scout_quick_strike"
+description = "A lightning-fast dagger attack."
+mp_cost = 0
+base_cooldown = 1.5
+cast_time = 0.2
+target_type = 0
+area_radius = 1.0
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+base_damage = 15
+vfx_effect = ExtResource("3_vfx")

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3 uid="uid://curse_effect"]
+
+[ext_resource type="Script" uid="uid://pj67a8r8paxh" path="res://src/core/status_effect.gd" id="1_fx"]
+
+[resource]
+script = ExtResource("1_fx")
+effect_id = "curse"
+display_name = "Cursed"
+description = "Reduced attack and defense."
+effect_type = 1 # DEBUFF
+effect_category = 0 # STAT_MODIFIER
+stat_to_modify = 1 # ATK
+modify_type = 0 # PERCENTAGE
+effect_value = 0.8 # 20% reduction
+duration = 8.0
+stacking_rule = 0 # NO_STACK
+is_hostile = true

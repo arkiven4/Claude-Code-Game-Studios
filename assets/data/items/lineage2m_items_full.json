@@ -1,0 +1,5385 @@
+[
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Forgotten Blade",
+        "rank": "Legend",
+        "stats": {
+            "damage": "26",
+            "accuracy": "18",
+            "weight": "144",
+            "damage status": "Unbreakable"
+        },
+        "options": "Extra Damage +8, Skill Damage Boost +20%, Stun Accuracy +5%, Extra PvP Damage +5",
+        "material": "Orichalcum",
+        "filename": "Weapon_Sword_Legend_Forgotten_Blade.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154336-Ok8rgwmOvQfYDh1DE8gB0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Caladbolg",
+        "rank": "Legend",
+        "stats": {
+            "damage": "27",
+            "accuracy": "15",
+            "weight": "162",
+            "damage status": "Unbreakable"
+        },
+        "options": "Extra Damage +5, Stun Accuracy +10%, Skill Damage Boost +20%",
+        "material": "Mithril",
+        "filename": "Weapon_Sword_Legend_Caladbolg.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154359-g7hkcEyZijFol14NyAd50-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Archangel Blade",
+        "rank": "Epic",
+        "stats": {
+            "damage": "19",
+            "accuracy": "9",
+            "weight": "180",
+            "damage status": "Damage"
+        },
+        "options": "Extra Damage +3",
+        "material": "Adamantium",
+        "filename": "Weapon_Sword_Epic_Archangel_Blade.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154414-YPmZNpHhZYbOlAoof1Q10-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Sword of Miracles",
+        "rank": "Epic",
+        "stats": {
+            "damage": "19",
+            "accuracy": "8",
+            "weight": "216",
+            "damage status": "Unbreakable"
+        },
+        "options": "Extra Damage +4",
+        "material": "Metal",
+        "filename": "Weapon_Sword_Epic_Sword_of_Miracles.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154422-zXIbBFCkMIvZtOi7lhsH0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Sirra's Blade",
+        "rank": "Epic",
+        "stats": {
+            "damage": "21",
+            "accuracy": "10",
+            "weight": "144",
+            "damage status": "Unbreakable"
+        },
+        "options": "Extra Damage +4, Skill Damage Boost +10%",
+        "material": "Orichalcum",
+        "filename": "Weapon_Sword_Epic_Sirra_s_Blade.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154427-NSzzJRcqe0VXXbYqD2Np0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Giant's Sword",
+        "rank": "Unique",
+        "stats": {
+            "damage": "18",
+            "accuracy": "5",
+            "weight": "162",
+            "damage status": "Unbreakable"
+        },
+        "options": "Extra Damage +3",
+        "material": "Black Mithril",
+        "filename": "Weapon_Sword_Unique_Giant_s_Sword.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154432-QQQylFCP6WAnl40VP34j0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Samurai Long Sword",
+        "rank": "Unique",
+        "stats": {
+            "damage": "15",
+            "accuracy": "4",
+            "weight": "216",
+            "damage status": "Broken"
+        },
+        "options": "Stun Accuracy +5%",
+        "material": "Metal",
+        "filename": "Weapon_Sword_Unique_Samurai_Long_Sword.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154442-7GNLARripjXfHVg81vwg0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Tsurugi",
+        "rank": "Unique",
+        "stats": {
+            "damage": "16",
+            "accuracy": "5",
+            "weight": "216",
+            "damage status": "Damage"
+        },
+        "options": "Extra Damage +1",
+        "material": "Metal",
+        "filename": "Weapon_Sword_Unique_Tsurugi.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154508-DA33hDwMarXPXoEUrEXU0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Sword of Nightmares",
+        "rank": "Unique",
+        "stats": {
+            "damage": "15",
+            "accuracy": "3",
+            "weight": "162",
+            "damage status": "Unbreakable"
+        },
+        "options": "-",
+        "material": "Mithril",
+        "filename": "Weapon_Sword_Unique_Sword_of_Nightmares.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154511-SaDCV0IHE5GaeWwZazbf0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Keshanberk",
+        "rank": "Unique",
+        "stats": {
+            "damage": "17",
+            "accuracy": "4",
+            "weight": "144",
+            "damage status": "Damage"
+        },
+        "options": "Extra Damage +2",
+        "material": "Orichalcum",
+        "filename": "Weapon_Sword_Unique_Keshanberk.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154519-fpJGhW3nu9ITVTm0fBO80-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Sword of Revolution",
+        "rank": "Rare",
+        "stats": {
+            "damage": "10",
+            "accuracy": "-",
+            "weight": "216",
+            "damage status": "Unbreakable"
+        },
+        "options": "STR+1",
+        "material": "Steel",
+        "filename": "Weapon_Sword_Rare_Sword_of_Revolution.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154523-Htp3GocquzRviXMm1CSB0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Silenos Sword",
+        "rank": "Rare",
+        "stats": {
+            "damage": "3",
+            "accuracy": "10",
+            "weight": "216",
+            "damage status": "Damage"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Weapon_Sword_Rare_Silenos_Sword.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154543-fcTfYhQ0b9OdQKH1MfSi0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Orc Fighter's Sword",
+        "rank": "Rare",
+        "stats": {
+            "damage": "11",
+            "accuracy": "1",
+            "weight": "216",
+            "damage status": "Damage"
+        },
+        "options": "STR+1, CON+2",
+        "material": "Steel",
+        "filename": "Weapon_Sword_Rare_Orc_Fighter_s_Sword.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154619-dg6hCnoQl5ZGGLCaYy0s0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Katana",
+        "rank": "Rare",
+        "stats": {
+            "damage": "13",
+            "accuracy": "3",
+            "weight": "216",
+            "damage status": "Damage"
+        },
+        "options": "Extra Damage +2",
+        "material": "Metal",
+        "filename": "Weapon_Sword_Rare_Katana.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154623-3m0q0kzXTy7wxBbnWKC60-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Elven Long Sword",
+        "rank": "Rare",
+        "stats": {
+            "damage": "10",
+            "accuracy": "1",
+            "weight": "180",
+            "damage status": "Damage"
+        },
+        "options": "-",
+        "material": "Silver",
+        "filename": "Weapon_Sword_Rare_Elven_Long_Sword.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154631-3GydUo6RJIiGyivGAmTS0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Knight's Sword",
+        "rank": "Common",
+        "stats": {
+            "damage": "5",
+            "accuracy": "1",
+            "weight": "216",
+            "damage status": "Damage"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Weapon_Sword_Common_Knight_s_Sword.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154640-r7vXbhX9JnRW9Zr2bM270-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Bastard Sword",
+        "rank": "Common",
+        "stats": {
+            "damage": "8",
+            "accuracy": "1",
+            "weight": "216",
+            "damage status": "Damage"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Weapon_Sword_Common_Bastard_Sword.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154648-2BSsHawdcTCnfoydTvp40-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Saber",
+        "rank": "Common",
+        "stats": {
+            "damage": "6",
+            "accuracy": "2",
+            "weight": "216",
+            "damage status": "Damage"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Weapon_Sword_Common_Saber.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154653-ecO5gc66GfNpoW1CgCx10-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Falchion",
+        "rank": "Common",
+        "stats": {
+            "damage": "5",
+            "accuracy": "-",
+            "weight": "216",
+            "damage status": "Damage"
+        },
+        "options": "Extra Damage +1",
+        "material": "Steel",
+        "filename": "Weapon_Sword_Common_Falchion.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154658-YQ3BI48sUOPzKZrdwVii0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Broadsword",
+        "rank": "Common",
+        "stats": {
+            "damage": "3",
+            "accuracy": "1",
+            "weight": "216",
+            "damage status": "Damage"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Weapon_Sword_Common_Broadsword.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154717-WhNqIIwxMtq3YvDA6tzc0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Longsword",
+        "rank": "Common",
+        "stats": {
+            "damage": "5",
+            "accuracy": "-",
+            "weight": "216",
+            "damage status": "Damage"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Weapon_Sword_Common_Longsword.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154725-uZex49C5jmSvr24Nfma80-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Squire's Sword",
+        "rank": "Common",
+        "stats": {
+            "damage": "4",
+            "accuracy": "-",
+            "weight": "216",
+            "damage status": "Damage"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Weapon_Sword_Common_Squire_s_Sword.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154732-V2tpWwm7wOVDGEMVz5s50-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Kobold Warrior's Sword",
+        "rank": "Common",
+        "stats": {
+            "damage": "8",
+            "accuracy": "-",
+            "weight": "216",
+            "damage status": "Damage"
+        },
+        "options": "Extra Damage +1",
+        "material": "Steel",
+        "filename": "Weapon_Sword_Common_Kobold_Warrior_s_Sword.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154740-1TeFqIm5BOz4adRCEmFH0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Ol Mahum Warrior's Sword",
+        "rank": "Common",
+        "stats": {
+            "damage": "7",
+            "accuracy": "-",
+            "weight": "216",
+            "damage status": "Damage"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Weapon_Sword_Common_Ol_Mahum_Warrior_s_Sword.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154755-U1WGXeQMWck2lSNAoPSg0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Orc Warrior's Sword",
+        "rank": "Common",
+        "stats": {
+            "damage": "5",
+            "accuracy": "1",
+            "weight": "216",
+            "damage status": "Damage"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Weapon_Sword_Common_Orc_Warrior_s_Sword.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154801-ubzKREjAabNuW1PqRhav0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Lizardman Warrior's Sword",
+        "rank": "Common",
+        "stats": {
+            "damage": "8",
+            "accuracy": "-1",
+            "weight": "216",
+            "damage status": "Damage"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Weapon_Sword_Common_Lizardman_Warrior_s_Sword.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154806-7Pnuowaf9JD1bajQIldw0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Sword",
+        "name": "Elven Sword",
+        "rank": "Common",
+        "stats": {
+            "damage": "4",
+            "accuracy": "2",
+            "weight": "180",
+            "damage status": "Damage"
+        },
+        "options": "-",
+        "material": "Silver",
+        "filename": "Weapon_Sword_Common_Elven_Sword.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117154812-rTX1fgggETJlxZxCm5Fj0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Astaroth Blades",
+        "rank": "Legend",
+        "stats": {
+            "damage": "29",
+            "accuracy": "15",
+            "weight": "180"
+        },
+        "options": "Melee Critical Hit +25%, Extra Damage on Critical Hit +12, Ignore Damage Reduction +6, Skill Damage Boost +30%, Stun Accuracy +7%",
+        "material": "Obsidian",
+        "filename": "Weapon_Dual_Blades_Legend_Astaroth_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155239-1MgN1gGnC4PndwLo3YAA0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Archangel Dual Blades",
+        "rank": "Epic",
+        "stats": {
+            "damage": "21",
+            "accuracy": "10",
+            "weight": "180"
+        },
+        "options": "Melee Critical Hit +25%, Ignore Damage Reduction +3",
+        "material": "Adamantium",
+        "filename": "Weapon_Dual_Blades_Epic_Archangel_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155252-uk6SFP1L1PxGD9d8QULm0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Tallum Dual Blades",
+        "rank": "Epic",
+        "stats": {
+            "damage": "21",
+            "accuracy": "9",
+            "weight": "162"
+        },
+        "options": "Melee Critical Hit +25%, Ignore Damage Reduction +3",
+        "material": "Mithril",
+        "filename": "Weapon_Dual_Blades_Epic_Tallum_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155259-OYeiULRYk0ZAAoMjDZl70-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Dark Legion's Edge",
+        "rank": "Epic",
+        "stats": {
+            "damage": "23",
+            "accuracy": "12",
+            "weight": "180"
+        },
+        "options": "Melee Critical Hit +25%, Extra Damage on Critical Hit +8, Ignore Damage Reduction +3, Skill Damage Boost +20%, Stun Accuracy +5%",
+        "material": "Obsidian",
+        "filename": "Weapon_Dual_Blades_Epic_Dark_Legion_s_Edge.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155312-e0vgeTJOrcCo5z0gJEPk0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Themis' Tongue",
+        "rank": "Unique",
+        "stats": {
+            "damage": "14",
+            "accuracy": "3",
+            "weight": "180"
+        },
+        "options": "Melee Critical Hit +25%",
+        "material": "Animal",
+        "filename": "Weapon_Dual_Blades_Unique_Themis_Tongue.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155318-LAnDECEKkveRi9JXd05d0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Giant's Dual Blades",
+        "rank": "Unique",
+        "stats": {
+            "damage": "20",
+            "accuracy": "5",
+            "weight": "162"
+        },
+        "options": "Melee Critical Hit +20%, Extra Damage +1",
+        "material": "Black Mithril",
+        "filename": "Weapon_Dual_Blades_Unique_Giant_s_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155326-PhK7MhJxxa9i1kLykuf90-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Damascus Dual Blades",
+        "rank": "Unique",
+        "stats": {
+            "damage": "17",
+            "accuracy": "4",
+            "weight": "216"
+        },
+        "options": "Melee Critical Hit +25%, Extra Damage on Critical Hit +2",
+        "material": "Steel",
+        "filename": "Weapon_Dual_Blades_Unique_Damascus_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155334-7PXUVnThKgmqBJsFbuJq0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Caliburs Dual Blades",
+        "rank": "Unique",
+        "stats": {
+            "damage": "14",
+            "accuracy": "2",
+            "weight": "162"
+        },
+        "options": "Melee Critical Hit +15%",
+        "material": "Mithril",
+        "filename": "Weapon_Dual_Blades_Unique_Caliburs_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155341-iCvAUWW3MqMGVORvEbIN0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Dual Blades of Delusion",
+        "rank": "Rare",
+        "stats": {
+            "damage": "12",
+            "accuracy": "2",
+            "weight": "180"
+        },
+        "options": "Melee Critical Hit +25%",
+        "material": "Gold",
+        "filename": "Weapon_Dual_Blades_Rare_Dual_Blades_of_Delusion.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155348-jzl0OZhPLK5wm70SDX840-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Ultimate Dual Blades",
+        "rank": "Rare",
+        "stats": {
+            "damage": "11",
+            "accuracy": "-",
+            "weight": "216"
+        },
+        "options": "Melee Critical Hit +20%",
+        "material": "Steel",
+        "filename": "Weapon_Dual_Blades_Rare_Ultimate_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155359-NnCwWr7BrpFGd70PlKWt0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Silenos Dual Blades",
+        "rank": "Rare",
+        "stats": {
+            "damage": "3",
+            "accuracy": "8",
+            "weight": "216"
+        },
+        "options": "Melee Critical Hit +10%",
+        "material": "Steel",
+        "filename": "Weapon_Dual_Blades_Rare_Silenos_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155406-6ZwY9D1XsYkQ767oKnVe0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Orc Fighter's Dual Blades",
+        "rank": "Rare",
+        "stats": {
+            "damage": "11",
+            "accuracy": "-",
+            "weight": "216"
+        },
+        "options": "Melee Critical Hit +20%, Extra Damage on Critical Hit +3",
+        "material": "Steel",
+        "filename": "Weapon_Dual_Blades_Rare_Orc_Fighter_s_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155414-4IzRzdEZwiOcAQ4biess0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Stormbringer Dual Blades",
+        "rank": "Rare",
+        "stats": {
+            "damage": "9",
+            "accuracy": "1",
+            "weight": "180"
+        },
+        "options": "Melee Critical Hit +20%",
+        "material": "Silver",
+        "filename": "Weapon_Dual_Blades_Rare_Stormbringer_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155422-y09YI1ZCi2i6aROzlQvn0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Spinebone Dual Blades",
+        "rank": "Common",
+        "stats": {
+            "damage": "5",
+            "accuracy": "2",
+            "weight": "162"
+        },
+        "options": "Melee Critical Hit +20%",
+        "material": "Bone",
+        "filename": "Weapon_Dual_Blades_Common_Spinebone_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155426-OXeH3KOs2iTSAefj54If0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Shamshir Dual Blades",
+        "rank": "Common",
+        "stats": {
+            "damage": "5",
+            "accuracy": "-",
+            "weight": "216"
+        },
+        "options": "Melee Critical Hit +20%",
+        "material": "Steel",
+        "filename": "Weapon_Dual_Blades_Common_Shamshir_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155436-RhZeXqJizEDfbDB5JFmE0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Dual Blades of Solidarity",
+        "rank": "Common",
+        "stats": {
+            "damage": "7",
+            "accuracy": "-",
+            "weight": "216"
+        },
+        "options": "Melee Critical Hit +20%",
+        "material": "Steel",
+        "filename": "Weapon_Dual_Blades_Common_Dual_Blades_of_Solidarity.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155445-VkHasEpNgHhx4I8GZ0tY0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Blood Dual Blades",
+        "rank": "Common",
+        "stats": {
+            "damage": "6",
+            "accuracy": "-",
+            "weight": "216"
+        },
+        "options": "Melee Critical Hit +20%",
+        "material": "Steel",
+        "filename": "Weapon_Dual_Blades_Common_Blood_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155458-hR7m7BAtzWA838f2SMX70-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Dual Blades",
+        "rank": "Common",
+        "stats": {
+            "damage": "2",
+            "accuracy": "1",
+            "weight": "216"
+        },
+        "options": "Melee Critical Hit +20%",
+        "material": "Steel",
+        "filename": "Weapon_Dual_Blades_Common_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155505-XujCbLCIEN3I12lb8Yjg0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Kobold Warrior's Dual Blades",
+        "rank": "Common",
+        "stats": {
+            "damage": "7",
+            "accuracy": "-",
+            "weight": "216"
+        },
+        "options": "Melee Critical Hit +20%, Extra Damage +1",
+        "material": "Steel",
+        "filename": "Weapon_Dual_Blades_Common_Kobold_Warrior_s_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155516-2LgbsROMRAbwcHPw5TNu0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Ol Mahum Warrior's Dual Blades",
+        "rank": "Common",
+        "stats": {
+            "damage": "4",
+            "accuracy": "-",
+            "weight": "216"
+        },
+        "options": "Melee Critical Hit +20%, Extra Damage +1",
+        "material": "Steel",
+        "filename": "Weapon_Dual_Blades_Common_Ol_Mahum_Warrior_s_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155526-qnZCGWllC4dMMIP4ESv00-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Orc Warrior's Dual Blades",
+        "rank": "Common",
+        "stats": {
+            "damage": "4",
+            "accuracy": "1",
+            "weight": "216"
+        },
+        "options": "Melee Critical Hit +20%",
+        "material": "Steel",
+        "filename": "Weapon_Dual_Blades_Common_Orc_Warrior_s_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155538-UqPNZfnXQ1QMi7I1Evi70-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Lizardman Warrior's Dual Blades",
+        "rank": "Common",
+        "stats": {
+            "damage": "5",
+            "accuracy": "-",
+            "weight": "216"
+        },
+        "options": "Melee Critical Hit +25%",
+        "material": "Steel",
+        "filename": "Weapon_Dual_Blades_Common_Lizardman_Warrior_s_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155543-78jYWYh1YlHcE88YPQQX0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Novice Warrior's Dual Blades",
+        "rank": "Common",
+        "stats": {
+            "damage": "3",
+            "accuracy": "-",
+            "weight": "216"
+        },
+        "options": "Melee Critical Hit +20%",
+        "material": "Steel",
+        "filename": "Weapon_Dual_Blades_Common_Novice_Warrior_s_Dual_Blades.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155553-JQ4RrgPFOTACGNaSTuXt0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dual Blades",
+        "name": "Dual Blades of Reflection",
+        "rank": "Common",
+        "stats": {
+            "damage": "7",
+            "accuracy": "-",
+            "weight": "216"
+        },
+        "options": "Melee Critical Hit +20%",
+        "material": "Metal",
+        "filename": "Weapon_Dual_Blades_Common_Dual_Blades_of_Reflection.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155558-jlGAWIHdnSTK2iOOEPmD0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Naga Storm",
+        "rank": "Legend",
+        "stats": {
+            "damage": "25",
+            "accuracy": "15",
+            "weight": "60"
+        },
+        "options": "Double Chance +25%, Extra Damage +2, Skill Damage Boost +30%, CC Accuracy +50%, Stun Accuracy +7%",
+        "material": "Adamantium",
+        "filename": "Weapon_Dagger_Legend_Naga_Storm.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155657-gMK3YYvoRwQ7noUgNm8K0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Archangel Slayer",
+        "rank": "Epic",
+        "stats": {
+            "damage": "19",
+            "accuracy": "8",
+            "weight": "60"
+        },
+        "options": "Double Chance +15%",
+        "material": "Adamantium",
+        "filename": "Weapon_Dagger_Epic_Archangel_Slayer.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155704-1yHwr0TCYGtm6tGykZ9p0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Cruma's Horn",
+        "rank": "Epic",
+        "stats": {
+            "damage": "20",
+            "accuracy": "10",
+            "weight": "60"
+        },
+        "options": "Double Chance +20%, CC Accuracy +30%, Skill Damage Boost +20%",
+        "material": "Animal",
+        "filename": "Weapon_Dagger_Epic_Cruma_s_Horn.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155711-UlQZjeq6EWwvzL0DvHJB0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Demon's Dagger",
+        "rank": "Epic",
+        "stats": {
+            "damage": "18",
+            "accuracy": "7",
+            "weight": "48"
+        },
+        "options": "Double Chance +15%",
+        "material": "Orichalcum",
+        "filename": "Weapon_Dagger_Epic_Demon_s_Dagger.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155719-BhAAOTeHgwynZC5AwvMP0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Giant's Dagger",
+        "rank": "Unique",
+        "stats": {
+            "damage": "18",
+            "accuracy": "3",
+            "weight": "54"
+        },
+        "options": "Double Chance +15%, Extra Damage +2",
+        "material": "Black Mithril",
+        "filename": "Weapon_Dagger_Unique_Giant_s_Dagger.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155727-5QNY1mnQDn8ssH5L3aJN0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Kris",
+        "rank": "Unique",
+        "stats": {
+            "damage": "15",
+            "accuracy": "4",
+            "weight": "72"
+        },
+        "options": "Double Chance +10%, Extra Damage +2",
+        "material": "Metal",
+        "filename": "Weapon_Dagger_Unique_Kris.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155738-jC5OOUnk6edJUSze8QmJ0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Twilight Knife",
+        "rank": "Unique",
+        "stats": {
+            "damage": "12",
+            "accuracy": "3",
+            "weight": "72"
+        },
+        "options": "Double Chance +15%",
+        "material": "Metal",
+        "filename": "Weapon_Dagger_Unique_Twilight_Knife.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155753-xqZkz2YuXdrCmopBrGZp0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Crystal Dagger",
+        "rank": "Unique",
+        "stats": {
+            "damage": "11",
+            "accuracy": "3",
+            "weight": "54"
+        },
+        "options": "Double Chance +15%",
+        "material": "Mithril",
+        "filename": "Weapon_Dagger_Unique_Crystal_Dagger.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155758-J1DakAYd01bNrrkUSX4z0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Silenos Dagger",
+        "rank": "Rare",
+        "stats": {
+            "damage": "3",
+            "accuracy": "9",
+            "weight": "72"
+        },
+        "options": "Double Chance +5%",
+        "material": "Steel",
+        "filename": "Weapon_Dagger_Rare_Silenos_Dagger.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155807-eWnftTEUXb63I6KusQf60-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Orc Fighter's Dagger",
+        "rank": "Rare",
+        "stats": {
+            "damage": "10",
+            "accuracy": "1",
+            "weight": "72"
+        },
+        "options": "Double Chance +12%, STR +1",
+        "material": "Steel",
+        "filename": "Weapon_Dagger_Rare_Orc_Fighter_s_Dagger.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155813-DPG5TZ9tbuIePVGGonms0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Graceful Dagger",
+        "rank": "Rare",
+        "stats": {
+            "damage": "9",
+            "accuracy": "-",
+            "weight": "54"
+        },
+        "options": "Double Chance +10%",
+        "material": "Mithril",
+        "filename": "Weapon_Dagger_Rare_Graceful_Dagger.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155818-5rK5PquiagBQSjpLk6y90-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Dark Screamer",
+        "rank": "Rare",
+        "stats": {
+            "damage": "10",
+            "accuracy": "4",
+            "weight": "60"
+        },
+        "options": "Double Chance +10%, Extra Damage +1",
+        "material": "Obsidian",
+        "filename": "Weapon_Dagger_Rare_Dark_Screamer.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155825-B16pRvRMyd7zmY7ZFoqW0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Dark Elven Dagger",
+        "rank": "Rare",
+        "stats": {
+            "damage": "10",
+            "accuracy": "1",
+            "weight": "60"
+        },
+        "options": "Double Chance +10%",
+        "material": "Obsidian",
+        "filename": "Weapon_Dagger_Rare_Dark_Elven_Dagger.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155830-OTB6MK5NbvvVa53wSGvU0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Dagger of Misfortune",
+        "rank": "Common",
+        "stats": {
+            "damage": "4",
+            "accuracy": "2",
+            "weight": "54"
+        },
+        "options": "Double Chance +10%",
+        "material": "Bone",
+        "filename": "Weapon_Dagger_Common_Dagger_of_Misfortune.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155842-BktvQuH28EnQW6RctZN00-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Assassin's Dagger",
+        "rank": "Common",
+        "stats": {
+            "damage": "6",
+            "accuracy": "-",
+            "weight": "72"
+        },
+        "options": "Double Chance +10%",
+        "material": "Steel",
+        "filename": "Weapon_Dagger_Common_Assassin_s_Dagger.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155847-HhuHKiPiwGwy6OZSAilQ0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Knife",
+        "rank": "Common",
+        "stats": {
+            "damage": "4",
+            "accuracy": "-",
+            "weight": "72"
+        },
+        "options": "Double Chance +10%",
+        "material": "Steel",
+        "filename": "Weapon_Dagger_Common_Knife.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155847-HhuHKiPiwGwy6OZSAilQ0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Kobold Raider's Dagger",
+        "rank": "Common",
+        "stats": {
+            "damage": "6",
+            "accuracy": "1",
+            "weight": "72"
+        },
+        "options": "Double Chance +10%",
+        "material": "Steel",
+        "filename": "Weapon_Dagger_Common_Kobold_Raider_s_Dagger.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155902-JY5rJBFlwBoYmRCRYydU0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Ol Mahum Warrior's Dagger",
+        "rank": "Common",
+        "stats": {
+            "damage": "5",
+            "accuracy": "-",
+            "weight": "72"
+        },
+        "options": "Double Chance +10%",
+        "material": "Steel",
+        "filename": "Weapon_Dagger_Common_Ol_Mahum_Warrior_s_Dagger.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155908-rtlq0W6d6jo8eyHCOyte0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Orc Warrior's Dagger",
+        "rank": "Common",
+        "stats": {
+            "damage": "3",
+            "accuracy": "-",
+            "weight": "72"
+        },
+        "options": "Double Chance +10%, Extra Damage +1",
+        "material": "Steel",
+        "filename": "Weapon_Dagger_Common_Orc_Warrior_s_Dagger.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155925-UJnCa0PUtIWTP3I418MP0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Lizardman Warrior's Dagger",
+        "rank": "Common",
+        "stats": {
+            "damage": "4",
+            "accuracy": "-",
+            "weight": "72"
+        },
+        "options": "Double Chance +13%",
+        "material": "Steel",
+        "filename": "Weapon_Dagger_Common_Lizardman_Warrior_s_Dagger.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155919-H2eEdiKpCSNrb4Plo0eK0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Novice Assassin's Knife",
+        "rank": "Common",
+        "stats": {
+            "damage": "3",
+            "accuracy": "-",
+            "weight": "72"
+        },
+        "options": "Double Chance +10%",
+        "material": "Steel",
+        "filename": "Weapon_Dagger_Common_Novice_Assassin_s_Knife.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155934-pwsBAB91xJSRHsJYacDI0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Dagger",
+        "name": "Main Gauche",
+        "rank": "Common",
+        "stats": {
+            "damage": "5",
+            "accuracy": "-",
+            "weight": "72"
+        },
+        "options": "Double Chance +10%",
+        "material": "Metal",
+        "filename": "Weapon_Dagger_Common_Main_Gauche.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117155940-7UCkUURTyCp7ux8C3Tjv0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Shyeed's Bow",
+        "rank": "Legend",
+        "stats": {
+            "damage": "28",
+            "accuracy": "15",
+            "weight": "100"
+        },
+        "options": "DEX +3, Skill Damage Boost +45%, Stun Accuracy +7%, Hold Accuracy +7%",
+        "material": "Adamantium",
+        "filename": "Weapon_Bow_Legend_Shyeed_s_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160251-IUhcZV756fGRxdiJkmZK0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Draconic Bow",
+        "rank": "Legend",
+        "stats": {
+            "damage": "28",
+            "accuracy": "17",
+            "weight": "100"
+        },
+        "options": "Hold Accuracy +10%, Extra Damage +4, Stun Accuracy +3%, CC Accuracy +40%, Skill Damage Boost +35%, Extra PvP Damage +5",
+        "material": "Draconic",
+        "filename": "Weapon_Bow_Legend_Draconic_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160256-EA4eO23kEQnr3Zpkw87C0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Archangel Bow",
+        "rank": "Epic",
+        "stats": {
+            "damage": "15",
+            "accuracy": "9",
+            "weight": "100"
+        },
+        "options": "Skill Damage Boost +20%",
+        "material": "Adamantium",
+        "filename": "Weapon_Bow_Epic_Archangel_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160305-Kx9U9cZqRU5oSa9rapxk0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Bow of Peril",
+        "rank": "Epic",
+        "stats": {
+            "damage": "20",
+            "accuracy": "8",
+            "weight": "120"
+        },
+        "options": "MP Recovery (Tick) +5",
+        "material": "Metal",
+        "filename": "Weapon_Bow_Epic_Bow_of_Peril.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160319-tfSLC6jAWx72PaRWpIXS0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Carnium Bow",
+        "rank": "Epic",
+        "stats": {
+            "damage": "17",
+            "accuracy": "11",
+            "weight": "90"
+        },
+        "options": "Extra Damage +3, Skill Damage Boost +20%, CC Accuracy +10%",
+        "material": "Wood",
+        "filename": "Weapon_Bow_Epic_Carnium_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160431-7EikC4Ld8qJocd3c23hN0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Akat Longbow",
+        "rank": "Unique",
+        "stats": {
+            "damage": "10",
+            "accuracy": "5",
+            "weight": "100"
+        },
+        "options": "Extra Damage +2",
+        "material": "Adamantium",
+        "filename": "Weapon_Bow_Unique_Akat_Longbow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160441-BCFsX9grXZaM9yjtpZrz0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Giant's Bow",
+        "rank": "Unique",
+        "stats": {
+            "damage": "13",
+            "accuracy": "5",
+            "weight": "90"
+        },
+        "options": "Extra Damage +3",
+        "material": "Black Mithril",
+        "filename": "Weapon_Bow_Unique_Giant_s_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160511-vqCaTscwAiZ22FxlOkcm0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Crystallized Ice Bow",
+        "rank": "Unique",
+        "stats": {
+            "damage": "10",
+            "accuracy": "4",
+            "weight": "100"
+        },
+        "options": "-",
+        "material": "Glass",
+        "filename": "Weapon_Bow_Unique_Crystallized_Ice_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160515-4vtVZFUPpPqQOkTC5PGe0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Elemental Bow",
+        "rank": "Unique",
+        "stats": {
+            "damage": "11",
+            "accuracy": "3",
+            "weight": "100"
+        },
+        "options": "-",
+        "material": "Jewelry",
+        "filename": "Weapon_Bow_Unique_Elemental_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160521-8GkHPr3hhGSzVyvP7vKw0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Eminence Bow",
+        "rank": "Unique",
+        "stats": {
+            "damage": "10",
+            "accuracy": "3",
+            "weight": "120"
+        },
+        "options": "Extra Damage +2",
+        "material": "Metal",
+        "filename": "Weapon_Bow_Unique_Eminence_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160527-sILEtKbeQVST0VRhLWnu0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Cyclone Bow",
+        "rank": "Rare",
+        "stats": {
+            "damage": "5",
+            "accuracy": "3",
+            "weight": "120"
+        },
+        "options": "Wind Type Damage +3",
+        "material": "Steel",
+        "filename": "Weapon_Bow_Rare_Cyclone_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160538-Gw5Jf21xW0IOF8aKWuBT0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Longbow",
+        "rank": "Rare",
+        "stats": {
+            "damage": "5",
+            "accuracy": "2",
+            "weight": "120"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Weapon_Bow_Rare_Longbow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160543-iHtcfYsFYUoKTeuijIyD0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Reinforced Longbow",
+        "rank": "Rare",
+        "stats": {
+            "damage": "9",
+            "accuracy": "3",
+            "weight": "90"
+        },
+        "options": "Extra Damage +1",
+        "material": "Wood",
+        "filename": "Weapon_Bow_Rare_Reinforced_Longbow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160549-E3KwK7SVeoQVWoQ3wwzV0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Gastraphetes",
+        "rank": "Rare",
+        "stats": {
+            "damage": "7",
+            "accuracy": "-",
+            "weight": "90"
+        },
+        "options": "Extra Damage +1",
+        "material": "Wood",
+        "filename": "Weapon_Bow_Rare_Gastraphetes.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160559-X2l9OeMTEQSJm57tCtWT0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Silenos Bow",
+        "rank": "Rare",
+        "stats": {
+            "damage": "3",
+            "accuracy": "7",
+            "weight": "90"
+        },
+        "options": "-",
+        "material": "Wood",
+        "filename": "Weapon_Bow_Rare_Silenos_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160621-Q6rhYLMrrgJ0qhpYUjgd0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Orc Fighter's Bow",
+        "rank": "Rare",
+        "stats": {
+            "damage": "6",
+            "accuracy": "1",
+            "weight": "90"
+        },
+        "options": "Extra Damage on Critical Hit +2, DEX +1",
+        "material": "Wood",
+        "filename": "Weapon_Bow_Rare_Orc_Fighter_s_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160630-qAC8ur8IFihPcoltj5Oe0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Reinforced Bow",
+        "rank": "Common",
+        "stats": {
+            "damage": "1",
+            "accuracy": "1",
+            "weight": "120"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Weapon_Bow_Common_Reinforced_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160640-M3BKbqC8JqSaqgaVYwRL0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Elven Bow",
+        "rank": "Common",
+        "stats": {
+            "damage": "4",
+            "accuracy": "-",
+            "weight": "90"
+        },
+        "options": "Extra Damage on Critical Hit +2",
+        "material": "Wood",
+        "filename": "Weapon_Bow_Common_Elven_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160648-oGjShi6YceBZ8BK4av3E0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Forest Bow",
+        "rank": "Common",
+        "stats": {
+            "damage": "5",
+            "accuracy": "-",
+            "weight": "90"
+        },
+        "options": "-",
+        "material": "Wood",
+        "filename": "Weapon_Bow_Common_Forest_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160653-fyzBz491ZjS7sWWEFKRW0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Short Bow",
+        "rank": "Common",
+        "stats": {
+            "damage": "1",
+            "accuracy": "-",
+            "weight": "90"
+        },
+        "options": "Extra Damage +1",
+        "material": "Wood",
+        "filename": "Weapon_Bow_Common_Short_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160700-HeKVwXNtCKH0JEmOLG1E0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Bow",
+        "rank": "Common",
+        "stats": {
+            "damage": "2",
+            "accuracy": "-",
+            "weight": "90"
+        },
+        "options": "-",
+        "material": "Wood",
+        "filename": "Weapon_Bow_Common_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160710-vHCdP32GCq9VXc2GdVIh0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Hunting Bow",
+        "rank": "Common",
+        "stats": {
+            "damage": "1",
+            "accuracy": "-",
+            "weight": "90"
+        },
+        "options": "-",
+        "material": "Wood",
+        "filename": "Weapon_Bow_Common_Hunting_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160716-trDhqlTy0FJhv6z1FG1M0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Kobold Scout's Bow",
+        "rank": "Common",
+        "stats": {
+            "damage": "5",
+            "accuracy": "-",
+            "weight": "90"
+        },
+        "options": "-",
+        "material": "Wood",
+        "filename": "Weapon_Bow_Common_Kobold_Scout_s_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160721-WpjahrS34F8OzfzvMrJb0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Ol Mahum Archer's Bow",
+        "rank": "Common",
+        "stats": {
+            "damage": "3",
+            "accuracy": "-",
+            "weight": "90"
+        },
+        "options": "-",
+        "material": "Wood",
+        "filename": "Weapon_Bow_Common_Ol_Mahum_Archer_s_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160737-FZhUHdtpmls8W0nESexp0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Orc Archer's Bow",
+        "rank": "Common",
+        "stats": {
+            "damage": "1",
+            "accuracy": "1",
+            "weight": "90"
+        },
+        "options": "Max HP +50",
+        "material": "Wood",
+        "filename": "Weapon_Bow_Common_Orc_Archer_s_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160744-i7HD5ZTcY46LEaCTJAk90-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Bow",
+        "name": "Lizardman Archer's Bow",
+        "rank": "Common",
+        "stats": {
+            "damage": "2",
+            "accuracy": "-",
+            "weight": "90"
+        },
+        "options": "Extra Damage on Critical Hit +1",
+        "material": "Wood",
+        "filename": "Weapon_Bow_Common_Lizardman_Archer_s_Bow.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117160749-eUAOY924RrGTBJQiw5Jd0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Imperial Staff",
+        "rank": "Legend",
+        "stats": {
+            "damage": "30",
+            "accuracy": "12",
+            "weight": "80"
+        },
+        "options": "Magic Critical Hit +30%, Extra Damage on Critical Hit +12, Skill Damage Boost +40%, CC Accuracy +50%",
+        "material": "Adamantium",
+        "filename": "Weapon_Staff_Legend_Imperial_Staff.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161008-OWqSWRlUKYdPxIrIyJFk0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Archangel Staff",
+        "rank": "Epic",
+        "stats": {
+            "damage": "22",
+            "accuracy": "5",
+            "weight": "80"
+        },
+        "options": "Magic Critical Hit +25%, Extra Damage on Critical Hit +7, Skill Damage Boost +20%",
+        "material": "Adamantium",
+        "filename": "Weapon_Staff_Epic_Archangel_Staff.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161012-DoZt6hVGxkHgTAXtQm2K0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Daimon Crystal",
+        "rank": "Epic",
+        "stats": {
+            "damage": "20",
+            "accuracy": "6",
+            "weight": "64"
+        },
+        "options": "Magic Critical Hit +20%, Extra Damage on Critical Hit +3, Fixed MP Recovery +6, Skill Damage Boost +15%",
+        "material": "Orichalcum",
+        "filename": "Weapon_Staff_Epic_Daimon_Crystal.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161017-4xWvGKgaS9jcL4F9zilU0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Stakato Queen's Staff",
+        "rank": "Epic",
+        "stats": {
+            "damage": "19",
+            "accuracy": "9",
+            "weight": "72"
+        },
+        "options": "Magic Critical Hit +20%, Extra Damage on Critical Hit +4, INT +3, MP Recovery (Tick) +8, Skill Damage Boost +20%",
+        "material": "Plant",
+        "filename": "Weapon_Staff_Epic_Stakato_Queen_s_Staff.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161021-p150WfVFFTNxLXVPrHma0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Mother Tree's Branch",
+        "rank": "Epic",
+        "stats": {
+            "damage": "23",
+            "accuracy": "7",
+            "weight": "72"
+        },
+        "options": "Magic Critical Hit +30%, Extra Damage on Critical Hit +11, Skill Damage Boost +25%, CC Accuracy +30%",
+        "material": "Wood",
+        "filename": "Weapon_Staff_Epic_Mother_Tree_s_Branch.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161054-jM7GwmHY7ylSghG0keZs0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Desperion's Staff",
+        "rank": "Unique",
+        "stats": {
+            "damage": "16",
+            "accuracy": "6",
+            "weight": "80"
+        },
+        "options": "Magic Critical Hit +25%, MP Recovery (Tick) +4",
+        "material": "Adamantium",
+        "filename": "Weapon_Staff_Unique_Desperion_s_Staff.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161059-n5alqhjcoDf0WDuOSRXi0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Giant's Staff",
+        "rank": "Unique",
+        "stats": {
+            "damage": "19",
+            "accuracy": "5",
+            "weight": "72"
+        },
+        "options": "Magic Critical Hit +20%, Extra Damage on Critical Hit +2, Extra Damage +2",
+        "material": "Black Mithril",
+        "filename": "Weapon_Staff_Unique_Giant_s_Staff.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161105-VqqH8OXhfP41okc56ZAg0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Crystal Staff",
+        "rank": "Unique",
+        "stats": {
+            "damage": "13",
+            "accuracy": "3",
+            "weight": "80"
+        },
+        "options": "Magic Critical Hit +20%, Extra Damage on Critical Hit +2, INT +1",
+        "material": "Glass",
+        "filename": "Weapon_Staff_Unique_Crystal_Staff.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161111-q8oKGrwL3BCpGE5mxKyT0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Staff of Evil Spirits",
+        "rank": "Unique",
+        "stats": {
+            "damage": "13",
+            "accuracy": "4",
+            "weight": "72"
+        },
+        "options": "Magic Critical Hit +20%",
+        "material": "Mithril",
+        "filename": "Weapon_Staff_Unique_Staff_of_Evil_Spirits.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161117-BlbwhcJ8kKLVrKQ73l3n0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Staff of Life",
+        "rank": "Rare",
+        "stats": {
+            "damage": "10",
+            "accuracy": "1",
+            "weight": "96"
+        },
+        "options": "Magic Critical Hit +20%",
+        "material": "Metal",
+        "filename": "Weapon_Staff_Rare_Staff_of_Life.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161123-FdU678wDcFGSDEO9w6dn0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Atuva Staff",
+        "rank": "Rare",
+        "stats": {
+            "damage": "12",
+            "accuracy": "-",
+            "weight": "72"
+        },
+        "options": "Magic Critical Hit +15%",
+        "material": "Mithril",
+        "filename": "Weapon_Staff_Rare_Atuva_Staff.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161247-6cHZz9XzO4cdtmNyNhDn0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Priest's Staff",
+        "rank": "Rare",
+        "stats": {
+            "damage": "12",
+            "accuracy": "2",
+            "weight": "72"
+        },
+        "options": "Magic Critical Hit +25%, Extra Damage on Critical Hit +2, MP Recovery (Tick) +2",
+        "material": "Wood",
+        "filename": "Weapon_Staff_Rare_Priest_s_Staff.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161252-FULcDeA0vyuir1RxS0k80-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Silenos Staff",
+        "rank": "Rare",
+        "stats": {
+            "damage": "3",
+            "accuracy": "9",
+            "weight": "72"
+        },
+        "options": "Magic Critical Hit +20%, Extra Damage on Critical Hit +2",
+        "material": "Wood",
+        "filename": "Weapon_Staff_Rare_Silenos_Staff.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161258-f0xazwXNsDlrdjEWQSxG0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Orc Elder's Staff",
+        "rank": "Rare",
+        "stats": {
+            "damage": "11",
+            "accuracy": "2",
+            "weight": "72"
+        },
+        "options": "Magic Critical Hit +25%, INT +1",
+        "material": "Wood",
+        "filename": "Weapon_Staff_Rare_Orc_Elder_s_Staff.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161305-VrKOmXU6sNen5JEZVa2F0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Mage Staff",
+        "rank": "Common",
+        "stats": {
+            "damage": "8",
+            "accuracy": "-",
+            "weight": "72"
+        },
+        "options": "Magic Critical Hit +10%",
+        "material": "Wood",
+        "filename": "Weapon_Staff_Common_Mage_Staff.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161311-RmI5u5YaFtCYMbSOZRvl0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Wand of Adeptness",
+        "rank": "Common",
+        "stats": {
+            "damage": "9",
+            "accuracy": "-",
+            "weight": "72"
+        },
+        "options": "Magic Critical Hit +20%, Extra Damage on Critical Hit +1",
+        "material": "Wood",
+        "filename": "Weapon_Staff_Common_Wand_of_Adeptness.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161316-yyxgefujL6xcDbX3btI40-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Cedar Staff",
+        "rank": "Common",
+        "stats": {
+            "damage": "6",
+            "accuracy": "-",
+            "weight": "72"
+        },
+        "options": "Magic Critical Hit +10%",
+        "material": "Wood",
+        "filename": "Weapon_Staff_Common_Cedar_Staff.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161320-DVE1DvaLTTPcakphkKIz0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Kobold Shaman's Staff",
+        "rank": "Common",
+        "stats": {
+            "damage": "8",
+            "accuracy": "-",
+            "weight": "72"
+        },
+        "options": "Magic Critical Hit +20%, Extra Damage +1",
+        "material": "Wood",
+        "filename": "Weapon_Staff_Common_Kobold_Shaman_s_Staff.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161324-MVmshNxa9KOX2XX1g8bj0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Ol Mahum Warlock's Staff",
+        "rank": "Common",
+        "stats": {
+            "damage": "6",
+            "accuracy": "-",
+            "weight": "72"
+        },
+        "options": "Magic Critical Hit +10%, Max MP +100",
+        "material": "Wood",
+        "filename": "Weapon_Staff_Common_Ol_Mahum_Warlock_s_Staff.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161335-FVVifqK34cfLSVRnnf4w0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Orc Warlock's Staff",
+        "rank": "Common",
+        "stats": {
+            "damage": "6",
+            "accuracy": "-",
+            "weight": "72"
+        },
+        "options": "Magic Critical Hit +10%, Extra Damage +1",
+        "material": "Wood",
+        "filename": "Weapon_Staff_Common_Orc_Warlock_s_Staff.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161340-DUHKxKXgKwuY6iwJyi9P0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Lizardman Warlock's Staff",
+        "rank": "Common",
+        "stats": {
+            "damage": "4",
+            "accuracy": "2",
+            "weight": "72"
+        },
+        "options": "Magic Critical Hit +10%",
+        "material": "Wood",
+        "filename": "Weapon_Staff_Common_Lizardman_Warlock_s_Staff.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161344-xxP8AYCvi5C8WkEodjM40-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Staff",
+        "name": "Novice Mage's Staff",
+        "rank": "Common",
+        "stats": {
+            "damage": "5",
+            "accuracy": "-",
+            "weight": "72"
+        },
+        "options": "Magic Critical Hit +10%",
+        "material": "Wood",
+        "filename": "Weapon_Staff_Common_Novice_Mage_s_Staff.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161347-XewppjO7QI7qwfxPWOuE0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Arcana's Orb",
+        "rank": "Legend",
+        "stats": {
+            "damage": "29",
+            "accuracy": "13",
+            "weight": "50"
+        },
+        "options": "Double Chance +15%, Skill Damage Boost +20%, Heal Boost +40%, Fixed MP Recovery +10",
+        "material": "Diamond",
+        "filename": "Weapon_Orb_Legend_Arcana_s_Orb.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161500-xk3YvccY79pFLFvAmftO0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Archangel Orb",
+        "rank": "Epic",
+        "stats": {
+            "damage": "21",
+            "accuracy": "7",
+            "weight": "50"
+        },
+        "options": "Double Chance +15%, Heal Boost +15%",
+        "material": "Adamantium",
+        "filename": "Weapon_Orb_Epic_Archangel_Orb.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161616-dTZ7QVlul99QZy3zVc580-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Flaming Dragon Skull",
+        "rank": "Epic",
+        "stats": {
+            "damage": "24",
+            "accuracy": "10",
+            "weight": "40"
+        },
+        "options": "Double Chance +15%, Skill Damage Boost +10%, Heal Boost +20%",
+        "material": "Dragonscale",
+        "filename": "Weapon_Orb_Epic_Flaming_Dragon_Skull.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161621-nnmFmzuGD1r3NQv5ebRK0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Cabrio's Hand",
+        "rank": "Epic",
+        "stats": {
+            "damage": "19",
+            "accuracy": "6",
+            "weight": "45"
+        },
+        "options": "Double Chance +15%, MP Recovery (Tick) +8",
+        "material": "Mithril",
+        "filename": "Weapon_Orb_Epic_Cabrio_s_Hand.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161625-kFkd3DCycgStOrVcobVd0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Giant's Orb",
+        "rank": "Unique",
+        "stats": {
+            "damage": "21",
+            "accuracy": "6",
+            "weight": "45"
+        },
+        "options": "Double Chance +10%",
+        "material": "Black Mithril",
+        "filename": "Weapon_Orb_Unique_Giant_s_Orb.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161630-a56SjhnTpqhDRRR4GGI90-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Spell Breaker",
+        "rank": "Unique",
+        "stats": {
+            "damage": "16",
+            "accuracy": "3",
+            "weight": "60"
+        },
+        "options": "Double Chance +10%",
+        "material": "Steel",
+        "filename": "Weapon_Orb_Unique_Spell_Breaker.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161634-7h5UFmc3cW1eLbe1Loib0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Ecliptic Orb",
+        "rank": "Unique",
+        "stats": {
+            "damage": "16",
+            "accuracy": "2",
+            "weight": "45"
+        },
+        "options": "Double Chance +10%",
+        "material": "Mithril",
+        "filename": "Weapon_Orb_Unique_Ecliptic_Orb.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161641-NexKldVwfwoZf1FPcIKO0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Demon's Orb",
+        "rank": "Unique",
+        "stats": {
+            "damage": "17",
+            "accuracy": "2",
+            "weight": "50"
+        },
+        "options": "Double Chance +15%, MP Recovery (Tick) +4, WIS +2",
+        "material": "Obsidian",
+        "filename": "Weapon_Orb_Unique_Demon_s_Orb.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161652-9SQfxf3OWlE0uBbC8rvZ0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Orb of Mana",
+        "rank": "Rare",
+        "stats": {
+            "damage": "9",
+            "accuracy": "-",
+            "weight": "50"
+        },
+        "options": "Double Chance +10%, WIS +1",
+        "material": "Jewelry",
+        "filename": "Weapon_Orb_Rare_Orb_of_Mana.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161702-zTlqwzVLiA83zBUsuVfq0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Silenos Orb",
+        "rank": "Rare",
+        "stats": {
+            "damage": "3",
+            "accuracy": "9",
+            "weight": "50"
+        },
+        "options": "Double Chance +10%",
+        "material": "Jewelry",
+        "filename": "Weapon_Orb_Rare_Silenos_Orb.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161709-I91vIp3kuOUNK71JwrUF0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Orc Prophet's Orb",
+        "rank": "Rare",
+        "stats": {
+            "damage": "12",
+            "accuracy": "1",
+            "weight": "50"
+        },
+        "options": "Double Chance +10%, INT +1",
+        "material": "Jewelry",
+        "filename": "Weapon_Orb_Rare_Orc_Prophet_s_Orb.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161713-PnQxGI8imQacVAcAgbAH0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Orb of Salvation",
+        "rank": "Rare",
+        "stats": {
+            "damage": "11",
+            "accuracy": "-",
+            "weight": "50"
+        },
+        "options": "Double Chance +10%",
+        "material": "Silver",
+        "filename": "Weapon_Orb_Rare_Orb_of_Salvation.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161718-163yCHw8nBhaZ4jrxrH60-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Orb of Nature",
+        "rank": "Rare",
+        "stats": {
+            "damage": "14",
+            "accuracy": "3",
+            "weight": "45"
+        },
+        "options": "Double Chance +10%, MP Recovery (Tick) +4",
+        "material": "Wood",
+        "filename": "Weapon_Orb_Rare_Orb_of_Nature.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161722-csqU9z0CnMfJWxnsDIKh0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Orb of Prayer",
+        "rank": "Common",
+        "stats": {
+            "damage": "6",
+            "accuracy": "-",
+            "weight": "50"
+        },
+        "options": "Double Chance +10%",
+        "material": "Jewelry",
+        "filename": "Weapon_Orb_Common_Orb_of_Prayer.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161727-sLBh4Q8aXPGKWxjelSBo0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Orb of Miracles",
+        "rank": "Common",
+        "stats": {
+            "damage": "7",
+            "accuracy": "1",
+            "weight": "50"
+        },
+        "options": "Double Chance +10%",
+        "material": "Jewelry",
+        "filename": "Weapon_Orb_Common_Orb_of_Miracles.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161732-J17qwizV6tsoNYoA78bj0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Orb of Judgment",
+        "rank": "Common",
+        "stats": {
+            "damage": "9",
+            "accuracy": "-",
+            "weight": "50"
+        },
+        "options": "Double Chance +10%",
+        "material": "Jewelry",
+        "filename": "Weapon_Orb_Common_Orb_of_Judgment.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161742-yTNlWFsSct0EJU7SIjIx0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Novice Priest's Orb",
+        "rank": "Common",
+        "stats": {
+            "damage": "4",
+            "accuracy": "-",
+            "weight": "50"
+        },
+        "options": "Double Chance +10%",
+        "material": "Jewelry",
+        "filename": "Weapon_Orb_Common_Novice_Priest_s_Orb.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161748-4r1hcObH3HHvp0KaWLfM0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Kobold Shaman's Orb",
+        "rank": "Common",
+        "stats": {
+            "damage": "7",
+            "accuracy": "-",
+            "weight": "50"
+        },
+        "options": "Double Chance +10%, Extra Damage +1",
+        "material": "Jewelry",
+        "filename": "Weapon_Orb_Common_Kobold_Shaman_s_Orb.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161753-dmOrOaoyXW9tbTCa4Bsm0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Ol Mahum Warlock's Orb",
+        "rank": "Common",
+        "stats": {
+            "damage": "6",
+            "accuracy": "-",
+            "weight": "50"
+        },
+        "options": "Double Chance +10%, Max MP +30",
+        "material": "Jewelry",
+        "filename": "Weapon_Orb_Common_Ol_Mahum_Warlock_s_Orb.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161759-jnjpQnWzescC16rGDk8k0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Orc Warlock's Orb",
+        "rank": "Common",
+        "stats": {
+            "damage": "7",
+            "accuracy": "-",
+            "weight": "50"
+        },
+        "options": "Double Chance +10%",
+        "material": "Jewelry",
+        "filename": "Weapon_Orb_Common_Orc_Warlock_s_Orb.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161804-JWFrLa76P2qsINeoEg020-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Lizardman Warlock's Orb",
+        "rank": "Common",
+        "stats": {
+            "damage": "7",
+            "accuracy": "-",
+            "weight": "50"
+        },
+        "options": "Double Chance +10%, MP Recovery (Tick) +1",
+        "material": "Jewelry",
+        "filename": "Weapon_Orb_Common_Lizardman_Warlock_s_Orb.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161810-JaH6KJbCH7ggBKBSzYNG0-v4"
+    },
+    {
+        "main_type": "Weapon",
+        "class_specific": "Orb",
+        "name": "Orb",
+        "rank": "Common",
+        "stats": {
+            "damage": "5",
+            "accuracy": "-",
+            "weight": "50"
+        },
+        "options": "Double Chance +10%",
+        "material": "Jewelry",
+        "filename": "Weapon_Orb_Common_Orb.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117161817-hp0zmShbh38GOtZwNCRl0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Imperial Crusader Helmet",
+        "rank": "Legend",
+        "stats": {
+            "defense": "11"
+        },
+        "options": "Melee Damage +2, Damage Reduction +3, Skill Damage Resistance +10%",
+        "material": "Adamantium",
+        "filename": "Armor_Helm_Legend_Imperial_Crusader_Helmet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164611-QojQUaO7GAOIL751kT5t0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Major Arcana Circlet",
+        "rank": "Legend",
+        "stats": {
+            "defense": "11"
+        },
+        "options": "Skill Damage Boost +10%, MP Recovery (Tick) +10",
+        "material": "Orichalcum",
+        "filename": "Armor_Helm_Legend_Major_Arcana_Circlet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164615-SePmqFqoQCrhyTp9mImv0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Draconic Leather Helmet",
+        "rank": "Legend",
+        "stats": {
+            "defense": "11"
+        },
+        "options": "All Damage +3, CC Accuracy +10%, Skill Damage Boost +5%",
+        "material": "Draconic",
+        "filename": "Armor_Helm_Legend_Draconic_Leather_Helmet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164618-xgV0DLBQRYAay99KK9hT0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Nightmare Helm",
+        "rank": "Epic",
+        "stats": {
+            "defense": "6"
+        },
+        "options": "-",
+        "material": "Orichalcum",
+        "filename": "Armor_Helm_Epic_Nightmare_Helm.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164630-v0LiTEfPpd0RjUyxshIP0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Dark Crystal Helmet",
+        "rank": "Epic",
+        "stats": {
+            "defense": "6"
+        },
+        "options": "-",
+        "material": "Obsidian",
+        "filename": "Armor_Helm_Epic_Dark_Crystal_Helmet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164636-5F9po2SkQHn5m1kVYMTK0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Majestic Diadem",
+        "rank": "Epic",
+        "stats": {
+            "defense": "6"
+        },
+        "options": "MP Recovery (Tick) +5",
+        "material": "Adamantium",
+        "filename": "Armor_Helm_Epic_Majestic_Diadem.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164641-gZpghrHBgfBGxNiJ2ZLO0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Medusa Helm",
+        "rank": "Epic",
+        "stats": {
+            "defense": "8"
+        },
+        "options": "Hold Resistance +10, Stun Resistance +5%",
+        "material": "Steel",
+        "filename": "Armor_Helm_Epic_Medusa_Helm.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164650-G7pv9aF2HrSBGQoYSVqW0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Doom Circlet",
+        "rank": "Unique",
+        "stats": {
+            "defense": "4"
+        },
+        "options": "WIS+1",
+        "material": "Mithril",
+        "filename": "Armor_Helm_Unique_Doom_Circlet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164719-U3evuMSvD2PpCM443t7I0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Full Plate Helmet",
+        "rank": "Unique",
+        "stats": {
+            "defense": "4"
+        },
+        "options": "CON+1",
+        "material": "Steel",
+        "filename": "Armor_Helm_Unique_Full_Plate_Helmet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164723-s6IBJ2lWRe92HcfM0UnT0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Blue Wolf Helmet",
+        "rank": "Unique",
+        "stats": {
+            "defense": "6"
+        },
+        "options": "Skill Resistance +5",
+        "material": "Mithril",
+        "filename": "Armor_Helm_Unique_Blue_Wolf_Helmet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164728-7ExmuByzbw06Foak1ZL20-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Implosion Helmet",
+        "rank": "Unique",
+        "stats": {
+            "defense": "5"
+        },
+        "options": "AGI +1, Accuracy +1",
+        "material": "Steel",
+        "filename": "Armor_Helm_Unique_Implosion_Helmet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164735-Ykv3l1M6NfcWDIwTnqsB0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Elven Mithril Helmet",
+        "rank": "Rare",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "-",
+        "material": "Mithril",
+        "filename": "Armor_Helm_Rare_Elven_Mithril_Helmet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164743-c4bYoOyR6xu0CrSGD02X0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Mithril Helmet",
+        "rank": "Rare",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "HP Recovery (Tick) +4",
+        "material": "Mithril",
+        "filename": "Armor_Helm_Rare_Mithril_Helmet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164748-aljaMJCOoY3eVHpr7nNI0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Bronze Helmet",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Max HP +120",
+        "material": "Steel",
+        "filename": "Armor_Helm_Rare_Bronze_Helmet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164753-H2i4eBieYDK9tR6rz2by0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Shining Circlet",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "WIS +1, Skill Resistance +3",
+        "material": "Cloth",
+        "filename": "Armor_Helm_Rare_Shining_Circlet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164759-gW6wZrxzK9RbPtfA2iyy0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Karmian Circlet",
+        "rank": "Rare",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "MP Recovery (Tick) +3",
+        "material": "Mithril",
+        "filename": "Armor_Helm_Rare_Karmian_Circlet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164807-Q7EAyb9hBVAn1Ap56RjE0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Plate Helmet",
+        "rank": "Common",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "CON+1",
+        "material": "Steel",
+        "filename": "Armor_Helm_Common_Plate_Helmet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164815-uXHPNTEjt7XPlI8riOCw0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Ol Mahum Helmet",
+        "rank": "Common",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Max HP +70",
+        "material": "Leather",
+        "filename": "Armor_Helm_Common_Ol_Mahum_Helmet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164824-GaVeYDLGsqZXE9i3g8ky0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Cap of Mana",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Max MP+40, WIS +1",
+        "material": "Cloth",
+        "filename": "Armor_Helm_Common_Cap_of_Mana.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164829-thBBBy8JW7Scv2OK4YCM0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Brigandine Helmet",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "-",
+        "material": "Leather",
+        "filename": "Armor_Helm_Common_Brigandine_Helmet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164834-vgJMqkycbizZEuyekimm0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Helm",
+        "name": "Skull Helm",
+        "rank": "Common",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Max HP +100",
+        "material": "Bone",
+        "filename": "Armor_Helm_Common_Skull_Helm.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117164838-RR2ezFxIxGVcjcoj8AKt0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Imperial Crusader Breastplate",
+        "rank": "Legend",
+        "stats": {
+            "defense": "17"
+        },
+        "options": "STR +3, Damage Reduction +2, Skill Damage Resistance +5%",
+        "material": "Adamantium",
+        "filename": "Armor_Shirt_Legend_Imperial_Crusader_Breastplate.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117165110-8Rot0DgxclOC8WfzEqNp0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Major Arcana Robe",
+        "rank": "Legend",
+        "stats": {
+            "defense": "16"
+        },
+        "options": "INT +3, MP Recovery (Tick) +12, Magic Accuracy +3, All Type Boost +5%",
+        "material": "Cloth",
+        "filename": "Armor_Shirt_Legend_Major_Arcana_Robe.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117165121-xW7C57En6TptAlOE02l50-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Draconic Leather Armor",
+        "rank": "Legend",
+        "stats": {
+            "defense": "16"
+        },
+        "options": "DEX +3, Ranged Accuracy +3, Skill Resistance +20, Skill Damage Boost +5%",
+        "material": "Draconic",
+        "filename": "Armor_Shirt_Legend_Draconic_Leather_Armor.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117165125-NmtbPoAA1OjpcWC5fLN60-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Apella Plate Armor",
+        "rank": "Epic",
+        "stats": {
+            "defense": "15"
+        },
+        "options": "Damage Reduction +2, Skill Resistance +15",
+        "material": "Adamantium",
+        "filename": "Armor_Shirt_Epic_Apella_Plate_Armor.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117165131-bKpds5kh2hArjZzNq4T20-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Absolute Tunic",
+        "rank": "Epic",
+        "stats": {
+            "defense": "13"
+        },
+        "options": "Skill Resistance +15, INT +3, MP Recovery (Tick) +10",
+        "material": "Cloth",
+        "filename": "Armor_Shirt_Epic_Absolute_Tunic.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174014-h3Yl7wG9t0ctWl5ErQrX0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Armor of Nightmares",
+        "rank": "Epic",
+        "stats": {
+            "defense": "12"
+        },
+        "options": "-",
+        "material": "Orichalcum",
+        "filename": "Armor_Shirt_Epic_Armor_of_Nightmares.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117165416-3A9VZZ9WwtE3IBA5bfkG0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Dark Crystal Breastplate",
+        "rank": "Epic",
+        "stats": {
+            "defense": "12"
+        },
+        "options": "-",
+        "material": "Obsidian",
+        "filename": "Armor_Shirt_Epic_Dark_Crystal_Breastplate.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174021-ubckS1AraB9BXT7qpPyX0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Majestic Robe",
+        "rank": "Epic",
+        "stats": {
+            "defense": "12"
+        },
+        "options": "-",
+        "material": "Cloth",
+        "filename": "Armor_Shirt_Epic_Majestic_Robe.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174036-tmVSr1EOwluFM9xEIjhd0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Savan's Robe",
+        "rank": "Epic",
+        "stats": {
+            "defense": "12"
+        },
+        "options": "INT +4, MP Recovery (Tick) +15",
+        "material": "Cloth",
+        "filename": "Armor_Shirt_Epic_Savan_s_Robe.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174041-Xcre1U7OH01iEtnaJdyt0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Blue Wolf Breastplate",
+        "rank": "Unique",
+        "stats": {
+            "defense": "11"
+        },
+        "options": "Damage Reduction +1",
+        "material": "Mithril",
+        "filename": "Armor_Shirt_Unique_Blue_Wolf_Breastplate.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174047-HglqWzbDym0Lsucg7oxd0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Zubei's Breastplate",
+        "rank": "Unique",
+        "stats": {
+            "defense": "9"
+        },
+        "options": "CON+1",
+        "material": "Adamantium",
+        "filename": "Armor_Shirt_Unique_Zubei_s_Breastplate.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174058-YP09JHvhZs0Vu65vIluI0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Avadon Robe",
+        "rank": "Unique",
+        "stats": {
+            "defense": "7"
+        },
+        "options": "INT +1, Max MP +50, MP Recovery (Tick) +8",
+        "material": "Cloth",
+        "filename": "Armor_Shirt_Unique_Avadon_Robe.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174103-GQRWPeJG8s3Hhd4VjinC0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Full Plate Armor",
+        "rank": "Unique",
+        "stats": {
+            "defense": "8"
+        },
+        "options": "Skill Resistance +5",
+        "material": "Steel",
+        "filename": "Armor_Shirt_Unique_Full_Plate_Armor.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174107-1mzqF38sSJabp3YTs9Ut0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Mithril Breastplate",
+        "rank": "Rare",
+        "stats": {
+            "defense": "6"
+        },
+        "options": "-",
+        "material": "Mithril",
+        "filename": "Armor_Shirt_Rare_Mithril_Breastplate.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174114-699jSPjsJYrdf3ZaBfMm0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Elven Mithril Breastplate",
+        "rank": "Rare",
+        "stats": {
+            "defense": "6"
+        },
+        "options": "-",
+        "material": "Mithril",
+        "filename": "Armor_Shirt_Rare_Elven_Mithril_Breastplate.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174121-VKpRgvnSIw5GyZSE1BNs0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Compound Armor",
+        "rank": "Rare",
+        "stats": {
+            "defense": "4"
+        },
+        "options": "Max HP +80",
+        "material": "Steel",
+        "filename": "Armor_Shirt_Rare_Compound_Armor.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174127-FvtEFjlUY5005ImkT02S0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Theca Leather Armor",
+        "rank": "Rare",
+        "stats": {
+            "defense": "4"
+        },
+        "options": "AGI+1",
+        "material": "Leather",
+        "filename": "Armor_Shirt_Rare_Theca_Leather_Armor.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174546-LTIm2sekics1L881RVlT0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Karmian Tunic",
+        "rank": "Rare",
+        "stats": {
+            "defense": "5"
+        },
+        "options": "MP Recovery (Tick) +4",
+        "material": "Cloth",
+        "filename": "Armor_Shirt_Rare_Karmian_Tunic.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174551-fkqRQT37cYvt4Povfh1I0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Reinforced Plate Armor",
+        "rank": "Rare",
+        "stats": {
+            "defense": "7"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Armor_Shirt_Rare_Reinforced_Plate_Armor.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174555-93b2W33TJd1YVpSIcdV00-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Silenos Tunic",
+        "rank": "Rare",
+        "stats": {
+            "defense": "5"
+        },
+        "options": "MP Recovery (Tick) +3, Max MP +40",
+        "material": "Cloth",
+        "filename": "Armor_Shirt_Rare_Silenos_Tunic.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174603-VBVtcrg7qX5jScxJjeCI0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Orcish Reinforced Breastplate",
+        "rank": "Rare",
+        "stats": {
+            "defense": "6"
+        },
+        "options": "Max HP +50",
+        "material": "Leather",
+        "filename": "Armor_Shirt_Rare_Orcish_Reinforced_Breastplate.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174615-3OYnwXZmiAd47dIOh1PA0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Shaman's Tunic",
+        "rank": "Rare",
+        "stats": {
+            "defense": "4"
+        },
+        "options": "WIS+1",
+        "material": "Cloth",
+        "filename": "Armor_Shirt_Rare_Shaman_s_Tunic.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174629-C1IJaYofHq4aOQZtyQFk0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Lizardman's Reinforced Leather Armor",
+        "rank": "Rare",
+        "stats": {
+            "defense": "6"
+        },
+        "options": "Magic Evasion +1",
+        "material": "Leather",
+        "filename": "Armor_Shirt_Rare_Lizardman_s_Reinforced_Leather_Armor.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174637-CKJ5xT1WW0E6kw10oJ1t0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Clan Oath Armor",
+        "rank": "Common",
+        "stats": {
+            "defense": "4"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Armor_Shirt_Common_Clan_Oath_Armor.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174645-VU3UKBDgatdgiNOOY1dZ0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Half Plate Armor",
+        "rank": "Common",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "Max HP +80",
+        "material": "Steel",
+        "filename": "Armor_Shirt_Common_Half_Plate_Armor.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174708-a8VK8cp4UpU92pdWzK7y0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Brigandine Breastplate",
+        "rank": "Common",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Max HP +70",
+        "material": "Leather",
+        "filename": "Armor_Shirt_Common_Brigandine_Breastplate.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174714-jw6i7At2wVvxZc1sKvqZ0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Tunic of Devotion",
+        "rank": "Common",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "Max MP +50",
+        "material": "Cloth",
+        "filename": "Armor_Shirt_Common_Tunic_of_Devotion.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174719-TyMOlGvzyqFKOLZGRiDj0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Dwarven Chain Mail",
+        "rank": "Common",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Armor_Shirt_Common_Dwarven_Chain_Mail.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174727-8t7FRME9pqAmJu6KNdZC0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Wooden Breastplate",
+        "rank": "Common",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "-",
+        "material": "Wood",
+        "filename": "Armor_Shirt_Common_Wooden_Breastplate.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174736-C42bc6Jx1MYtPYrkok6y0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Orcish Breastplate",
+        "rank": "Common",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "HP Recovery (Tick) +6",
+        "material": "Steel",
+        "filename": "Armor_Shirt_Common_Orcish_Breastplate.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174755-aM0000UBMkH1oSNmc12v0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Ol Mahum Leather Armor",
+        "rank": "Common",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "CON+1",
+        "material": "Leather",
+        "filename": "Armor_Shirt_Common_Ol_Mahum_Leather_Armor.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174809-AMJpwGTTu5LE4dC5upy00-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Ol Mahum Breastplate",
+        "rank": "Common",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Max HP +80",
+        "material": "Steel",
+        "filename": "Armor_Shirt_Common_Ol_Mahum_Breastplate.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174816-6DRIioThdD8FAmbNNb6D0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shirt",
+        "name": "Lizardman Armor",
+        "rank": "Common",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Max MP +40",
+        "material": "Steel",
+        "filename": "Armor_Shirt_Common_Lizardman_Armor.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117174822-Dx6P38tjCGY2fl2mrSK60-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Imperial Crusader Gaiters",
+        "rank": "Legend",
+        "stats": {
+            "defense": "12"
+        },
+        "options": "Stun Resistance +10%, All Type Resistance +10%, Damage Reduction +2",
+        "material": "Adamantium",
+        "filename": "Armor_Upper_Legend_Imperial_Crusader_Gaiters.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162056-HwZbxURMA9JDuFZY8aSZ0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Shilen's Breath",
+        "rank": "Epic",
+        "stats": {
+            "defense": "10"
+        },
+        "options": "Stun Resistance +5%, Damage Reduction +1",
+        "material": "Mithril",
+        "filename": "Armor_Upper_Epic_Shilen_s_Breath.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162100-QtWc8VXFkkSNYv2IfHVa0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Blood Gaiters",
+        "rank": "Epic",
+        "stats": {
+            "defense": "8"
+        },
+        "options": "Accuracy +2",
+        "material": "Orichalcum",
+        "filename": "Armor_Upper_Epic_Blood_Gaiters.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162105-oyloMxKte0i0qHLb4H2w0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Crystal Gaiters",
+        "rank": "Epic",
+        "stats": {
+            "defense": "9"
+        },
+        "options": "Skill Resistance +10",
+        "material": "Mithril",
+        "filename": "Armor_Upper_Epic_Crystal_Gaiters.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162109-OJH1ExCOQdm7CDR8lVcW0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Blue Wolf Gaiters",
+        "rank": "Unique",
+        "stats": {
+            "defense": "8"
+        },
+        "options": "Damage Reduction +1",
+        "material": "Mithril",
+        "filename": "Armor_Upper_Unique_Blue_Wolf_Gaiters.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162113-4R7EgnK5cShF4gy6PHnd0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Devil's Pact",
+        "rank": "Unique",
+        "stats": {
+            "defense": "6"
+        },
+        "options": "Dark Type Resistance +25%",
+        "material": "Black Mithril",
+        "filename": "Armor_Upper_Unique_Devil_s_Pact.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162119-IE8oQTPX3yY789znE3Ba0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Full Plate Gaiters",
+        "rank": "Unique",
+        "stats": {
+            "defense": "6"
+        },
+        "options": "CON+1",
+        "material": "Steel",
+        "filename": "Armor_Upper_Unique_Full_Plate_Gaiters.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162137-dYaLnonnxmvmK6CeJy1T0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Basila's Skin",
+        "rank": "Unique",
+        "stats": {
+            "defense": "8"
+        },
+        "options": "Skill Resistance +5",
+        "material": "Animal",
+        "filename": "Armor_Upper_Unique_Basila_s_Skin.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162141-1YKpaQ8kK0xxkHELvhmC0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Gaiters of the Underworld",
+        "rank": "Rare",
+        "stats": {
+            "defense": "4"
+        },
+        "options": "Dark Type Resistance +20%",
+        "material": "Silver",
+        "filename": "Armor_Upper_Rare_Gaiters_of_the_Underworld.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162147-4JArX8N8Sl1iPiWszAML0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Reinforced Plate Gaiters",
+        "rank": "Rare",
+        "stats": {
+            "defense": "5"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Armor_Upper_Rare_Reinforced_Plate_Gaiters.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162157-AZJA7Jp4CnHiO0eDWL680-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Sage's Fire Spirit Hosiery",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Fire Type Damage +2, Max MP +80",
+        "material": "Cloth",
+        "filename": "Armor_Upper_Rare_Sage_s_Fire_Spirit_Hosiery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162201-FPMsMbfYQ2KeVnpb2np90-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Sage's Ice Spirit Hosiery",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Water Type Damage +2, Max MP +80",
+        "material": "Cloth",
+        "filename": "Armor_Upper_Rare_Sage_s_Ice_Spirit_Hosiery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162344-YicDLs5Tn422YCdVgNQI0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Sage's Wind Spirit Hosiery",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Wind Type Damage +2, Max MP +80",
+        "material": "Cloth",
+        "filename": "Armor_Upper_Rare_Sage_s_Wind_Spirit_Hosiery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162349-NxxWfnaYdF3gYqQeVIWL0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Sage's Earth Spirit Hosiery",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Earth Type Damage +2, Max MP +80",
+        "material": "Cloth",
+        "filename": "Armor_Upper_Rare_Sage_s_Earth_Spirit_Hosiery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162354-2SlgIQOQezNcngLzzT9R0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Sage's Dark Spirit Hosiery",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Dark Type Damage +2, Max MP +80",
+        "material": "Cloth",
+        "filename": "Armor_Upper_Rare_Sage_s_Dark_Spirit_Hosiery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162358-AqOSEQVWk1XoR7s14pFT0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Sage's Light Spirit Hosiery",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Light Type Damage +2, Max MP +80",
+        "material": "Cloth",
+        "filename": "Armor_Upper_Rare_Sage_s_Light_Spirit_Hosiery.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162402-ZPgjpoRTO8GBSQvZR5bR0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Orcish Gaiters",
+        "rank": "Rare",
+        "stats": {
+            "defense": "4"
+        },
+        "options": "Max HP +50",
+        "material": "Cloth",
+        "filename": "Armor_Upper_Rare_Orcish_Gaiters.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162413-gX1fnPHg2JAp1xqfvz3g0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Chain Gaiters",
+        "rank": "Common",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Armor_Upper_Common_Chain_Gaiters.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162440-TFY4E0BmLif8mJ6fmJdE0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Hosiery of Meditation",
+        "rank": "Common",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "MP Recovery (Tick) +2, Max MP +30",
+        "material": "Leather",
+        "filename": "Armor_Upper_Common_Hosiery_of_Meditation.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162526-sno3zSzTaSfSZzp0bnKH0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Upper",
+        "name": "Steel Gaiters",
+        "rank": "Common",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "-",
+        "material": "Steel",
+        "filename": "Armor_Upper_Common_Steel_Gaiters.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162532-vGqzAFs6GCDS3KVM0Cb80-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Draconic Leather Gloves",
+        "rank": "Legend",
+        "stats": {
+            "defense": "10"
+        },
+        "options": "All Damage +5, Double Chance +10%, Accuracy +2",
+        "material": "Draconic",
+        "filename": "Armor_Lower_Legend_Draconic_Leather_Gloves.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162802-epzoUXWEa6KBpf97FwX30-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Gloves of Blessing",
+        "rank": "Epic",
+        "stats": {
+            "defense": "6"
+        },
+        "options": "Accuracy +1, Extra Damage on Critical Hit +5",
+        "material": "Cloth",
+        "filename": "Armor_Lower_Epic_Gloves_of_Blessing.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162811-J1g1KtvMo816iVLGCD4P0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Gauntlets of Nightmares",
+        "rank": "Epic",
+        "stats": {
+            "defense": "5"
+        },
+        "options": "-",
+        "material": "Orichalcum",
+        "filename": "Armor_Lower_Epic_Gauntlets_of_Nightmares.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162821-q1CfpwUNddAHvNs34WFb0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Dark Crystal Gloves",
+        "rank": "Epic",
+        "stats": {
+            "defense": "5"
+        },
+        "options": "-",
+        "material": "Obsidian",
+        "filename": "Armor_Lower_Epic_Dark_Crystal_Gloves.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162827-33fCQLwDDcbuRZiToOSb0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Majestic Gloves",
+        "rank": "Epic",
+        "stats": {
+            "defense": "4"
+        },
+        "options": "Skill Damage Boost +5%",
+        "material": "Cloth",
+        "filename": "Armor_Lower_Epic_Majestic_Gloves.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119162839-MIshqvXIWxExJv6gINzk0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Blue Wolf Gloves",
+        "rank": "Unique",
+        "stats": {
+            "defense": "5"
+        },
+        "options": "Extra Damage on Critical Hit +2",
+        "material": "Mithril",
+        "filename": "Armor_Lower_Unique_Blue_Wolf_Gloves.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163021-LUFGRI3ZZ97tEyEDDI4o0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Full Plate Gauntlets",
+        "rank": "Unique",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "Melee Damage +1",
+        "material": "Steel",
+        "filename": "Armor_Lower_Unique_Full_Plate_Gauntlets.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163029-RJQ7HRmGwmIafwpBGGwf0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Drake Leather Gloves",
+        "rank": "Unique",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "Ranged Damage +1",
+        "material": "Leather",
+        "filename": "Armor_Lower_Unique_Drake_Leather_Gloves.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163035-0gr6NYFT1hPoAnDbxC0G0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Divine Gloves",
+        "rank": "Unique",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "Magic Damage +1",
+        "material": "Cloth",
+        "filename": "Armor_Lower_Unique_Divine_Gloves.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163041-ze7HQbeDlxrqS5H0kOik0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Zubei's Gloves",
+        "rank": "Unique",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "CON+1",
+        "material": "Adamantium",
+        "filename": "Armor_Lower_Unique_Zubei_s_Gloves.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163053-xKOH3828DITNrIvXwwou0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Avadon Gloves",
+        "rank": "Unique",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "MP Recovery (Tick) +4",
+        "material": "Cloth",
+        "filename": "Armor_Lower_Unique_Avadon_Gloves.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163059-KYOM9gXDW3oGJjNn0dlx0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Gorgon Gloves",
+        "rank": "Unique",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "Stun Resistance +5%",
+        "material": "Animal",
+        "filename": "Armor_Lower_Unique_Gorgon_Gloves.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163105-awhJC8HS9uecLawwvLpx0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Mithril Gloves",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "All Damage +1",
+        "material": "Mithril",
+        "filename": "Armor_Lower_Rare_Mithril_Gloves.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163135-ppQ88AX9WrPpHnhuvGwA0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Pa'agrio Hand",
+        "rank": "Rare",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Melee Damage +1",
+        "material": "Steel",
+        "filename": "Armor_Lower_Rare_Pa_agrio_Hand.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163143-CMVlUhGrsLHqZsMHsnbv0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Lined Leather Gloves",
+        "rank": "Rare",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Ranged Damage +1",
+        "material": "Leather",
+        "filename": "Armor_Lower_Rare_Lined_Leather_Gloves.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163154-LKZ1PmFD4KSrmy3hu5w10-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Eva's Gloves of Knowledge",
+        "rank": "Rare",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Magic Damage +1",
+        "material": "Cloth",
+        "filename": "Armor_Lower_Rare_Eva_s_Gloves_of_Knowledge.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163159-7a3OMlNaOHKVy7o32x4A0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Orcish Reinforced Gloves",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Max HP +100",
+        "material": "Steel",
+        "filename": "Armor_Lower_Rare_Orcish_Reinforced_Gloves.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163215-X2uuRB8Z7m7EJaRwL8xr0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Karmian Gloves",
+        "rank": "Rare",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Max MP +40, MP Recovery (Tick) +2",
+        "material": "Cloth",
+        "filename": "Armor_Lower_Rare_Karmian_Gloves.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163228-M00x1Y0kOE4NEto0fqjd0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Moonlight Gloves",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Max HP +50",
+        "material": "Leather",
+        "filename": "Armor_Lower_Common_Moonlight_Gloves.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163243-kBK4IfCKNk1fKnoFIKwh0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Shooting Gloves",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Ranged Accuracy +2",
+        "material": "Leather",
+        "filename": "Armor_Lower_Common_Shooting_Gloves.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163248-MKw1KxKz6bFAkuFxp1aY0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Lower",
+        "name": "Leather Gloves",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "-",
+        "material": "Leather",
+        "filename": "Armor_Lower_Common_Leather_Gloves.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163254-bkvV26PxVw9jfImzuA3k0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Draconic Leather Boots",
+        "rank": "Legend",
+        "stats": {
+            "defense": "13"
+        },
+        "options": "Skill Resistance +20, Damage Reduction +2, Movement Speed +5%, Skill Damage Boost +10%",
+        "material": "Draconic",
+        "filename": "Armor_Gloves_Legend_Draconic_Leather_Boots.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163537-ZaqFgaw4x7iANeG7iMvd0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Demon's Boots",
+        "rank": "Epic",
+        "stats": {
+            "defense": "11"
+        },
+        "options": "All Damage +3",
+        "material": "Cloth",
+        "filename": "Armor_Gloves_Epic_Demon_s_Boots.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163542-WKyE09W2mpT8xQaig34i0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Boots of Nightmares",
+        "rank": "Epic",
+        "stats": {
+            "defense": "7"
+        },
+        "options": "-",
+        "material": "Orichalcum",
+        "filename": "Armor_Gloves_Epic_Boots_of_Nightmares.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163547-LHdLZ6VbItnOdCZG7Mc00-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Dark Crystal Boots",
+        "rank": "Epic",
+        "stats": {
+            "defense": "7"
+        },
+        "options": "Extra Damage on Critical Hit +2, Skill Resistance +10",
+        "material": "Obsidian",
+        "filename": "Armor_Gloves_Epic_Dark_Crystal_Boots.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163554-IqpghPNm11HPhwvJugEG0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Majestic Boots",
+        "rank": "Epic",
+        "stats": {
+            "defense": "7"
+        },
+        "options": "Magic Accuracy +2",
+        "material": "Cloth",
+        "filename": "Armor_Gloves_Epic_Majestic_Boots.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163601-40TfUNQK2Z87UXtU7Hn60-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Full Plate Boots",
+        "rank": "Unique",
+        "stats": {
+            "defense": "5"
+        },
+        "options": "Melee Accuracy +1, Ranged Evasion +1",
+        "material": "Steel",
+        "filename": "Armor_Gloves_Unique_Full_Plate_Boots.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163607-ltO6vjaIdHst1yscahLn0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Drake Leather Boots",
+        "rank": "Unique",
+        "stats": {
+            "defense": "4"
+        },
+        "options": "Ranged Accuracy +1, Magic Evasion +1",
+        "material": "Leather",
+        "filename": "Armor_Gloves_Unique_Drake_Leather_Boots.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163634-j7A56iUFqtQofwVIphKI0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Divine Boots",
+        "rank": "Unique",
+        "stats": {
+            "defense": "4"
+        },
+        "options": "Magic Accuracy +1, MP Recovery (Tick) +6",
+        "material": "Cloth",
+        "filename": "Armor_Gloves_Unique_Divine_Boots.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163642-Gm6cPhzlql7zIPfp17940-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Zubei's Boots",
+        "rank": "Unique",
+        "stats": {
+            "defense": "5"
+        },
+        "options": "-",
+        "material": "Adamantium",
+        "filename": "Armor_Gloves_Unique_Zubei_s_Boots.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163716-M0bAit2XZsGWFWdTD8ac0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Avadon Boots",
+        "rank": "Unique",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "MP Recovery (Tick) +5",
+        "material": "Cloth",
+        "filename": "Armor_Gloves_Unique_Avadon_Boots.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163707-HPR1LrgmWJngrsOlycdx0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Blue Wolf Boots",
+        "rank": "Unique",
+        "stats": {
+            "defense": ""
+        },
+        "options": "Skill Resistance +5",
+        "material": "Mithril",
+        "filename": "Armor_Gloves_Unique_Blue_Wolf_Boots.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163723-Hd80uPVOMrvvZoPCgWCU0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Mithril Boots",
+        "rank": "Rare",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "CON+1",
+        "material": "Mithril",
+        "filename": "Armor_Gloves_Rare_Mithril_Boots.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163729-lQbuzUtV8andf5u2kkyQ0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Orcish Reinforced Boots",
+        "rank": "Rare",
+        "stats": {
+            "defense": "4"
+        },
+        "options": "Max HP +80",
+        "material": "Steel",
+        "filename": "Armor_Gloves_Rare_Orcish_Reinforced_Boots.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163738-plhmF5qfxRsyl1ZJGoiP0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Karmian Boots",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "MP Recovery (Tick) +4, Max MP +50",
+        "material": "Cloth",
+        "filename": "Armor_Gloves_Rare_Karmian_Boots.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163744-4OIY2ZWmqGwwrvjz2rnk0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Boots of Faith",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "WIS+1",
+        "material": "Leather",
+        "filename": "Armor_Gloves_Rare_Boots_of_Faith.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163750-6KXxJIqBuw0rRPyxEdkC0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Lizardman Boots",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "HP Recovery (Tick) +4, Max HP +50",
+        "material": "Leather",
+        "filename": "Armor_Gloves_Common_Lizardman_Boots.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163758-znfc98hL0OspqrRbGANI0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Short Boots",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "-",
+        "material": "Leather",
+        "filename": "Armor_Gloves_Common_Short_Boots.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163803-O0EjuFwJHSaH5J7Jv0MK0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Gloves",
+        "name": "Long Boots",
+        "rank": "Common",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "-",
+        "material": "Leather",
+        "filename": "Armor_Gloves_Common_Long_Boots.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119163808-nL2l9rUYntRkAJh9k6he0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shoes",
+        "name": "Mithril Shirt of Might",
+        "rank": "Unique",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "STR +1, Melee Damage +1",
+        "material": "",
+        "filename": "Armor_Shoes_Unique_Mithril_Shirt_of_Might.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164220-loJOXPDxtirDbgVmIgBX0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shoes",
+        "name": "Mithril Shirt of Dexterity",
+        "rank": "Unique",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "DEX +1, Ranged Damage +1",
+        "material": "",
+        "filename": "Armor_Shoes_Unique_Mithril_Shirt_of_Dexterity.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164224-DfjuiIiuQD6PgP5k6AYO0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shoes",
+        "name": "Mithril Shirt of Knowledge",
+        "rank": "Unique",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "INT +1, Magic Damage +1",
+        "material": "",
+        "filename": "Armor_Shoes_Unique_Mithril_Shirt_of_Knowledge.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164228-363Z697gnqhri9sXYBhj0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shoes",
+        "name": "Warrior's Shirt",
+        "rank": "Unique",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Damage Reduction +1",
+        "material": "",
+        "filename": "Armor_Shoes_Unique_Warrior_s_Shirt.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164233-YT26FbSUtWaTpdlXoccw0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shoes",
+        "name": "Linen Shirt of Might",
+        "rank": "Rare",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "STR+1",
+        "material": "",
+        "filename": "Armor_Shoes_Rare_Linen_Shirt_of_Might.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164240-lZlhVspAi3guM3bAW3tX0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shoes",
+        "name": "Linen Shirt of Dexterity",
+        "rank": "Rare",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "DEX+1",
+        "material": "",
+        "filename": "Armor_Shoes_Rare_Linen_Shirt_of_Dexterity.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164244-wXbhMGVXM0FO7uXA4oqx0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shoes",
+        "name": "Linen Shirt of Knowledge",
+        "rank": "Rare",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "INT+1",
+        "material": "",
+        "filename": "Armor_Shoes_Rare_Linen_Shirt_of_Knowledge.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164249-tuZxYUBD5ylGiTGylS6N0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shoes",
+        "name": "Shirt of Concentration",
+        "rank": "Rare",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "MP Recovery (Tick) +4, Light Type Damage +1",
+        "material": "",
+        "filename": "Armor_Shoes_Rare_Shirt_of_Concentration.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164304-6LDAqQaTGHF0D7OFow0v0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shoes",
+        "name": "Vigilante's Shirt",
+        "rank": "Rare",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "All Damage +1",
+        "material": "",
+        "filename": "Armor_Shoes_Rare_Vigilante_s_Shirt.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164308-C9CtSPBvkZ8yE7ggldOd0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shoes",
+        "name": "Cotton Shirt",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "-",
+        "material": "",
+        "filename": "Armor_Shoes_Common_Cotton_Shirt.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164312-5R2vRgTXpDUe40snnEKo0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Shoes",
+        "name": "Linen Shirt",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Max HP +80",
+        "material": "",
+        "filename": "Armor_Shoes_Common_Linen_Shirt.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164317-LnK5GrwkYUtP5UqP5bdW0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Cloak",
+        "name": "Nevit's Cloak of Light",
+        "rank": "Legend",
+        "stats": {
+            "defense": "7"
+        },
+        "options": "Skill Resistance +25, Damage Reduction +2, Skill Damage Resistance +5%",
+        "material": "Cloth",
+        "filename": "Armor_Cloak_Legend_Nevit_s_Cloak_of_Light.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164557-tCaw04WgDJrf0i6EgviP0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Cloak",
+        "name": "Dragon's Scale",
+        "rank": "Epic",
+        "stats": {
+            "defense": "5"
+        },
+        "options": "Skill Damage Boost +5%",
+        "material": "Dragonscale",
+        "filename": "Armor_Cloak_Epic_Dragon_s_Scale.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164610-B8AcKYNDULEHB1u91wEV0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Cloak",
+        "name": "Zaken's Cloak",
+        "rank": "Epic",
+        "stats": {
+            "defense": "5"
+        },
+        "options": "AGI+2",
+        "material": "Cloth",
+        "filename": "Armor_Cloak_Epic_Zaken_s_Cloak.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164614-3ky75CXQIrIlLvy2m2wj0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Cloak",
+        "name": "Cloak of Freya",
+        "rank": "Epic",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "CC Accuracy +30%, WIS +2",
+        "material": "Cloth",
+        "filename": "Armor_Cloak_Epic_Cloak_of_Freya.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164619-z2JNitTwxACZVXdfWESK0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Cloak",
+        "name": "Queen Ant's Wings",
+        "rank": "Epic",
+        "stats": {
+            "defense": "4"
+        },
+        "options": "CC Accuracy +40%, MP Recovery (Tick) +10",
+        "material": "Cloth",
+        "filename": "Armor_Cloak_Epic_Queen_Ant_s_Wings.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164623-pzNoNsFX2woQtFLLSmQk0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Cloak",
+        "name": "Cloak of Silence",
+        "rank": "Epic",
+        "stats": {
+            "defense": "5"
+        },
+        "options": "Skill Resistance +15, Skill Damage Resistance +5%",
+        "material": "Cloth",
+        "filename": "Armor_Cloak_Epic_Cloak_of_Silence.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164628-HANWiJHyZtBiRRio3SxA0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Cloak",
+        "name": "Holy Spirit's Cloak",
+        "rank": "Unique",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "CON+1",
+        "material": "Cloth",
+        "filename": "Armor_Cloak_Unique_Holy_Spirit_s_Cloak.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164633-PdDQSw06NG4kLfNkGgsF0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Cloak",
+        "name": "Salamander's Cloak",
+        "rank": "Unique",
+        "stats": {
+            "defense": "4"
+        },
+        "options": "Extra Damage on Critical Hit +3",
+        "material": "Cloth",
+        "filename": "Armor_Cloak_Unique_Salamander_s_Cloak.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164638-Fyr1tNjMLiBMKLkL9c5F0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Cloak",
+        "name": "Sylph's Cloak",
+        "rank": "Unique",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "AGI+1",
+        "material": "Cloth",
+        "filename": "Armor_Cloak_Unique_Sylph_s_Cloak.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164642-n6fuW7WzanhjktIj9XBH0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Cloak",
+        "name": "Undine's Cloak",
+        "rank": "Unique",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "WIS+1",
+        "material": "Cloth",
+        "filename": "Armor_Cloak_Unique_Undine_s_Cloak.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164646-VSqEJzNwNTMlYGBUNtws0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Cloak",
+        "name": "Medusa's Cloak",
+        "rank": "Unique",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "CC Accuracy +20%, Skill Resistance +4",
+        "material": "Leather",
+        "filename": "Armor_Cloak_Unique_Medusa_s_Cloak.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164651-RENX88l6UHiS3jtjUaLc0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Cloak",
+        "name": "Knight's Cloak",
+        "rank": "Rare",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "Max HP +100",
+        "material": "Cloth",
+        "filename": "Armor_Cloak_Rare_Knight_s_Cloak.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164657-vG3sieTFgkBvR8MUPFVz0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Cloak",
+        "name": "Sage's Cloak",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "WIS+1",
+        "material": "Cloth",
+        "filename": "Armor_Cloak_Rare_Sage_s_Cloak.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164701-C0r0uKh9YFVFoqWfZ90G0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Cloak",
+        "name": "Silver Cloak",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Skill Resistance +4",
+        "material": "Cloth",
+        "filename": "Armor_Cloak_Rare_Silver_Cloak.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164706-rqrKxJuI7t1DLfxjkciP0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Cloak",
+        "name": "Cloak of Mana",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "MP Recovery (Tick) +4",
+        "material": "Cloth",
+        "filename": "Armor_Cloak_Common_Cloak_of_Mana.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164711-1rCgVwdPM3GGnh6Jegxp0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Cloak",
+        "name": "Worn Cloak",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "-",
+        "material": "Cloth",
+        "filename": "Armor_Cloak_Common_Worn_Cloak.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119164715-AdbblqNqDvCOM28zz8gX0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Sigil",
+        "name": "Tear of Darkness",
+        "rank": "Legend",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Melee Damage +7, Melee Accuracy +6, Weapon Block +10%",
+        "material": "Jewelry",
+        "filename": "Armor_Sigil_Legend_Tear_of_Darkness.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119165257-6SaJrqL81Jpwig2V7heh0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Sigil",
+        "name": "Draconic Sigil",
+        "rank": "Legend",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Ranged Damage+7, Ranged Accuracy +6, Weapon Block +10%",
+        "material": "Draconic",
+        "filename": "Armor_Sigil_Legend_Draconic_Sigil.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119165300-5Ioi8dqYoS1IVxg4Eizl0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Sigil",
+        "name": "Arcana Sigil",
+        "rank": "Legend",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Magic Damage +7, Magic Accuracy +6, Weapon Block +10%",
+        "material": "Jewelry",
+        "filename": "Armor_Sigil_Legend_Arcana_Sigil.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119165308-xKKTZqI9hfomJPgdYGDk0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Sigil",
+        "name": "Susceptor's Heart",
+        "rank": "Epic",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Accuracy +4, Double Chance +5%, Weapon Block +7%",
+        "material": "Black Mithril",
+        "filename": "Armor_Sigil_Epic_Susceptor_s_Heart.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119165313-cTAWlRD2BOHCgbfb5GHj0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Sigil",
+        "name": "Jaeger's Sigil",
+        "rank": "Epic",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Ranged Accuracy +5, Ranged Critical Hit +5%, Weapon Block +7%",
+        "material": "Black Mithril",
+        "filename": "Armor_Sigil_Epic_Jaeger_s_Sigil.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119165332-YHeqZ5e7hXfxDMCpNStb0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Sigil",
+        "name": "Paradia's Sigil",
+        "rank": "Epic",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "All Damage +3, Accuracy +3, Weapon Block +7%",
+        "material": "Black Mithril",
+        "filename": "Armor_Sigil_Epic_Paradia_s_Sigil.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119165337-zbNqdOYx3krweJouI1ZO0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Sigil",
+        "name": "Cruma's Shell",
+        "rank": "Epic",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Armor+3, Damage Reduction +1, Weapon Block +7%",
+        "material": "Animal",
+        "filename": "Armor_Sigil_Epic_Cruma_s_Shell.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119165342-7c57eCLXl5PMefG6vkf30-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Sigil",
+        "name": "Blood Crystal",
+        "rank": "Unique",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Accuracy +2, Dark Type Damage +2, Weapon Block +4%",
+        "material": "Jewelry",
+        "filename": "Armor_Sigil_Unique_Blood_Crystal.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119165346-6Tkp3utbEiQqafnXRinc0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Sigil",
+        "name": "Dream Sigil",
+        "rank": "Unique",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "All Damage +2, Skill Resistance +5, Weapon Block +4%",
+        "material": "Black Mithril",
+        "filename": "Armor_Sigil_Unique_Dream_Sigil.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119165351-DUSn70AHzCkdlbyY9a200-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Sigil",
+        "name": "Holy Sigil",
+        "rank": "Unique",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Light Type Damage +2, Dark Type Resistance +10%, Weapon Block +4%",
+        "material": "Jewelry",
+        "filename": "Armor_Sigil_Unique_Holy_Sigil.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119165355-5M5Rkx56irIgDw6bRBPO0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Sigil",
+        "name": "Sigil of Might",
+        "rank": "Rare",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Melee Damage +1, STR +1, Weapon Block +2%",
+        "material": "Black Mithril",
+        "filename": "Armor_Sigil_Rare_Sigil_of_Might.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119165431-pZOINlkO90HzNaL8GNam0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Sigil",
+        "name": "Sigil of Dexterity",
+        "rank": "Rare",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Ranged Damage +1, DEX +1, Weapon Block +2%",
+        "material": "Black Mithril",
+        "filename": "Armor_Sigil_Rare_Sigil_of_Dexterity.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119165437-ElWQEcqI3wz7fmrrpzWa0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Sigil",
+        "name": "Sigil of Magic",
+        "rank": "Rare",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Magic Damage +1, INT +1, Weapon Block +2%",
+        "material": "Black Mithril",
+        "filename": "Armor_Sigil_Rare_Sigil_of_Magic.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119165441-mX3CT8x6FKvZBCc29IrC0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Sigil",
+        "name": "Aristocrat's Sigil",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "All Damage +2, Accuracy +1, Weapon Block +2%",
+        "material": "Jewelry",
+        "filename": "Armor_Sigil_Rare_Aristocrat_s_Sigil.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119165446-aZfuz9UT2xIUJgpVyOWj0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Sigil",
+        "name": "Fairy's Sigil",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "All Damage +1, Accuracy +1, Weapon Block +1%",
+        "material": "Jewelry",
+        "filename": "Armor_Sigil_Common_Fairy_s_Sigil.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119165451-fbSq72FLbDATQABHA4Yu0-v4"
+    },
+    {
+        "main_type": "Armor",
+        "class_specific": "Sigil",
+        "name": "Nymph's Sigil",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Accuracy +1, Weapon Block +1%",
+        "material": "Jewelry",
+        "filename": "Armor_Sigil_Common_Nymph_s_Sigil.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211119165455-73LjiVu7cbOmGarg14g90-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Valakas' Necklace",
+        "rank": "Legend",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "Cooldown Reduction +30%, MP Consumption Reduction +25%, All Type Boost +10%",
+        "material": "Draconic",
+        "filename": "Accessory_Type_Legend_Valakas_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117144836-OzMbwq9DsTEjoarBai7r0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Antharas' Necklace",
+        "rank": "Legend",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "Cooldown Reduction +30%, Accuracy +4, CC Accuracy +40%",
+        "material": "Draconic",
+        "filename": "Accessory_Type_Legend_Antharas_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145107-uMcbc5LAAVVU1iPqWnGx0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Lindvior's Necklace",
+        "rank": "Legend",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "Cooldown Reduction +30%, Damage Reduction +2, Stun Accuracy +10%",
+        "material": "Draconic",
+        "filename": "Accessory_Type_Legend_Lindvior_s_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145111-5VFwo2eaVyGi7CXK0KYB0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Lilith's Soul Necklace",
+        "rank": "Epic",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Cooldown Reduction +20%, MP Consumption Reduction +15%, MP Recovery (Tick) +8",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Epic_Lilith_s_Soul_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145116-bKxs0wEPEsw5RUwkxd3g0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Anakim's Soul Necklace",
+        "rank": "Epic",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Cooldown Reduction +20%, All Damage +2, Accuracy +1%",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Epic_Anakim_s_Soul_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145121-6oXsJa0W3eHFwT0mBVHm0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Baium's Necklace",
+        "rank": "Epic",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Cooldown Reduction +20%, Damage Reduction +1",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Epic_Baium_s_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145207-hkW6adi9euDVqUPYq4KO0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Zaken's Necklace",
+        "rank": "Epic",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Stun Accuracy +10%",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Epic_Zaken_s_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145211-oBhDhdAMcs28Nl3PuqhK0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Orfen's Necklace",
+        "rank": "Epic",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "Cooldown Reduction +20%",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Epic_Orfen_s_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145216-RlSNErKfzOdPvfVYo1EB0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Necklace of Immortality",
+        "rank": "Epic",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Cooldown Reduction +20%, CC Accuracy +30%",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Epic_Necklace_of_Immortality.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145219-bjLo4GpGTHyofwR6xkIz0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Pan Dra'eed's Necklace",
+        "rank": "Unique",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Cooldown Reduction +15%, STR +1",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Unique_Pan_Dra_eed_s_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145223-2TAUGC28mOcA8ujPJcWa0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Vilesoul Valefar's Necklace",
+        "rank": "Unique",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Cooldown Reduction +15%, DEX +1",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Unique_Vilesoul_Valefar_s_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145235-Iqa3nPRgfe8pI5AjRaeU0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Black Lily's Magic Necklace",
+        "rank": "Unique",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Cooldown Reduction +15%, INT +1",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Unique_Black_Lily_s_Magic_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145240-4VsOg1CpP3OJCJjAGsGY0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Chertuba's Soul Necklace",
+        "rank": "Unique",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "\u00b7 Increases Skill Resistance on Enchant",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Unique_Chertuba_s_Soul_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145244-n8aPziDDy1zynhuexqMI0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Necklace of Awakening",
+        "rank": "Unique",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Cooldown Reduction +15%, Stun Accuracy +5%",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Unique_Necklace_of_Awakening.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145248-ZG9K2RO1TkhdcXtXh1vP0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Necklace of Yearning",
+        "rank": "Unique",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Cooldown Reduction +15%, CC Accuracy +10%",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Unique_Necklace_of_Yearning.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145253-84MXA96qXGSzw4nfVuxU0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Adamantite Necklace",
+        "rank": "Rare",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Cooldown Reduction +10%",
+        "material": "Adamantium",
+        "filename": "Accessory_Type_Rare_Adamantite_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145301-BecH4GUnt5KNXHRT4x6S0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Phoenix Necklace",
+        "rank": "Rare",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "STR+1",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Rare_Phoenix_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145345-tgxLp2xm3FBEorD4G94q0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Black Ore Necklace",
+        "rank": "Rare",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "DEX+1",
+        "material": "Obsidian",
+        "filename": "Accessory_Type_Rare_Black_Ore_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145351-d5Bny7gTftEumtTLsAIZ0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Sage's Necklace",
+        "rank": "Rare",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "INT+1",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Rare_Sage_s_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145401-wLwhyKKkLIHZ8d3YCnaR0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Necklace of Valor",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "\u00b7 Increases Skill Resistance on Enchant",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Rare_Necklace_of_Valor.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145405-69Mzfhp4jKI0LizV30DJ0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Elven Necklace",
+        "rank": "Rare",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "MP Recovery (Tick) +5",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Rare_Elven_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145413-tbY961UW3zxAVO6VDZTX0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Magic Necklace",
+        "rank": "Rare",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Max MP +50, MP Recovery (Tick) +3",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Rare_Magic_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145418-MHgzMEblBmeaRlHEINGO0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Blue Diamond Necklace",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Max MP +50",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Common_Blue_Diamond_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145424-nvxgyldsTtapBUB9HYqd0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Necklace of Anguish",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "MP Recovery (Tick) +2",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Common_Necklace_of_Anguish.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145429-5nLsN2caUSXURIoZDmGs0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Old Forest Necklace",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Max HP +50, HP Recovery (Tick) +2",
+        "material": "Plant",
+        "filename": "Accessory_Type_Common_Old_Forest_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145435-XI5Sav3c0nn2OUle4g3t0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Necklace of Devotion",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Max MP +20",
+        "material": "Jewelry",
+        "filename": "Accessory_Type_Common_Necklace_of_Devotion.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145444-j6fYfkmbz46FQnMBIRFe0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Type",
+        "name": "Orcish Necklace",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Max HP +20",
+        "material": "Bone",
+        "filename": "Accessory_Type_Common_Orcish_Necklace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145449-zlDBcG5IMc7g9YZfTTTG0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Necklace",
+        "name": "Inferno Earring",
+        "rank": "Unique",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Skill Resistance +10",
+        "material": "Jewelry",
+        "filename": "Accessory_Necklace_Unique_Inferno_Earring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145856-jOZ7uNiXUHUAKSVxO0ql0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Necklace",
+        "name": "Phoenix Earring",
+        "rank": "Rare",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "MP Recovery (Tick) +8",
+        "material": "Jewelry",
+        "filename": "Accessory_Necklace_Rare_Phoenix_Earring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145902-uZFRoe9USAIpzQAd9BMY0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Necklace",
+        "name": "Black Ore Earring",
+        "rank": "Rare",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Max HP +120",
+        "material": "Obsidian",
+        "filename": "Accessory_Necklace_Rare_Black_Ore_Earring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145939-SDrQzLrrgzFo7ImU95rK0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Necklace",
+        "name": "Red Crescent",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Max MP +60",
+        "material": "Jewelry",
+        "filename": "Accessory_Necklace_Common_Red_Crescent.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145943-M3uwjQTunhygxPRmeSth0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Necklace",
+        "name": "Onyx Beast's Eye Earring",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "MP Recovery (Tick) +5",
+        "material": "Jewelry",
+        "filename": "Accessory_Necklace_Common_Onyx_Beast_s_Eye_Earring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145948-hEmghBB42TS592tLobse0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Necklace",
+        "name": "Earring of Seal",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "HP Recovery (Tick) +2",
+        "material": "Jewelry",
+        "filename": "Accessory_Necklace_Common_Earring_of_Seal.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117145953-O4dFVfdJq2AFL9ebtsf00-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Necklace",
+        "name": "Earring of Protection",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Max HP +50",
+        "material": "Jewelry",
+        "filename": "Accessory_Necklace_Common_Earring_of_Protection.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150003-6yLidWV4HByUuGhfjAZE0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Necklace",
+        "name": "Old Forest Earring",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "MP Recovery (Tick) +4",
+        "material": "Plant",
+        "filename": "Accessory_Necklace_Common_Old_Forest_Earring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150007-EMoBbXoIoezQFmNA9eCE0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Necklace",
+        "name": "Coral Earring",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "HP Recovery (Tick) +6",
+        "material": "Jewelry",
+        "filename": "Accessory_Necklace_Common_Coral_Earring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150012-nzT9mpoLQWCNLQgrcGVc0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Lilith's Ring",
+        "rank": "Epic",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "INT+2",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Epic_Lilith_s_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150720-A61eu1dAZgmW7lhREmJb0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Anakim's Ring",
+        "rank": "Epic",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "Stun Resistance +10%",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Epic_Anakim_s_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150726-QJy1jooaRf1VUJQkCxYr0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Baium's Ring",
+        "rank": "Epic",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "STR+2",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Epic_Baium_s_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150815-dx6htAphaaf8vG6H2Ki90-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Vereth's Ring",
+        "rank": "Epic",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "DEX+2",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Epic_Vereth_s_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150823-6rGS5AKiBBrnn1SHWsPk0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Core Ring",
+        "rank": "Epic",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "Hold Resistance +10%, Skill Damage Resistance +10%",
+        "material": "Obsidian",
+        "filename": "Accessory_Earring_Epic_Core_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150828-9PtB60wmvDiQE8vvNI210-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Queen Ant's Heart",
+        "rank": "Epic",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "Vex Resistance +10%, Weapon Damage Resistance +10%",
+        "material": "Animal",
+        "filename": "Accessory_Earring_Epic_Queen_Ant_s_Heart.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150834-8fPfgZxW8CEzrLuq25B00-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Forgotten Hero's Ring",
+        "rank": "Epic",
+        "stats": {
+            "defense": "4"
+        },
+        "options": "\u00b7 Increases Accuracy on Enchant",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Epic_Forgotten_Hero_s_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150839-XKOZeKRUKABtRhL9abgo0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Ring of Passion",
+        "rank": "Epic",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "Skill Resistance +20",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Epic_Ring_of_Passion.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150844-GwR2PbcKlANQw4UOmkYh0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Inferno Ring",
+        "rank": "Unique",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Accuracy +1",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Unique_Inferno_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150849-NrC65vVOKHdQiEXQhZks0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Ring of Insolence",
+        "rank": "Unique",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "Skill Resistance +10",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Unique_Ring_of_Insolence.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150855-c52xNe1eWPPrtK7hmrOo0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Protection Ring of Water",
+        "rank": "Unique",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Water Type Resistance +45%",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Unique_Protection_Ring_of_Water.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150911-CAHu0RNibxEhAXnInYCV0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Protection Ring of Earth",
+        "rank": "Unique",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Earth Type Resistance +45%",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Unique_Protection_Ring_of_Earth.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150916-Bx8xTe0zLHFD7ebKorch0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Protection Ring of Wind",
+        "rank": "Unique",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Wind Type Resistance +45%",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Unique_Protection_Ring_of_Wind.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150920-VwC2kCL4x4MZrFh7BzJw0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Protection Ring of Fire",
+        "rank": "Unique",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Fire Type Resistance +45%",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Unique_Protection_Ring_of_Fire.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150925-jIdGBGXBFe3nK6lPDWXM0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Protection Ring of Darkness",
+        "rank": "Unique",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Dark Type Resistance +45%",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Unique_Protection_Ring_of_Darkness.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150930-aC6Xy06a3gd3m8huLhWJ0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Protection Ring of Light",
+        "rank": "Unique",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Light Type Resistance +45%",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Unique_Protection_Ring_of_Light.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150935-QsIpu1OqgV1Mqc55ZhQc0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Royal Guard's Ring",
+        "rank": "Unique",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "\u00b7 Increases Accuracy on Enchant",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Unique_Royal_Guard_s_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150942-KUoGtWjCL0iFWU3VMjOg0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Ring of Blessing",
+        "rank": "Unique",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Critical Hit Resistance +20%",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Unique_Ring_of_Blessing.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150949-Fre95nXyurII7Vgcy7J40-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Phoenix Ring",
+        "rank": "Rare",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "STR+1",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Rare_Phoenix_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117150954-TxajSXgGsxB3Md1U2Caw0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Black Ore Ring",
+        "rank": "Rare",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "DEX+1",
+        "material": "Obsidian",
+        "filename": "Accessory_Earring_Rare_Black_Ore_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151001-k1z3NbbBfYaa3iNURhno0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Sage's Ring",
+        "rank": "Rare",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "INT+1",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Rare_Sage_s_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151007-4MrQN7R8Gw2tiKOUfXaD0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Black Pearl Ring",
+        "rank": "Rare",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Skill Resistance +10",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Rare_Black_Pearl_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151033-ap0mMbVnO7zWAYbe1Oa90-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Mithril Ring",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "\u00b7 Increases Accuracy on Enchant",
+        "material": "Mithril",
+        "filename": "Accessory_Earring_Rare_Mithril_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151040-PM81F1iIh0d6bR9i8vyI0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Blue Coral Ring",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Skill Resistance +5, HP Recovery (Tick) +5",
+        "material": "Plant",
+        "filename": "Accessory_Earring_Common_Blue_Coral_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151051-Gcl6cmgzyxa8T1Kh3gjR0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Magic Ring",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Skill Resistance +5, MP Recovery (Tick) +2",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Common_Magic_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151058-6iu8pxLSEtKYtIIsh3580-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Gold Ring",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Max HP +30, Max MP +30",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Common_Gold_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151102-8EmuxJ9bvS6l8lwI0dQq0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Water Ring",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Water Type Resistance +15%",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Common_Water_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151106-qYxoB5398UorVzJJKOxW0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Earth Ring",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Earth Type Resistance +15%",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Common_Earth_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151114-OAy8igeAsLtcGsXkoQcq0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Wind Ring",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Wind Type Resistance +15%",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Common_Wind_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151124-AJvr7aQv8SgyhCng3tU60-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Fire Ring",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Fire Type Resistance +15%",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Common_Fire_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151131-kUrRh1EJDRks3qBrIwc30-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Dark Ring",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Dark Type Resistance +15%",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Common_Dark_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151139-lnBB5SRFmIqI5plHAwm70-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Holy Ring",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Light Type Resistance +15%",
+        "material": "Gold",
+        "filename": "Accessory_Earring_Common_Holy_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151151-Wcvov0Mq3mIFLBd9OTO10-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Earring",
+        "name": "Orcish Ring",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Max HP +30, HP Recovery (Tick) +2",
+        "material": "Bone",
+        "filename": "Accessory_Earring_Common_Orcish_Ring.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151158-wEJBjZC7zmMrd6CUVnSl0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Ring",
+        "name": "Lord's Authority",
+        "rank": "Legend",
+        "stats": {
+            "defense": "10"
+        },
+        "options": "Weight Limit +1400, Damage Reduction +3, All Damage +3",
+        "material": "Gold",
+        "filename": "Accessory_Ring_Legend_Lord_s_Authority.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151447-JX18ZmyNa5yCf1TBQkFQ0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Ring",
+        "name": "Tiat's Belt",
+        "rank": "Epic",
+        "stats": {
+            "defense": "8"
+        },
+        "options": "Weight Limit +1,000, Damage Reduction +2",
+        "material": "Gold",
+        "filename": "Accessory_Ring_Epic_Tiat_s_Belt.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151512-WkUcJjZwvSLJXsbXY76b0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Ring",
+        "name": "Ekimus' Belt",
+        "rank": "Epic",
+        "stats": {
+            "defense": "3"
+        },
+        "options": "Weight Limit +1,200",
+        "material": "Gold",
+        "filename": "Accessory_Ring_Epic_Ekimus_Belt.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151517-igrkkF92fFDXmePSIdXS0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Ring",
+        "name": "Dragon Belt",
+        "rank": "Epic",
+        "stats": {
+            "defense": "8"
+        },
+        "options": "Weight Limit +1,000, Accuracy +2",
+        "material": "Gold",
+        "filename": "Accessory_Ring_Epic_Dragon_Belt.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151523-mipvvZN1hJr8nnFRUdrG0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Ring",
+        "name": "Belt of Blessing",
+        "rank": "Unique",
+        "stats": {
+            "defense": "4"
+        },
+        "options": "Weight Limit +700, MP Recovery (Tick) +6",
+        "material": "Leather",
+        "filename": "Accessory_Ring_Unique_Belt_of_Blessing.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151628-1hLfJo07IToVnjQwmgpO0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Ring",
+        "name": "Cerberus' Belt",
+        "rank": "Unique",
+        "stats": {
+            "defense": "4"
+        },
+        "options": "Weight Limit +700, All Damage +1",
+        "material": "Leather",
+        "filename": "Accessory_Ring_Unique_Cerberus_Belt.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151632-DDKBAPtBK4RPSOUIN1Wq0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Ring",
+        "name": "Behemoth's Leather Belt",
+        "rank": "Unique",
+        "stats": {
+            "defense": "5"
+        },
+        "options": "Weight Limit +800",
+        "material": "Leather",
+        "filename": "Accessory_Ring_Unique_Behemoth_s_Leather_Belt.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151636-k91Jcgv4YGDIHSSTjdS40-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Ring",
+        "name": "Belt of Insolence",
+        "rank": "Rare",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Weight Limit +700",
+        "material": "Leather",
+        "filename": "Accessory_Ring_Rare_Belt_of_Insolence.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151641-2PwIH3JgnPByQkwC5eE70-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Ring",
+        "name": "Mithril Belt",
+        "rank": "Rare",
+        "stats": {
+            "defense": "2"
+        },
+        "options": "\u00b7 Increases Defense on Enchant",
+        "material": "Mithril",
+        "filename": "Accessory_Ring_Rare_Mithril_Belt.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151646-Dh00NPlhRWzvOp3xM3gN0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Ring",
+        "name": "Orc Soldier's Belt",
+        "rank": "Rare",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Weight Limit +500",
+        "material": "Leather",
+        "filename": "Accessory_Ring_Rare_Orc_Soldier_s_Belt.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151653-R19mYX8QAnb4poNg06YB0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Ring",
+        "name": "Sturdy Leather Belt",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Weight Limit +300",
+        "material": "Leather",
+        "filename": "Accessory_Ring_Common_Sturdy_Leather_Belt.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151658-GbWCYPCSU7iGe9GzQbyU0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Ring",
+        "name": "Steel Belt",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "Max HP +50, HP Recovery (Tick) +3",
+        "material": "Steel",
+        "filename": "Accessory_Ring_Common_Steel_Belt.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151703-6ePnFIzLzL8SrsrD0G2b0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Ring",
+        "name": "Leather Belt",
+        "rank": "Common",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "MP Recovery (Tick) +3",
+        "material": "Leather",
+        "filename": "Accessory_Ring_Common_Leather_Belt.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151712-eVwRPHJbHoE1A89HbdZB0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Ring",
+        "name": "Cloth Belt",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Max MP +10, MP Recovery (Tick) +1",
+        "material": "Cloth",
+        "filename": "Accessory_Ring_Common_Cloth_Belt.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117151716-zu3JnynTmEbVFfemxEwP0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Bracelet",
+        "name": "Bracelet of Blessing",
+        "rank": "Unique",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "CC Resistance +15%",
+        "material": "Metal",
+        "filename": "Accessory_Bracelet_Unique_Bracelet_of_Blessing.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117152558-lI4cgUOSwVzoJjLggYON0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Bracelet",
+        "name": "Bracelet of Grace",
+        "rank": "Unique",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Stun Resistance +5%",
+        "material": "Metal",
+        "filename": "Accessory_Bracelet_Unique_Bracelet_of_Grace.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117152605-knIkx14yrRGS6NJ9vONF0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Bracelet",
+        "name": "Bracelet of Dawn",
+        "rank": "Unique",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Accuracy +2, Skill Resistance +8",
+        "material": "Metal",
+        "filename": "Accessory_Bracelet_Unique_Bracelet_of_Dawn.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117152609-vodnFBq0CsEqnrWzbHdS0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Bracelet",
+        "name": "Bracelet of Hell",
+        "rank": "Rare",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "All Damage +1",
+        "material": "Metal",
+        "filename": "Accessory_Bracelet_Rare_Bracelet_of_Hell.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117152614-ZPuFU8sNL5N0eUhI8GFa0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Bracelet",
+        "name": "Mithril Bracelet",
+        "rank": "Rare",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "MP Recovery (Tick) +2",
+        "material": "Mithril",
+        "filename": "Accessory_Bracelet_Rare_Mithril_Bracelet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117152619-0GsNf0DcmhxzGk7bgCyd0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Bracelet",
+        "name": "Steel Bracelet",
+        "rank": "Rare",
+        "stats": {
+            "defense": "1"
+        },
+        "options": "\u00b7 Increases Max HP on Enchant",
+        "material": "Steel",
+        "filename": "Accessory_Bracelet_Rare_Steel_Bracelet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117152623-bGAEZafpz1qAQb2bXlw70-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Bracelet",
+        "name": "Bronze Bracelet",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Max MP +20",
+        "material": "Metal",
+        "filename": "Accessory_Bracelet_Common_Bronze_Bracelet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117152629-Ujj4Yr9sGQ86leVKCAjB0-v4"
+    },
+    {
+        "main_type": "Accessory",
+        "class_specific": "Bracelet",
+        "name": "Iron Bracelet",
+        "rank": "Common",
+        "stats": {
+            "defense": "-"
+        },
+        "options": "Max HP +30",
+        "material": "Steel",
+        "filename": "Accessory_Bracelet_Common_Iron_Bracelet.png",
+        "icon_url": "https://imgfiles-cdn.plaync.com/file/l2mnu/download/20211117152633-CI3r6NdAOtvSzZUkeSXR0-v4"
+    }
+]

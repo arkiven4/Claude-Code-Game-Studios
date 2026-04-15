@@ -1,6 +1,6 @@
 # Item Database
 
-> **Status**: In Design
+> **Status**: Approved
 > **Author**: Design session 2026-04-04
 > **Last Updated**: 2026-04-04
 > **Implements Pillar**: The Party Is the Game
@@ -9,8 +9,8 @@
 
 The Item Database is the master definition for all items in the game — equipment,
 consumables, key/quest items, and enhancement materials. Stored as multiple
-Resource types (`ItemEquipmentSO`, `ItemConsumableSO`, `ItemKeySO`,
-`ItemMaterialSO`), each item's data card defines its identity, stats, rarity tier,
+Resource types (`ItemEquipment`, `ItemConsumable`, `ItemKey`,
+`ItemMaterial`), each item's data card defines its identity, stats, rarity tier,
 character class restrictions, and usage rules. Players interact with the Item Database
 indirectly: when they see a sword drop, read its stats, equip it to Evan, or notice
 that a potion restores 40% HP, they are seeing Item Database entries in action. The
@@ -39,17 +39,17 @@ specific and narratively meaningful, not stat-stick commodities. Players remembe
 sword they found in Chapter 2 because it carried them through Chapter 3, not because
 it had the highest DPS at level 8.
 
-## Detailed Design
+## Detailed Rules
 
 ### Core Rules
 
 1. **Four Resource types** exist, one per item category:
-   - `ItemEquipmentSO` — equippable items (weapons, armor, accessories)
-   - `ItemConsumableSO` — single-use items (potions, buffs, revives)
-   - `ItemKeySO` — quest/story items that cannot be used, sold, or dropped
-   - `ItemMaterialSO` — enhancement materials used to upgrade equipment
+   - `ItemEquipment` — equippable items (weapons, armor, accessories)
+   - `ItemConsumable` — single-use items (potions, buffs, revives)
+   - `ItemKey` — quest/story items that cannot be used, sold, or dropped
+   - `ItemMaterial` — enhancement materials used to upgrade equipment
 
-2. **Every `ItemEquipmentSO` has exactly 5 equipment slots**:
+2. **Every `ItemEquipment` has exactly 5 equipment slots**:
 
    | Slot | Purpose | Examples |
    |------|---------|----------|
@@ -73,14 +73,14 @@ it had the highest DPS at level 8.
 
 6. **Item levels** — every equipment item has a `RequiredLevel` field. Characters below this level cannot equip the item. This gates item progression independently from rarity.
 
-7. **Consumable items** (`ItemConsumableSO`) define:
+7. **Consumable items** (`ItemConsumable`) define:
    - `EffectType` enum: `RestoreHP`, `RestoreMP`, `TemporaryBuff`, `Revive`, `CleanseStatus`
    - `EffectValue` (int or float) — the magnitude of the effect
    - `TargetScope` enum: `SingleCharacter`, `AllParty`, `ActiveCharacterOnly`
 
-8. **Key items** (`ItemKeySO`) have no stats, no equip rules, and cannot be sold or dropped. They exist purely for narrative gating and quest tracking.
+8. **Key items** (`ItemKey`) have no stats, no equip rules, and cannot be sold or dropped. They exist purely for narrative gating and quest tracking.
 
-9. **Enhancement materials** (`ItemMaterialSO`) define:
+9. **Enhancement materials** (`ItemMaterial`) define:
    - `EnhancementTier` — which equipment rarity levels they apply to
    - `StatIncrease` — the flat or percentage boost applied to the target equipment
    - `BaseGoldCost` (int) — the gold value of this material; used when calculating the 30% refund on enhanced item sale
@@ -89,7 +89,7 @@ it had the highest DPS at level 8.
 
 ### States and Transitions
 
-`ItemEquipmentSO`, `ItemConsumableSO`, `ItemKeySO`, and `ItemMaterialSO` are **stateless** Resources — they define item templates and never change at runtime.
+`ItemEquipment`, `ItemConsumable`, `ItemKey`, and `ItemMaterial` are **stateless** Resources — they define item templates and never change at runtime.
 
 Runtime state for equipment instances is tracked in `EquipmentInstance`, a separate runtime container:
 
@@ -117,9 +117,9 @@ Runtime state for equipment instances is tracked in `EquipmentInstance`, a separ
 |--------|-----------|---------------|
 | Inventory & Equipment System | Reads Item Resources + EquipmentInstance | ItemDisplayName, Icon, StatBonuses, RequiredLevel, CharacterClass; tracks EquipmentInstance state |
 | Loot & Drop System | Reads Item Resources | Rarity, CharacterClass restriction, RequiredLevel (filters drops to appropriate characters) |
-| Character Progression System | Reads ItemEquipmentSO.RequiredLevel | Gates equipment equipping behind character level |
+| Character Progression System | Reads ItemEquipment.RequiredLevel | Gates equipment equipping behind character level |
 | Shop System | Reads Item Resources | BaseGoldValue (calculated from Rarity + StatBonuses) |
-| Equipment Enhancement System | Reads ItemEquipmentSO + EquipmentInstance | EnhancementTier compatibility; applies stat recalculation on enhancement |
+| Equipment Enhancement System | Reads ItemEquipment + EquipmentInstance | EnhancementTier compatibility; applies stat recalculation on enhancement |
 | Combat HUD | Reads EquipmentInstance (via Inventory System) | Active equipment bonuses applied to character stats |
 | Health & Damage System | Reads EquipmentInstance bonuses | Effective DEF and MaxHP after equipment bonuses applied |
 | Skill Execution System | Reads EquipmentInstance bonuses | Effective SPD and CRIT after equipment bonuses applied |
@@ -138,17 +138,17 @@ EffectiveStat = (BaseStat + EquipmentFlatBonus) × (1 + min(EquipmentPercentageB
 
 | Variable | Type | Range | Source | Description |
 |----------|------|-------|--------|-------------|
-| BaseStat | int or float | See Character Data GDD | CharacterDataSO | Character's base stat from their data card (includes level growth) |
+| BaseStat | int or float | See Character Data GDD | CharacterData | Character's base stat from their data card (includes level growth) |
 | EquipmentFlatBonus | int | 0–200 | Sum of all 5 equipped items' flat bonuses | Total flat stat bonus from all equipped equipment |
 | EquipmentPercentageBonus | float | 0.0–0.50 (0%–50%) | Sum of all 5 equipped items' percentage bonuses | Total percentage bonus from all equipped equipment (capped at 50%) |
 
 **Example** — Evelyn at L30 with full Rare equipment:
-- Base ATK: 239 (from CharacterDataSO)
+- Base ATK: 239 (from CharacterData)
 - Equipment Flat Bonus: +80 ATK (Weapon) + +40 ATK (Accessory) = +120 ATK
 - Equipment Percentage Bonus: 12% ATK (Weapon) + 8% ATK (Relic) = 20% ATK
 - **Effective ATK** = (239 + 120) × (1 + 0.20) = 359 × 1.20 = **430.8**
 
-**Expected bonus impact**: Equipment should contribute 15–35% of a character's total effective stats at endgame. This keeps character identity (base stats from CharacterDataSO) meaningful while making equipment feel impactful.
+**Expected bonus impact**: Equipment should contribute 15–35% of a character's total effective stats at endgame. This keeps character identity (base stats from CharacterData) meaningful while making equipment feel impactful.
 
 **Note on derived stat bonuses**: Some equipment grants bonuses to derived stats like "Final ATK%" (percentage of total ATK after all modifiers) or "Physical DEF%" (percentage of DEF against physical damage only). These are implemented as **Special Effects** and are applied during combat calculation, not during stat aggregation. The EffectiveStat formula above only covers base stat aggregation; derived stat modifiers are applied multiplicatively during damage calculation by the Combat System.
 
@@ -188,7 +188,7 @@ BaseGoldValue = (RequiredLevel × 10) × RarityMultiplier × (1 + StatBonusTotal
 
 | Variable | Type | Range | Source |
 |----------|------|-------|--------|
-| RequiredLevel | int | 1–30 | ItemEquipmentSO |
+| RequiredLevel | int | 1–30 | ItemEquipment |
 | RarityMultiplier | float | 1.0–2.5 | From rarity table above |
 | StatBonusTotal | float | 0–50 | Sum of all percentage stat bonuses on the item |
 
@@ -219,9 +219,9 @@ EnhancedStat = BaseItemStat × (1 + (EnhancementLevel × EnhancementBonusPerLeve
 
 | Variable | Type | Range | Source |
 |----------|------|-------|--------|
-| BaseItemStat | int or float | From ItemEquipmentSO | Base stat of the item (after rarity multiplier) |
+| BaseItemStat | int or float | From ItemEquipment | Base stat of the item (after rarity multiplier) |
 | EnhancementLevel | int | 0–10 | EquipmentInstance | Current enhancement level (0 = unenhanced) |
-| EnhancementBonusPerLevel | float | 0.03–0.08 (3%–8%) | ItemEquipmentSO.EnhancementGrowth | Per-level stat increase (tuned per item) |
+| EnhancementBonusPerLevel | float | 0.03–0.08 (3%–8%) | ItemEquipment.EnhancementGrowth | Per-level stat increase (tuned per item) |
 
 **Example**: Epic sword (base ATK 150), EnhancementLevel 5, EnhancementGrowth 5%:
 - Enhanced ATK = 150 × (1 + (5 × 0.05)) = 150 × 1.25 = **187.5 ATK**
@@ -233,7 +233,7 @@ EnhancedStat = BaseItemStat × (1 + (EnhancementLevel × EnhancementBonusPerLeve
 | Equipment percentage bonuses exceed 50% cap | Cap at 50%; log a warning in the console; excess bonus is ignored. The Inventory UI displays a "Stat Cap Reached" indicator on the offending item. | Prevents stat inflation from breaking combat balance; warning helps data authors debug |
 | Character level drops below item's RequiredLevel (curse, death penalty) | Item stays equipped but all stat bonuses from it are disabled (greyed-out in HUD). Stats re-activate when character re-meets the level requirement. | Prevents exploit of equipping high-level gear then dropping level to bypass restrictions |
 | Equipment item has a null or invalid field (data authoring error) | Log an error at scene load; use a zero-value fallback stat block (all bonuses = 0); item is still equippable but provides no stats. Flag the item in a data validation report for the team. | Null items must never crash the game; zero fallback is safe and debuggable |
-| Enhanced equipment item is sold to a shop | Enhancement level is reset to 0; sell value = BaseGoldValue + (EnhancementLevel × `ItemMaterialSO.BaseGoldCost` × 0.30). Player recovers 30% of the gold spent on materials. | Prevents enhancement from being a total loss; 30% refund feels fair without making sell-and-repurchase profitable |
+| Enhanced equipment item is sold to a shop | Enhancement level is reset to 0; sell value = BaseGoldValue + (EnhancementLevel × `ItemMaterial.BaseGoldCost` × 0.30). Player recovers 30% of the gold spent on materials. | Prevents enhancement from being a total loss; 30% refund feels fair without making sell-and-repurchase profitable |
 | Equipment durability reaches 0 mid-combat | Item is unequipped automatically; all stat bonuses are removed immediately; item is greyed-out in inventory with a "Broken" tag. Combat continues without pause. | Broken equipment mid-fight creates tension; auto-unequip prevents stat confusion |
 | Player attempts to equip two items in the same slot | Second item replaces the first; first item returns to inventory. No equip animation plays for the swap. | Simple, unambiguous behavior; player always knows what's active |
 | Two special effects trigger simultaneously (e.g., "Lifesteal on hit" and "+10 MP on kill" on same hit that kills an enemy) | Both effects fire in slot order: Weapon → Armor → Helmet → Accessory → Relic. Effects are resolved sequentially, not in parallel. | Deterministic ordering prevents race conditions and makes debugging reproducible |
@@ -266,6 +266,8 @@ EnhancedStat = BaseItemStat × (1 + (EnhancementLevel × EnhancementBonusPerLeve
 |-----------|--------------|------------|-------------------|-------------------|
 | **Rarity Stat Multipliers** | Common 1.0x, Uncommon 1.25x, Rare 1.50x, Epic 2.0x, Legendary 2.5x | ±0.25x per tier | Epic/Legendary items trivialize content; Common items feel worthless | Rarity differences become imperceptible; loot feels unrewarding |
 | **Equipment Percentage Bonus Cap** | 50% total | 30%–80% | Stats balloon; combat math breaks; damage formulas overflow | Equipment feels irrelevant; players ignore stat optimization |
+
+> **Cap note**: The 50% cap applies to the **sum** of all percentage bonuses across all 5 equipped slots. Example: one Epic accessory granting +30% ATK + a second granting +25% ATK = 55% total, capped to 50%. Designers must account for this when authoring high-rarity accessories.
 | **Durability Loss Per Hit** | 1 (Armor/Helmet only) | 0–2 | Items break constantly; repair costs drain player gold; frustration | Items never break; durability system is ignored; no tension |
 | **Durability Loss On Death** | 10 (flat) | 5–20 | Death penalty feels punishing; players avoid challenging content | Death has no consequence; players don't fear failure |
 | **Enhancement Bonus Per Level** | 3%–8% per level (per item) | 2%–12% per level | Enhanced items outclass base items; enhancement feels mandatory | Enhancement not worth the material cost; players ignore the system |
@@ -318,7 +320,7 @@ EnhancedStat = BaseItemStat × (1 + (EnhancementLevel × EnhancementBonusPerLeve
 
 ## Acceptance Criteria
 
-- [ ] All four Resource types (`ItemEquipmentSO`, `ItemConsumableSO`, `ItemKeySO`, `ItemMaterialSO`) can be created in the Godot Editor and saved as `.tres` files
+- [ ] All four Resource types (`ItemEquipment`, `ItemConsumable`, `ItemKey`, `ItemMaterial`) can be created in the Godot Editor and saved as `.tres` files
 - [ ] Equipment items correctly enforce CharacterClass restrictions — a Mage-only staff cannot be equipped by an Archer character (verified by unit test)
 - [ ] RequiredLevel gating works — a Level 5 character cannot equip a Level 15 sword (verified by unit test)
 - [ ] Effective stat calculation formula produces correct results: `(BaseStat + FlatBonus) × (1 + PercentageBonus)` — verified by unit test with known inputs
@@ -339,10 +341,10 @@ EnhancedStat = BaseItemStat × (1 + (EnhancementLevel × EnhancementBonusPerLeve
 
 | Question | Owner | Resolution Target |
 |----------|-------|-------------------|
-| How many unique equipment items will exist per character class? (e.g., 10 Mage staffs, 8 Archer bows?) | Game Designer / Economy Designer | Resolve before loot table authoring begins — affects total number of ItemEquipmentSO assets to author |
+| How many unique equipment items will exist per character class? (e.g., 10 Mage staffs, 8 Archer bows?) | Game Designer / Economy Designer | Resolve before loot table authoring begins — affects total number of ItemEquipment assets to author |
 | Should Relic items be truly unique (one per character, narrative-specific) or can multiple characters share a Relic pool? | Game Designer / Narrative Director | Resolve before Relic items are authored — affects narrative weight and loot distribution |
 | Does durability loss feel punishing or engaging to players? Should the rate be tuned based on playtest feedback? | QA Lead / Game Designer | Resolve after first playtest of MVP combat — may require adjustment |
 | What is the gold income rate per encounter? (Needed to validate shop prices and enhancement material costs) | Economy Designer | Resolve in Economy/Loot & Drop GDD — depends on encounter design |
 | Should enhancement materials be purchasable in shops, or only found as loot? | Economy Designer | Resolve before Shop System GDD is authored — affects shop inventory design |
 | Are there equipment set bonuses? (e.g., "Equip 3 pieces of the Fire Set: +20% ATK") | Game Designer | Resolve after core equipment system is implemented — set bonuses are a Full Vision enhancement |
-| How many consumable item types are needed for MVP? (Potions, revives, buffs — which are essential for Witch prologue + Ch 1–2?) | Game Designer | Resolve before consumable data authoring — affects ItemConsumableSO asset count |
+| How many consumable item types are needed for MVP? (Potions, revives, buffs — which are essential for Witch prologue + Ch 1–2?) | Game Designer | Resolve before consumable data authoring — affects ItemConsumable asset count |

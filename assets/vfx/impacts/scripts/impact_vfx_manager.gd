@@ -11,7 +11,6 @@
 ##   ImpactVFXManager.spawn_impact_at(global_position, global_transform.basis)
 
 extends Node
-class_name ImpactVFXManager
 
 ## Reference to the master impact VFX scene
 const IMPACT_VFX_SCENE: PackedScene = preload("res://assets/vfx/impacts/scenes/impact_vfx_master.tscn")
@@ -26,7 +25,7 @@ var _active_vfx: Array[Node3D] = []
 func _ready() -> void:
 	_vfx_parent = Node3D.new()
 	_vfx_parent.name = "VFX_Spawner"
-	get_tree().root.add_child(_vfx_parent)
+	get_tree().root.add_child.call_deferred(_vfx_parent)
 
 
 ## Spawns an impact VFX at the specified position.
@@ -41,19 +40,17 @@ func spawn_impact(
 	basis: Basis = Basis.IDENTITY
 ) -> Node3D:
 	var vfx: Node3D = IMPACT_VFX_SCENE.instantiate()
+
+	_vfx_parent.add_child(vfx)
 	vfx.global_position = position
 	vfx.global_basis = basis
-	
+
 	# Connect cleanup signal
-	if vfx.has_signal("vfx_completed"):
-		vfx.vfx_completed.connect(_on_vfx_completed.bind(vfx))
-	
-	_vfx_parent.add_child(vfx)
-	_active_vfx.append(vfx)
+	if vfx.has_signal("vfx_completed"):	_active_vfx.append(vfx)
 	
 	# Trigger the effect
 	if vfx.has_method("play"):
-		vfx.play(Vector3.ZERO, tint_color)
+		vfx.play.call_deferred(Vector3.ZERO, tint_color)
 	
 	return vfx
 

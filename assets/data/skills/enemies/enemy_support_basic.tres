@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://orb_aura_bolt"]
+[ext_resource type="Script" uid="uid://be6mqnv6bugg" path="res://src/core/skill_data.gd" id="1_skill"]
+[ext_resource type="Script" uid="uid://bfep1t8y7u5tq" path="res://src/core/skill_tier_config.gd" id="2_tier"]
+[sub_resource type="Resource" id="Tier1"]
+script = ExtResource("2_tier")
+effect_value = 1.2
+tier_description = "Holy energy blast."
+[resource]
+script = ExtResource("1_skill")
+skill_type = 0
+display_name = "Aura Bolt"
+skill_id = "orb_aura_bolt"
+description = "Projects a strong blast of energy to attack the target."
+mp_cost = 2
+base_cooldown = 1.2
+target_type = 0
+tiers = Array[ExtResource("2_tier")]([SubResource("Tier1")])
+base_damage = 30
+damage_category = 2
